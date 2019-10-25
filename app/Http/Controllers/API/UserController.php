@@ -9,10 +9,27 @@ use DB;
 use Carbon\Carbon;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\GlobalFunctions;
+use App\Traits\NotificationFunctions;
 
 class UserController extends Controller
 {
+
+    use GlobalFunctions, NotificationFunctions;
+    
     public function index(Request $request){
+
+        $users = User::all();
+
+        //Page Pagination Result List
+        //Default return 10
+
+        $paginateddata = $this->paginateResult($users , $request->result, $request->page);
+        $data['data'] = $paginateddata;
+        $data['msg'] = $this->getRetrievedSuccessMsg('Users');
+
+        return response()->json($data, 200);
+
         
     }
 
@@ -47,18 +64,18 @@ class UserController extends Controller
             $user->save();
         }catch(Exception $e){
             DB::rollBack();
-            $payload['status'] = 'error';
-            $payload['msg'] = 'User cannot save.';
+            $data['status'] = 'error';
+            $data['msg'] = 'User cannot save.';
 
-            return response()->json($payload, 500);
+            return response()->json($data, 500);
         }
        
         DB::commit();
-        $payload['status'] = 'success';
-        $payload['msg'] = 'User Saved.';
-        $payload['user'] =  $user;
+        $data['status'] = 'success';
+        $data['msg'] = 'User Saved.';
+        $data['data'] =  $user;
 
-        return response()->json($payload, 200);
+        return response()->json($data, 200);
     }
 
     public function show(Request $request){

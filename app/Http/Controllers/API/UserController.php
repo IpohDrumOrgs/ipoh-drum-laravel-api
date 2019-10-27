@@ -26,6 +26,7 @@ class UserController extends Controller
 
         $paginateddata = $this->paginateResult($users , $request->result, $request->page);
         $data['data'] = $paginateddata;
+        $data['maximunPage'] = $this->getMaximumPaginationPage($users->count(), $request->result);
         $data['msg'] = $this->getRetrievedSuccessMsg('Users');
 
         return response()->json($data, 200);

@@ -631,8 +631,20 @@ trait GlobalFunctions {
         }
         
         $data = $data->slice(($page-1) * $result)->take($result);
-        
+
         return $data;
+    }
+
+    //Get Maximun Pages
+    public function getMaximumPaginationPage($dataNo , $result){
+        
+        if($result != null && $result != "" && $result != 0){
+            $result = 10;
+        }
+        
+        $maximunPage = ceil($dataNo / $result);
+
+        return $maximunPage;
     }
     
 }

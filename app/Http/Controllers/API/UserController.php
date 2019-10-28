@@ -19,7 +19,7 @@ class UserController extends Controller
     
     public function index(Request $request){
 
-        $users = User::all();
+        $users = User::where('status' , true)->get();
 
         //Page Pagination Result List
         //Default return 10
@@ -74,21 +74,123 @@ class UserController extends Controller
         DB::commit();
         $data['status'] = 'success';
         $data['msg'] = 'User Saved.';
-        $data['data'] =  $user;
+        $data['data'] =  $user->refresh();
 
         return response()->json($data, 200);
     }
 
-    public function show(Request $request){
-        
+    public function show($uid){
+
+        $user = User::with('role','groups.company')->where('uid', $uid)->where('status', 1)->first();
+        if(empty($user)){
+            $payload['status'] = 'error';
+            $payload['msg'] = 'User Cannot Found.';
+
+            return response()->json($payload, 404);
+        }else{
+            $payload['status'] = 'success';
+            $payload['msg'] = 'User Found.';
+            $payload['data'] = $user;
+            
+            return response()->json($payload, 200);
+        }
     }
 
-    public function update(Request $request){
+    public function update(Request $request, $uid){
         
+        $user = User::where('uid', $uid)->where('status', 1)->first();
+        if(empty($user)){
+            $payload['status'] = 'error';
+            $payload['msg'] = 'User not found.';
+
+            return response()->json($payload, 404);
+        }
+        $this->validate($request, [
+            'email' => 'required|string|max:191|unique:users,email,'.$user->id,
+            'name' => 'required|string|max:191',
+        ]);
+
+        DB::beginTransaction();
+
+        // $role = Role::where('name', '=', $request->role_name)->first();
+        // if(empty($role)){
+        //     $payload['status'] = 'error';
+        //     $payload['msg'] = 'Role Not Found.';
+
+        //     return response()->json($payload, 404);
+        // }
+        // $user->role()->associate($role);
+
+        // $company = Company::with('groups')->where('id', $request->company)->first();
+        // $group = $company->groups->first();
+
+        // $company = Company::where('name', '=', $request->company)->first();
+        // if(empty($group)){
+        //     $payload['status'] = 'error';
+        //     $payload['msg'] = 'Company\'s group not found.';
+
+        //     return response()->json($payload, 404);
+        // }
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->icno = $request->icno;
+        $user->tel1 = $request->tel1;
+        $user->address1 = $request->address1;
+        $user->postcode = $request->postcode;
+        $user->city = $request->city;
+        $user->state = $request->state;
+        $user->country = $request->country;
+        $user->status = true;
+        $user->lastedit_by = $request->user()->name;
+      
+        try{
+            $user->save();
+        }catch(Exception $e){
+            DB::rollBack();
+            $payload['status'] = 'error';
+            $payload['msg'] = 'User Cannot Be Updated.';
+
+            return response()->json($payload, 404);
+        }
+        // $user->groups()->attach($group);
+
+        DB::commit();
+        $payload['status'] = 'success';
+        $payload['msg'] = 'User Updated.';
+        $payload['data'] =  $user->refresh();
+
+        return response()->json($payload, 200);
     }
 
-    public function destroy(Request $request){
-        
+    public function destroy(Request $request, $uid){
+        $user = User::where('uid', $uid)->where('status', true)->first();
+        if(empty($user)){
+            $payload['status'] = 'error';
+            $payload['msg'] = 'User not found.';
+
+            return response()->json($payload, 404);
+        }
+        $user->status = false;
+        DB::beginTransaction();
+
+        try{
+            DB::commit();
+            $user->save();
+
+            $payload['status'] = 'success';
+            $payload['msg'] = 'User Deleted.';
+            $payload['user'] =  $user->refresh();
+
+            return response()->json($payload, 200);
+            
+        }catch(Exception $e){
+            DB::rollBack();
+            $payload['status'] = 'error';
+            $payload['msg'] = 'User Cannot Be Deleted.';
+
+            return response()->json($payload, 404);
+        }
     }
 
     public function authentication(Request $request){

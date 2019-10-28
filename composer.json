@@ -16,6 +16,7 @@
         "spatie/laravel-cors": "^1.6"
     },
     "require-dev": {
+        "appointer/swaggervel": "^2.5",
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.4",
         "laravel/ui": "^1.1",

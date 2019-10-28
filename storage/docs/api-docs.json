@@ -1,0 +1,155 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Ipoh Drum Laravel API",
+        "description": "This is a swagger-generated API documentation for the project Ipoh Drum.",
+        "contact": {
+            "email": "henry_lcz97@hotmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api",
+    "paths": {
+        "/sale": {
+            "get": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "List of sales",
+                "responses": {
+                    "200": {
+                        "description": "A list of sales."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of sales."
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "List of users",
+                "responses": {
+                    "200": {
+                        "description": "A list of users."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of users."
+                    }
+                }
+            }
+        },
+        "/store": {
+            "post": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "Store user",
+                "responses": {
+                    "200": {
+                        "description": "User has been stored successfully."
+                    },
+                    "default": {
+                        "description": "Unable to store the user."
+                    }
+                }
+            }
+        },
+        "/authentication": {
+            "post": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "Authenticate user",
+                "responses": {
+                    "200": {
+                        "description": "Successfully authenticated user."
+                    },
+                    "default": {
+                        "description": "Unable to authenticate the user."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Sale": {
+            "title": "Sale"
+        },
+        "User": {
+            "title": "User",
+            "properties": {
+                "id": {
+                    "type": "int"
+                },
+                "role_id": {
+                    "type": "int"
+                },
+                "uid": {
+                    "type": "int"
+                },
+                "name": {
+                    "type": "String"
+                },
+                "email": {
+                    "type": "String"
+                },
+                "icno": {
+                    "type": "String"
+                },
+                "tel1": {
+                    "type": "String"
+                },
+                "tel2": {
+                    "type": "String"
+                },
+                "address1": {
+                    "type": "String"
+                },
+                "address2": {
+                    "type": "String"
+                },
+                "postcode": {
+                    "type": "String"
+                },
+                "city": {
+                    "type": "String"
+                },
+                "state": {
+                    "type": "String"
+                },
+                "country": {
+                    "type": "String"
+                },
+                "password": {
+                    "type": "String"
+                },
+                "status": {
+                    "type": "short"
+                },
+                "last_login": {
+                    "type": "Date"
+                },
+                "last_active": {
+                    "type": "Date"
+                },
+                "lastedit_by": {
+                    "type": "String"
+                },
+                "remember_token": {
+                    "type": "String"
+                },
+                "created_at": {
+                    "type": "timestamp"
+                },
+                "updated_at": {
+                    "type": "timestamp"
+                }
+            }
+        }
+    }
+}

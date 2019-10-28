@@ -626,7 +626,7 @@ trait GlobalFunctions {
     //Page Pagination
     public function paginateResult($data , $result , $page){
         
-        if($result != null && $result != "" && $result != 0){
+        if($result == null || $result == "" || $result == 0){
             $result = 10;
         }
         
@@ -638,7 +638,7 @@ trait GlobalFunctions {
     //Get Maximun Pages
     public function getMaximumPaginationPage($dataNo , $result){
         
-        if($result != null && $result != "" && $result != 0){
+        if($result == null  || $result == "" || $result == 0){
             $result = 10;
         }
         

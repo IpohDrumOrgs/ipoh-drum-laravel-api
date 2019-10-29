@@ -4,9 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @SWG\Definition(title="Sale")
- */
 class Sale extends Model
 {
     /**

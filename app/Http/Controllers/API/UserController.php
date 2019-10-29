@@ -15,23 +15,23 @@ class UserController extends Controller
 {
     use GlobalFunctions, NotificationFunctions;
 
+
     /**
-     * @SWG\Get(
-     *   tags={"UserControllerService"},
-     *   path="/user",
-     *   operationId="getListOfUsers",
-     *   summary="Retrieve list of users",
-     *   produces={"application/json"},
-     *   @SWG\Response(
-     *     response=200,
-     *     description="Successfully retrieved list of users."
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="Unable to retrieve list of users."
-     *   )
-     * )
-     */
+ * @OA\Get(
+ *      path="/api/user",
+ *      operationId="getUserList",
+ *      tags={"UserControllerService"},
+ *      summary="Get list of users",
+ *      description="Returns list of users",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Successfully retrieved list of users"
+ *       ),
+ *       @OA\Response(response=400, description="Unable to retrieve list of users")
+ *     )
+ *
+ * Returns list of projects
+ */
     public function index(Request $request)
     {
         // api/user (GET)
@@ -45,61 +45,6 @@ class UserController extends Controller
         return response()->json($data, 200);
     }
 
-    /**
-     * @SWG\Post(
-     *   tags={"UserControllerService"},
-     *   path="/user",
-     *   summary="Creates a user.",
-     *     produces={"application/json"},
-     *     operationId="createUser",
-     *   @SWG\Parameter(
-     *     name="name",
-     *     in="query",
-     *     description="Username",
-     *     required=true,
-     *     type="string",
-     *   ),
-     * @SWG\Parameter(
-     * name="email",
-     * in="query",
-     * description="Email",
-     * required=true,
-     * type="string"
-     * ),
-     * @SWG\Parameter(
-     * name="password",
-     * in="query",
-     * description="Password",
-     * format="password",
-     * required=true,
-     * type="string"
-     * ),
-     *      * @SWG\Parameter(
-     * name="password_confirmation",
-     * in="query",
-     * description="Password Confirmation",
-     * format="password",
-     * required=true,
-     * type="string"
-     * ),
-     * @SWG\Parameter(
-     * name="country",
-     * in="query",
-     * description="Country Name",
-     * required=false,
-     * type="string",
-     * allowEmptyValue=true
-     * ),
-     *   @SWG\Response(
-     *     response=200,
-     *     description="User has been created successfully."
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="Unable to create the user."
-     *   )
-     * )
-     */
     public function store(Request $request)
     {
         // api/user (POST)
@@ -139,30 +84,7 @@ class UserController extends Controller
         return response()->json($data, 200);
     }
 
-        /**
-     * @SWG\Get(
-     *   tags={"UserControllerService"},
-     *   path="/user/{uid}",
-     *   summary="Retrieves user by userId.",
-     *     produces={"application/json"},
-     *     operationId="getUserByUserId",
-     *   @SWG\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="User ID, NOT 'ID'.",
-     *     required=true,
-     *     type="string",
-     *   ),
-     *   @SWG\Response(
-     *     response=200,
-     *     description="User has been retrieved successfully."
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="Unable to retrieve the user."
-     *   )
-     * )
-     */
+    
     public function show($uid)
     {
         // api/user/{userid} (GET)
@@ -180,87 +102,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * @SWG\Put(
-     *   tags={"UserControllerService"},
-     *   path="/user/{uid}",
-     *   summary="Update user by userId.",
-     *     produces={"application/json"},
-     *     consumes={"application/x-www-form-urlencoded"},
-     *     operationId="updateUserByUserId",
-     *   @SWG\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="User ID, NOT 'ID'.",
-     *     required=true,
-     *     type="string",
-     *   ),
-     *   @SWG\Parameter(
-     *     name="name",
-     *     in="query",
-     *     description="Username.",
-     *     required=true,
-     *     type="string",
-     *   ),
-     *  @SWG\Parameter(
-     *     name="email",
-     *     in="query",
-     *     description="Email.",
-     *     required=true,
-     *     type="string",
-     *   ),
-     *  @SWG\Parameter(
-     *     name="tel1",
-     *     in="query",
-     *     description="Telephone Number #1.",
-     *     required=false,
-     *     type="string",
-     *   ),
-     *  @SWG\Parameter(
-     *     name="address1",
-     *     in="query",
-     *     description="Address #1.",
-     *     required=false,
-     *     type="string",
-     *   ),
-     *  @SWG\Parameter(
-     *     name="city",
-     *     in="query",
-     *     description="City.",
-     *     required=false,
-     *     type="string",
-     *   ),
-     *  @SWG\Parameter(
-     *     name="postcode",
-     *     in="query",
-     *     description="PostCode.",
-     *     required=false,
-     *     type="string",
-     *   ),
-     *  @SWG\Parameter(
-     *     name="state",
-     *     in="query",
-     *     description="State.",
-     *     required=false,
-     *     type="string",
-     *   ),
-     *  @SWG\Parameter(
-     *     name="country",
-     *     in="query",
-     *     description="Country.",
-     *     required=false,
-     *     type="string",
-     *   ),
-     *   @SWG\Response(
-     *     response=200,
-     *     description="User has been updated successfully."
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="Unable to update the user."
-     *   )
-     * )
-     */
     public function update(Request $request, $uid)
     {
         // api/user/{userid} (PUT)
@@ -345,22 +186,7 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * @SWG\Post(
-     *   tags={"UserControllerService"},
-     *   path="/authentication",
-     *   summary="Authenticate user",
-     *   operationId="authenticateUser",
-     *   @SWG\Response(
-     *     response=200,
-     *     description="Successfully authenticated user."
-     *   ),
-     *   @SWG\Response(
-     *     response="default",
-     *     description="Unable to authenticate the user."
-     *   )
-     * )
-     */
+ 
     public function authentication(Request $request)
     {
 

@@ -8,17 +8,13 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
 /**
- * @SWG\Swagger(
- *     host="localhost:8000",
- *     basePath="/api",
- *   @SWG\Info(
- *     title="Ipoh Drum Laravel API",
- *     version="1.0",
- *     description="This is a swagger-generated API documentation for the project Ipoh Drum.",
- *     @SWG\Contact(
- *         email="henry_lcz97@hotmail.com"
- *     )
- *   )
+ * @OA\Info(
+ *      version="1.0.0",
+ *      title="Ipoh Drum Laravel API",
+ *      description="This is a swagger-generated API documentation for the project Ipoh Drum. (Only supports OpenAPI Annotations for now.)",
+ *      @OA\Contact(
+ *          email="henry_lcz97@hotmail.com"
+ *      )
  * )
  */
 class Controller extends BaseController

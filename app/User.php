@@ -7,101 +7,22 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
+
 /**
- * @SWG\Definition(@SWG\Xml(name="User"), type="object")
+ * @OA\Schema(
+ *   schema="User",
+ *   allOf={
+ *     @OA\Schema(
+ *       @OA\Property(property="id", type="integer"),
+ *       @OA\Property(property="name", type="string")
+ *     )
+ *   }
+ * )
  */
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
-    /**
-     * @SWG\Property(property="id")
-     * @var int
-     */
-    /**
-     * @SWG\Property(property="role_id")
-     * @var int
-     */
-    /**
-     * @SWG\Property(property="uid")
-     * @var int
-     */
-    /**
-     * @SWG\Property(property="name", example="nameeeeefedsf")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="email")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="icno")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="tel1")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="tel2")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="address1")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="address2")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="postcode")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="city")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="state")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="country")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="password")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="status")
-     * @var boolean
-     */
-    /**
-     * @SWG\Property(property="last_login")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="last_active")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="lastedit_by")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="remember_token")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="created_at")
-     * @var string
-     */
-    /**
-     * @SWG\Property(property="updated_at")
-     * @var string
-     */
 
     /**
      * Use username to login user.

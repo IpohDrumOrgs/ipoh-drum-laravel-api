@@ -1,0 +1,50 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Ipoh Drum Laravel API",
+        "description": "This is a swagger-generated API documentation for the project Ipoh Drum. (Only supports OpenAPI Annotations for now.)",
+        "contact": {
+            "email": "henry_lcz97@hotmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/user": {
+            "get": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "Get list of users",
+                "description": "Returns list of users",
+                "operationId": "getUserList",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of users"
+                    },
+                    "400": {
+                        "description": "Unable to retrieve list of users"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "allOf": [
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            }
+        }
+    }
+}

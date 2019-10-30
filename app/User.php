@@ -7,22 +7,38 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-
-/**
- * @OA\Schema(
- *   schema="User",
- *   allOf={
- *     @OA\Schema(
- *       @OA\Property(property="id", type="integer"),
- *       @OA\Property(property="name", type="string")
- *     )
- *   }
+/** @OA\Schema(
+ *     description="User object",
+ *     title="User"
  * )
  */
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
+    /**       @OA\Property(property="id", type="integer"),
+     *       @OA\Property(property="role_id", type="integer"),
+     * * @OA\Property(property="uid", type="integer"),
+     *       @OA\Property(property="name", type="string"),
+     * @OA\Property(property="email", type="string"),
+     * @OA\Property(property="icno", type="string"),
+     * @OA\Property(property="tel1", type="string"),
+     * @OA\Property(property="tel2", type="string"),
+     * @OA\Property(property="address1", type="string"),
+     * @OA\Property(property="address2", type="string"),
+     * @OA\Property(property="postcode", type="string"),
+     * @OA\Property(property="city", type="string"),
+     * @OA\Property(property="state", type="string"),
+     * @OA\Property(property="country", type="string"),
+     * @OA\Property(property="password", type="string"),
+     * @OA\Property(property="status", type="string"),
+     * @OA\Property(property="last_login", type="string"),
+     * @OA\Property(property="last_active", type="string"),
+     * @OA\Property(property="lastedit_by", type="string"),
+     * @OA\Property(property="remember_token", type="string"),
+     * @OA\Property(property="created_at", type="string"),
+     * @OA\Property(property="updated_at", type="string")
+     */
 
     /**
      * Use username to login user.

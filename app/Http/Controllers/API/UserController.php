@@ -17,21 +17,21 @@ class UserController extends Controller
 
 
     /**
- * @OA\Get(
- *      path="/api/user",
- *      operationId="getUserList",
- *      tags={"UserControllerService"},
- *      summary="Get list of users",
- *      description="Returns list of users",
- *      @OA\Response(
- *          response=200,
- *          description="Successfully retrieved list of users"
- *       ),
- *       @OA\Response(response=400, description="Unable to retrieve list of users")
- *     )
- *
- * Returns list of projects
- */
+     * @OA\Get(
+     *      path="/api/user",
+     *      operationId="getUserList",
+     *      tags={"UserControllerService"},
+     *      summary="Get list of users",
+     *      description="Returns list of users",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successfully retrieved list of users"
+     *       ),
+     *       @OA\Response(
+     * response="default", 
+     * description="Unable to retrieve list of users")
+     *     )
+     */
     public function index(Request $request)
     {
         // api/user (GET)
@@ -45,6 +45,67 @@ class UserController extends Controller
         return response()->json($data, 200);
     }
 
+    /**
+     * @OA\Post(
+     *   tags={"UserControllerService"},
+     *   path="/api/user",
+     *   summary="Creates a user.",
+     *     operationId="createUser",
+     *   @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Username",
+     *     required=true,
+     *              @OA\Schema(
+     *              type="string"
+     *          )
+     *   ),
+     * @OA\Parameter(
+     * name="email",
+     * in="query",
+     * description="Email",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="password",
+     * in="query",
+     * description="Password",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     *      * @OA\Parameter(
+     * name="password_confirmation",
+     * in="query",
+     * description="Password Confirmation",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="country",
+     * in="query",
+     * description="Country Name",
+     * required=false,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="User has been created successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to create the user."
+     *   )
+     * )
+     */
     public function store(Request $request)
     {
         // api/user (POST)
@@ -84,7 +145,29 @@ class UserController extends Controller
         return response()->json($data, 200);
     }
 
-    
+    /**
+     * @OA\Get(
+     *   tags={"UserControllerService"},
+     *   path="/api/user/{uid}",
+     *   summary="Retrieves user by userId.",
+     *     operationId="getUserByUserId",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="User_ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="User has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieve the user."
+     *   )
+     * )
+     */
     public function show($uid)
     {
         // api/user/{userid} (GET)
@@ -102,6 +185,86 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *   tags={"UserControllerService"},
+     *   path="/api/user/{uid}",
+     *   summary="Update user by userId.",
+     *     operationId="updateUserByUserId",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="User_ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Username.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *  @OA\Parameter(
+     *     name="email",
+     *     in="query",
+     *     description="Email.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *  @OA\Parameter(
+     *     name="tel1",
+     *     in="query",
+     *     description="Telephone Number #1.",
+     *     required=false,
+     *     @OA\Schema(type="string")
+     *   ),
+     *  @OA\Parameter(
+     *     name="address1",
+     *     in="query",
+     *     description="Address #1.",
+     *     required=false,
+     *     @OA\Schema(type="string")
+     *   ),
+     *  @OA\Parameter(
+     *     name="city",
+     *     in="query",
+     *     description="City.",
+     *     required=false,
+     *     @OA\Schema(type="string")
+     *   ),
+     *  @OA\Parameter(
+     *     name="postcode",
+     *     in="query",
+     *     description="PostCode.",
+     *     required=false,
+     *     @OA\Schema(type="string")
+     *   ),
+     *  @OA\Parameter(
+     *     name="state",
+     *     in="query",
+     *     description="State.",
+     *     required=false,
+     *     @OA\Schema(type="string")
+     *   ),
+     *  @OA\Parameter(
+     *     name="country",
+     *     in="query",
+     *     description="Country.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="User has been updated successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to update the user."
+     *   )
+     * )
+     */
+    // TODO: Change required to false for country in the future
     public function update(Request $request, $uid)
     {
         // api/user/{userid} (PUT)
@@ -141,8 +304,7 @@ class UserController extends Controller
         $user->state = $request->state;
         $user->country = $request->country;
         $user->status = true;
-        // TODO: Commented due to Swagger
-        // $user->lastedit_by = $request->user()->name;
+        $user->lastedit_by = $request->user()->name;
 
         try {
             $user->save();
@@ -160,7 +322,31 @@ class UserController extends Controller
         return response()->json($payload, 200);
     }
 
-    public function destroy(Request $request, $uid)
+
+    /**
+     * @OA\Delete(
+     *   tags={"UserControllerService"},
+     *   path="/api/user/{uid}",
+     *   summary="Set user's 'status' to 0.",
+     *     operationId="deleteUserByUserId",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="User ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="User has been 'deleted' successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to 'delete' the user."
+     *   )
+     * )
+     */
+    public function destroy($uid)
     {
         // api/user/{userid} (DELETE)
         $user = User::where('uid', $uid)->where('status', true)->first();
@@ -186,10 +372,24 @@ class UserController extends Controller
         }
     }
 
- 
+    /**
+     * @OA\Post(
+     *   tags={"UserControllerService"},
+     *   summary="Authenticates current request's user.",
+     *     operationId="authenticateCurrentRequestsUser",
+     * path="/api/authentication",
+     *   @OA\Response(
+     *     response=200,
+     *     description="User is already authenticated."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="User is not authenticated."
+     *   )
+     * )
+     */
     public function authentication(Request $request)
     {
-
         return response()->json($request->user(), 200);
     }
 }

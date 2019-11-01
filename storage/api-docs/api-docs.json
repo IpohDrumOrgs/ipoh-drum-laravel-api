@@ -261,6 +261,79 @@
     },
     "components": {
         "schemas": {
+            "Sale": {
+                "title": "Sale",
+                "description": "Sales object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "account_id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "sono": {
+                        "type": "string"
+                    },
+                    "totalqty": {
+                        "type": "integer"
+                    },
+                    "discpctg": {
+                        "type": "double"
+                    },
+                    "totalcost": {
+                        "type": "double"
+                    },
+                    "totalbfdisc": {
+                        "type": "double"
+                    },
+                    "totalbftax": {
+                        "type": "double"
+                    },
+                    "totaldisc": {
+                        "type": "float"
+                    },
+                    "grandtotal": {
+                        "type": "double"
+                    },
+                    "payment": {
+                        "type": "double"
+                    },
+                    "outstanding": {
+                        "type": "double"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "lastedit_by": {
+                        "type": "string"
+                    },
+                    "remark": {
+                        "type": "string"
+                    },
+                    "docdate": {
+                        "type": "string"
+                    },
+                    "pos": {
+                        "type": "int"
+                    },
+                    "remember_token": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "title": "User",
                 "description": "User object",

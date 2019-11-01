@@ -8,7 +8,6 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
 /** @OA\Schema(
- *     description="User object",
  *     title="User"
  * )
  */
@@ -16,10 +15,10 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
-    /**       @OA\Property(property="id", type="integer"),
-     *       @OA\Property(property="role_id", type="integer"),
-     * * @OA\Property(property="uid", type="integer"),
-     *       @OA\Property(property="name", type="string"),
+    /** @OA\Property(property="id", type="integer"),
+     * @OA\Property(property="role_id", type="integer"),
+     * @OA\Property(property="uid", type="integer"),
+     * @OA\Property(property="name", type="string"),
      * @OA\Property(property="email", type="string"),
      * @OA\Property(property="icno", type="string"),
      * @OA\Property(property="tel1", type="string"),

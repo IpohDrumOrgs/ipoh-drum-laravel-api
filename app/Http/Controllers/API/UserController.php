@@ -34,6 +34,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        error_log('Retrieving list of users.');
         // api/user (GET)
         $users = User::where('status', true)->get();
         //Page Pagination Result List
@@ -109,6 +110,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // api/user (POST)
+        error_log('Creating user.');
         $this->validate($request, [
             'email' => 'nullable|string|email|max:191|unique:users',
             'password' => 'required|string|min:6|confirmed',
@@ -136,6 +138,7 @@ class UserController extends Controller
             DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = 'User cannot save.';
+            error_log('Something went wrong while creating a new user.');
             return response()->json($data, 500);
         }
         DB::commit();
@@ -171,8 +174,10 @@ class UserController extends Controller
     public function show($uid)
     {
         // api/user/{userid} (GET)
+        error_log('Retrieving user of uid:' . $uid);
         $user = User::with('role', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
         if (empty($user)) {
+            error_log('No user found.');
             $payload['status'] = 'error';
             $payload['msg'] = 'User Cannot Found.';
             return response()->json($payload, 404);
@@ -268,6 +273,7 @@ class UserController extends Controller
     public function update(Request $request, $uid)
     {
         // api/user/{userid} (PUT)
+        error_log('Updating user of uid: ' . $uid);
         $user = User::where('uid', $uid)->where('status', 1)->first();
         if (empty($user)) {
             $payload['status'] = 'error';
@@ -349,6 +355,7 @@ class UserController extends Controller
     public function destroy($uid)
     {
         // api/user/{userid} (DELETE)
+        error_log('Deleting user of uid: ' . $uid);
         $user = User::where('uid', $uid)->where('status', true)->first();
         if (empty($user)) {
             $payload['status'] = 'error';
@@ -390,6 +397,7 @@ class UserController extends Controller
      */
     public function authentication(Request $request)
     {
+        error_log('Authenticating user.');
         return response()->json($request->user(), 200);
     }
 }

@@ -28,9 +28,9 @@ class UserController extends Controller
      *          description="Successfully retrieved list of users"
      *       ),
      *       @OA\Response(
-     * response="default", 
-     * description="Unable to retrieve list of users")
-     *     )
+     *          response="default",
+     *          description="Unable to retrieve list of users")
+     *       )
      */
     public function index(Request $request)
     {

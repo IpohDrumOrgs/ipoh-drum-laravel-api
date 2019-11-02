@@ -17,6 +17,12 @@ use Illuminate\Routing\Controller as BaseController;
  *      )
  * )
  */
+/**
+ *  @OA\Server(
+ *      url="http://localhost:8000",
+ *      description="The URL that IpohDrum Laravel API is running on."
+ *  )
+ */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

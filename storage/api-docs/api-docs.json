@@ -8,6 +8,12 @@
         },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "The URL that IpohDrum Laravel API is running on."
+        }
+    ],
     "paths": {
         "/api/user": {
             "get": {
@@ -263,7 +269,6 @@
         "schemas": {
             "Sale": {
                 "title": "Sale",
-                "description": "Sales object",
                 "properties": {
                     "id": {
                         "type": "integer"
@@ -336,7 +341,6 @@
             },
             "User": {
                 "title": "User",
-                "description": "User object",
                 "properties": {
                     "id": {
                         "type": "integer"

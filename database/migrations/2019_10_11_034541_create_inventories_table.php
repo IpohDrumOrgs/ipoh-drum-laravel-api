@@ -15,7 +15,7 @@ class CreateInventoriesTable extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->increments('id')->unique();
-            $table->unsignedInteger('company_id')->unsigned()->nullable();
+            $table->unsignedInteger('store_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('code');
             $table->string('sku');
@@ -23,6 +23,11 @@ class CreateInventoriesTable extends Migration
             $table->string('desc')->nullable();
             $table->decimal('cost',8,2)->default(0.00);
             $table->decimal('price',8,2)->default(0.00);
+            $table->decimal('disc',8,2)->default(0.00);
+            $table->decimal('discpctg',8,2)->default(0.00);
+            $table->decimal('promoprice',8,2)->default(0.00);
+            $table->dateTime('promostartdate')->nullable();
+            $table->dateTime('promoenddate')->nullable();
             $table->integer('stock')->default(0);
             $table->integer('salesqty')->default(0);
             $table->integer('warrantyperiod')->default(0);
@@ -32,9 +37,9 @@ class CreateInventoriesTable extends Migration
             $table->string('lastedit_by')->nullable();
             $table->timestamps();
 
-            $table->foreign('company_id')
+            $table->foreign('store_id')
             ->references('id')
-            ->on('companies')
+            ->on('stores')
             ->onUpdate('cascade')
             ->onDelete('restrict');
         });

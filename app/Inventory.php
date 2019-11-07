@@ -2,6 +2,7 @@
 
 namespace App;
 
+
 use Illuminate\Database\Eloquent\Model;
 
 class Inventory extends Model
@@ -22,29 +23,15 @@ class Inventory extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+    
     /**
-     * Get the company of the inventory.
+     * Get the store of the inventory.
      */
-    public function company()
+    public function store()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo('App\Store');
     }
 
-    /**
-     * Get the accounts price list of the inventory.
-     */
-    public function accounts()
-    {
-        return $this->belongsToMany('App\Account','account_inventory')->withPivot( 'min','price','lastedit_by','created_at','updated_at');
-    }
-
-    /**
-     * Get the batches of the inventory.
-     */
-    public function batches()
-    {
-        return $this->hasMany('App\Batch');
-    }
 
     /**
      * Get the saleitems of the inventory.
@@ -54,36 +41,26 @@ class Inventory extends Model
         return $this->hasMany('App\SaleItem');
     }
 
-    /**
-     * Get the saleitems of the inventory.
-     */
-    public function inventorybatches()
-    {
-        return $this->hasMany('App\InventoryBatch');
-    }
-
-    /**
-     * Get the purchaseitems of the inventory.
-     */
-    public function purchaseitems()
-    {
-        return $this->hasMany('App\PurchaseItem');
-    }
     
     /**
-     * Get the purchaseitems of the inventory.
+     * 
      */
-    public function stocktransfers()
+    public function categories()
     {
-        return $this->belongsToMany('App\Inventory','stock_transfer','sender_id','receiver_id')->withPivot('uid', 'cost','price','stock','status','created_at','updated_at','accepted_by','accepted_at');
+        return $this->belongsToMany('App\Category')->withPivot('status','remark');
     }
-
-    
     /**
-     * Get the purchaseitems of the inventory.
+     * 
      */
-    public function receivestocks()
+    public function types()
     {
-        return $this->belongsToMany('App\Inventory','stock_transfer','receiver_id','sender_id')->withPivot('uid', 'cost','price','stock','status','created_at','updated_at');
+        return $this->belongsToMany('App\Type')->withPivot('status','remark');
+    }
+    /**
+     * 
+     */
+    public function productfeatures()
+    {
+        return $this->belongsToMany('App\ProductFeature')->withPivot('status','remark');
     }
 }

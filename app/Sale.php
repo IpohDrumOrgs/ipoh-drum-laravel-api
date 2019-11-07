@@ -77,11 +77,13 @@ class Sale extends Model
         return $this->belongsTo('App\User','user_id');
     }
 
+    
     /**
-     * Get the account of the purchase.
+     * Get the creator of the purchase.
      */
-    public function account()
+    public function store()
     {
-        return $this->belongsTo('App\Account');
+        return $this->belongsTo('App\Store');
     }
+
 }

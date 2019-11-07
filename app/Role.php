@@ -24,11 +24,21 @@ class Role extends Model
        return $this->belongsToMany('App\Module')->withPivot( 'clearance');
    }
 
-   /**
-    * Get the users for the role.
-    */
-   public function users()
-   {
-       return $this->hasMany('App\User');
-   }
+
+   
+    /**
+     * Get the users on hold this role
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\User','company_role_user')->withPivot('user_id','role_id','company_id','assigned_by','assigned_at', 'unassigned_by', 'unassigned_at','remark','status');
+    }
+
+    /**
+     * Get the companies got this role
+     */
+    public function companies()
+    {
+        return $this->belongsToMany('App\Company','company_role_user')->withPivot('user_id','role_id','company_id','assigned_by','assigned_at', 'unassigned_by', 'unassigned_at','remark','status');
+    }
 }

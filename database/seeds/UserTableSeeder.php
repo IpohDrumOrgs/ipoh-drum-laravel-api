@@ -23,8 +23,8 @@ class UserTableSeeder extends Seeder
         $user->icno = '11111111111';
         $user->email = 'admin@gmail.com';
         $user->password = Hash::make('111111');
-        $user->role_id = 1;
         $user->save();
+        $user->roles()->attach([['role_id' => 1 , 'company_id'=> 1]]);
 
         $user->groups()->attach(1);
         
@@ -36,11 +36,11 @@ class UserTableSeeder extends Seeder
             $user->icno = $faker->ean13;
             $user->email =  $faker->unique()->safeEmail;
             $user->password = Hash::make('111111');
-            $user->role_id = $faker->randomElement([1,2,3,4]);
+            // $user->role_id = $faker->randomElement([1,2,3,4]);
             $user->save();
+            $user->roles()->attach([['role_id' => $faker->randomElement([1,2]) , 'company_id'=> $faker->randomElement([1,2,3,4,5])]]);
 
             $user->groups()->attach($faker->randomElement([1,2,3,4,5]));
         }
-        
     }
 }

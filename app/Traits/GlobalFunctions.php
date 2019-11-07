@@ -86,9 +86,9 @@ trait GlobalFunctions {
        
     }
     
-    public function getModule($provider,$action) {
+    public function getModule($provider,$name) {
 
-        $module = Module::where('provider',$provider)->where('action',$action)->first();
+        $module = Module::where('provider',$provider)->where('name',$name)->first();
         if(empty($module)){
             return null;
         }else{
@@ -629,7 +629,9 @@ trait GlobalFunctions {
         if($result == null || $result == "" || $result == 0){
             $result = 10;
         }
-        
+        if($page == null || $page == "" || $page == 0){
+            $page = 1;
+        }
         $data = $data->slice(($page-1) * $result)->take($result);
 
         return $data;
@@ -646,5 +648,6 @@ trait GlobalFunctions {
 
         return $maximunPage;
     }
+
     
 }

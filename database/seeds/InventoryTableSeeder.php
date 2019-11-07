@@ -2,8 +2,12 @@
 
 use Illuminate\Database\Seeder;
 use App\Inventory;
+use App\Store;
 use Faker\Factory as Faker;
 use App\Company;
+use App\Category;
+use App\Type;
+use App\ProductFeature;
 use App\Batch;
 use Carbon\Carbon;
 
@@ -42,10 +46,19 @@ class InventoryTableSeeder extends Seeder
             $inventory->stock = $faker->randomDigit;
             $inventory->stockthreshold = $faker->randomDigit;
             $inventory->salesqty = 0;
-            $company = Company::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));
-            $inventory->company()->associate($company);
+            $store = Store::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));
+            $inventory->store()->associate($store);
 
             $inventory->save();
+
+            $category = Category::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));
+            $inventory->categories()->attach($category);
+            
+            $type = Type::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));
+            $inventory->types()->attach($type);
+
+            $productfeature = ProductFeature::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));
+            $inventory->productfeatures()->attach($productfeature);
 
             // $batch = new Batch();
             // $batch->uid = $inventory->uid.'-'.($inventory->batches()->where('status','!=','cancel')->count() + 1);

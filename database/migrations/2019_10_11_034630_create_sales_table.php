@@ -15,8 +15,8 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->increments('id')->unique();
-            $table->unsignedInteger('account_id')->unsigned()->nullable();
             $table->unsignedInteger('user_id')->unsigned()->nullable();
+            $table->unsignedInteger('store_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('sono')->nullable();
             $table->integer('totalqty')->default(0);
@@ -39,6 +39,12 @@ class CreateSalesTable extends Migration
             $table->foreign('user_id')
             ->references('id')
             ->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+
+            $table->foreign('store_id')
+            ->references('id')
+            ->on('stores')
             ->onUpdate('cascade')
             ->onDelete('restrict');
         });

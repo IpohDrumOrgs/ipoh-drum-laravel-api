@@ -41,6 +41,8 @@ return [
             'provider' => 'users',
         ],
 
+        // Set 'driver' option of the 'api' authentication guard to 'passport'
+        // This will instruct your app to use Passport's TokenGuard when authenticating incoming API requests.
         'api' => [
             'driver' => 'passport',
             'provider' => 'users',

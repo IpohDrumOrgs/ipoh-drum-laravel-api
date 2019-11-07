@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+// HasApiTokens will provide a few helper methods to your model
+// which allows you to inspect the authenticated user's token and scopes
 use Laravel\Passport\HasApiTokens;
 
 /** @OA\Schema(

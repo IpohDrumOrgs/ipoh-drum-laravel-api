@@ -10,10 +10,12 @@ use App\User;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
+use App\Traits\UserServices;
+use App\Traits\LogServices;
 
 class UserController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions;
+    use GlobalFunctions, NotificationFunctions, UserServices , LogServices;
 
 
     /**
@@ -36,7 +38,7 @@ class UserController extends Controller
     {
         error_log('Retrieving list of users.');
         // api/user (GET)
-        $users = User::where('status', true)->get();
+        $users = $this->getUserListing();
         //Page Pagination Result List
         //Default return 10
         $paginateddata = $this->paginateResult($users, $request->result, $request->page);
@@ -111,41 +113,19 @@ class UserController extends Controller
     {
         // api/user (POST)
         error_log('Creating user.');
-        $this->validate($request, [
-            'email' => 'nullable|string|email|max:191|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-        DB::beginTransaction();
-        $user = new User();
-        $grouparr = [];
-        $user->uid = Carbon::now()->timestamp . User::count();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->icno = $request->icno;
-        $user->tel1 = $request->tel1;
-        $user->tel2 = $request->tel2;
-        $user->address1 = $request->address1;
-        $user->address2 = $request->address2;
-        $user->postcode = $request->postcode;
-        $user->city = $request->city;
-        $user->state = $request->state;
-        $user->country = $request->country;
-        $user->password = Hash::make($request->password);
-        $user->status = true;
-        try {
-            $user->save();
-        } catch (Exception $e) {
-            DB::rollBack();
+        $user = $this->createUser($request);
+        $this->createLog($request->user()->id , [$user->id] , 'store' , 'user');
+
+        if(!empty($user)){
+            $data['status'] = 'success';
+            $data['msg'] = 'User Saved.';
+            $data['data'] =  $user;
+            return response()->json($data, 200);
+        }else{
             $data['status'] = 'error';
-            $data['msg'] = 'User cannot save.';
-            error_log('Something went wrong while creating a new user.');
-            return response()->json($data, 500);
+            $data['msg'] = 'Cannot Create User.';
+            return response()->json($payload, 404);
         }
-        DB::commit();
-        $data['status'] = 'success';
-        $data['msg'] = 'User Saved.';
-        $data['data'] =  $user->refresh();
-        return response()->json($data, 200);
     }
 
     /**
@@ -173,7 +153,7 @@ class UserController extends Controller
      */
     public function show($uid)
     {
-        // api/user/{userid} (GET)
+        // api/user/{userid} (GET)t
         error_log('Retrieving user of uid:' . $uid);
         $user = User::with('role', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
         if (empty($user)) {

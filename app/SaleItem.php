@@ -39,6 +39,14 @@ class SaleItem extends Model
         return $this->belongsTo('App\Inventory');
     }
     
+    
+    /**
+     * Get the inventory of the purchase item.
+     */
+    public function ticket()
+    {
+        return $this->belongsTo('App\Ticket');
+    }
     /**
      * Get the inventory of the purchase item.
      */

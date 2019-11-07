@@ -28,14 +28,6 @@ class Payment extends Model
     }
 
     /**
-     * Get the account of the payment.
-     */
-    public function account()
-    {
-        return $this->belongsTo('App\Account');
-    }
-
-    /**
      * Get the sales of the payment.
      */
     public function sales()
@@ -43,12 +35,5 @@ class Payment extends Model
         return $this->belongsToMany('App\Sale','payment_sale')->withPivot( 'amt','discount','type','status','created_at','updated_at');
     }
 
-    
-    /**
-     * Get the purchases of the payment.
-     */
-    public function purchases()
-    {
-        return $this->belongsToMany('App\Purchase','payment_purchase')->withPivot( 'amt','discount','type','status','created_at','updated_at');
-    }
+   
 }

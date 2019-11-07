@@ -65,4 +65,28 @@ class Company extends Model
     {
         return $this->hasOne('App\Account');
     }
+
+     /**
+     * company roles
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role','company_role_user')->withPivot('user_id','role_id','company_id','assigned_by','assigned_at', 'unassigned_by', 'unassigned_at','remark','status');
+    }
+
+    /**
+     * company users
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\User','company_role_user')->withPivot('user_id','role_id','company_id','assigned_by','assigned_at', 'unassigned_by', 'unassigned_at','remark','status');
+    }
+    
+    /**
+     * Get the inventories of the company.
+     */
+    public function stores()
+    {
+        return $this->hasMany('App\Store');
+    }
 }

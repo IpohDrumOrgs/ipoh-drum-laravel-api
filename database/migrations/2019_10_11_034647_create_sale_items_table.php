@@ -17,6 +17,7 @@ class CreateSaleItemsTable extends Migration
             $table->increments('id')->unique();
             $table->unsignedInteger('sale_id')->unsigned()->nullable();
             $table->unsignedInteger('inventory_id')->unsigned()->nullable();
+            $table->unsignedInteger('ticket_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name');
             $table->integer('qty')->default(0);
@@ -42,6 +43,12 @@ class CreateSaleItemsTable extends Migration
             $table->foreign('inventory_id')
             ->references('id')
             ->on('inventories')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+
+            $table->foreign('ticket_id')
+            ->references('id')
+            ->on('tickets')
             ->onUpdate('cascade')
             ->onDelete('restrict');
         });

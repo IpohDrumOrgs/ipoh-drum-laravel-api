@@ -16,6 +16,18 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
+    //Customize login condition. Ex : use username to login
+     /**
+     * Find the user instance for the given username.
+     *
+     * @param  string  $username
+     * @return \App\User
+     */
+    public function findForPassport($username)
+    {
+        return $this->where('email', $username)->where('status', true)->first();
+    }
+
     /** @OA\Property(property="id", type="integer"),
      * @OA\Property(property="role_id", type="integer"),
      * @OA\Property(property="uid", type="integer"),
@@ -40,16 +52,9 @@ class User extends Authenticatable
      * @OA\Property(property="updated_at", type="string")
      */
 
-    /**
-     * Use username to login user.
-     */
-    // public function findForPassport($username)
-    // {
-    //     return $this->where('uname', $username)->first();
-    // }
-    /**
-     * The attributes that are mass assignable.
-     */
+
+    
+
     protected $fillable = [
         'uid', 'email', 'name', 'password'
     ];
@@ -83,12 +88,21 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the role belongs to the users.
+     * user roles
      */
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo('App\Role');
+        return $this->belongsToMany('App\Role','company_role_user')->withPivot('company_id','assigned_by','assigned_at', 'unassigned_by', 'unassigned_at','remark','status');
     }
+
+    /**
+     * user companies
+     */
+    public function companies()
+    {
+        return $this->belongsToMany('App\Company','company_role_user')->withPivot('role_id','assigned_by','assigned_at', 'unassigned_by', 'unassigned_at','remark','status');
+    }
+
 
     /**
      * Get the group belongs to user.
@@ -98,12 +112,22 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Group')->withPivot('desc', 'status', 'lastedit_by', 'created_at', 'updated_at');
     }
 
-    /**
-     * Get the logs belongs to the user.
+    
+     /**
+     *  activity that done by user
      */
-    public function logs()
+    public function activitylogs()
     {
-        return $this->hasMany('App\Log');
+        return $this->belongsToMany('App\User','logs','operator_id','affector_id')->withPivot('id', 'action','model','created_at','updated_at');
+    }
+
+    
+    /**
+     * activity that affected the user
+     */
+    public function affectedlogs()
+    {
+        return $this->belongsToMany('App\User','logs','affector_id','operator_id')->withPivot('id', 'action','model','created_at','updated_at');
     }
 
     /**

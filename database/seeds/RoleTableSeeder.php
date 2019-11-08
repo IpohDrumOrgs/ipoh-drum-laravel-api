@@ -101,6 +101,21 @@ class RoleTableSeeder extends Seeder
             }
         }
         $role->uid = $uid;
+        $role->name = 'groupmanager';
+        $role->desc = 'The manager of resources of group';
+        $role->save();
+
+        $role = new Role();  
+        $checkid = false;
+        $uid = '';
+        while(!$checkid){
+            $uid = Carbon::now()->timestamp. '-' . (Role::count() + 1);
+            if (!Role::where('uid', '=', $uid)->exists()) {
+                // user found
+                $checkid = true;
+            }
+        }
+        $role->uid = $uid;
         $role->name = 'user';
         $role->desc = 'The normal user of application';
         $role->save();

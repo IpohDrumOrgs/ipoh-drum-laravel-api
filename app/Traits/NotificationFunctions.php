@@ -19,4 +19,23 @@ trait NotificationFunctions {
         return $provider. ' retrieved successfully.';
     }
  
+    public function getNotFoundMsg($provider){
+        return $provider. ' Not Found. Please Try Again Later';
+    }
+    
+    public function getCreateSuccessMsg($provider){
+        return $provider. ' created successfully.';
+    }
+
+    public function getUpdateSuccessMsg($provider){
+        return $provider. ' updated successfully.';
+    }
+    
+    public function getDeleteSuccessMsg($provider){
+        return $provider. ' deleted successfully.';
+    }
+
+    public function getErrorMsg($provider){
+        return 'Something went wrong. Please Try Again Later.';
+    }
 }

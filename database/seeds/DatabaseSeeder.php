@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleTableSeeder::class);
         $this->call(RoleAdminSeeder::class);
         $this->call(RoleSuperAdminSeeder::class);
+        $this->call(RoleGroupManagerSeeder::class);
 
 
         //Testing Data

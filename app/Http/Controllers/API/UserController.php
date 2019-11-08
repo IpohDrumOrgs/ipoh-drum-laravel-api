@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 use App\User;
+use App\Company;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
@@ -24,7 +25,16 @@ class UserController extends Controller
      *      operationId="getUserList",
      *      tags={"UserControllerService"},
      *      summary="Get list of users",
-     *      description="Returns list of users",
+     *      description="Returns list of users", 
+     *      @OA\Parameter(
+     *          name="company_id",
+     *          in="query",
+     *          description="Company ID",
+     *          required=true,
+     *              @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Successfully retrieved list of users"
@@ -32,22 +42,61 @@ class UserController extends Controller
      *       @OA\Response(
      *          response="default",
      *          description="Unable to retrieve list of users")
-     *       )
+     *    )
      */
     public function index(Request $request)
     {
         error_log('Retrieving list of users.');
         // api/user (GET)
-        $users = $this->getUserListing();
-        //Page Pagination Result List
-        //Default return 10
-        $paginateddata = $this->paginateResult($users, $request->result, $request->page);
-        $data['data'] = $paginateddata;
-        $data['maximunPage'] = $this->getMaximumPaginationPage($users->count(), $request->result);
-        $data['msg'] = $this->getRetrievedSuccessMsg('Users');
-        return response()->json($data, 200);
+        $users = $this->getUserListing($request->user());
+        if($this->isEmpty($user)){
+            $data['data'] = null;
+            $data['maximunPage'] = 0;
+            $data['msg'] = $this->getNotFoundMsg('Users');
+            return response()->json($data, 404);
+        }else{
+           
+              //Page Pagination Result List
+            //Default return 10
+            $paginateddata = $this->paginateResult($users, $request->result, $request->page);
+            $data['data'] = $paginateddata;
+            $data['maximunPage'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['msg'] = $this->getRetrievedSuccessMsg('Users');
+            return response()->json($data, 200);
+        }
+      
     }
 
+    public function filter(Request $request)
+    {
+        error_log('Retrieving list of filtered users.');
+        // api/user/filter (GET)
+        $condition = collect([
+            'keyword' => $request->keyword,
+            'fromdate' => $request->fromdate,
+            'todate' => $request->todate,
+            'status' => $request->status,
+        ]);
+        //Convert To Json Object
+        $condition = json_decode(json_encode($condition));
+        $users = $this->filterUserListing($request->user() , $condition );
+
+        if($this->isEmpty($user)){
+            $data['data'] = null;
+            $data['maximunPage'] = 0;
+            $data['msg'] = $this->getNotFoundMsg('Users');
+            return response()->json($data, 404);
+        }else{
+            //Page Pagination Result List
+            //Default return 10
+            $paginateddata = $this->paginateResult($users, $request->result, $request->page);
+            $data['data'] = $paginateddata;
+            $data['maximunPage'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['msg'] = $this->getRetrievedSuccessMsg('Users');
+            return response()->json($data, 200);
+        }
+      
+    }
     /**
      * @OA\Post(
      *   tags={"UserControllerService"},
@@ -112,19 +161,31 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // api/user (POST)
+        $this->validate($request, [
+            'email' => 'nullable|string|email|max:191|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
         error_log('Creating user.');
-        $user = $this->createUser($request);
+        $params = collect([
+            'email' => $request->email,
+            'password' => $request->password,
+            'country' => 'MALAYSIA',
+        ]);
+        //Convert To Json Object
+        $params = json_decode(json_encode($params));
+        $user = $this->createUser($request->user(), $params );
         $this->createLog($request->user()->id , [$user->id] , 'store' , 'user');
 
-        if(!empty($user)){
+        if($this->isEmpty($user)){
+            $data['data'] = null;
+            $data['status'] = 'error';
+            $data['msg'] = $this->getErrorMsg();
+            return response()->json($data, 404);
+        }else{
             $data['status'] = 'success';
-            $data['msg'] = 'User Saved.';
+            $data['msg'] = $this->getCreateSuccessMsg('User');
             $data['data'] =  $user;
             return response()->json($data, 200);
-        }else{
-            $data['status'] = 'error';
-            $data['msg'] = 'Cannot Create User.';
-            return response()->json($payload, 404);
         }
     }
 
@@ -151,22 +212,22 @@ class UserController extends Controller
      *   )
      * )
      */
-    public function show($uid)
+    public function show(Request $request, $uid)
     {
-        // api/user/{userid} (GET)t
+        // api/user/{userid} (GET)
         error_log('Retrieving user of uid:' . $uid);
-        $user = User::with('role', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
-        if (empty($user)) {
-            error_log('No user found.');
-            $payload['status'] = 'error';
-            $payload['msg'] = 'User Cannot Found.';
-            return response()->json($payload, 404);
+        $user = $this->getUser($request->user() , $uid);
+        if ($this->isEmpty($user)) {
+            $data['data'] = null;
+            $data['status'] = 'error';
+            $data['msg'] = $this->getNotFoundMsg('User');
+            return response()->json($data, 404);
         } else {
-            $payload['status'] = 'success';
-            $payload['msg'] = 'User Found.';
-            $payload['data'] = $user;
+            $data['status'] = 'success';
+            $data['msg'] = $this->getRetrievedSuccessMsg('User');
+            $data['data'] = $user;
 
-            return response()->json($payload, 200);
+            return response()->json($data, 200);
         }
     }
 
@@ -254,58 +315,40 @@ class UserController extends Controller
     {
         // api/user/{userid} (PUT)
         error_log('Updating user of uid: ' . $uid);
-        $user = User::where('uid', $uid)->where('status', 1)->first();
-        if (empty($user)) {
-            $payload['status'] = 'error';
-            $payload['msg'] = 'User not found.';
-            return response()->json($payload, 404);
-        }
+        
         $this->validate($request, [
             'email' => 'required|string|max:191|unique:users,email,' . $user->id,
             'name' => 'required|string|max:191',
         ]);
-        DB::beginTransaction();
-        // $role = Role::where('name', '=', $request->role_name)->first();
-        // if(empty($role)){
-        //     $payload['status'] = 'error';
-        //     $payload['msg'] = 'Role Not Found.';
-        //     return response()->json($payload, 404);
-        // }
-        // $user->role()->associate($role);
-        // $company = Company::with('groups')->where('id', $request->company)->first();
-        // $group = $company->groups->first();
-        // $company = Company::where('name', '=', $request->company)->first();
-        // if(empty($group)){
-        //     $payload['status'] = 'error';
-        //     $payload['msg'] = 'Company\'s group not found.';
-        //     return response()->json($payload, 404);
-        // }
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->icno = $request->icno;
-        $user->tel1 = $request->tel1;
-        $user->address1 = $request->address1;
-        $user->postcode = $request->postcode;
-        $user->city = $request->city;
-        $user->state = $request->state;
-        $user->country = $request->country;
-        $user->status = true;
-        $user->lastedit_by = $request->user()->name;
 
-        try {
-            $user->save();
-        } catch (Exception $e) {
-            DB::rollBack();
-            $payload['status'] = 'error';
-            $payload['msg'] = 'User Cannot Be Updated.';
-            return response()->json($payload, 404);
+        $user = $this->getUser($uid);
+        if ($this->isEmpty($user)) {
+            $data['data'] = null;
+            $data['status'] = 'error';
+            $data['msg'] = $this->getNotFoundMsg('User');
+            return response()->json($data, 404);
         }
-        // $user->groups()->attach($group);
-        DB::commit();
-        $payload['status'] = 'success';
-        $payload['msg'] = 'User Updated.';
-        $payload['data'] =  $user->refresh();
-        return response()->json($payload, 200);
+
+        $params = collect([
+            'email' => $request->email,
+            'name' => $request->name,
+            'country' => 'MALAYSIA',
+        ]);
+        //Convert To Json Object
+        $params = json_decode(json_encode($params));
+        $user = $this->updateUser($request->user(), $params);
+        if ($this->isEmpty($user)) {
+            $data['data'] = null;
+            $data['status'] = 'error';
+            $data['msg'] = $this->getErrorMsg();
+            return response()->json($data, 404);
+        } else {
+            $data['status'] = 'success';
+            $data['msg'] = $this->getUpdateSuccessMsg('User');
+            $data['data'] = $user;
+
+            return response()->json($data, 200);
+        }
     }
 
 
@@ -332,30 +375,30 @@ class UserController extends Controller
      *   )
      * )
      */
-    public function destroy($uid)
+    public function destroy(Request $request, $uid)
     {
         // api/user/{userid} (DELETE)
         error_log('Deleting user of uid: ' . $uid);
-        $user = User::where('uid', $uid)->where('status', true)->first();
-        if (empty($user)) {
-            $payload['status'] = 'error';
-            $payload['msg'] = 'User not found.';
-            return response()->json($payload, 404);
+        $user = $this->getUser($request->user() , $uid);
+        if ($this->isEmpty($user)) {
+            $data['data'] = null;
+            $data['status'] = 'error';
+            $data['msg'] = $this->getNotFoundMsg('User');
+            return response()->json($data, 404);
         }
-        $user->status = false;
-        DB::beginTransaction();
-        try {
-            DB::commit();
-            $user->save();
-            $payload['status'] = 'success';
-            $payload['msg'] = 'User Deleted.';
-            $payload['user'] =  $user->refresh();
-            return response()->json($payload, 200);
-        } catch (Exception $e) {
-            DB::rollBack();
-            $payload['status'] = 'error';
-            $payload['msg'] = 'User Cannot Be Deleted.';
-            return response()->json($payload, 404);
+
+        $user = $this->deleteUser($request->user() , $user->id);
+       
+        if ($this->isEmpty($user)) {
+            $data['data'] = null;
+            $data['status'] = 'error';
+            $data['msg'] = $this->getErrorMsg();
+            return response()->json($data, 404);
+        } else {
+            $data['status'] = 'success';
+            $data['msg'] = $this->getDeleteSuccessMsg('User');
+            $data['data'] = $user;
+            return response()->json($data, 200);
         }
     }
 
@@ -378,6 +421,21 @@ class UserController extends Controller
     public function authentication(Request $request)
     {
         error_log('Authenticating user.');
+        return response()->json($request->user(), 200);
+    }
+
+    
+    public function register(Request $request)
+    {
+        error_log('Registering user.'); 
+        $params = collect([
+            'email' => $request->email,
+            'password' => $request->password,
+            'country' => 'MALAYSIA',
+        ]);
+        //Convert To Json Object
+        $params = json_decode(json_encode($params));
+        $user = $this->createUser($request->user() , $params);
         return response()->json($request->user(), 200);
     }
 }

@@ -25,7 +25,7 @@ class UserController extends Controller
      *      operationId="getUserList",
      *      tags={"UserControllerService"},
      *      summary="Get list of users",
-     *      description="Returns list of users", 
+     *      description="Returns list of users",
      *      @OA\Parameter(
      *          name="company_id",
      *          in="query",
@@ -55,7 +55,7 @@ class UserController extends Controller
             $data['msg'] = $this->getNotFoundMsg('Users');
             return response()->json($data, 404);
         }else{
-           
+
               //Page Pagination Result List
             //Default return 10
             $paginateddata = $this->paginateResult($users, $request->result, $request->page);
@@ -64,7 +64,7 @@ class UserController extends Controller
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
             return response()->json($data, 200);
         }
-      
+
     }
 
     public function filter(Request $request)
@@ -95,7 +95,7 @@ class UserController extends Controller
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
             return response()->json($data, 200);
         }
-      
+
     }
     /**
      * @OA\Post(
@@ -315,7 +315,7 @@ class UserController extends Controller
     {
         // api/user/{userid} (PUT)
         error_log('Updating user of uid: ' . $uid);
-        
+
         $this->validate($request, [
             'email' => 'required|string|max:191|unique:users,email,' . $user->id,
             'name' => 'required|string|max:191',
@@ -388,7 +388,7 @@ class UserController extends Controller
         }
 
         $user = $this->deleteUser($request->user() , $user->id);
-       
+
         if ($this->isEmpty($user)) {
             $data['data'] = null;
             $data['status'] = 'error';
@@ -424,10 +424,10 @@ class UserController extends Controller
         return response()->json($request->user(), 200);
     }
 
-    
+
     public function register(Request $request)
     {
-        error_log('Registering user.'); 
+        error_log('Registering user.');
         $params = collect([
             'email' => $request->email,
             'password' => $request->password,

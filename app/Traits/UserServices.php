@@ -117,9 +117,7 @@ trait UserServices {
 
 
     private function getUser($requester , $uid) {
-        
-        
-        $user = User::with('role', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
+        $user = User::with('roles', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
         return $user;
     }
 

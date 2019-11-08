@@ -49,9 +49,9 @@ class UserController extends Controller
         error_log('Retrieving list of users.');
         // api/user (GET)
         $users = $this->getUserListing($request->user());
-        if($this->isEmpty($user)){
+        if($this->isEmpty($users)){
             $data['data'] = null;
-            $data['maximunPage'] = 0;
+            $data['maximumPages'] = 0;
             $data['msg'] = $this->getNotFoundMsg('Users');
             return response()->json($data, 404);
         }else{
@@ -60,11 +60,10 @@ class UserController extends Controller
             //Default return 10
             $paginateddata = $this->paginateResult($users, $request->result, $request->page);
             $data['data'] = $paginateddata;
-            $data['maximunPage'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
             return response()->json($data, 200);
         }
-
     }
 
     public function filter(Request $request)
@@ -83,7 +82,7 @@ class UserController extends Controller
 
         if($this->isEmpty($user)){
             $data['data'] = null;
-            $data['maximunPage'] = 0;
+            $data['maximumPages'] = 0;
             $data['msg'] = $this->getNotFoundMsg('Users');
             return response()->json($data, 404);
         }else{
@@ -91,7 +90,7 @@ class UserController extends Controller
             //Default return 10
             $paginateddata = $this->paginateResult($users, $request->result, $request->page);
             $data['data'] = $paginateddata;
-            $data['maximunPage'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
             return response()->json($data, 200);
         }
@@ -217,6 +216,7 @@ class UserController extends Controller
         // api/user/{userid} (GET)
         error_log('Retrieving user of uid:' . $uid);
         $user = $this->getUser($request->user() , $uid);
+        error_log($user);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
             $data['status'] = 'error';
@@ -226,7 +226,7 @@ class UserController extends Controller
             $data['status'] = 'success';
             $data['msg'] = $this->getRetrievedSuccessMsg('User');
             $data['data'] = $user;
-
+            error_log($user);
             return response()->json($data, 200);
         }
     }
@@ -315,13 +315,11 @@ class UserController extends Controller
     {
         // api/user/{userid} (PUT)
         error_log('Updating user of uid: ' . $uid);
-
+        $user = $this->getUser($request->user(), $uid);
         $this->validate($request, [
             'email' => 'required|string|max:191|unique:users,email,' . $user->id,
             'name' => 'required|string|max:191',
         ]);
-
-        $user = $this->getUser($uid);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
             $data['status'] = 'error';

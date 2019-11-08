@@ -23,6 +23,17 @@
                 "summary": "Get list of users",
                 "description": "Returns list of users",
                 "operationId": "getUserList",
+                "parameters": [
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Company ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved list of users"

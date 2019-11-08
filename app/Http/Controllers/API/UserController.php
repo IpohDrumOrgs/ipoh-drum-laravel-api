@@ -43,7 +43,7 @@ class UserController extends Controller
         //Default return 10
         $paginateddata = $this->paginateResult($users, $request->result, $request->page);
         $data['data'] = $paginateddata;
-        $data['maximunPage'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+        $data['maximumPage'] = $this->getMaximumPaginationPage($users->count(), $request->result);
         $data['msg'] = $this->getRetrievedSuccessMsg('Users');
         return response()->json($data, 200);
     }
@@ -124,7 +124,7 @@ class UserController extends Controller
         }else{
             $data['status'] = 'error';
             $data['msg'] = 'Cannot Create User.';
-            return response()->json($payload, 404);
+            return response()->json($data, 404);
         }
     }
 

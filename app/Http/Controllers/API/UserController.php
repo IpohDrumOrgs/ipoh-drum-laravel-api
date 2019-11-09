@@ -164,11 +164,22 @@ class UserController extends Controller
             'email' => 'nullable|string|email|max:191|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
-        error_log('Creating user.');
+        error_log('Creating user.'); 
         $params = collect([
+            'icno' => $request->icno,
+            'name' => $request->name,
             'email' => $request->email,
+            'tel1' => $request->tel1,
+            'email' => $request->email,
+            'address1' => $request->address1,
+            'postcode' => $request->postcode,
+            'address1' => $request->address1,
+            'state' => $request->state,
+            'city' => $request->city,
+            'tel2' => $request->tel2,
+            'address2' => $request->address2,
+            'country' => $request->country,
             'password' => $request->password,
-            'country' => 'MALAYSIA',
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
@@ -328,13 +339,23 @@ class UserController extends Controller
         }
 
         $params = collect([
-            'email' => $request->email,
+            'icno' => $request->icno,
             'name' => $request->name,
-            'country' => 'MALAYSIA',
+            'email' => $request->email,
+            'tel1' => $request->tel1,
+            'email' => $request->email,
+            'address1' => $request->address1,
+            'postcode' => $request->postcode,
+            'address1' => $request->address1,
+            'state' => $request->state,
+            'city' => $request->city,
+            'tel2' => $request->tel2,
+            'address2' => $request->address2,
+            'country' => $request->country,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $user = $this->updateUser($request->user(), $params);
+        $user = $this->updateUser($request->user(), $user , $params);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
             $data['status'] = 'error';

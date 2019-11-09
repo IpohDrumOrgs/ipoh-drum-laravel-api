@@ -152,12 +152,10 @@ trait UserServices {
     }
 
     //Make Sure User is not empty when calling this function
-    private function updateUser($requester, $userid) {
+    private function updateUser($requester, $user,  $data) {
         
         DB::beginTransaction();
-        $user = User::find($userid);
         $grouparr = [];
-        $user->uid = Carbon::now()->timestamp . User::count();
         $user->name = $data->name;
         $user->email = $data->email;
         $user->icno = $data->icno;
@@ -169,8 +167,6 @@ trait UserServices {
         $user->city = $data->city;
         $user->state = $data->state;
         $user->country = $data->country;
-        $user->password = Hash::make($data->password);
-        $user->status = true;
         try {
             $user->save();
         } catch (Exception $e) {
@@ -182,7 +178,7 @@ trait UserServices {
         return $user->refresh();
     }
 
-    private function destroyUser($requester , $userid) {
+    private function deleteUser($requester , $userid) {
         DB::beginTransaction();
         $user = User::find($userid);
         $user->status = false;

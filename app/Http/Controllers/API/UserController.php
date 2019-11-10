@@ -16,8 +16,7 @@ use App\Traits\LogServices;
 
 class UserController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, UserServices , LogServices;
-
+    use GlobalFunctions, NotificationFunctions, UserServices, LogServices;
 
     /**
      * @OA\Get(
@@ -49,16 +48,17 @@ class UserController extends Controller
         error_log('Retrieving list of users.');
         // api/user (GET)
         $users = $this->getUserListing($request->user());
-        if($this->isEmpty($users)){
+        if ($this->isEmpty($users)) {
+            $data['status'] = 'error';
             $data['data'] = null;
             $data['maximumPages'] = 0;
             $data['msg'] = $this->getNotFoundMsg('Users');
             return response()->json($data, 404);
-        }else{
-
-              //Page Pagination Result List
+        } else {
+            //Page Pagination Result List
             //Default return 10
             $paginateddata = $this->paginateResult($users, $request->result, $request->page);
+            $data['status'] = 'success';
             $data['data'] = $paginateddata;
             $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
@@ -78,14 +78,14 @@ class UserController extends Controller
         ]);
         //Convert To Json Object
         $condition = json_decode(json_encode($condition));
-        $users = $this->filterUserListing($request->user() , $condition );
+        $users = $this->filterUserListing($request->user(), $condition);
 
-        if($this->isEmpty($user)){
+        if ($this->isEmpty($user)) {
             $data['data'] = null;
             $data['maximumPages'] = 0;
             $data['msg'] = $this->getNotFoundMsg('Users');
             return response()->json($data, 404);
-        }else{
+        } else {
             //Page Pagination Result List
             //Default return 10
             $paginateddata = $this->paginateResult($users, $request->result, $request->page);
@@ -96,105 +96,45 @@ class UserController extends Controller
         }
 
     }
-    /**
-     * @OA\Post(
-     *   tags={"UserControllerService"},
-     *   path="/api/user",
-     *   summary="Creates a user.",
-     *     operationId="createUser",
-     *   @OA\Parameter(
-     *     name="name",
-     *     in="query",
-     *     description="Username",
-     *     required=true,
-     *              @OA\Schema(
-     *              type="string"
-     *          )
-     *   ),
-     * @OA\Parameter(
-     * name="email",
-     * in="query",
-     * description="Email",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="password",
-     * in="query",
-     * description="Password",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     *      * @OA\Parameter(
-     * name="password_confirmation",
-     * in="query",
-     * description="Password Confirmation",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="country",
-     * in="query",
-     * description="Country Name",
-     * required=false,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     *   @OA\Response(
-     *     response=200,
-     *     description="User has been created successfully."
-     *   ),
-     *   @OA\Response(
-     *     response="default",
-     *     description="Unable to create the user."
-     *   )
-     * )
-     */
+
+
     public function store(Request $request)
     {
+        // Can only be used by Authorized personnel
         // api/user (POST)
         $this->validate($request, [
             'email' => 'nullable|string|email|max:191|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
-        error_log('Creating user.'); 
+        error_log('Creating user.');
         $params = collect([
             'icno' => $request->icno,
             'name' => $request->name,
             'email' => $request->email,
             'tel1' => $request->tel1,
-            'email' => $request->email,
+            'tel2' => $request->tel2,
             'address1' => $request->address1,
+            'address2' => $request->address2,
             'postcode' => $request->postcode,
-            'address1' => $request->address1,
             'state' => $request->state,
             'city' => $request->city,
-            'tel2' => $request->tel2,
-            'address2' => $request->address2,
             'country' => $request->country,
             'password' => $request->password,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $user = $this->createUser($request->user(), $params );
-        $this->createLog($request->user()->id , [$user->id] , 'store' , 'user');
+        $user = $this->createUser($request->user(), $params);
+        $this->createLog($request->user()->id, [$user->id], 'store', 'user');
 
-        if($this->isEmpty($user)){
+        if ($this->isEmpty($user)) {
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             return response()->json($data, 404);
-        }else{
+        } else {
             $data['status'] = 'success';
             $data['msg'] = $this->getCreateSuccessMsg('User');
-            $data['data'] =  $user;
+            $data['data'] = $user;
             return response()->json($data, 200);
         }
     }
@@ -226,7 +166,7 @@ class UserController extends Controller
     {
         // api/user/{userid} (GET)
         error_log('Retrieving user of uid:' . $uid);
-        $user = $this->getUser($request->user() , $uid);
+        $user = $this->getUser($request->user(), $uid);
         error_log($user);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
@@ -311,6 +251,13 @@ class UserController extends Controller
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
+     *   @OA\Parameter(
+     *     name="icno",
+     *     in="query",
+     *     description="IC Number.",
+     *     required=false,
+     *     @OA\Schema(type="string")
+     *     ),
      *   @OA\Response(
      *     response=200,
      *     description="User has been updated successfully."
@@ -321,7 +268,6 @@ class UserController extends Controller
      *   )
      * )
      */
-    // TODO: Change required to false for country in the future
     public function update(Request $request, $uid)
     {
         // api/user/{userid} (PUT)
@@ -337,35 +283,33 @@ class UserController extends Controller
             $data['msg'] = $this->getNotFoundMsg('User');
             return response()->json($data, 404);
         }
-
         $params = collect([
             'icno' => $request->icno,
             'name' => $request->name,
             'email' => $request->email,
             'tel1' => $request->tel1,
-            'email' => $request->email,
+            'tel2' => $request->tel2,
             'address1' => $request->address1,
+            'address2' => $request->address2,
             'postcode' => $request->postcode,
-            'address1' => $request->address1,
             'state' => $request->state,
             'city' => $request->city,
-            'tel2' => $request->tel2,
-            'address2' => $request->address2,
             'country' => $request->country,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $user = $this->updateUser($request->user(), $user , $params);
+        $user = $this->updateUser($request->user(), $user, $params);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdateSuccessMsg('User');
             $data['data'] = $user;
-
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
@@ -398,7 +342,7 @@ class UserController extends Controller
     {
         // api/user/{userid} (DELETE)
         error_log('Deleting user of uid: ' . $uid);
-        $user = $this->getUser($request->user() , $uid);
+        $user = $this->getUser($request->user(), $uid);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
             $data['status'] = 'error';
@@ -406,7 +350,7 @@ class UserController extends Controller
             return response()->json($data, 404);
         }
 
-        $user = $this->deleteUser($request->user() , $user->id);
+        $user = $this->deleteUser($request->user(), $user->id);
 
         if ($this->isEmpty($user)) {
             $data['data'] = null;
@@ -444,17 +388,82 @@ class UserController extends Controller
     }
 
 
+    /**
+     * @OA\Post(
+     *   tags={"UserControllerService"},
+     *   path="/api/user",
+     *   summary="Creates a user. (Without authorization)",
+     *   operationId="createUserWithoutAuthorization",
+     * @OA\Parameter(
+     * name="name",
+     * in="query",
+     * description="Username",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="email",
+     * in="query",
+     * description="Email",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="password",
+     * in="query",
+     * description="Password",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="password_confirmation",
+     * in="query",
+     * description="Password Confirmation",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="country",
+     * in="query",
+     * description="Country",
+     * required=true,
+     * @OA\Schema(
+     *  type="string"
+     *  )
+     * ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="User has been created successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to create the user."
+     *   )
+     * )
+     */
     public function register(Request $request)
     {
+        // Can be used without authorization
         error_log('Registering user.');
         $params = collect([
+            'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
             'country' => 'MALAYSIA',
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $user = $this->createUser($request->user() , $params);
+        // TODO where to put this?
+        // $data['status'] = 'error';
+        $user = $this->createUser($request->user(), $params);
         return response()->json($request->user(), 200);
     }
 }

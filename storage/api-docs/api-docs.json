@@ -47,8 +47,8 @@
                 "tags": [
                     "UserControllerService"
                 ],
-                "summary": "Creates a user.",
-                "operationId": "createUser",
+                "summary": "Creates a user. (Without authorization)",
+                "operationId": "createUserWithoutAuthorization",
                 "parameters": [
                     {
                         "name": "name",
@@ -89,8 +89,8 @@
                     {
                         "name": "country",
                         "in": "query",
-                        "description": "Country Name",
-                        "required": false,
+                        "description": "Country",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -217,6 +217,15 @@
                         "in": "query",
                         "description": "Country.",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "icno",
+                        "in": "query",
+                        "description": "IC Number.",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -354,9 +363,6 @@
                 "title": "User",
                 "properties": {
                     "id": {
-                        "type": "integer"
-                    },
-                    "role_id": {
                         "type": "integer"
                     },
                     "uid": {

@@ -109,6 +109,14 @@ trait UserServices {
             }
         }
 
+        
+        if($condition->company_id){
+            $company_id = $condition->company_id;
+            $users = $users->filter(function ($item) use($company_id) {
+                return $item->companies->contains('id' , $company_id);
+            });
+        }
+
        
         $users = $users->unique('id');
 

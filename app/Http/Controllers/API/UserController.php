@@ -75,6 +75,7 @@ class UserController extends Controller
             'fromdate' => $request->fromdate,
             'todate' => $request->todate,
             'status' => $request->status,
+            'company_id' => $request->company_id,
         ]);
         //Convert To Json Object
         $condition = json_decode(json_encode($condition));
@@ -446,15 +447,28 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        error_log('Registering user.');
-        $params = collect([
-            'email' => $request->email,
-            'password' => $request->password,
-            'country' => 'MALAYSIA',
+        error_log('Registering user.'); 
+        // api/register (POST)
+        $this->validate($request, [
+            'name' => 'required|string|max:191',
+            'email' => 'required|string|email|max:191|unique:users',
+            'password' => 'required|string|min:6|confirmed',
         ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $user = $this->createUser($request->user() , $params);
-        return response()->json($request->user(), 200);
+        DB::beginTransaction();
+        $user = new User();
+        $user->uid = Carbon::now()->timestamp . User::count();
+        $user->name = $data->name;
+        $user->email = $data->email;
+        $user->password = Hash::make($data->password);
+        $user->status = true;
+        try {
+            $user->save();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return null;
+        }
+
+        DB::commit();
+        return response()->json($user->refresh(), 200);
     }
 }

@@ -80,3 +80,5 @@ Route::group(['middleware' => ['auth:api']], function (){
 
 
 Route::middleware('auth:api')->post('/authentication', 'API\UserController@authentication');
+
+Route::post('/register', 'UserController@register');

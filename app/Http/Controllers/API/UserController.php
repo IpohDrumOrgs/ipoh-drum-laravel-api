@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 use App\User;
-use App\Company;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
@@ -25,15 +24,6 @@ class UserController extends Controller
      *      tags={"UserControllerService"},
      *      summary="Get list of users",
      *      description="Returns list of users",
-     *      @OA\Parameter(
-     *          name="company_id",
-     *          in="query",
-     *          description="Company ID",
-     *          required=true,
-     *              @OA\Schema(
-     *              type="string"
-     *          )
-     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Successfully retrieved list of users"
@@ -66,39 +56,67 @@ class UserController extends Controller
         }
     }
 
-    public function filter(Request $request)
-    {
-        error_log('Retrieving list of filtered users.');
-        // api/user/filter (GET)
-        $condition = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'company_id' => $request->company_id,
-        ]);
-        //Convert To Json Object
-        $condition = json_decode(json_encode($condition));
-        $users = $this->filterUserListing($request->user(), $condition);
-
-        if ($this->isEmpty($user)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Users');
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($users, $request->result, $request->page);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Users');
-            return response()->json($data, 200);
-        }
-
-    }
-
-
+    /**
+     * @OA\Post(
+     *   tags={"UserControllerService"},
+     *   path="/api/user",
+     *   summary="Creates a user. (With authorization)",
+     *     operationId="createUserWithAuthorization",
+     *   @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Username",
+     *     required=true,
+     *              @OA\Schema(
+     *              type="string"
+     *          )
+     *   ),
+     * @OA\Parameter(
+     * name="email",
+     * in="query",
+     * description="Email",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="password",
+     * in="query",
+     * description="Password",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     *      * @OA\Parameter(
+     * name="password_confirmation",
+     * in="query",
+     * description="Password Confirmation",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="country",
+     * in="query",
+     * description="Country Name",
+     * required=false,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="User has been created successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to create the user."
+     *   )
+     * )
+     */
     public function store(Request $request)
     {
         // Can only be used by Authorized personnel
@@ -168,17 +186,17 @@ class UserController extends Controller
         // api/user/{userid} (GET)
         error_log('Retrieving user of uid:' . $uid);
         $user = $this->getUser($request->user(), $uid);
-        error_log($user);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
-            $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('User');
+            $data['status'] = 'error';
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('User');
             $data['data'] = $user;
-            error_log($user);
+            $data['msg'] = $this->getRetrievedSuccessMsg('User');
+            $data['status'] = 'success';
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
@@ -280,8 +298,9 @@ class UserController extends Controller
         ]);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
-            $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('User');
+            $data['status'] = 'error';
+            $data['code'] = 404;
             return response()->json($data, 404);
         }
         $params = collect([
@@ -302,19 +321,18 @@ class UserController extends Controller
         $user = $this->updateUser($request->user(), $user, $params);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
+            $data['msg'] = $this->getErrorMsg('User');
             $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdateSuccessMsg('User');
             $data['data'] = $user;
+            $data['msg'] = $this->getUpdateSuccessMsg('User');
+            $data['status'] = 'success';
             $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
-
 
     /**
      * @OA\Delete(
@@ -341,27 +359,29 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        // TODO ONLY TOGGLES THE status = 1/0
         // api/user/{userid} (DELETE)
         error_log('Deleting user of uid: ' . $uid);
         $user = $this->getUser($request->user(), $uid);
         if ($this->isEmpty($user)) {
-            $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('User');
+            $data['data'] = null;
+            $data['code'] = 404;
             return response()->json($data, 404);
         }
-
         $user = $this->deleteUser($request->user(), $user->id);
-
         if ($this->isEmpty($user)) {
-            $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
+            $data['data'] = null;
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             $data['status'] = 'success';
             $data['msg'] = $this->getDeleteSuccessMsg('User');
             $data['data'] = $user;
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
@@ -384,6 +404,7 @@ class UserController extends Controller
      */
     public function authentication(Request $request)
     {
+        // TODO Authenticate currently logged in user
         error_log('Authenticating user.');
         return response()->json($request->user(), 200);
     }
@@ -392,7 +413,7 @@ class UserController extends Controller
     /**
      * @OA\Post(
      *   tags={"UserControllerService"},
-     *   path="/api/user",
+     *   path="/api/register",
      *   summary="Creates a user. (Without authorization)",
      *   operationId="createUserWithoutAuthorization",
      * @OA\Parameter(
@@ -452,6 +473,7 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
+        // TODO Registers users without needing authorization
         error_log('Registering user.'); 
         // api/register (POST)
         $this->validate($request, [
@@ -462,18 +484,57 @@ class UserController extends Controller
         DB::beginTransaction();
         $user = new User();
         $user->uid = Carbon::now()->timestamp . User::count();
-        $user->name = $data->name;
-        $user->email = $data->email;
-        $user->password = Hash::make($data->password);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
         $user->status = true;
         try {
             $user->save();
         } catch (Exception $e) {
             DB::rollBack();
-            return null;
+            $data['status'] = 'error';
+            $data['msg'] = $this->getErrorMsg('User');
+            $data['data'] = null;
+            $data['code'] = 404;
+            return response()->json($data, 404);
         }
-
         DB::commit();
-        return response()->json($user->refresh(), 200);
+        $data['status'] = 'success';
+        $data['msg'] = $this->getCreateSuccessMsg('User');
+        $data['data'] = $user->refresh();
+        $data['code'] = 200;
+        return response()->json($data, 200);
+    }
+
+
+    public function filter(Request $request)
+    {
+        error_log('Retrieving list of filtered users.');
+        // api/user/filter (GET)
+        $condition = collect([
+            'keyword' => $request->keyword,
+            'fromdate' => $request->fromdate,
+            'todate' => $request->todate,
+            'status' => $request->status,
+            'company_id' => $request->company_id,
+        ]);
+        //Convert To Json Object
+        $condition = json_decode(json_encode($condition));
+        $users = $this->filterUserListing($request->user(), $condition);
+
+        if ($this->isEmpty($user)) {
+            $data['data'] = null;
+            $data['maximumPages'] = 0;
+            $data['msg'] = $this->getNotFoundMsg('Users');
+            return response()->json($data, 404);
+        } else {
+            //Page Pagination Result List
+            //Default return 10
+            $paginateddata = $this->paginateResult($users, $request->result, $request->page);
+            $data['data'] = $paginateddata;
+            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['msg'] = $this->getRetrievedSuccessMsg('Users');
+            return response()->json($data, 200);
+        }
     }
 }

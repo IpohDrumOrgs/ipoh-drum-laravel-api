@@ -29,7 +29,6 @@ class User extends Authenticatable
     }
 
     /** @OA\Property(property="id", type="integer"),
-     * @OA\Property(property="role_id", type="integer"),
      * @OA\Property(property="uid", type="integer"),
      * @OA\Property(property="name", type="string"),
      * @OA\Property(property="email", type="string"),

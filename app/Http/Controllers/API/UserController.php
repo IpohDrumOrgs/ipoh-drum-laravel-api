@@ -125,7 +125,6 @@ class UserController extends Controller
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $user = $this->createUser($request->user(), $params);
-        $this->createLog($request->user()->id, [$user->id], 'store', 'user');
 
         if ($this->isEmpty($user)) {
             $data['data'] = null;

@@ -20,11 +20,12 @@ use App\Video;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
+use App\Traits\LogServices;
 use DB;
 
 trait UserServices {
 
-    use GlobalFunctions;
+    use GlobalFunctions, LogServices;
 
     private function getUserListing($requester) {
 
@@ -150,6 +151,7 @@ trait UserServices {
         $user->status = true;
         try {
             $user->save();
+            $this->createLog($requester->id , [$user->id], 'store', 'user');
         } catch (Exception $e) {
             DB::rollBack();
             return null;
@@ -177,6 +179,7 @@ trait UserServices {
         $user->country = $data->country;
         try {
             $user->save();
+            $this->createLog($requester->id , [$user->id], 'update', 'user');
         } catch (Exception $e) {
             DB::rollBack();
             return null;
@@ -192,6 +195,7 @@ trait UserServices {
         $user->status = false;
         try {
             $user->save();
+            $this->createLog($requester->id , [$user->id], 'delete', 'user');
         } catch (Exception $e) {
             DB::rollBack();
             return null;

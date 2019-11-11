@@ -16,7 +16,7 @@ use DB;
 trait GlobalFunctions {
 
 
-    public function checkAccessibility($user, $clearance) {
+    public function checkAccessibility($user, $company ,  $clearance) {
         
         $usermodule = $user->role->modules()->wherePivot('module_id',$module->id)->wherePivot('role_id',$user->role->id)->first();
         if(empty($usermodule)){

@@ -29,7 +29,7 @@ trait UserServices {
 
     private function getUserListing($requester) {
 
-        $users = collect();
+        $data = collect();
         $companies = $requester->companies;
         foreach($companies as $company){
             $clearance = $this->checkClearance($requester, $company ,  $this->getModule('user','index'));
@@ -37,24 +37,24 @@ trait UserServices {
             switch ($clearance) {
                 //System Wide
                 case 1:
-                    $compusers = User::where('status', true)->get();
-                    $users = $users->merge($compusers);
+                    $temp = User::where('status', true)->get();
+                    $data = $data->merge($temp);
                     break;
                 //Company Wide
                 case 2:
-                    $compusers = $company->users()->get();
-                    $users = $users->merge($compusers);
+                    $temp = $company->users()->get();
+                    $data = $data->merge($temp);
                     break;
                 //Group Wide
                 case 3:
-                    $groups = $user->groups;
+                    $groups = $requester->groups;
                     foreach($groups as $group){
-                        $users = $users->merge($group->users);
+                        $data = $data->merge($group->users);
                     }
                     break;
                 //Own Wide
                 case 4:
-                    return $users = $users->push($requester);
+                    return $data = $data->push($requester);
                     break;
                 default:
                     break;
@@ -62,17 +62,17 @@ trait UserServices {
     
         }
         
-        $users = $users->unique('id');
+        $data = $data->unique('id');
 
-        return $users;
+        return $data;
     
     }
 
     
     private function pluckUserIndex($cols) {
 
-        $users = User::get($cols);
-        return $users;
+        $data = User::get($cols);
+        return $data;
     
     }
 
@@ -80,12 +80,12 @@ trait UserServices {
     private function filterUserListing($requester , $params) {
 
         error_log('Filtering users....');
-        $users = $this->getUserListing($requester);
+        $data = $this->getUserListing($requester);
 
         if($params->keyword){
             error_log('Filtering users with keyword....');
             $keyword = $params->keyword;
-            $users = $users->filter(function($item)use($keyword){
+            $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
                 if(stristr($item->name, $keyword) == TRUE || stristr($item->email, $keyword) == TRUE || stristr($item->icno, $keyword) == TRUE ) {
                     return true;
@@ -100,7 +100,7 @@ trait UserServices {
         if($params->fromdate){
             error_log('Filtering users with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
-            $users = $users->filter(function ($item) use ($date) {
+            $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
             });
         }
@@ -108,7 +108,7 @@ trait UserServices {
         if($params->todate){
             error_log('Filtering users with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
-            $users = $users->filter(function ($item) use ($date) {
+            $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
             
@@ -117,37 +117,37 @@ trait UserServices {
         if($params->status){
             error_log('Filtering users with status....');
             if($params->status == 'true'){
-                $users = $users->where('status', true);
+                $data = $data->where('status', true);
             }else if($params->status == 'false'){
-                $users = $users->where('status', false);
+                $data = $data->where('status', false);
             }else{
-                $users = $users->where('status', '!=', null);
+                $data = $data->where('status', '!=', null);
             }
         }
         
         if($params->company_id){
             error_log('Filtering users with company id....');
             $company_id = $params->company_id;
-            $users = $users->filter(function ($item) use($company_id) {
+            $data = $data->filter(function ($item) use($company_id) {
                 return $item->companies->contains('id' , $company_id);
             });
         }
 
        
-        $users = $users->unique('id');
+        $data = $data->unique('id');
 
-        return $users;
+        return $data;
     }
 
     
     private function pluckUserFilter($cols , $params) {
 
-        $users = User::all();
+        $data = User::all();
 
         if($params->keyword){
             error_log('Filtering users with keyword....');
             $keyword = $params->keyword;
-            $users = $users->filter(function($item)use($keyword){
+            $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
                 if(stristr($item->name, $keyword) == TRUE || stristr($item->email, $keyword) == TRUE || stristr($item->icno, $keyword) == TRUE ) {
                     return true;
@@ -162,7 +162,7 @@ trait UserServices {
         if($params->fromdate){
             error_log('Filtering users with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
-            $users = $users->filter(function ($item) use ($date) {
+            $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
             });
         }
@@ -170,7 +170,7 @@ trait UserServices {
         if($params->todate){
             error_log('Filtering users with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
-            $users = $users->filter(function ($item) use ($date) {
+            $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
             
@@ -179,117 +179,119 @@ trait UserServices {
         if($params->status){
             error_log('Filtering users with status....');
             if($params->status == 'true'){
-                $users = $users->where('status', true);
+                $data = $data->where('status', true);
             }else if($params->status == 'false'){
-                $users = $users->where('status', false);
+                $data = $data->where('status', false);
             }else{
-                $users = $users->where('status', '!=', null);
+                $data = $data->where('status', '!=', null);
             }
         }
         
         if($params->company_id){
             error_log('Filtering users with company id....');
             $company_id = $params->company_id;
-            $users = $users->filter(function ($item) use($company_id) {
+            $data = $data->filter(function ($item) use($company_id) {
                 return $item->companies->contains('id' , $company_id);
             });
         }
 
-        $users = $users->unique('id');
+        $data = $data->unique('id');
 
         //Pluck Columns
-        $users = $users->map(function($item)use($cols){
+        $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
         
-        return $users;
+        return $data;
     
     }
 
 
     private function getUser($requester , $uid) {
-        $user = User::with('roles', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
-        return $user;
+        $data = User::with('roles', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
+        return $data;
     }
 
     private function pluckUser($cols , $uid) {
-        $user = User::where('uid', $uid)->where('status', 1)->get($cols)->first();
-        return $user;
+        $data = User::where('uid', $uid)->where('status', 1)->get($cols)->first();
+        return $data;
     }
 
-    private function createUser($requester , $data) {
+    private function createUser($requester , $params) {
 
-        DB::beginTransaction();
-        $user = new User();
-        $grouparr = [];
-        $user->uid = Carbon::now()->timestamp . User::count();
-        $user->name = $data->name;
-        $user->email = $data->email;
-        $user->icno = $data->icno;
-        $user->tel1 = $data->tel1;
-        $user->tel2 = $data->tel2;
-        $user->address1 = $data->address1;
-        $user->address2 = $data->address2;
-        $user->postcode = $data->postcode;
-        $user->city = $data->city;
-        $user->state = $data->state;
-        $user->country = $data->country;
-        $user->password = Hash::make($data->password);
-        $user->status = true;
-        try {
-            $user->save();
-            $this->createLog($requester->id , [$user->id], 'store', 'user');
-        } catch (Exception $e) {
-            DB::rollBack();
-            return null;
-        }
 
-        DB::commit();
-        return $user->refresh();
+            DB::beginTransaction();
+            $data = new User();
+            $data->uid = Carbon::now()->timestamp . User::count();
+            $data->name = $params->name;
+            $data->email = $params->email;
+            $data->icno = $params->icno;
+            $data->tel1 = $params->tel1;
+            $data->tel2 = $params->tel2;
+            $data->address1 = $params->address1;
+            $data->address2 = $params->address2;
+            $data->postcode = $params->postcode;
+            $data->city = $params->city;
+            $data->state = $params->state;
+            $data->country = $params->country;
+            $data->password = Hash::make($params->password);
+            $data->status = true;
+            try {
+                $data->save();
+                $this->createLog($requester->id , [$data->id], 'store', 'user');
+            } catch (Exception $e) {
+                DB::rollBack();
+                return null;
+            }
+
+            DB::commit();
+            return $data->refresh();
+        
+        
     }
 
     //Make Sure User is not empty when calling this function
-    private function updateUser($requester, $user,  $data) {
+    private function updateUser($requester, $data,  $params) {
         
         DB::beginTransaction();
         $grouparr = [];
-        $user->name = $data->name;
-        $user->email = $data->email;
-        $user->icno = $data->icno;
-        $user->tel1 = $data->tel1;
-        $user->tel2 = $data->tel2;
-        $user->address1 = $data->address1;
-        $user->address2 = $data->address2;
-        $user->postcode = $data->postcode;
-        $user->city = $data->city;
-        $user->state = $data->state;
-        $user->country = $data->country;
+        $data->name = $params->name;
+        $data->email = $params->email;
+        $data->icno = $params->icno;
+        $data->tel1 = $params->tel1;
+        $data->tel2 = $params->tel2;
+        $data->address1 = $params->address1;
+        $data->address2 = $params->address2;
+        $data->postcode = $params->postcode;
+        $data->city = $params->city;
+        $data->state = $params->state;
+        $data->country = $params->country;
         try {
-            $user->save();
-            $this->createLog($requester->id , [$user->id], 'update', 'user');
+            $data->save();
+            $this->createLog($requester->id , [$data->id], 'update', 'user');
         } catch (Exception $e) {
             DB::rollBack();
             return null;
         }
 
         DB::commit();
-        return $user->refresh();
+        return $data->refresh();
     }
 
-    private function deleteUser($requester , $userid) {
+    private function deleteUser($requester , $id) {
         DB::beginTransaction();
-        $user = User::find($userid);
-        $user->status = false;
+        $data = User::find($id);
+        $data->status = false;
         try {
-            $user->save();
-            $this->createLog($requester->id , [$user->id], 'delete', 'user');
+            $data->save();
+            $this->createLog($requester->id , [$data->id], 'delete', 'user');
         } catch (Exception $e) {
             DB::rollBack();
             return null;
         }
 
         DB::commit();
-        return $user->refresh();
+        return $data->refresh();
     }
 
     

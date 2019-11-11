@@ -86,3 +86,15 @@ Route::post('/register', 'API\UserController@register');
 Route::get('/pluck/users', 'API\UserController@pluckIndex');
 Route::get('/pluck/user/{uid}', 'API\UserController@pluckShow');
 Route::get('/pluck/filter/user', 'API\UserController@pluckFilter');
+
+Route::get('/pluck/companies', 'API\CompanyController@pluckIndex');
+Route::get('/pluck/company/{uid}', 'API\CompanyController@pluckShow');
+Route::get('/pluck/filter/company', 'API\CompanyController@pluckFilter');
+
+Route::get('/pluck/inventories', 'API\InventoryController@pluckIndex');
+Route::get('/pluck/inventory/{uid}', 'API\InventoryController@pluckShow');
+Route::get('/pluck/filter/inventory', 'API\InventoryController@pluckFilter');
+
+
+
+

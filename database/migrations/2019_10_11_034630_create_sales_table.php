@@ -22,8 +22,8 @@ class CreateSalesTable extends Migration
             $table->integer('totalqty')->default(0);
             $table->decimal('discpctg',9,6)->default(0.00);
             $table->decimal('totalcost',8,2)->default(0.00);
-            $table->decimal('totalbfdisc',8,2)->default(0.00);
-            $table->decimal('totalbftax',8,2)->default(0.00);
+            $table->decimal('linetotal',8,2)->default(0.00);
+            $table->decimal('charge',8,2)->default(0.00);
             $table->decimal('totaldisc',8,2)->default(0.00);
             $table->decimal('grandtotal',8,2)->default(0.00);
             $table->decimal('payment',8,2)->default(0.00);

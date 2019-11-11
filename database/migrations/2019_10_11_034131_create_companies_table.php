@@ -16,16 +16,15 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id')->unique();
             $table->unsignedInteger('company_type_id')->unsigned();
-            $table->unsignedInteger('company_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name');
             $table->string('regno')->nullable();
-            $table->string('tel1')->nullable();
-            $table->string('tel2')->nullable();
-            $table->string('fax1')->nullable();
-            $table->string('fax2')->nullable();
-            $table->string('email1')->nullable();
-            $table->string('email2')->nullable();
+            $table->string('tel1')->unique()->nullable();
+            $table->string('tel2')->unique()->nullable();
+            $table->string('fax1')->unique()->nullable();
+            $table->string('fax2')->unique()->nullable();
+            $table->string('email1')->unique()->nullable();
+            $table->string('email2')->unique()->nullable();
             $table->string('address1')->nullable();
             $table->string('address2')->nullable();
             $table->string('postcode')->nullable();
@@ -34,19 +33,14 @@ class CreateCompaniesTable extends Migration
             $table->string('country')->nullable();
             $table->boolean('status')->default(1);
             $table->string('lastedit_by')->nullable();
-            $table->boolean('hasbranch')->default(1);
             $table->timestamps();
+
             $table->foreign('company_type_id')
             ->references('id')
             ->on('company_types')
             ->onUpdate('cascade')
             ->onDelete('restrict');
 
-            $table->foreign('company_id')
-            ->references('id')
-            ->on('companies')
-            ->onUpdate('cascade')
-            ->onDelete('restrict');
         });
     }
 

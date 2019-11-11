@@ -35,35 +35,11 @@ class Company extends Model
     }
 
     /**
-     * Get the branches of the company.
-     */
-    public function branches()
-    {
-        return $this->hasMany('App\Company', 'company_id');
-    }
-
-    /**
-     * Get the parent company of the company.
-     */
-    public function mothercompany()
-    {
-        return $this->belongsTo('App\Company', 'company_id');
-    }
-
-    /**
      * Get the inventories of the company.
      */
     public function inventories()
     {
         return $this->hasMany('App\Inventory');
-    }
-
-    /**
-     * Get the account of the company.
-     */
-    public function account()
-    {
-        return $this->hasOne('App\Account');
     }
 
      /**

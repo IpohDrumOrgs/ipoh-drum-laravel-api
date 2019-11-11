@@ -43,6 +43,7 @@ class UserController extends Controller
             $data['data'] = null;
             $data['maximumPages'] = 0;
             $data['msg'] = $this->getNotFoundMsg('Users');
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             //Page Pagination Result List
@@ -52,6 +53,7 @@ class UserController extends Controller
             $data['data'] = $paginateddata;
             $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
@@ -81,7 +83,7 @@ class UserController extends Controller
     public function pluckIndex(Request $request)
     {
         error_log('Retrieving list of plucked users.');
-        // api/user (GET)
+        // api/pluck/users (GET)
         error_log("columns = " . collect($this->splitToArray($request->cols)));
         $users = $this->pluckUserIndex($this->splitToArray($request->cols));
         if ($this->isEmpty($users)) {
@@ -89,6 +91,7 @@ class UserController extends Controller
             $data['data'] = null;
             $data['maximumPages'] = 0;
             $data['msg'] = $this->getNotFoundMsg('Users');
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             //Page Pagination Result List
@@ -98,6 +101,7 @@ class UserController extends Controller
             $data['data'] = $paginateddata;
             $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
@@ -167,6 +171,7 @@ class UserController extends Controller
             $data['data'] = null;
             $data['maximumPages'] = 0;
             $data['msg'] = $this->getNotFoundMsg('Users');
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             //Page Pagination Result List
@@ -175,6 +180,7 @@ class UserController extends Controller
             $data['data'] = $paginateddata;
             $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
 
@@ -236,7 +242,7 @@ class UserController extends Controller
     public function pluckFilter(Request $request)
     {
         error_log('Retrieving list of filtered and plucked users.');
-        // api/user/filter (GET)
+        // api/pluck/filter/user (GET)
         $params = collect([
             'keyword' => $request->keyword,
             'fromdate' => $request->fromdate,
@@ -252,6 +258,7 @@ class UserController extends Controller
             $data['data'] = null;
             $data['maximumPages'] = 0;
             $data['msg'] = $this->getNotFoundMsg('Users');
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             //Page Pagination Result List
@@ -260,19 +267,113 @@ class UserController extends Controller
             $data['data'] = $paginateddata;
             $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
 
     }
 
+    /**
+     * @OA\Get(
+     *   tags={"UserControllerService"},
+     *   path="/api/user/{uid}",
+     *   summary="Retrieves user by userId.",
+     *     operationId="getUserByUserId",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="User_ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="User has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieve the user."
+     *   )
+     * )
+     */
+    public function show(Request $request, $uid)
+    {
+        // api/user/{userid} (GET)
+        error_log('Retrieving user of uid:' . $uid);
+        $user = $this->getUser($request->user(), $uid);
+        if ($this->isEmpty($user)) {
+            $data['data'] = null;
+            $data['msg'] = $this->getNotFoundMsg('User');
+            $data['status'] = 'error';
+            $data['code'] = 404;
+            return response()->json($data, 404);
+        } else {
+            $data['data'] = $user;
+            $data['msg'] = $this->getRetrievedSuccessMsg('User');
+            $data['status'] = 'success';
+            $data['code'] = 200;
+            return response()->json($data, 200);
+        }
+    }
 
+    /**
+     * @OA\Get(
+     *      path="/api/pluck/user/{uid}",
+     *      operationId="pluckUser",
+     *      tags={"UserControllerService"},
+     *      summary="pluck user",
+     *      description="Returns plucked users",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="User_ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="cols",
+     *     in="query",
+     *     required=true,
+     *     description="Columns for pluck",
+     *     @OA\Schema(type="string")
+     *   ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successfully retrieved list of users"
+     *       ),
+     *       @OA\Response(
+     *          response="default",
+     *          description="Unable to retrieve list of users")
+     *    )
+     */
+    public function pluckShow(Request $request , $uid)
+    {
+        error_log('Retrieving plucked users.');
+        // api/pluck/user/{uid} (GET)
+        error_log("columns = " . collect($this->splitToArray($request->cols)));
+        $user = $this->pluckUser($this->splitToArray($request->cols) , $uid);
+        if ($this->isEmpty($user)) {
+            $data['data'] = null;
+            $data['status'] = 'error';
+            $data['msg'] = $this->getNotFoundMsg('User');
+            $data['code'] = 404;
+            return response()->json($data, 404);
+        } else {
+            $data['status'] = 'success';
+            $data['msg'] = $this->getRetrievedSuccessMsg('User');
+            $data['data'] = $user;
+            $data['code'] = 200;
+            return response()->json($data, 200);
+        }
+    }
 
+    
     /**
      * @OA\Post(
      *   tags={"UserControllerService"},
      *   path="/api/user",
-     *   summary="Creates a user. (Without authorization)",
-     *   operationId="createUserWithoutAuthorization",
+     *   summary="Creates a user.",
+     *   operationId="createUser",
      * @OA\Parameter(
      * name="name",
      * in="query",
@@ -358,104 +459,13 @@ class UserController extends Controller
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('User');
             $data['data'] = $user;
-            return response()->json($data, 200);
-        }
-    }
-
-    /**
-     * @OA\Get(
-     *   tags={"UserControllerService"},
-     *   path="/api/user/{uid}",
-     *   summary="Retrieves user by userId.",
-     *     operationId="getUserByUserId",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="User_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Response(
-     *     response=200,
-     *     description="User has been retrieved successfully."
-     *   ),
-     *   @OA\Response(
-     *     response="default",
-     *     description="Unable to retrieve the user."
-     *   )
-     * )
-     */
-    public function show(Request $request, $uid)
-    {
-        // api/user/{userid} (GET)
-        error_log('Retrieving user of uid:' . $uid);
-        $user = $this->getUser($request->user(), $uid);
-        if ($this->isEmpty($user)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('User');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['data'] = $user;
-            $data['msg'] = $this->getRetrievedSuccessMsg('User');
-            $data['status'] = 'success';
             $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/user/{uid}",
-     *      operationId="pluckUser",
-     *      tags={"UserControllerService"},
-     *      summary="pluck user",
-     *      description="Returns plucked users",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="User_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of users"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of users")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked users.');
-        // api/user (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $user = $this->pluckUser($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($user)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('User');
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('User');
-            $data['data'] = $user;
-            error_log($user);
             return response()->json($data, 200);
         }
     }
@@ -588,7 +598,6 @@ class UserController extends Controller
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('User');
             $data['data'] = $user;
-            $data['msg'] = $this->getUpdateSuccessMsg('User');
             $data['status'] = 'success';
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -695,12 +704,14 @@ class UserController extends Controller
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('User Account');
             $data['data'] = $user;
+            $data['code'] = 200;
             return response()->json($data, 200);
         } catch (Exception $e) {
             DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
+            $data['code'] = 404;
             return response()->json($data, 404);
         }
     }

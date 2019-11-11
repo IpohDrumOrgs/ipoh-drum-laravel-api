@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 use App\User;
-use App\Company;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
@@ -396,17 +395,17 @@ class UserController extends Controller
         // api/user/{userid} (GET)
         error_log('Retrieving user of uid:' . $uid);
         $user = $this->getUser($request->user(), $uid);
-        error_log($user);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
-            $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('User');
+            $data['status'] = 'error';
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('User');
             $data['data'] = $user;
-            error_log($user);
+            $data['msg'] = $this->getRetrievedSuccessMsg('User');
+            $data['status'] = 'success';
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
@@ -558,8 +557,9 @@ class UserController extends Controller
         ]);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
-            $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('User');
+            $data['status'] = 'error';
+            $data['code'] = 404;
             return response()->json($data, 404);
         }
         $params = collect([
@@ -580,19 +580,20 @@ class UserController extends Controller
         $user = $this->updateUser($request->user(), $user, $params);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
+            $data['msg'] = $this->getErrorMsg('User');
             $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('User');
             $data['data'] = $user;
+            $data['msg'] = $this->getUpdateSuccessMsg('User');
+            $data['status'] = 'success';
             $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
-
 
     /**
      * @OA\Delete(
@@ -619,27 +620,29 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        // TODO ONLY TOGGLES THE status = 1/0
         // api/user/{userid} (DELETE)
         error_log('Deleting user of uid: ' . $uid);
         $user = $this->getUser($request->user(), $uid);
         if ($this->isEmpty($user)) {
-            $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('User');
+            $data['data'] = null;
+            $data['code'] = 404;
             return response()->json($data, 404);
         }
-
         $user = $this->deleteUser($request->user(), $user->id);
-
         if ($this->isEmpty($user)) {
-            $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
+            $data['data'] = null;
+            $data['code'] = 404;
             return response()->json($data, 404);
         } else {
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('User');
             $data['data'] = $user;
+            $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
@@ -664,12 +667,14 @@ class UserController extends Controller
      */
     public function authentication(Request $request)
     {
+        // TODO Authenticate currently logged in user
         error_log('Authenticating user.');
         return response()->json($request->user(), 200);
     }
 
     public function register(Request $request)
     {
+        // TODO Registers users without needing authorization
         error_log('Registering user.'); 
         // api/register (POST)
         $this->validate($request, [

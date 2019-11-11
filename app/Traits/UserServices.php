@@ -68,14 +68,26 @@ trait UserServices {
     
     }
 
-    private function filterUserListing($requester , $condition) {
+    
+    private function pluckUserIndex($cols) {
 
+        $users = User::get($cols);
+        return $users;
+    
+    }
+
+
+    private function filterUserListing($requester , $params) {
+
+        error_log('Filtering users....');
         $users = $this->getUserListing($requester);
 
-        if($condition->keyword){
-            $users = $users->filter(function($user)use($keyword){
+        if($params->keyword){
+            error_log('Filtering users with keyword....');
+            $keyword = $params->keyword;
+            $users = $users->filter(function($item)use($keyword){
                 //check string exist inside or not
-                if(stristr($user->uname, $keyword) == TRUE || stristr($user->email, $keyword) == TRUE || stristr($user->fname, $keyword) == TRUE || stristr($user->lname, $keyword) == TRUE) {
+                if(stristr($item->name, $keyword) == TRUE || stristr($item->email, $keyword) == TRUE || stristr($item->icno, $keyword) == TRUE ) {
                     return true;
                 }else{
                     return false;
@@ -85,14 +97,16 @@ trait UserServices {
         }
 
              
-        if($condition->fromdate){
-            $date = Carbon::parse($condition->fromdate)->startOfDay();
+        if($params->fromdate){
+            error_log('Filtering users with fromdate....');
+            $date = Carbon::parse($params->fromdate)->startOfDay();
             $users = $users->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
             });
         }
 
-        if($condition->todate){
+        if($params->todate){
+            error_log('Filtering users with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
             $users = $users->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
@@ -100,19 +114,20 @@ trait UserServices {
             
         } 
 
-        if($condition->status){
-            if($condition->status == 'true'){
-                $users->where('status', true);
-            }else if($condition->status == 'false'){
-                $users->where('status', false);
+        if($params->status){
+            error_log('Filtering users with status....');
+            if($params->status == 'true'){
+                $users = $users->where('status', true);
+            }else if($params->status == 'false'){
+                $users = $users->where('status', false);
             }else{
-                $users->where('status', '!=', null);
+                $users = $users->where('status', '!=', null);
             }
         }
-
         
-        if($condition->company_id){
-            $company_id = $condition->company_id;
+        if($params->company_id){
+            error_log('Filtering users with company id....');
+            $company_id = $params->company_id;
             $users = $users->filter(function ($item) use($company_id) {
                 return $item->companies->contains('id' , $company_id);
             });
@@ -124,9 +139,81 @@ trait UserServices {
         return $users;
     }
 
+    
+    private function pluckUserFilter($cols , $params) {
+
+        $users = User::all();
+
+        if($params->keyword){
+            error_log('Filtering users with keyword....');
+            $keyword = $params->keyword;
+            $users = $users->filter(function($item)use($keyword){
+                //check string exist inside or not
+                if(stristr($item->name, $keyword) == TRUE || stristr($item->email, $keyword) == TRUE || stristr($item->icno, $keyword) == TRUE ) {
+                    return true;
+                }else{
+                    return false;
+                }
+            
+            });
+        }
+
+             
+        if($params->fromdate){
+            error_log('Filtering users with fromdate....');
+            $date = Carbon::parse($params->fromdate)->startOfDay();
+            $users = $users->filter(function ($item) use ($date) {
+                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
+            });
+        }
+
+        if($params->todate){
+            error_log('Filtering users with todate....');
+            $date = Carbon::parse($request->todate)->endOfDay();
+            $users = $users->filter(function ($item) use ($date) {
+                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
+            });
+            
+        } 
+
+        if($params->status){
+            error_log('Filtering users with status....');
+            if($params->status == 'true'){
+                $users = $users->where('status', true);
+            }else if($params->status == 'false'){
+                $users = $users->where('status', false);
+            }else{
+                $users = $users->where('status', '!=', null);
+            }
+        }
+        
+        if($params->company_id){
+            error_log('Filtering users with company id....');
+            $company_id = $params->company_id;
+            $users = $users->filter(function ($item) use($company_id) {
+                return $item->companies->contains('id' , $company_id);
+            });
+        }
+
+        $users = $users->unique('id');
+
+        //Pluck Columns
+        $users = $users->map(function($item)use($cols){
+            return $item->only($cols);
+        });
+        
+        return $users;
+    
+    }
+
 
     private function getUser($requester , $uid) {
         $user = User::with('roles', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
+        return $user;
+    }
+
+    private function pluckUser($cols , $uid) {
+        $user = User::where('uid', $uid)->where('status', 1)->get($cols)->first();
         return $user;
     }
 
@@ -204,4 +291,6 @@ trait UserServices {
         DB::commit();
         return $user->refresh();
     }
+
+    
 }

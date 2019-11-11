@@ -23,17 +23,6 @@
                 "summary": "Get list of users",
                 "description": "Returns list of users",
                 "operationId": "getUserList",
-                "parameters": [
-                    {
-                        "name": "company_id",
-                        "in": "query",
-                        "description": "Company ID",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved list of users"
@@ -90,7 +79,6 @@
                         "name": "country",
                         "in": "query",
                         "description": "Country",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -102,6 +90,164 @@
                     },
                     "default": {
                         "description": "Unable to create the user."
+                    }
+                }
+            }
+        },
+        "/api/pluck/users": {
+            "get": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "pluck list of users",
+                "description": "Returns list of plucked users",
+                "operationId": "pluckUserList",
+                "parameters": [
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of users"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of users"
+                    }
+                }
+            }
+        },
+        "/api/filter/user": {
+            "get": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "Filter list of users",
+                "description": "Returns list of filtered users",
+                "operationId": "filterUserList",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Company id for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered users"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of users"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/user": {
+            "get": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "Filter list of plucked users",
+                "description": "Returns list of filtered users",
+                "operationId": "filterPluckedUserList",
+                "parameters": [
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Company id for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered users"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of users"
                     }
                 }
             }
@@ -263,6 +409,44 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the user."
+                    }
+                }
+            }
+        },
+        "/api/pluck/user/{uid}": {
+            "get": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "pluck user",
+                "description": "Returns plucked users",
+                "operationId": "pluckUser",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "User_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of users"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of users"
                     }
                 }
             }

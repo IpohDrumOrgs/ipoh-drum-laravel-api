@@ -23,15 +23,15 @@ trait NotificationFunctions {
         return $provider. ' Not Found. Please Try Again Later';
     }
     
-    public function getCreateSuccessMsg($provider){
+    public function getCreatedSuccessMsg($provider){
         return $provider. ' created successfully.';
     }
 
-    public function getUpdateSuccessMsg($provider){
+    public function getUpdatedSuccessMsg($provider){
         return $provider. ' updated successfully.';
     }
     
-    public function getDeleteSuccessMsg($provider){
+    public function getDeletedSuccessMsg($provider){
         return $provider. ' deleted successfully.';
     }
 

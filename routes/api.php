@@ -55,22 +55,22 @@ Route::group(['middleware' => ['auth:api']], function (){
     // Route::resource('pricelist', 'API\PriceListController');
 
     //Filter
-    // Route::get('/filter/user', 'API\UserController@filter');
-    // Route::get('/filter/group', 'API\GroupController@filter');
-    // Route::get('/filter/company', 'API\CompanyController@filter');
-    // Route::get('/filter/companytype', 'API\CompanyTypeController@filter');
-    // Route::get('/filter/role', 'API\RoleController@filter');
-    // Route::get('/filter/log', 'API\LogController@filter');
-    // Route::get('/filter/module', 'API\ModuleController@filter');
-    // Route::get('/filter/inventory', 'API\InventoryController@filter');
-    // Route::get('/filter/inventorybatch', 'API\InventoryBatchController@filter');
-    // Route::get('/filter/sale', 'API\SaleController@filter');
-    // Route::get('/filter/payment', 'API\PaymentController@filter');
-    // Route::get('/filter/purchase', 'API\PurchaseController@filter');
-    // Route::get('/filter/batch', 'API\BatchController@filter');
-    // Route::get('/filter/stocktransfer', 'API\StockTransferController@filter');
-    // Route::get('/filter/get-cashiers', 'API\UserController@getCashiers');
-    // Route::get('/filter/filter-report', 'API\ReportController@filter');
+    Route::get('/filter/user', 'API\UserController@filter');
+    Route::get('/filter/group', 'API\GroupController@filter');
+    Route::get('/filter/company', 'API\CompanyController@filter');
+    Route::get('/filter/companytype', 'API\CompanyTypeController@filter');
+    Route::get('/filter/role', 'API\RoleController@filter');
+    Route::get('/filter/log', 'API\LogController@filter');
+    Route::get('/filter/module', 'API\ModuleController@filter');
+    Route::get('/filter/inventory', 'API\InventoryController@filter');
+    Route::get('/filter/inventorybatch', 'API\InventoryBatchController@filter');
+    Route::get('/filter/sale', 'API\SaleController@filter');
+    Route::get('/filter/payment', 'API\PaymentController@filter');
+    Route::get('/filter/purchase', 'API\PurchaseController@filter');
+    Route::get('/filter/batch', 'API\BatchController@filter');
+    Route::get('/filter/stocktransfer', 'API\StockTransferController@filter');
+    Route::get('/filter/get-cashiers', 'API\UserController@getCashiers');
+    Route::get('/filter/filter-report', 'API\ReportController@filter');
 
     // Route::get('/awaiting-approve', 'API\StockTransferController@awaitingApprove');
 
@@ -81,4 +81,8 @@ Route::group(['middleware' => ['auth:api']], function (){
 
 Route::middleware('auth:api')->post('/authentication', 'API\UserController@authentication');
 
-Route::post('/register', 'UserController@register');
+Route::post('/register', 'API\UserController@register');
+
+Route::get('/pluck/users', 'API\UserController@pluckIndex');
+Route::get('/pluck/user/{uid}', 'API\UserController@pluckShow');
+Route::get('/pluck/filter/user', 'API\UserController@pluckFilter');

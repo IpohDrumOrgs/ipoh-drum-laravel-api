@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('postcode')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('country')->default('malaysia');
+            $table->string('country')->default('malaysia')->nullable();
             $table->string('password');
             $table->boolean('status')->default(1);
             $table->dateTime('last_login')->nullable();

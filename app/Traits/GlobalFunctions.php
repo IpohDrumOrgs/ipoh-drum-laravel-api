@@ -145,4 +145,14 @@ trait GlobalFunctions {
     }
 
     
+    //Split the string to array
+    public function splitToArray($params){
+        $params = collect(explode(',' , $params));
+        $params = $params->map(function ($item, $key) {
+            return trim($item);
+        });
+        return $params->toArray();
+    }
+
+    
 }

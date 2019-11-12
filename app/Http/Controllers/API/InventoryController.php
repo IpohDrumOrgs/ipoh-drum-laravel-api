@@ -77,15 +77,15 @@ class InventoryController extends Controller
      *      summary="pluck list of inventories",
      *      description="Returns list of plucked inventories",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="Page size",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -138,15 +138,15 @@ class InventoryController extends Controller
      *      summary="Filter list of inventories",
      *      description="Returns list of filtered inventories",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="Page size",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -230,15 +230,15 @@ class InventoryController extends Controller
      *      summary="Filter list of plucked inventories",
      *      description="Returns list of filtered inventories",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="Page size",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(

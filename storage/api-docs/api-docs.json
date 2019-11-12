@@ -1217,7 +1217,7 @@
                 "operationId": "pluckInventoryList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -1225,9 +1225,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "Page size",
                         "schema": {
                             "type": "integer"
                         }
@@ -1262,7 +1262,7 @@
                 "operationId": "filterInventoryList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -1270,9 +1270,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "Page size",
                         "schema": {
                             "type": "integer"
                         }
@@ -1338,7 +1338,7 @@
                 "operationId": "filterPluckedInventoryList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -1346,9 +1346,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "Page size",
                         "schema": {
                             "type": "integer"
                         }
@@ -3014,6 +3014,81 @@
     },
     "components": {
         "schemas": {
+            "Inventory": {
+                "title": "Inventory",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "store_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "sku": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "cost": {
+                        "type": "number"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "disc": {
+                        "type": "number"
+                    },
+                    "discpctg": {
+                        "type": "number"
+                    },
+                    "promoprice": {
+                        "type": "number"
+                    },
+                    "promostartdate": {
+                        "type": "string"
+                    },
+                    "promoenddate": {
+                        "type": "string"
+                    },
+                    "stock": {
+                        "type": "integer"
+                    },
+                    "salesqty": {
+                        "type": "integer"
+                    },
+                    "warrantyperiod": {
+                        "type": "integer"
+                    },
+                    "stockthreshold": {
+                        "type": "integer"
+                    },
+                    "backorder": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "lastedit_by": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "Sale": {
                 "title": "Sale",
                 "properties": {

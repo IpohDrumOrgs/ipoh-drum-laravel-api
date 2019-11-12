@@ -684,8 +684,8 @@ class UserController extends Controller
     /**
      * @OA\Post(
      *   tags={"UserControllerService"},
-     *   summary="Register user.",
-     *     operationId="registerUser",
+     *   summary="Creates a user without needing authorization.",
+     *     operationId="createUserWithoutAuthorization",
      * path="/api/register",
      *   @OA\Parameter(
      *     name="name",
@@ -717,11 +717,11 @@ class UserController extends Controller
      *   ),
      *   @OA\Response(
      *     response=200,
-     *     description="User is already authenticated."
+     *     description="User has been successfully created."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="User is not authenticated."
+     *     description="User is not created."
      *   )
      * )
      */

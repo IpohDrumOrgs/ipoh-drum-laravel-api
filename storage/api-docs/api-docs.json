@@ -1596,8 +1596,8 @@
                 "tags": [
                     "UserControllerService"
                 ],
-                "summary": "Register user.",
-                "operationId": "registerUser",
+                "summary": "Creates a user without needing authorization.",
+                "operationId": "createUserWithoutAuthorization",
                 "parameters": [
                     {
                         "name": "name",
@@ -1638,10 +1638,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User is already authenticated."
+                        "description": "User has been successfully created."
                     },
                     "default": {
-                        "description": "User is not authenticated."
+                        "description": "User is not created."
                     }
                 }
             }

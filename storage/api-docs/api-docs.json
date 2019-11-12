@@ -1659,6 +1659,784 @@
                 }
             }
         },
+        "/api/productfeature": {
+            "get": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "Get list of productfeatures",
+                "description": "Returns list of productfeatures",
+                "operationId": "getProductFeatureList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of productfeatures"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productfeatures"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "Creates a productfeature.",
+                "operationId": "createProductFeature",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "ProductFeature name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "ProductFeature Description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductFeature has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the productfeature."
+                    }
+                }
+            }
+        },
+        "/api/pluck/productfeatures": {
+            "get": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "pluck list of productfeatures",
+                "description": "Returns list of plucked productfeatures",
+                "operationId": "pluckProductFeatureList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of productfeatures"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productfeatures"
+                    }
+                }
+            }
+        },
+        "/api/filter/productfeature": {
+            "get": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "Filter list of productfeatures",
+                "description": "Returns list of filtered productfeatures",
+                "operationId": "filterProductFeatureList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered productfeatures"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productfeatures"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/productfeature": {
+            "get": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "Filter list of plucked productfeatures",
+                "description": "Returns list of filtered productfeatures",
+                "operationId": "filterPluckedProductFeatureList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered productfeatures"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productfeatures"
+                    }
+                }
+            }
+        },
+        "/api/productfeature/{uid}": {
+            "get": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "Retrieves productfeature by productfeatureId.",
+                "operationId": "getProductFeatureByProductFeatureId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductFeature_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductFeature has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the productfeature."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "Update productfeature by productfeatureId.",
+                "operationId": "updateProductFeatureByProductFeatureId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductFeature_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "ProductFeature name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "ProductFeature Description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductFeature has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the productfeature."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "Set productfeature's 'status' to 0.",
+                "operationId": "deleteProductFeatureByProductFeatureId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductFeature ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductFeature has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the productfeature."
+                    }
+                }
+            }
+        },
+        "/api/pluck/productfeature/{uid}": {
+            "get": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "pluck productfeature",
+                "description": "Returns plucked productfeatures",
+                "operationId": "pluckProductFeature",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductFeature_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of productfeatures"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productfeatures"
+                    }
+                }
+            }
+        },
+        "/api/type": {
+            "get": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "Get list of types",
+                "description": "Returns list of types",
+                "operationId": "getTypeList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of types"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of types"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "Creates a type.",
+                "operationId": "createType",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Type name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Type Description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Type has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the type."
+                    }
+                }
+            }
+        },
+        "/api/pluck/types": {
+            "get": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "pluck list of types",
+                "description": "Returns list of plucked types",
+                "operationId": "pluckTypeList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of types"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of types"
+                    }
+                }
+            }
+        },
+        "/api/filter/type": {
+            "get": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "Filter list of types",
+                "description": "Returns list of filtered types",
+                "operationId": "filterTypeList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered types"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of types"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/type": {
+            "get": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "Filter list of plucked types",
+                "description": "Returns list of filtered types",
+                "operationId": "filterPluckedTypeList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered types"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of types"
+                    }
+                }
+            }
+        },
+        "/api/type/{uid}": {
+            "get": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "Retrieves type by typeId.",
+                "operationId": "getTypeByTypeId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Type_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Type has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the type."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "Update type by typeId.",
+                "operationId": "updateTypeByTypeId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Type_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Type name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Type Description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Type has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the type."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "Set type's 'status' to 0.",
+                "operationId": "deleteTypeByTypeId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Type ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Type has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the type."
+                    }
+                }
+            }
+        },
+        "/api/pluck/type/{uid}": {
+            "get": {
+                "tags": [
+                    "TypeControllerService"
+                ],
+                "summary": "pluck type",
+                "description": "Returns plucked types",
+                "operationId": "pluckType",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Type_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of types"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of types"
+                    }
+                }
+            }
+        },
         "/api/user": {
             "get": {
                 "tags": [

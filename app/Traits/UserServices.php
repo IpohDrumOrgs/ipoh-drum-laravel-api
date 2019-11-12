@@ -71,7 +71,7 @@ trait UserServices {
     
     private function pluckUserIndex($cols) {
 
-        $data = User::get($cols);
+        $data = User::where('status',true)->get($cols);
         return $data;
     
     }

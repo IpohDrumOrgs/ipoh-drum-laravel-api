@@ -24,6 +24,18 @@ class InventoryController extends Controller
      *      tags={"InventoryControllerService"},
      *      summary="Get list of inventories",
      *      description="Returns list of inventories",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *      @OA\Response(
      *          response=200,
      *          description="Successfully retrieved list of inventories"
@@ -64,6 +76,18 @@ class InventoryController extends Controller
      *      tags={"InventoryControllerService"},
      *      summary="pluck list of inventories",
      *      description="Returns list of plucked inventories",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Parameter(
      *     name="cols",
      *     in="query",
@@ -113,6 +137,18 @@ class InventoryController extends Controller
      *      tags={"InventoryControllerService"},
      *      summary="Filter list of inventories",
      *      description="Returns list of filtered inventories",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Parameter(
      *     name="keyword",
      *     in="query",
@@ -193,6 +229,18 @@ class InventoryController extends Controller
      *      tags={"InventoryControllerService"},
      *      summary="Filter list of plucked inventories",
      *      description="Returns list of filtered inventories",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Parameter(
      *     name="cols",
      *     in="query",

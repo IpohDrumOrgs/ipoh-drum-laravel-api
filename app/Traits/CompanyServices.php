@@ -70,7 +70,7 @@ trait CompanyServices {
     
     private function pluckCompanyIndex($cols) {
 
-        $data = Company::get($cols);
+        $data = Company::where('status',true)->get($cols);
         return $data;
     
     }

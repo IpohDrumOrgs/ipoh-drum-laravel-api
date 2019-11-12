@@ -37,6 +37,9 @@ class DatabaseSeeder extends Seeder
         $this->call(ModulePurchaseSeeder::class);
         $this->call(ModuleRoleSeeder::class);
         $this->call(ModuleSaleSeeder::class);
+        $this->call(ModuleCategorySeeder::class);
+        $this->call(ModuleTypeSeeder::class);
+        $this->call(ModuleProductFeatureSeeder::class);
 
         $this->call(RoleTableSeeder::class);
         $this->call(RoleAdminSeeder::class);

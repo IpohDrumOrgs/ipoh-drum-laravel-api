@@ -24,6 +24,18 @@ class UserController extends Controller
      *      tags={"UserControllerService"},
      *      summary="Get list of users",
      *      description="Returns list of users",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *      @OA\Response(
      *          response=200,
      *          description="Successfully retrieved list of users"
@@ -71,6 +83,18 @@ class UserController extends Controller
      *     description="Columns for pluck",
      *     @OA\Schema(type="string")
      *   ),
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *      @OA\Response(
      *          response=200,
      *          description="Successfully retrieved list of users"
@@ -113,6 +137,18 @@ class UserController extends Controller
      *      tags={"UserControllerService"},
      *      summary="Filter list of users",
      *      description="Returns list of filtered users",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Parameter(
      *     name="keyword",
      *     in="query",
@@ -193,6 +229,18 @@ class UserController extends Controller
      *      tags={"UserControllerService"},
      *      summary="Filter list of plucked users",
      *      description="Returns list of filtered users",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Parameter(
      *     name="cols",
      *     in="query",

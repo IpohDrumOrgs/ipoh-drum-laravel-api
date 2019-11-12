@@ -15,6 +15,395 @@
         }
     ],
     "paths": {
+        "/api/category": {
+            "get": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "Get list of categories",
+                "description": "Returns list of categories",
+                "operationId": "getCategoryList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of categories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of categories"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "Creates a category.",
+                "operationId": "createCategory",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Category name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Category Description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the category."
+                    }
+                }
+            }
+        },
+        "/api/pluck/categories": {
+            "get": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "pluck list of categories",
+                "description": "Returns list of plucked categories",
+                "operationId": "pluckCategoryList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of categories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of categories"
+                    }
+                }
+            }
+        },
+        "/api/filter/category": {
+            "get": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "Filter list of categories",
+                "description": "Returns list of filtered categories",
+                "operationId": "filterCategoryList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered categories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of categories"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/category": {
+            "get": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "Filter list of plucked categories",
+                "description": "Returns list of filtered categories",
+                "operationId": "filterPluckedCategoryList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered categories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of categories"
+                    }
+                }
+            }
+        },
+        "/api/category/{uid}": {
+            "get": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "Retrieves category by categoryId.",
+                "operationId": "getCategoryByCategoryId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Category_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the category."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "Update category by categoryId.",
+                "operationId": "updateCategoryByCategoryId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Category_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Category name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Category Description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the category."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "Set category's 'status' to 0.",
+                "operationId": "deleteCategoryByCategoryId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Category ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the category."
+                    }
+                }
+            }
+        },
+        "/api/pluck/category/{uid}": {
+            "get": {
+                "tags": [
+                    "CategoryControllerService"
+                ],
+                "summary": "pluck category",
+                "description": "Returns plucked categories",
+                "operationId": "pluckCategory",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Category_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of categories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of categories"
+                    }
+                }
+            }
+        },
         "/api/company": {
             "get": {
                 "tags": [
@@ -23,6 +412,24 @@
                 "summary": "Get list of companies",
                 "description": "Returns list of companies",
                 "operationId": "getCompanyList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved list of companies"
@@ -183,6 +590,22 @@
                 "operationId": "pluckCompanyList",
                 "parameters": [
                     {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "cols",
                         "in": "query",
                         "description": "Columns for pluck",
@@ -211,6 +634,22 @@
                 "description": "Returns list of filtered companies",
                 "operationId": "filterCompanyList",
                 "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
                     {
                         "name": "keyword",
                         "in": "query",
@@ -271,6 +710,22 @@
                 "description": "Returns list of filtered companies",
                 "operationId": "filterPluckedCompanyList",
                 "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
                     {
                         "name": "cols",
                         "in": "query",
@@ -580,6 +1035,24 @@
                 "summary": "Get list of inventories",
                 "description": "Returns list of inventories",
                 "operationId": "getInventoryList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved list of inventories"
@@ -744,6 +1217,22 @@
                 "operationId": "pluckInventoryList",
                 "parameters": [
                     {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "cols",
                         "in": "query",
                         "description": "Columns for pluck",
@@ -772,6 +1261,22 @@
                 "description": "Returns list of filtered inventories",
                 "operationId": "filterInventoryList",
                 "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
                     {
                         "name": "keyword",
                         "in": "query",
@@ -832,6 +1337,22 @@
                 "description": "Returns list of filtered inventories",
                 "operationId": "filterPluckedInventoryList",
                 "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
                     {
                         "name": "cols",
                         "in": "query",
@@ -1146,6 +1667,24 @@
                 "summary": "Get list of users",
                 "description": "Returns list of users",
                 "operationId": "getUserList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved list of users"
@@ -1234,6 +1773,22 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
                 ],
                 "responses": {
@@ -1255,6 +1810,22 @@
                 "description": "Returns list of filtered users",
                 "operationId": "filterUserList",
                 "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
                     {
                         "name": "keyword",
                         "in": "query",
@@ -1315,6 +1886,22 @@
                 "description": "Returns list of filtered users",
                 "operationId": "filterPluckedUserList",
                 "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "result",
+                        "in": "query",
+                        "description": "number of result",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
                     {
                         "name": "cols",
                         "in": "query",

@@ -58,7 +58,7 @@ trait InventoryServices {
     
     private function pluckInventoryIndex($cols) {
 
-        $data = Inventory::get($cols);
+        $data = Inventory::where('status',true)->get($cols);
         return $data;
     
     }

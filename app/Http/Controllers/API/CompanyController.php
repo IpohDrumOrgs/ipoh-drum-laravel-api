@@ -24,6 +24,18 @@ class CompanyController extends Controller
      *      tags={"CompanyControllerService"},
      *      summary="Get list of companies",
      *      description="Returns list of companies",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *      @OA\Response(
      *          response=200,
      *          description="Successfully retrieved list of companies"
@@ -64,6 +76,18 @@ class CompanyController extends Controller
      *      tags={"CompanyControllerService"},
      *      summary="pluck list of companies",
      *      description="Returns list of plucked companies",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Parameter(
      *     name="cols",
      *     in="query",
@@ -113,6 +137,18 @@ class CompanyController extends Controller
      *      tags={"CompanyControllerService"},
      *      summary="Filter list of companies",
      *      description="Returns list of filtered companies",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Parameter(
      *     name="keyword",
      *     in="query",
@@ -193,6 +229,18 @@ class CompanyController extends Controller
      *      tags={"CompanyControllerService"},
      *      summary="Filter list of plucked companies",
      *      description="Returns list of filtered companies",
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="result",
+     *     in="query",
+     *     description="number of result",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Parameter(
      *     name="cols",
      *     in="query",

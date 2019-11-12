@@ -1037,17 +1037,17 @@
                 "operationId": "getInventoryList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number",
+                        "description": "Page number.",
                         "schema": {
                             "type": "integer"
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "Page size.",
                         "schema": {
                             "type": "integer"
                         }

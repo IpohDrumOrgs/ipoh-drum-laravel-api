@@ -25,15 +25,15 @@ class InventoryController extends Controller
      *      summary="Get list of inventories",
      *      description="Returns list of inventories",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
-     *     description="Page number",
+     *     description="Page number.",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="Page size.",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(

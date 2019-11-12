@@ -572,6 +572,572 @@
                 }
             }
         },
+        "/api/inventory": {
+            "get": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Get list of inventories",
+                "description": "Returns list of inventories",
+                "operationId": "getInventoryList",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of inventories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of inventories"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Creates a inventory.",
+                "operationId": "createInventory",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Inventoryname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "storeid",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "description": "Sku",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Product Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cost",
+                        "in": "query",
+                        "description": "Product Cost",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Product Selling Price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Product Discount",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "promoprice",
+                        "in": "query",
+                        "description": "Promotion Price",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promostartdate",
+                        "in": "query",
+                        "description": "Promotion Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promoenddate",
+                        "in": "query",
+                        "description": "Promotion End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stock",
+                        "in": "query",
+                        "description": "Stock Qty",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warrantyperiod",
+                        "in": "query",
+                        "description": "Warranty Period",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stockthreshold",
+                        "in": "query",
+                        "description": "Stock Threshold",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On Sale",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the inventory."
+                    }
+                }
+            }
+        },
+        "/api/pluck/inventories": {
+            "get": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "pluck list of inventories",
+                "description": "Returns list of plucked inventories",
+                "operationId": "pluckInventoryList",
+                "parameters": [
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of inventories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of inventories"
+                    }
+                }
+            }
+        },
+        "/api/filter/inventory": {
+            "get": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Filter list of inventories",
+                "description": "Returns list of filtered inventories",
+                "operationId": "filterInventoryList",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "onsale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered inventories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of inventories"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/inventory": {
+            "get": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Filter list of plucked inventories",
+                "description": "Returns list of filtered inventories",
+                "operationId": "filterPluckedInventoryList",
+                "parameters": [
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "onsale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered inventories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of inventories"
+                    }
+                }
+            }
+        },
+        "/api/inventory/{uid}": {
+            "get": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Retrieves inventory by inventoryId.",
+                "operationId": "getInventoryByInventoryId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Inventory_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the inventory."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Update inventory by inventoryId.",
+                "operationId": "updateInventoryByInventoryId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Inventory_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Inventoryname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "storeid",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "description": "Sku",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Product Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cost",
+                        "in": "query",
+                        "description": "Product Cost",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Product Selling Price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Product Discount",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "promoprice",
+                        "in": "query",
+                        "description": "Promotion Price",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promostartdate",
+                        "in": "query",
+                        "description": "Promotion Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promoenddate",
+                        "in": "query",
+                        "description": "Promotion End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stock",
+                        "in": "query",
+                        "description": "Stock Qty",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warrantyperiod",
+                        "in": "query",
+                        "description": "Warranty Period",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stockthreshold",
+                        "in": "query",
+                        "description": "Stock Threshold",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On Sale",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the inventory."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Set inventory's 'status' to 0.",
+                "operationId": "deleteInventoryByInventoryId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Inventory ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the inventory."
+                    }
+                }
+            }
+        },
+        "/api/pluck/inventory/{uid}": {
+            "get": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "pluck inventory",
+                "description": "Returns plucked inventories",
+                "operationId": "pluckInventory",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Inventory_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of inventories"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of inventories"
+                    }
+                }
+            }
+        },
         "/api/user": {
             "get": {
                 "tags": [

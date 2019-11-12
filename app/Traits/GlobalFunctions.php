@@ -155,4 +155,18 @@ trait GlobalFunctions {
     }
 
     
+    //convert string to double
+    public function toDouble($data){
+        return number_format((float)($data), 2,'.','');
+    }
+
+    //convert string to double
+    public function toInt($data){
+        return (int)$data;
+    }
+    
+    //convert string to double
+    public function toDate($data){
+        return Carbon::parse($data)->format('Y-m-d');
+    }
 }

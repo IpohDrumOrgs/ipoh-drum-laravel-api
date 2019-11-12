@@ -33,6 +33,7 @@ class CreateInventoriesTable extends Migration
             $table->integer('warrantyperiod')->default(0);
             $table->integer('stockthreshold')->default(0);
             $table->boolean('status')->default(1);
+            $table->boolean('onsale')->default(1);
             $table->string('lastedit_by')->nullable();
             $table->timestamps();
 

@@ -134,7 +134,8 @@ trait CompanyServices {
     
     private function pluckCompanyFilter($cols , $params) {
 
-        $data = Company::all();
+        //Unauthorized users cannot access deleted data
+        $data = Company::where('status',true)->get();
 
         if($params->keyword){
             error_log('Filtering companies with keyword....');
@@ -168,17 +169,6 @@ trait CompanyServices {
             
         } 
 
-        if($params->status){
-            error_log('Filtering companies with status....');
-            if($params->status == 'true'){
-                $data = $data->where('status', true);
-            }else if($params->status == 'false'){
-                $data = $data->where('status', false);
-            }else{
-                $data = $data->where('status', '!=', null);
-            }
-        }
-        
        
 
         $data = $data->unique('id');
@@ -223,6 +213,9 @@ trait CompanyServices {
         $data->state = $params->state;
         $data->country = $params->country;
         $companytype = CompanyType::find($params->companytypeid);
+        if($this->isEmpty($companytype)){
+            return null;
+        }
         $data->companytype()->associate($companytype);
         $data->status = true;
         try {
@@ -256,6 +249,9 @@ trait CompanyServices {
         $data->state = $params->state;
         $data->country = $params->country;
         $companytype = CompanyType::find($params->companytypeid);
+        if($this->isEmpty($companytype)){
+            return null;
+        }
         $data->companytype()->associate($companytype);
         try {
             $data->save();

@@ -512,12 +512,12 @@ class CompanyController extends Controller
         // Can only be used by Authorized personnel
         // api/company (POST)
         $this->validate($request, [
-            'email1' => 'email|max:191|unique:companies',
-            'email2' => 'email|max:191|unique:companies',
-            'fax1' => 'string|max:191|unique:companies',
-            'fax2' => 'string|max:191|unique:companies',
-            'tel1' => 'string|max:191|unique:companies',
-            'tel2' => 'string|max:191|unique:companies',
+            'email1' => 'nullable|email|max:191|unique:companies',
+            'email2' => 'nullable|email|max:191|unique:companies',
+            'fax1' => 'nullable|string|max:191|unique:companies',
+            'fax2' => 'nullable|string|max:191|unique:companies',
+            'tel1' => 'nullable|string|max:191|unique:companies',
+            'tel2' => 'nullable|string|max:191|unique:companies',
             'companytypeid' => 'required|string',
             'name' => 'required|string',
         ]);

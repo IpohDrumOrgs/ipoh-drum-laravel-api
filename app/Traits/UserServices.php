@@ -142,7 +142,8 @@ trait UserServices {
     
     private function pluckUserFilter($cols , $params) {
 
-        $data = User::all();
+        //Unauthorized users cannot access deleted data
+        $data = User::where('status',true)->get();
 
         if($params->keyword){
             error_log('Filtering users with keyword....');
@@ -175,17 +176,6 @@ trait UserServices {
             });
             
         } 
-
-        if($params->status){
-            error_log('Filtering users with status....');
-            if($params->status == 'true'){
-                $data = $data->where('status', true);
-            }else if($params->status == 'false'){
-                $data = $data->where('status', false);
-            }else{
-                $data = $data->where('status', '!=', null);
-            }
-        }
         
         if($params->company_id){
             error_log('Filtering users with company id....');

@@ -42,8 +42,11 @@ Route::group(['middleware' => ['auth:api']], function (){
     // Route::resource('account', 'API\AccountController');
     Route::resource('companytype', 'API\CompanyTypeController');
     Route::resource('role', 'API\RoleController');
-    // Route::resource('log', 'API\LogController');
+    Route::resource('log', 'API\LogController');
     Route::resource('module', 'API\ModuleController');
+    Route::resource('category', 'API\CategoryController');
+    Route::resource('type', 'API\TypeController');
+    Route::resource('productfeature', 'API\ProductFeatureController');
     Route::resource('inventory', 'API\InventoryController');
     Route::resource('sale', 'API\SaleController');
     Route::resource('payment', 'API\PaymentController');
@@ -62,6 +65,9 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::get('/filter/role', 'API\RoleController@filter');
     Route::get('/filter/log', 'API\LogController@filter');
     Route::get('/filter/module', 'API\ModuleController@filter');
+    Route::get('/filter/category', 'API\CategoryController@filter');
+    Route::get('/filter/type', 'API\TypeController@filter');
+    Route::get('/filter/productfeature', 'API\ProductFeatureController@filter');
     Route::get('/filter/inventory', 'API\InventoryController@filter');
     Route::get('/filter/inventorybatch', 'API\InventoryBatchController@filter');
     Route::get('/filter/sale', 'API\SaleController@filter');
@@ -96,5 +102,15 @@ Route::get('/pluck/inventory/{uid}', 'API\InventoryController@pluckShow');
 Route::get('/pluck/filter/inventory', 'API\InventoryController@pluckFilter');
 
 
+Route::get('/pluck/categories', 'API\CategoryController@pluckIndex');
+Route::get('/pluck/category/{uid}', 'API\CategoryController@pluckShow');
+Route::get('/pluck/filter/category', 'API\CategoryController@pluckFilter');
 
+Route::get('/pluck/types', 'API\TypeController@pluckIndex');
+Route::get('/pluck/type/{uid}', 'API\TypeController@pluckShow');
+Route::get('/pluck/filter/type', 'API\TypeController@pluckFilter');
+
+Route::get('/pluck/productfeatures', 'API\ProductFeatureController@pluckIndex');
+Route::get('/pluck/productfeature/{uid}', 'API\ProductFeatureController@pluckShow');
+Route::get('/pluck/filter/productfeature', 'API\ProductFeatureController@pluckFilter');
 

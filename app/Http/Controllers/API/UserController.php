@@ -681,6 +681,50 @@ class UserController extends Controller
         return response()->json($request->user(), 200);
     }
 
+    /**
+     * @OA\Post(
+     *   tags={"UserControllerService"},
+     *   summary="Register user.",
+     *     operationId="registerUser",
+     * path="/api/register",
+     *   @OA\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Username.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="email",
+     *     in="query",
+     *     description="Email.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="password",
+     *     in="query",
+     *     description="Password.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="password_confirmation",
+     *     in="query",
+     *     description="Confirm Password.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="User is already authenticated."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="User is not authenticated."
+     *   )
+     * )
+     */
     public function register(Request $request)
     {
         // TODO Registers users without needing authorization

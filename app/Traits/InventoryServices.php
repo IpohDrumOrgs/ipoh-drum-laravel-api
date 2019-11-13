@@ -35,6 +35,10 @@ trait InventoryServices {
                     foreach($stores as $store){
                         $data = $data->merge($store->inventories);
                     }
+                    $stores = $requester->stores;
+                    foreach($stores as $store){
+                        $data = $data->merge($store->inventories);
+                    }
                     break;
                 //Own Wide
                 case 4:

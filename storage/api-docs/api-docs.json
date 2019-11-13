@@ -2048,6 +2048,563 @@
                 }
             }
         },
+        "/api/store": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Get list of stores",
+                "description": "Returns list of stores",
+                "operationId": "getStoreList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of stores"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of stores"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Creates a store.",
+                "operationId": "createStore",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Storename",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "companyid",
+                        "in": "query",
+                        "description": "Company ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "userid",
+                        "in": "query",
+                        "description": "User ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "companyBelongings",
+                        "in": "query",
+                        "description": "Store belongs to Company",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "contact",
+                        "in": "query",
+                        "description": "Contact",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "postcode",
+                        "in": "query",
+                        "description": "Post Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "State",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "City",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Country",
+                        "in": "query",
+                        "description": "Country",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Store has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the store."
+                    }
+                }
+            }
+        },
+        "/api/pluck/stores": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "pluck list of stores",
+                "description": "Returns list of plucked stores",
+                "operationId": "pluckStoreList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of stores"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of stores"
+                    }
+                }
+            }
+        },
+        "/api/filter/store": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Filter list of stores",
+                "description": "Returns list of filtered stores",
+                "operationId": "filterStoreList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "onsale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered stores"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of stores"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/store": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Filter list of plucked stores",
+                "description": "Returns list of filtered stores",
+                "operationId": "filterPluckedStoreList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "onsale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered stores"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of stores"
+                    }
+                }
+            }
+        },
+        "/api/store/{uid}": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Retrieves store by storeId.",
+                "operationId": "getStoreByStoreId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Store has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the store."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Update store by storeId.",
+                "operationId": "updateStoreByStoreId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Storename",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "companyid",
+                        "in": "query",
+                        "description": "Company ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "userid",
+                        "in": "query",
+                        "description": "User ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "companyBelongings",
+                        "in": "query",
+                        "description": "Store belongs to Company",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "contact",
+                        "in": "query",
+                        "description": "Contact",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Address",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "postcode",
+                        "in": "query",
+                        "description": "Post Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "State",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "City",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Country",
+                        "in": "query",
+                        "description": "Country",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Store has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the store."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Set store's 'status' to 0.",
+                "operationId": "deleteStoreByStoreId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Store has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the store."
+                    }
+                }
+            }
+        },
+        "/api/pluck/store/{uid}": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "pluck store",
+                "description": "Returns plucked stores",
+                "operationId": "pluckStore",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of stores"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of stores"
+                    }
+                }
+            }
+        },
         "/api/ticket": {
             "get": {
                 "tags": [
@@ -2178,6 +2735,7 @@
                         "name": "enddate",
                         "in": "query",
                         "description": "Ticket End Date",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -2556,6 +3114,7 @@
                         "name": "enddate",
                         "in": "query",
                         "description": "Ticket End Date",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }

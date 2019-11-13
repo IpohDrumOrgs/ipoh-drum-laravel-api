@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('type', 'API\TypeController');
     Route::resource('productfeature', 'API\ProductFeatureController');
     Route::resource('inventory', 'API\InventoryController');
+    Route::resource('store', 'API\StoreController');
     Route::resource('ticket', 'API\TicketController');
     Route::resource('sale', 'API\SaleController');
     Route::resource('payment', 'API\PaymentController');
@@ -70,6 +71,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::get('/filter/type', 'API\TypeController@filter');
     Route::get('/filter/productfeature', 'API\ProductFeatureController@filter');
     Route::get('/filter/inventory', 'API\InventoryController@filter');
+    Route::get('/filter/store', 'API\StoreController@filter');
     Route::get('/filter/ticket', 'API\TicketController@filter');
     Route::get('/filter/inventorybatch', 'API\InventoryBatchController@filter');
     Route::get('/filter/sale', 'API\SaleController@filter');
@@ -119,3 +121,6 @@ Route::get('/pluck/productfeatures', 'API\ProductFeatureController@pluckIndex');
 Route::get('/pluck/productfeature/{uid}', 'API\ProductFeatureController@pluckShow');
 Route::get('/pluck/filter/productfeature', 'API\ProductFeatureController@pluckFilter');
 
+Route::get('/pluck/stores', 'API\StoreController@pluckIndex');
+Route::get('/pluck/store/{uid}', 'API\StoreController@pluckShow');
+Route::get('/pluck/filter/store', 'API\StoreController@pluckFilter');

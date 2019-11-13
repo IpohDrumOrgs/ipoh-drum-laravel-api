@@ -25,8 +25,10 @@ class CreateStoresTable extends Migration
             $table->string('address')->nullable();
             $table->string('state')->nullable();
             $table->string('postcode')->nullable();
+            $table->string('city')->nullable();
             $table->string('country')->nullable();
             $table->boolean('status')->default(true);
+            $table->boolean('companyBelongings')->default(true);
             $table->string('lastedit_by')->nullable();
             $table->timestamps();
 

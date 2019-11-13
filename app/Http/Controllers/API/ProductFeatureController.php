@@ -25,15 +25,15 @@ class ProductFeatureController extends Controller
      *      summary="Get list of productfeatures",
      *      description="Returns list of productfeatures",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -60,10 +60,10 @@ class ProductFeatureController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($productfeatures, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Product Features');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -77,15 +77,15 @@ class ProductFeatureController extends Controller
      *      summary="pluck list of productfeatures",
      *      description="Returns list of plucked productfeatures",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -120,10 +120,10 @@ class ProductFeatureController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($productfeatures, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Product Features');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -138,15 +138,15 @@ class ProductFeatureController extends Controller
      *      summary="Filter list of productfeatures",
      *      description="Returns list of filtered productfeatures",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -206,9 +206,9 @@ class ProductFeatureController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($productfeatures, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Product Features');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -224,15 +224,15 @@ class ProductFeatureController extends Controller
      *      summary="Filter list of plucked productfeatures",
      *      description="Returns list of filtered productfeatures",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -293,9 +293,9 @@ class ProductFeatureController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($productfeatures, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Product Features');
             $data['code'] = 200;
             return response()->json($data, 200);

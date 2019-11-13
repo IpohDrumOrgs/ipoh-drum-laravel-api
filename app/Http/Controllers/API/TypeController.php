@@ -25,15 +25,15 @@ class TypeController extends Controller
      *      summary="Get list of types",
      *      description="Returns list of types",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -60,10 +60,10 @@ class TypeController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($types, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($types, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Types');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -77,15 +77,15 @@ class TypeController extends Controller
      *      summary="pluck list of types",
      *      description="Returns list of plucked types",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -120,10 +120,10 @@ class TypeController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($types, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($types, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Types');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -138,15 +138,15 @@ class TypeController extends Controller
      *      summary="Filter list of types",
      *      description="Returns list of filtered types",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -206,9 +206,9 @@ class TypeController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($types, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($types, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Types');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -224,15 +224,15 @@ class TypeController extends Controller
      *      summary="Filter list of plucked types",
      *      description="Returns list of filtered types",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -293,9 +293,9 @@ class TypeController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($types, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($types, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Types');
             $data['code'] = 200;
             return response()->json($data, 200);

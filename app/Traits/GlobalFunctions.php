@@ -167,6 +167,6 @@ trait GlobalFunctions {
     
     //convert string to double
     public function toDate($data){
-        return Carbon::parse($data)->format('Y-m-d');
+        return Carbon::parse($data);
     }
 }

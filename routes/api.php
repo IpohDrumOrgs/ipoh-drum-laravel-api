@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('type', 'API\TypeController');
     Route::resource('productfeature', 'API\ProductFeatureController');
     Route::resource('inventory', 'API\InventoryController');
+    Route::resource('ticket', 'API\TicketController');
     Route::resource('sale', 'API\SaleController');
     Route::resource('payment', 'API\PaymentController');
     // Route::resource('purchase', 'API\PurchaseController');
@@ -69,6 +70,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::get('/filter/type', 'API\TypeController@filter');
     Route::get('/filter/productfeature', 'API\ProductFeatureController@filter');
     Route::get('/filter/inventory', 'API\InventoryController@filter');
+    Route::get('/filter/ticket', 'API\TicketController@filter');
     Route::get('/filter/inventorybatch', 'API\InventoryBatchController@filter');
     Route::get('/filter/sale', 'API\SaleController@filter');
     Route::get('/filter/payment', 'API\PaymentController@filter');
@@ -101,6 +103,9 @@ Route::get('/pluck/inventories', 'API\InventoryController@pluckIndex');
 Route::get('/pluck/inventory/{uid}', 'API\InventoryController@pluckShow');
 Route::get('/pluck/filter/inventory', 'API\InventoryController@pluckFilter');
 
+Route::get('/pluck/tickets', 'API\TicketController@pluckIndex');
+Route::get('/pluck/ticket/{uid}', 'API\TicketController@pluckShow');
+Route::get('/pluck/filter/ticket', 'API\TicketController@pluckFilter');
 
 Route::get('/pluck/categories', 'API\CategoryController@pluckIndex');
 Route::get('/pluck/category/{uid}', 'API\CategoryController@pluckShow');

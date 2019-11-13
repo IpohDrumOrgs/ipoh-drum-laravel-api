@@ -25,7 +25,7 @@
                 "operationId": "getCategoryList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -33,9 +33,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -96,7 +96,7 @@
                 "operationId": "pluckCategoryList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -104,9 +104,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -141,7 +141,7 @@
                 "operationId": "filterCategoryList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -149,9 +149,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -209,7 +209,7 @@
                 "operationId": "filterPluckedCategoryList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -217,9 +217,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -414,7 +414,7 @@
                 "operationId": "getCompanyList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -422,9 +422,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -590,7 +590,7 @@
                 "operationId": "pluckCompanyList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -598,9 +598,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -635,7 +635,7 @@
                 "operationId": "filterCompanyList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -643,9 +643,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -711,7 +711,7 @@
                 "operationId": "filterPluckedCompanyList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -719,9 +719,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1669,7 +1669,7 @@
                 "operationId": "getProductFeatureList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -1677,9 +1677,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1740,7 +1740,7 @@
                 "operationId": "pluckProductFeatureList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -1748,9 +1748,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1785,7 +1785,7 @@
                 "operationId": "filterProductFeatureList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -1793,9 +1793,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1853,7 +1853,7 @@
                 "operationId": "filterPluckedProductFeatureList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -1861,9 +1861,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2048,6 +2048,620 @@
                 }
             }
         },
+        "/api/ticket": {
+            "get": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "Get list of tickets",
+                "description": "Returns list of tickets",
+                "operationId": "getTicketList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of tickets"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of tickets"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "Creates a ticket.",
+                "operationId": "createTicket",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Ticketname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "storeid",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "description": "Sku",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Product Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Product Selling Price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Product Discount",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "promoprice",
+                        "in": "query",
+                        "description": "Promotion Price",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promostartdate",
+                        "in": "query",
+                        "description": "Promotion Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promoenddate",
+                        "in": "query",
+                        "description": "Promotion End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "description": "Ticket End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stock",
+                        "in": "query",
+                        "description": "Stock Qty",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stockthreshold",
+                        "in": "query",
+                        "description": "Stock Threshold",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On Sale",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ticket has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the ticket."
+                    }
+                }
+            }
+        },
+        "/api/pluck/tickets": {
+            "get": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "pluck list of tickets",
+                "description": "Returns list of plucked tickets",
+                "operationId": "pluckTicketList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of tickets"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of tickets"
+                    }
+                }
+            }
+        },
+        "/api/filter/ticket": {
+            "get": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "Filter list of tickets",
+                "description": "Returns list of filtered tickets",
+                "operationId": "filterTicketList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "onsale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered tickets"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of tickets"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/ticket": {
+            "get": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "Filter list of plucked tickets",
+                "description": "Returns list of filtered tickets",
+                "operationId": "filterPluckedTicketList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "onsale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered tickets"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of tickets"
+                    }
+                }
+            }
+        },
+        "/api/ticket/{uid}": {
+            "get": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "Retrieves ticket by ticketId.",
+                "operationId": "getTicketByTicketId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Ticket_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ticket has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the ticket."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "Update ticket by ticketId.",
+                "operationId": "updateTicketByTicketId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Ticket_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Ticketname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "storeid",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "description": "Sku",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Product Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Product Selling Price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Product Discount",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "promoprice",
+                        "in": "query",
+                        "description": "Promotion Price",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promostartdate",
+                        "in": "query",
+                        "description": "Promotion Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promoenddate",
+                        "in": "query",
+                        "description": "Promotion End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "description": "Ticket End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stock",
+                        "in": "query",
+                        "description": "Stock Qty",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stockthreshold",
+                        "in": "query",
+                        "description": "Stock Threshold",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On Sale",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ticket has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the ticket."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "Set ticket's 'status' to 0.",
+                "operationId": "deleteTicketByTicketId",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Ticket ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ticket has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the ticket."
+                    }
+                }
+            }
+        },
+        "/api/pluck/ticket/{uid}": {
+            "get": {
+                "tags": [
+                    "TicketControllerService"
+                ],
+                "summary": "pluck ticket",
+                "description": "Returns plucked tickets",
+                "operationId": "pluckTicket",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Ticket_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of tickets"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of tickets"
+                    }
+                }
+            }
+        },
         "/api/type": {
             "get": {
                 "tags": [
@@ -2058,7 +2672,7 @@
                 "operationId": "getTypeList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -2066,9 +2680,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2129,7 +2743,7 @@
                 "operationId": "pluckTypeList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -2137,9 +2751,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2174,7 +2788,7 @@
                 "operationId": "filterTypeList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -2182,9 +2796,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2242,7 +2856,7 @@
                 "operationId": "filterPluckedTypeList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -2250,9 +2864,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2447,7 +3061,7 @@
                 "operationId": "getUserList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -2455,9 +3069,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2553,7 +3167,7 @@
                         }
                     },
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -2561,9 +3175,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2589,7 +3203,7 @@
                 "operationId": "filterUserList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -2597,9 +3211,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2665,7 +3279,7 @@
                 "operationId": "filterPluckedUserList",
                 "parameters": [
                     {
-                        "name": "page",
+                        "name": "pageNumber",
                         "in": "query",
                         "description": "Page number",
                         "schema": {
@@ -2673,9 +3287,9 @@
                         }
                     },
                     {
-                        "name": "result",
+                        "name": "pageSize",
                         "in": "query",
-                        "description": "number of result",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }

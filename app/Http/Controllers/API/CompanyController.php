@@ -25,15 +25,15 @@ class CompanyController extends Controller
      *      summary="Get list of companies",
      *      description="Returns list of companies",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -60,10 +60,10 @@ class CompanyController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($companies, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($companies, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Companies');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -77,15 +77,15 @@ class CompanyController extends Controller
      *      summary="pluck list of companies",
      *      description="Returns list of plucked companies",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -120,10 +120,10 @@ class CompanyController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($companies, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($companies, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Companies');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -138,15 +138,15 @@ class CompanyController extends Controller
      *      summary="Filter list of companies",
      *      description="Returns list of filtered companies",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -212,9 +212,9 @@ class CompanyController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($companies, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($companies, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Companies');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -230,15 +230,15 @@ class CompanyController extends Controller
      *      summary="Filter list of plucked companies",
      *      description="Returns list of filtered companies",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -311,9 +311,9 @@ class CompanyController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($companies, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($companies, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Companies');
             $data['code'] = 200;
             return response()->json($data, 200);

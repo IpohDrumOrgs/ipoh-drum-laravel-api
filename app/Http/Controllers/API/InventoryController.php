@@ -60,10 +60,10 @@ class InventoryController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($inventories, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($inventories, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -120,10 +120,10 @@ class InventoryController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($inventories, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($inventories, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -212,9 +212,9 @@ class InventoryController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($inventories, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($inventories, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -311,9 +311,9 @@ class InventoryController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($inventories, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($inventories, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
             $data['code'] = 200;
             return response()->json($data, 200);

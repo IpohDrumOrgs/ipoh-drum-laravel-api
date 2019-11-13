@@ -25,15 +25,15 @@ class UserController extends Controller
      *      summary="Get list of users",
      *      description="Returns list of users",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -60,10 +60,10 @@ class UserController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($users, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($users, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -84,15 +84,15 @@ class UserController extends Controller
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -120,10 +120,10 @@ class UserController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($users, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($users, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -138,15 +138,15 @@ class UserController extends Controller
      *      summary="Filter list of users",
      *      description="Returns list of filtered users",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -212,9 +212,9 @@ class UserController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($users, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($users, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -230,15 +230,15 @@ class UserController extends Controller
      *      summary="Filter list of plucked users",
      *      description="Returns list of filtered users",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -311,9 +311,9 @@ class UserController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($users, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($users, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($users->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Users');
             $data['code'] = 200;
             return response()->json($data, 200);

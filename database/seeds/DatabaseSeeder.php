@@ -26,20 +26,34 @@ class DatabaseSeeder extends Seeder
         // // $this->call(CompanyTypeTableModuleTableSeeder::class);
         // $this->call(PriceListModuleTableSeeder::class);
 
-
+        //Role Based Module
         $this->call(ModuleTableSeeder::class);
         $this->call(ModuleUserSeeder::class);
         $this->call(ModuleCompanySeeder::class);
         $this->call(ModuleCompanyTypeSeeder::class);
         $this->call(ModuleGroupSeeder::class);
+        $this->call(ModuleRoleSeeder::class);
+
+        //Store Management Module
         $this->call(ModuleInventorySeeder::class);
+        $this->call(ModuleTicketSeeder::class);
         $this->call(ModulePaymentSeeder::class);
         $this->call(ModulePurchaseSeeder::class);
-        $this->call(ModuleRoleSeeder::class);
         $this->call(ModuleSaleSeeder::class);
         $this->call(ModuleCategorySeeder::class);
         $this->call(ModuleTypeSeeder::class);
+        $this->call(ModuleBackOrderSeeder::class);
         $this->call(ModuleProductFeatureSeeder::class);
+        $this->call(ModuleVerificationCodeSeeder::class);
+        $this->call(ModuleStoreSeeder::class);
+
+        //Video Management Module
+        $this->call(ModuleChannelSeeder::class);
+        $this->call(ModuleVideoSeeder::class);
+
+        //Article Management Module
+        $this->call(ModuleArticleSeeder::class);
+
 
         $this->call(RoleTableSeeder::class);
         $this->call(RoleAdminSeeder::class);
@@ -56,7 +70,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductFeatureTableSeeder::class);
         $this->call(StoreTableSeeder::class);
         $this->call(TicketTableSeeder::class);
-        // $this->call(AccountTableSeeder::class);
         $this->call(InventoryTableSeeder::class);
     }
 }

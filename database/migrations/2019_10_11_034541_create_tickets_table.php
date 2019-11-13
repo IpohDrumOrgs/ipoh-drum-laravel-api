@@ -31,7 +31,7 @@ class CreateTicketsTable extends Migration
             $table->integer('salesqty')->default(0);
             $table->dateTime('enddate');
             $table->integer('stockthreshold')->default(0);
-            $table->boolean('backorder')->default(0);
+            $table->boolean('onsale')->default(1);
             $table->boolean('status')->default(1);
             $table->string('lastedit_by')->nullable();
             $table->timestamps();

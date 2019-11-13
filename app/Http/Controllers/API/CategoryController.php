@@ -25,15 +25,15 @@ class CategoryController extends Controller
      *      summary="Get list of categories",
      *      description="Returns list of categories",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -60,10 +60,10 @@ class CategoryController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($categories, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($categories, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Categories');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -77,15 +77,15 @@ class CategoryController extends Controller
      *      summary="pluck list of categories",
      *      description="Returns list of plucked categories",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -120,10 +120,10 @@ class CategoryController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($categories, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($categories, $request->pageSize, $request->pageNumber);
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Categories');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -138,15 +138,15 @@ class CategoryController extends Controller
      *      summary="Filter list of categories",
      *      description="Returns list of filtered categories",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -206,9 +206,9 @@ class CategoryController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($categories, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($categories, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Categories');
             $data['code'] = 200;
             return response()->json($data, 200);
@@ -224,15 +224,15 @@ class CategoryController extends Controller
      *      summary="Filter list of plucked categories",
      *      description="Returns list of filtered categories",
      *   @OA\Parameter(
-     *     name="page",
+     *     name="pageNumber",
      *     in="query",
      *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
-     *     name="result",
+     *     name="pageSize",
      *     in="query",
-     *     description="number of result",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -293,9 +293,9 @@ class CategoryController extends Controller
         } else {
             //Page Pagination Result List
             //Default return 10
-            $paginateddata = $this->paginateResult($categories, $request->result, $request->page);
+            $paginateddata = $this->paginateResult($categories, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->result);
+            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->pageSize);
             $data['msg'] = $this->getRetrievedSuccessMsg('Categories');
             $data['code'] = 200;
             return response()->json($data, 200);

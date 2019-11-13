@@ -325,8 +325,8 @@ class UserController extends Controller
      * @OA\Get(
      *   tags={"UserControllerService"},
      *   path="/api/user/{uid}",
-     *   summary="Retrieves user by userId.",
-     *     operationId="getUserByUserId",
+     *   summary="Retrieves user by Uid.",
+     *     operationId="getUserByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -367,7 +367,7 @@ class UserController extends Controller
     /**
      * @OA\Get(
      *      path="/api/pluck/user/{uid}",
-     *      operationId="pluckUser",
+     *      operationId="pluckUserByUid",
      *      tags={"UserControllerService"},
      *      summary="pluck user",
      *      description="Returns plucked users",
@@ -522,8 +522,8 @@ class UserController extends Controller
      * @OA\Put(
      *   tags={"UserControllerService"},
      *   path="/api/user/{uid}",
-     *   summary="Update user by userId.",
-     *     operationId="updateUserByUserId",
+     *   summary="Update user by Uid.",
+     *     operationId="updateUserByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -657,7 +657,7 @@ class UserController extends Controller
      *   tags={"UserControllerService"},
      *   path="/api/user/{uid}",
      *   summary="Set user's 'status' to 0.",
-     *     operationId="deleteUserByUserId",
+     *     operationId="deleteUserByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

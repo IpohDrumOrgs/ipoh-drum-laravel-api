@@ -325,8 +325,8 @@ class TicketController extends Controller
      * @OA\Get(
      *   tags={"TicketControllerService"},
      *   path="/api/ticket/{uid}",
-     *   summary="Retrieves ticket by ticketId.",
-     *     operationId="getTicketByTicketId",
+     *   summary="Retrieves ticket by Uid.",
+     *     operationId="getTicketByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -367,7 +367,7 @@ class TicketController extends Controller
     /**
      * @OA\Get(
      *      path="/api/pluck/ticket/{uid}",
-     *      operationId="pluckTicket",
+     *      operationId="pluckTicketByUid",
      *      tags={"TicketControllerService"},
      *      summary="pluck ticket",
      *      description="Returns plucked tickets",
@@ -437,7 +437,7 @@ class TicketController extends Controller
      * description="Store ID",
      * required=true,
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -613,8 +613,8 @@ class TicketController extends Controller
      * @OA\Put(
      *   tags={"TicketControllerService"},
      *   path="/api/ticket/{uid}",
-     *   summary="Update ticket by ticketId.",
-     *     operationId="updateTicketByTicketId",
+     *   summary="Update ticket by Uid.",
+     *     operationId="updateTicketByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -637,7 +637,7 @@ class TicketController extends Controller
      * description="Store ID",
      * required=true,
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -824,7 +824,7 @@ class TicketController extends Controller
      *   tags={"TicketControllerService"},
      *   path="/api/ticket/{uid}",
      *   summary="Set ticket's 'status' to 0.",
-     *     operationId="deleteTicketByTicketId",
+     *     operationId="deleteTicketByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

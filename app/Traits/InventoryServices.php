@@ -225,6 +225,13 @@ trait InventoryServices {
         $data->warrantyperiod = $this->toInt($params->warrantyperiod);
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
+        
+        if(!$this->isEmpty($data->promostartdate) || !$this->isEmpty($data->promoenddate)){
+            $data->onpromo = true;
+        }else{
+            $data->onpromo = false;
+        }
+
         $store = Store::find($params->storeid);
         if($this->isEmpty($store)){
             return null;
@@ -262,6 +269,13 @@ trait InventoryServices {
         $data->warrantyperiod = $this->toInt($params->warrantyperiod);
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
+
+        if(!$this->isEmpty($data->promostartdate) || !$this->isEmpty($data->promoenddate)){
+            $data->onpromo = true;
+        }else{
+            $data->onpromo = false;
+        }
+
         $store = Store::find($params->storeid);
         if($this->isEmpty($store)){
             return null;

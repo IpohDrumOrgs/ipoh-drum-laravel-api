@@ -325,8 +325,8 @@ class CompanyController extends Controller
      * @OA\Get(
      *   tags={"CompanyControllerService"},
      *   path="/api/company/{uid}",
-     *   summary="Retrieves company by companyId.",
-     *     operationId="getCompanyByCompanyId",
+     *   summary="Retrieves company by Uid.",
+     *     operationId="getCompanyByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -367,7 +367,7 @@ class CompanyController extends Controller
     /**
      * @OA\Get(
      *      path="/api/pluck/company/{uid}",
-     *      operationId="pluckCompany",
+     *      operationId="pluckCompanyByUid",
      *      tags={"CompanyControllerService"},
      *      summary="pluck company",
      *      description="Returns plucked companies",
@@ -437,7 +437,7 @@ class CompanyController extends Controller
      * description="Company Type ID",
      * required=true,
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -611,8 +611,8 @@ class CompanyController extends Controller
      * @OA\Put(
      *   tags={"CompanyControllerService"},
      *   path="/api/company/{uid}",
-     *   summary="Update company by companyId.",
-     *     operationId="updateCompanyByCompanyId",
+     *   summary="Update company by Uid.",
+     *     operationId="updateCompanyByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -635,7 +635,7 @@ class CompanyController extends Controller
      * description="Company Type ID",
      * required=true,
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -818,7 +818,7 @@ class CompanyController extends Controller
      *   tags={"CompanyControllerService"},
      *   path="/api/company/{uid}",
      *   summary="Set company's 'status' to 0.",
-     *     operationId="deleteCompanyByCompanyId",
+     *     operationId="deleteCompanyByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

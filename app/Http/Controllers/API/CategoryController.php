@@ -307,8 +307,8 @@ class CategoryController extends Controller
      * @OA\Get(
      *   tags={"CategoryControllerService"},
      *   path="/api/category/{uid}",
-     *   summary="Retrieves category by categoryId.",
-     *     operationId="getCategoryByCategoryId",
+     *   summary="Retrieves category by Uid.",
+     *     operationId="getCategoryByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -349,7 +349,7 @@ class CategoryController extends Controller
     /**
      * @OA\Get(
      *      path="/api/pluck/category/{uid}",
-     *      operationId="pluckCategory",
+     *      operationId="pluckCategoryByUid",
      *      tags={"CategoryControllerService"},
      *      summary="pluck category",
      *      description="Returns plucked categories",
@@ -469,8 +469,8 @@ class CategoryController extends Controller
      * @OA\Put(
      *   tags={"CategoryControllerService"},
      *   path="/api/category/{uid}",
-     *   summary="Update category by categoryId.",
-     *     operationId="updateCategoryByCategoryId",
+     *   summary="Update category by Uid.",
+     *     operationId="updateCategoryByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -553,7 +553,7 @@ class CategoryController extends Controller
      *   tags={"CategoryControllerService"},
      *   path="/api/category/{uid}",
      *   summary="Set category's 'status' to 0.",
-     *     operationId="deleteCategoryByCategoryId",
+     *     operationId="deleteCategoryByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

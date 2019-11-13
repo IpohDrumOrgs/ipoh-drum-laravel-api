@@ -147,26 +147,42 @@ trait GlobalFunctions {
     
     //Split the string to array
     public function splitToArray($params){
-        $params = collect(explode(',' , $params));
-        $params = $params->map(function ($item, $key) {
-            return trim($item);
-        });
-        return $params->toArray();
+        if($this->isEmpty($data)){
+            return null;
+        }else{
+            $params = collect(explode(',' , $params));
+            $params = $params->map(function ($item, $key) {
+                return trim($item);
+            });
+            return $params->toArray();
+        }
     }
 
     
     //convert string to double
     public function toDouble($data){
-        return number_format((float)($data), 2,'.','');
+        if($this->isEmpty($data)){
+            return null;
+        }else{
+            return number_format((float)($data), 2,'.','');
+        }
     }
 
     //convert string to double
     public function toInt($data){
-        return (int)$data;
+        if($this->isEmpty($data)){
+            return null;
+        }else{
+            return (int)$data;
+        }
     }
     
     //convert string to double
     public function toDate($data){
-        return Carbon::parse($data);
+        if($this->isEmpty($data)){
+            return null;
+        }else{
+            return Carbon::parse($data);
+        }
     }
 }

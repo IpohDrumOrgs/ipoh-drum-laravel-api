@@ -325,8 +325,8 @@ class InventoryController extends Controller
      * @OA\Get(
      *   tags={"InventoryControllerService"},
      *   path="/api/inventory/{uid}",
-     *   summary="Retrieves inventory by inventoryId.",
-     *     operationId="getInventoryByInventoryId",
+     *   summary="Retrieves inventory by Uid.",
+     *     operationId="getInventoryByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -367,7 +367,7 @@ class InventoryController extends Controller
     /**
      * @OA\Get(
      *      path="/api/pluck/inventory/{uid}",
-     *      operationId="pluckInventory",
+     *      operationId="pluckInventoryByUid",
      *      tags={"InventoryControllerService"},
      *      summary="pluck inventory",
      *      description="Returns plucked inventories",
@@ -437,7 +437,7 @@ class InventoryController extends Controller
      * description="Store ID",
      * required=true,
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -617,8 +617,8 @@ class InventoryController extends Controller
      * @OA\Put(
      *   tags={"InventoryControllerService"},
      *   path="/api/inventory/{uid}",
-     *   summary="Update inventory by inventoryId.",
-     *     operationId="updateInventoryByInventoryId",
+     *   summary="Update inventory by Uid.",
+     *     operationId="updateInventoryByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -641,7 +641,7 @@ class InventoryController extends Controller
      * description="Store ID",
      * required=true,
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -838,7 +838,7 @@ class InventoryController extends Controller
      *   tags={"InventoryControllerService"},
      *   path="/api/inventory/{uid}",
      *   summary="Set inventory's 'status' to 0.",
-     *     operationId="deleteInventoryByInventoryId",
+     *     operationId="deleteInventoryByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

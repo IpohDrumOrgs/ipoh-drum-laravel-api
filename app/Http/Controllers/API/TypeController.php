@@ -307,8 +307,8 @@ class TypeController extends Controller
      * @OA\Get(
      *   tags={"TypeControllerService"},
      *   path="/api/type/{uid}",
-     *   summary="Retrieves type by typeId.",
-     *     operationId="getTypeByTypeId",
+     *   summary="Retrieves type by Uid.",
+     *     operationId="getTypeByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -349,7 +349,7 @@ class TypeController extends Controller
     /**
      * @OA\Get(
      *      path="/api/pluck/type/{uid}",
-     *      operationId="pluckType",
+     *      operationId="pluckTypeByUid",
      *      tags={"TypeControllerService"},
      *      summary="pluck type",
      *      description="Returns plucked types",
@@ -469,8 +469,8 @@ class TypeController extends Controller
      * @OA\Put(
      *   tags={"TypeControllerService"},
      *   path="/api/type/{uid}",
-     *   summary="Update type by typeId.",
-     *     operationId="updateTypeByTypeId",
+     *   summary="Update type by Uid.",
+     *     operationId="updateTypeByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -553,7 +553,7 @@ class TypeController extends Controller
      *   tags={"TypeControllerService"},
      *   path="/api/type/{uid}",
      *   summary="Set type's 'status' to 0.",
-     *     operationId="deleteTypeByTypeId",
+     *     operationId="deleteTypeByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

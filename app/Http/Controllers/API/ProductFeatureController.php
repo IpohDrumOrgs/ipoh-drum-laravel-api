@@ -307,8 +307,8 @@ class ProductFeatureController extends Controller
      * @OA\Get(
      *   tags={"ProductFeatureControllerService"},
      *   path="/api/productfeature/{uid}",
-     *   summary="Retrieves productfeature by productfeatureId.",
-     *     operationId="getProductFeatureByProductFeatureId",
+     *   summary="Retrieves productfeature by Uid.",
+     *     operationId="getProductFeatureByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -349,7 +349,7 @@ class ProductFeatureController extends Controller
     /**
      * @OA\Get(
      *      path="/api/pluck/productfeature/{uid}",
-     *      operationId="pluckProductFeature",
+     *      operationId="pluckProductFeatureByUid",
      *      tags={"ProductFeatureControllerService"},
      *      summary="pluck productfeature",
      *      description="Returns plucked productfeatures",
@@ -469,8 +469,8 @@ class ProductFeatureController extends Controller
      * @OA\Put(
      *   tags={"ProductFeatureControllerService"},
      *   path="/api/productfeature/{uid}",
-     *   summary="Update productfeature by productfeatureId.",
-     *     operationId="updateProductFeatureByProductFeatureId",
+     *   summary="Update productfeature by Uid.",
+     *     operationId="updateProductFeatureByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -553,7 +553,7 @@ class ProductFeatureController extends Controller
      *   tags={"ProductFeatureControllerService"},
      *   path="/api/productfeature/{uid}",
      *   summary="Set productfeature's 'status' to 0.",
-     *     operationId="deleteProductFeatureByProductFeatureId",
+     *     operationId="deleteProductFeatureByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

@@ -325,8 +325,8 @@ class StoreController extends Controller
      * @OA\Get(
      *   tags={"StoreControllerService"},
      *   path="/api/store/{uid}",
-     *   summary="Retrieves store by storeId.",
-     *     operationId="getStoreByStoreId",
+     *   summary="Retrieves store by Uid.",
+     *     operationId="getStoreByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -367,7 +367,7 @@ class StoreController extends Controller
     /**
      * @OA\Get(
      *      path="/api/pluck/store/{uid}",
-     *      operationId="pluckStore",
+     *      operationId="pluckStoreByUid",
      *      tags={"StoreControllerService"},
      *      summary="pluck store",
      *      description="Returns plucked stores",
@@ -436,7 +436,7 @@ class StoreController extends Controller
      * in="query",
      * description="Company ID",
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -444,7 +444,7 @@ class StoreController extends Controller
      * in="query",
      * description="User ID",
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -569,8 +569,8 @@ class StoreController extends Controller
      * @OA\Put(
      *   tags={"StoreControllerService"},
      *   path="/api/store/{uid}",
-     *   summary="Update store by storeId.",
-     *     operationId="updateStoreByStoreId",
+     *   summary="Update store by Uid.",
+     *     operationId="updateStoreByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -592,7 +592,7 @@ class StoreController extends Controller
      * in="query",
      * description="Company ID",
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -600,7 +600,7 @@ class StoreController extends Controller
      * in="query",
      * description="User ID",
      * @OA\Schema(
-     *              type="string"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -732,7 +732,7 @@ class StoreController extends Controller
      *   tags={"StoreControllerService"},
      *   path="/api/store/{uid}",
      *   summary="Set store's 'status' to 0.",
-     *     operationId="deleteStoreByStoreId",
+     *     operationId="deleteStoreByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

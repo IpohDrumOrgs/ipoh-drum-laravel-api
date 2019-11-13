@@ -273,8 +273,8 @@
                 "tags": [
                     "CategoryControllerService"
                 ],
-                "summary": "Retrieves category by categoryId.",
-                "operationId": "getCategoryByCategoryId",
+                "summary": "Retrieves category by Uid.",
+                "operationId": "getCategoryByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -299,8 +299,8 @@
                 "tags": [
                     "CategoryControllerService"
                 ],
-                "summary": "Update category by categoryId.",
-                "operationId": "updateCategoryByCategoryId",
+                "summary": "Update category by Uid.",
+                "operationId": "updateCategoryByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -344,7 +344,7 @@
                     "CategoryControllerService"
                 ],
                 "summary": "Set category's 'status' to 0.",
-                "operationId": "deleteCategoryByCategoryId",
+                "operationId": "deleteCategoryByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -373,7 +373,7 @@
                 ],
                 "summary": "pluck category",
                 "description": "Returns plucked categories",
-                "operationId": "pluckCategory",
+                "operationId": "pluckCategoryByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -461,7 +461,7 @@
                         "description": "Company Type ID",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -791,8 +791,8 @@
                 "tags": [
                     "CompanyControllerService"
                 ],
-                "summary": "Retrieves company by companyId.",
-                "operationId": "getCompanyByCompanyId",
+                "summary": "Retrieves company by Uid.",
+                "operationId": "getCompanyByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -817,8 +817,8 @@
                 "tags": [
                     "CompanyControllerService"
                 ],
-                "summary": "Update company by companyId.",
-                "operationId": "updateCompanyByCompanyId",
+                "summary": "Update company by Uid.",
+                "operationId": "updateCompanyByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -844,7 +844,7 @@
                         "description": "Company Type ID",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -967,7 +967,7 @@
                     "CompanyControllerService"
                 ],
                 "summary": "Set company's 'status' to 0.",
-                "operationId": "deleteCompanyByCompanyId",
+                "operationId": "deleteCompanyByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -996,7 +996,7 @@
                 ],
                 "summary": "pluck company",
                 "description": "Returns plucked companies",
-                "operationId": "pluckCompany",
+                "operationId": "pluckCompanyByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -1084,7 +1084,7 @@
                         "description": "Store ID",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -1418,8 +1418,8 @@
                 "tags": [
                     "InventoryControllerService"
                 ],
-                "summary": "Retrieves inventory by inventoryId.",
-                "operationId": "getInventoryByInventoryId",
+                "summary": "Retrieves inventory by Uid.",
+                "operationId": "getInventoryByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -1444,8 +1444,8 @@
                 "tags": [
                     "InventoryControllerService"
                 ],
-                "summary": "Update inventory by inventoryId.",
-                "operationId": "updateInventoryByInventoryId",
+                "summary": "Update inventory by Uid.",
+                "operationId": "updateInventoryByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -1471,7 +1471,7 @@
                         "description": "Store ID",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -1599,7 +1599,7 @@
                     "InventoryControllerService"
                 ],
                 "summary": "Set inventory's 'status' to 0.",
-                "operationId": "deleteInventoryByInventoryId",
+                "operationId": "deleteInventoryByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -1628,7 +1628,7 @@
                 ],
                 "summary": "pluck inventory",
                 "description": "Returns plucked inventories",
-                "operationId": "pluckInventory",
+                "operationId": "pluckInventoryByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -1917,8 +1917,8 @@
                 "tags": [
                     "ProductFeatureControllerService"
                 ],
-                "summary": "Retrieves productfeature by productfeatureId.",
-                "operationId": "getProductFeatureByProductFeatureId",
+                "summary": "Retrieves productfeature by Uid.",
+                "operationId": "getProductFeatureByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -1943,8 +1943,8 @@
                 "tags": [
                     "ProductFeatureControllerService"
                 ],
-                "summary": "Update productfeature by productfeatureId.",
-                "operationId": "updateProductFeatureByProductFeatureId",
+                "summary": "Update productfeature by Uid.",
+                "operationId": "updateProductFeatureByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -1988,7 +1988,7 @@
                     "ProductFeatureControllerService"
                 ],
                 "summary": "Set productfeature's 'status' to 0.",
-                "operationId": "deleteProductFeatureByProductFeatureId",
+                "operationId": "deleteProductFeatureByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -2017,7 +2017,7 @@
                 ],
                 "summary": "pluck productfeature",
                 "description": "Returns plucked productfeatures",
-                "operationId": "pluckProductFeature",
+                "operationId": "pluckProductFeatureByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -2104,7 +2104,7 @@
                         "in": "query",
                         "description": "Company ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -2112,7 +2112,7 @@
                         "in": "query",
                         "description": "User ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -2402,8 +2402,8 @@
                 "tags": [
                     "StoreControllerService"
                 ],
-                "summary": "Retrieves store by storeId.",
-                "operationId": "getStoreByStoreId",
+                "summary": "Retrieves store by Uid.",
+                "operationId": "getStoreByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -2428,8 +2428,8 @@
                 "tags": [
                     "StoreControllerService"
                 ],
-                "summary": "Update store by storeId.",
-                "operationId": "updateStoreByStoreId",
+                "summary": "Update store by Uid.",
+                "operationId": "updateStoreByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -2454,7 +2454,7 @@
                         "in": "query",
                         "description": "Company ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -2462,7 +2462,7 @@
                         "in": "query",
                         "description": "User ID",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -2545,7 +2545,7 @@
                     "StoreControllerService"
                 ],
                 "summary": "Set store's 'status' to 0.",
-                "operationId": "deleteStoreByStoreId",
+                "operationId": "deleteStoreByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -2574,7 +2574,7 @@
                 ],
                 "summary": "pluck store",
                 "description": "Returns plucked stores",
-                "operationId": "pluckStore",
+                "operationId": "pluckStoreByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -2662,7 +2662,7 @@
                         "description": "Store ID",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -2988,8 +2988,8 @@
                 "tags": [
                     "TicketControllerService"
                 ],
-                "summary": "Retrieves ticket by ticketId.",
-                "operationId": "getTicketByTicketId",
+                "summary": "Retrieves ticket by Uid.",
+                "operationId": "getTicketByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3014,8 +3014,8 @@
                 "tags": [
                     "TicketControllerService"
                 ],
-                "summary": "Update ticket by ticketId.",
-                "operationId": "updateTicketByTicketId",
+                "summary": "Update ticket by Uid.",
+                "operationId": "updateTicketByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3041,7 +3041,7 @@
                         "description": "Store ID",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
@@ -3161,7 +3161,7 @@
                     "TicketControllerService"
                 ],
                 "summary": "Set ticket's 'status' to 0.",
-                "operationId": "deleteTicketByTicketId",
+                "operationId": "deleteTicketByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3190,7 +3190,7 @@
                 ],
                 "summary": "pluck ticket",
                 "description": "Returns plucked tickets",
-                "operationId": "pluckTicket",
+                "operationId": "pluckTicketByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3479,8 +3479,8 @@
                 "tags": [
                     "TypeControllerService"
                 ],
-                "summary": "Retrieves type by typeId.",
-                "operationId": "getTypeByTypeId",
+                "summary": "Retrieves type by Uid.",
+                "operationId": "getTypeByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3505,8 +3505,8 @@
                 "tags": [
                     "TypeControllerService"
                 ],
-                "summary": "Update type by typeId.",
-                "operationId": "updateTypeByTypeId",
+                "summary": "Update type by Uid.",
+                "operationId": "updateTypeByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3550,7 +3550,7 @@
                     "TypeControllerService"
                 ],
                 "summary": "Set type's 'status' to 0.",
-                "operationId": "deleteTypeByTypeId",
+                "operationId": "deleteTypeByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3579,7 +3579,7 @@
                 ],
                 "summary": "pluck type",
                 "description": "Returns plucked types",
-                "operationId": "pluckType",
+                "operationId": "pluckTypeByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3918,8 +3918,8 @@
                 "tags": [
                     "UserControllerService"
                 ],
-                "summary": "Retrieves user by userId.",
-                "operationId": "getUserByUserId",
+                "summary": "Retrieves user by Uid.",
+                "operationId": "getUserByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -3944,8 +3944,8 @@
                 "tags": [
                     "UserControllerService"
                 ],
-                "summary": "Update user by userId.",
-                "operationId": "updateUserByUserId",
+                "summary": "Update user by Uid.",
+                "operationId": "updateUserByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -4052,7 +4052,7 @@
                     "UserControllerService"
                 ],
                 "summary": "Set user's 'status' to 0.",
-                "operationId": "deleteUserByUserId",
+                "operationId": "deleteUserByUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -4081,7 +4081,7 @@
                 ],
                 "summary": "pluck user",
                 "description": "Returns plucked users",
-                "operationId": "pluckUser",
+                "operationId": "pluckUserByUid",
                 "parameters": [
                     {
                         "name": "uid",

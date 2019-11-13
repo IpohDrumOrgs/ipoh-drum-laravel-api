@@ -4284,28 +4284,28 @@
                         "type": "integer"
                     },
                     "discpctg": {
-                        "type": "double"
+                        "type": "number"
                     },
                     "totalcost": {
-                        "type": "double"
+                        "type": "number"
                     },
                     "totalbfdisc": {
-                        "type": "double"
+                        "type": "number"
                     },
                     "totalbftax": {
-                        "type": "double"
+                        "type": "number"
                     },
                     "totaldisc": {
-                        "type": "float"
+                        "type": "number"
                     },
                     "grandtotal": {
-                        "type": "double"
+                        "type": "number"
                     },
                     "payment": {
-                        "type": "double"
+                        "type": "number"
                     },
                     "outstanding": {
-                        "type": "double"
+                        "type": "number"
                     },
                     "status": {
                         "type": "string"
@@ -4320,7 +4320,7 @@
                         "type": "string"
                     },
                     "pos": {
-                        "type": "int"
+                        "type": "integer"
                     },
                     "remember_token": {
                         "type": "string"

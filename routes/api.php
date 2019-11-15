@@ -93,6 +93,14 @@ Route::middleware('auth:api')->post('/authentication', 'API\UserController@authe
 
 Route::post('/register', 'API\UserController@register');
 
+Route::get('/pluck/modules', 'API\ModuleController@pluckIndex');
+Route::get('/pluck/module/{uid}', 'API\ModuleController@pluckShow');
+Route::get('/pluck/filter/module', 'API\ModuleController@pluckFilter');
+
+Route::get('/pluck/roles', 'API\RoleController@pluckIndex');
+Route::get('/pluck/role/{uid}', 'API\RoleController@pluckShow');
+Route::get('/pluck/filter/role', 'API\RoleController@pluckFilter');
+
 Route::get('/pluck/users', 'API\UserController@pluckIndex');
 Route::get('/pluck/user/{uid}', 'API\UserController@pluckShow');
 Route::get('/pluck/filter/user', 'API\UserController@pluckFilter');

@@ -434,6 +434,7 @@ class ProductFeatureController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/productfeature (POST)
         $this->validate($request, [
@@ -450,12 +451,14 @@ class ProductFeatureController extends Controller
         $productfeature = $this->createProductFeature($request->user(), $params);
 
         if ($this->isEmpty($productfeature)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('ProductFeature');
             $data['data'] = $productfeature;
@@ -508,6 +511,7 @@ class ProductFeatureController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        DB::beginTransaction();
         // api/productfeature/{productfeatureid} (PUT) 
         error_log('Updating productfeature of uid: ' . $uid);
         $productfeature = $this->getProductFeature($request->user(), $uid);
@@ -518,6 +522,7 @@ class ProductFeatureController extends Controller
         ]);
 
         if ($this->isEmpty($productfeature)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('ProductFeature');
             $data['status'] = 'error';
@@ -533,12 +538,14 @@ class ProductFeatureController extends Controller
         $params = json_decode(json_encode($params));
         $productfeature = $this->updateProductFeature($request->user(), $productfeature, $params);
         if ($this->isEmpty($productfeature)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getErrorMsg('ProductFeature');
             $data['status'] = 'error';
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('ProductFeature');
             $data['data'] = $productfeature;
@@ -573,11 +580,13 @@ class ProductFeatureController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/productfeature/{productfeatureid} (DELETE)
         error_log('Deleting productfeature of uid: ' . $uid);
         $productfeature = $this->getProductFeature($request->user(), $uid);
         if ($this->isEmpty($productfeature)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('ProductFeature');
             $data['data'] = null;
@@ -586,12 +595,14 @@ class ProductFeatureController extends Controller
         }
         $productfeature = $this->deleteProductFeature($request->user(), $productfeature->id);
         if ($this->isEmpty($productfeature)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['data'] = null;
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('ProductFeature');
             $data['data'] = $productfeature;

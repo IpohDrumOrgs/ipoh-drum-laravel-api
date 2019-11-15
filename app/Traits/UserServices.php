@@ -21,7 +21,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use DB;
 
 trait UserServices {
 
@@ -32,24 +31,24 @@ trait UserServices {
         $data = collect();
         $companies = $requester->companies;
         foreach($companies as $company){
-            $clearance = $this->checkClearance($requester, $company ,  $this->getModule('user','index'));
+            $clearance = $this->checkClearance($requester, $company ,  $this->checkModule('user','index'));
             error_log($clearance);
             switch ($clearance) {
                 //System Wide
                 case 1:
                     $temp = User::where('status', true)->get();
                     $data = $data->merge($temp);
-                    break;
+                    break 2;
                 //Company Wide
                 case 2:
-                    $temp = $company->users()->get();
+                    $temp = $company->users()->where('status',true)->get();
                     $data = $data->merge($temp);
                     break;
                 //Group Wide
                 case 3:
                     $groups = $requester->groups;
                     foreach($groups as $group){
-                        $data = $data->merge($group->users);
+                        $data = $data->merge($group->users()->where('status',true)->get());
                     }
                     break;
                 //Own Wide
@@ -210,7 +209,6 @@ trait UserServices {
     private function createUser($requester , $params) {
 
 
-            DB::beginTransaction();
             $data = new User();
             $data->uid = Carbon::now()->timestamp . User::count();
             $data->name = $params->name;
@@ -230,11 +228,9 @@ trait UserServices {
                 $data->save();
                 $this->createLog($requester->id , [$data->id], 'store', 'user');
             } catch (Exception $e) {
-                DB::rollBack();
                 return null;
             }
 
-            DB::commit();
             return $data->refresh();
         
         
@@ -243,7 +239,6 @@ trait UserServices {
     //Make Sure User is not empty when calling this function
     private function updateUser($requester, $data,  $params) {
         
-        DB::beginTransaction();
         $grouparr = [];
         $data->name = $params->name;
         $data->email = $params->email;
@@ -260,27 +255,22 @@ trait UserServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'user');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     private function deleteUser($requester , $id) {
-        DB::beginTransaction();
         $data = User::find($id);
         $data->status = false;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'delete', 'user');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 

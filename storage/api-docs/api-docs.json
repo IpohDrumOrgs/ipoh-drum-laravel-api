@@ -74,6 +74,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "ticketids",
+                        "in": "query",
+                        "description": "Ticket Ids",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -324,6 +333,15 @@
                         "name": "desc",
                         "in": "query",
                         "description": "Category Description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ticketids",
+                        "in": "query",
+                        "description": "Ticket Ids",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1027,6 +1045,846 @@
                 }
             }
         },
+        "/api/companytype": {
+            "get": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "Get list of companytypes",
+                "description": "Returns list of companytypes",
+                "operationId": "getCompanyTypeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of companytypes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of companytypes"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "Creates a companytype.",
+                "operationId": "createCompanyType",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "CompanyType Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "CompanyType Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CompanyType has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the companytype."
+                    }
+                }
+            }
+        },
+        "/api/pluck/companytypes": {
+            "get": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "pluck list of companytypes",
+                "description": "Returns list of plucked companytypes",
+                "operationId": "pluckCompanyTypeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of companytypes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of companytypes"
+                    }
+                }
+            }
+        },
+        "/api/filter/companytype": {
+            "get": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "Filter list of companytypes",
+                "description": "Returns list of filtered companytypes",
+                "operationId": "filterCompanyTypeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "oncompanytype",
+                        "in": "query",
+                        "description": "oncompanytype for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered companytypes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of companytypes"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/companytype": {
+            "get": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "Filter list of plucked companytypes",
+                "description": "Returns list of filtered companytypes",
+                "operationId": "filterPluckedCompanyTypeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "oncompanytype",
+                        "in": "query",
+                        "description": "oncompanytype for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered companytypes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of companytypes"
+                    }
+                }
+            }
+        },
+        "/api/companytype/{uid}": {
+            "get": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "Retrieves companytype by Uid.",
+                "operationId": "getCompanyTypeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "CompanyType_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CompanyType has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the companytype."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "Update companytype by Uid.",
+                "operationId": "updateCompanyTypeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "CompanyType_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "CompanyTypename",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "CompanyType Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CompanyType has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the companytype."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "Set companytype's 'status' to 0.",
+                "operationId": "deleteCompanyTypeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "CompanyType ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CompanyType has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the companytype."
+                    }
+                }
+            }
+        },
+        "/api/pluck/companytype/{uid}": {
+            "get": {
+                "tags": [
+                    "CompanyTypeControllerService"
+                ],
+                "summary": "pluck companytype",
+                "description": "Returns plucked companytypes",
+                "operationId": "pluckCompanyTypeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "CompanyType_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of companytypes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of companytypes"
+                    }
+                }
+            }
+        },
+        "/api/group": {
+            "get": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "Get list of groups",
+                "description": "Returns list of groups",
+                "operationId": "getGroupList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of groups"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of groups"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "Creates a group.",
+                "operationId": "createGroup",
+                "parameters": [
+                    {
+                        "name": "companyid",
+                        "in": "query",
+                        "description": "Group belongs to which company",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Group Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Group Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Group has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the group."
+                    }
+                }
+            }
+        },
+        "/api/pluck/groups": {
+            "get": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "pluck list of groups",
+                "description": "Returns list of plucked groups",
+                "operationId": "pluckGroupList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of groups"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of groups"
+                    }
+                }
+            }
+        },
+        "/api/filter/group": {
+            "get": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "Filter list of groups",
+                "description": "Returns list of filtered groups",
+                "operationId": "filterGroupList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ongroup",
+                        "in": "query",
+                        "description": "ongroup for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered groups"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of groups"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/group": {
+            "get": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "Filter list of plucked groups",
+                "description": "Returns list of filtered groups",
+                "operationId": "filterPluckedGroupList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ongroup",
+                        "in": "query",
+                        "description": "ongroup for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered groups"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of groups"
+                    }
+                }
+            }
+        },
+        "/api/group/{uid}": {
+            "get": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "Retrieves group by Uid.",
+                "operationId": "getGroupByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Group_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Group has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the group."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "Update group by Uid.",
+                "operationId": "updateGroupByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Group_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "companyid",
+                        "in": "query",
+                        "description": "Group belongs to which company",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Groupname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Group Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Group has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the group."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "Set group's 'status' to 0.",
+                "operationId": "deleteGroupByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Group ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Group has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the group."
+                    }
+                }
+            }
+        },
+        "/api/pluck/group/{uid}": {
+            "get": {
+                "tags": [
+                    "GroupControllerService"
+                ],
+                "summary": "pluck group",
+                "description": "Returns plucked groups",
+                "operationId": "pluckGroupByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Group_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of groups"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of groups"
+                    }
+                }
+            }
+        },
         "/api/inventory": {
             "get": {
                 "tags": [
@@ -1659,6 +2517,435 @@
                 }
             }
         },
+        "/api/module": {
+            "get": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "Get list of modules",
+                "description": "Returns list of modules",
+                "operationId": "getModuleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of modules"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of modules"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "Creates a module.",
+                "operationId": "createModule",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Module Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Module Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "provider",
+                        "in": "query",
+                        "description": "Provider of Model",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Module has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the module."
+                    }
+                }
+            }
+        },
+        "/api/pluck/modules": {
+            "get": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "pluck list of modules",
+                "description": "Returns list of plucked modules",
+                "operationId": "pluckModuleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of modules"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of modules"
+                    }
+                }
+            }
+        },
+        "/api/filter/module": {
+            "get": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "Filter list of modules",
+                "description": "Returns list of filtered modules",
+                "operationId": "filterModuleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onmodule",
+                        "in": "query",
+                        "description": "onmodule for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered modules"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of modules"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/module": {
+            "get": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "Filter list of plucked modules",
+                "description": "Returns list of filtered modules",
+                "operationId": "filterPluckedModuleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onmodule",
+                        "in": "query",
+                        "description": "onmodule for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered modules"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of modules"
+                    }
+                }
+            }
+        },
+        "/api/module/{uid}": {
+            "get": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "Retrieves module by Uid.",
+                "operationId": "getModuleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Module_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Module has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the module."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "Update module by Uid.",
+                "operationId": "updateModuleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Module_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Modulename",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Module Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "provider",
+                        "in": "query",
+                        "description": "Provider of Model",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Module has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the module."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "Set module's 'status' to 0.",
+                "operationId": "deleteModuleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Module ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Module has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the module."
+                    }
+                }
+            }
+        },
+        "/api/pluck/module/{uid}": {
+            "get": {
+                "tags": [
+                    "ModuleControllerService"
+                ],
+                "summary": "pluck module",
+                "description": "Returns plucked modules",
+                "operationId": "pluckModuleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Module_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of modules"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of modules"
+                    }
+                }
+            }
+        },
         "/api/productfeature": {
             "get": {
                 "tags": [
@@ -2044,6 +3331,1058 @@
                     },
                     "default": {
                         "description": "Unable to retrieve list of productfeatures"
+                    }
+                }
+            }
+        },
+        "/api/role": {
+            "get": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "Get list of roles",
+                "description": "Returns list of roles",
+                "operationId": "getRoleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of roles"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of roles"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "Creates a role.",
+                "operationId": "createRole",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Role Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Role Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the role."
+                    }
+                }
+            }
+        },
+        "/api/pluck/roles": {
+            "get": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "pluck list of roles",
+                "description": "Returns list of plucked roles",
+                "operationId": "pluckRoleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of roles"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of roles"
+                    }
+                }
+            }
+        },
+        "/api/filter/role": {
+            "get": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "Filter list of roles",
+                "description": "Returns list of filtered roles",
+                "operationId": "filterRoleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onrole",
+                        "in": "query",
+                        "description": "onrole for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered roles"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of roles"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/role": {
+            "get": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "Filter list of plucked roles",
+                "description": "Returns list of filtered roles",
+                "operationId": "filterPluckedRoleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onrole",
+                        "in": "query",
+                        "description": "onrole for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered roles"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of roles"
+                    }
+                }
+            }
+        },
+        "/api/role/{uid}": {
+            "get": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "Retrieves role by Uid.",
+                "operationId": "getRoleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Role_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the role."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "Update role by Uid.",
+                "operationId": "updateRoleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Role_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Rolename",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Role Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the role."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "Set role's 'status' to 0.",
+                "operationId": "deleteRoleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Role ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the role."
+                    }
+                }
+            }
+        },
+        "/api/pluck/role/{uid}": {
+            "get": {
+                "tags": [
+                    "RoleControllerService"
+                ],
+                "summary": "pluck role",
+                "description": "Returns plucked roles",
+                "operationId": "pluckRoleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Role_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of roles"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of roles"
+                    }
+                }
+            }
+        },
+        "/api/sale": {
+            "get": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "Get list of sales",
+                "description": "Returns list of sales",
+                "operationId": "getSaleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of sales"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of sales"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "Creates a sale.",
+                "operationId": "createSale",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Salename",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "storeid",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "description": "Sku",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Product Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cost",
+                        "in": "query",
+                        "description": "Product Cost",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Product Selling Price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Product Discount",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "promoprice",
+                        "in": "query",
+                        "description": "Promotion Price",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promostartdate",
+                        "in": "query",
+                        "description": "Promotion Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promoenddate",
+                        "in": "query",
+                        "description": "Promotion End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stock",
+                        "in": "query",
+                        "description": "Stock Qty",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warrantyperiod",
+                        "in": "query",
+                        "description": "Warranty Period",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stockthreshold",
+                        "in": "query",
+                        "description": "Stock Threshold",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On Sale",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sale has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the sale."
+                    }
+                }
+            }
+        },
+        "/api/pluck/sales": {
+            "get": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "pluck list of sales",
+                "description": "Returns list of plucked sales",
+                "operationId": "pluckSaleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of sales"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of sales"
+                    }
+                }
+            }
+        },
+        "/api/filter/sale": {
+            "get": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "Filter list of sales",
+                "description": "Returns list of filtered sales",
+                "operationId": "filterSaleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "onsale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered sales"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of sales"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/sale": {
+            "get": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "Filter list of plucked sales",
+                "description": "Returns list of filtered sales",
+                "operationId": "filterPluckedSaleList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "onsale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered sales"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of sales"
+                    }
+                }
+            }
+        },
+        "/api/sale/{uid}": {
+            "get": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "Retrieves sale by Uid.",
+                "operationId": "getSaleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Sale_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sale has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the sale."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "Update sale by Uid.",
+                "operationId": "updateSaleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Sale_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Salename",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "storeid",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "userid",
+                        "in": "query",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sono",
+                        "in": "query",
+                        "description": "Sale Order No",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "description": "totalqty",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "linetotal",
+                        "in": "query",
+                        "description": "Line Total",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "totalcost",
+                        "in": "query",
+                        "description": "All Product Cost",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "totaldisc",
+                        "in": "query",
+                        "description": "Total Discount",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Product Discount",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "promoprice",
+                        "in": "query",
+                        "description": "Promotion Price",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promostartdate",
+                        "in": "query",
+                        "description": "Promotion Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promoenddate",
+                        "in": "query",
+                        "description": "Promotion End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stock",
+                        "in": "query",
+                        "description": "Stock Qty",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warrantyperiod",
+                        "in": "query",
+                        "description": "Warranty Period",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stockthreshold",
+                        "in": "query",
+                        "description": "Stock Threshold",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On Sale",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sale has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the sale."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "Set sale's 'status' to 0.",
+                "operationId": "deleteSaleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Sale ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sale has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the sale."
+                    }
+                }
+            }
+        },
+        "/api/pluck/sale/{uid}": {
+            "get": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "pluck sale",
+                "description": "Returns plucked sales",
+                "operationId": "pluckSaleByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Sale_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of sales"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of sales"
                     }
                 }
             }
@@ -4180,6 +6519,419 @@
                     },
                     "default": {
                         "description": "User is not created."
+                    }
+                }
+            }
+        },
+        "/api/verificationcode": {
+            "get": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "Get list of verificationcodes",
+                "description": "Returns list of verificationcodes",
+                "operationId": "getVerificationCodeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of verificationcodes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of verificationcodes"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "Creates a verificationcode.",
+                "operationId": "createVerificationCode",
+                "parameters": [
+                    {
+                        "name": "ticketid",
+                        "in": "query",
+                        "description": "Verification belongs to which Ticket",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "VerificationCode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VerificationCode has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the verificationcode."
+                    }
+                }
+            }
+        },
+        "/api/pluck/verificationcodes": {
+            "get": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "pluck list of verificationcodes",
+                "description": "Returns list of plucked verificationcodes",
+                "operationId": "pluckVerificationCodeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of verificationcodes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of verificationcodes"
+                    }
+                }
+            }
+        },
+        "/api/filter/verificationcode": {
+            "get": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "Filter list of verificationcodes",
+                "description": "Returns list of filtered verificationcodes",
+                "operationId": "filterVerificationCodeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onverificationcode",
+                        "in": "query",
+                        "description": "onverificationcode for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered verificationcodes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of verificationcodes"
+                    }
+                }
+            }
+        },
+        "/api/pluck/filter/verificationcode": {
+            "get": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "Filter list of plucked verificationcodes",
+                "description": "Returns list of filtered verificationcodes",
+                "operationId": "filterPluckedVerificationCodeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onverificationcode",
+                        "in": "query",
+                        "description": "onverificationcode for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered verificationcodes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of verificationcodes"
+                    }
+                }
+            }
+        },
+        "/api/verificationcode/{uid}": {
+            "get": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "Retrieves verificationcode by Uid.",
+                "operationId": "getVerificationCodeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "VerificationCode_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VerificationCode has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the verificationcode."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "Update verificationcode by Uid.",
+                "operationId": "updateVerificationCodeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "VerificationCode_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ticketid",
+                        "in": "query",
+                        "description": "Verification belongs to which Ticket",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "VerificationCode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VerificationCode has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the verificationcode."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "Set verificationcode's 'status' to 0.",
+                "operationId": "deleteVerificationCodeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "VerificationCode ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VerificationCode has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the verificationcode."
+                    }
+                }
+            }
+        },
+        "/api/pluck/verificationcode/{uid}": {
+            "get": {
+                "tags": [
+                    "VerificationCodeControllerService"
+                ],
+                "summary": "pluck verificationcode",
+                "description": "Returns plucked verificationcodes",
+                "operationId": "pluckVerificationCodeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "VerificationCode_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cols",
+                        "in": "query",
+                        "description": "Columns for pluck",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of verificationcodes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of verificationcodes"
                     }
                 }
             }

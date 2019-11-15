@@ -2,27 +2,26 @@
 
 namespace App\Traits;
 use App\User;
-use App\Module;
+use App\VerificationCode;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use App\Traits\RoleServices;
+use App\Traits\TicketServices;
 
-trait ModuleServices {
+trait VerificationCodeServices {
 
-    use GlobalFunctions, LogServices, RoleServices;
+    use GlobalFunctions, LogServices ,TicketServices;
 
-    private function getModuleListing($requester) {
+    private function getVerificationCodeListing($requester) {
 
         $data = collect();
-        //Role Based Retrieved Done in Role Services
-        $roles = $this->getRoleListing($requester);
-        foreach($roles as $role){
-            $data = $data->merge($role->modules()->where('status',true)->get());
+        //Role Based Retrieve Done in TicketService
+        $tickets = $this->getTicketListing($requester);
+        foreach($tickets as $ticket){
+            $data = $data->merge($ticket->verificationcodes()->where('status',true)->get());
         }
-        
-        
+
         $data = $data->unique('id')->sortBy('id');
 
         return $data;
@@ -30,21 +29,21 @@ trait ModuleServices {
     }
 
     
-    private function pluckModuleIndex($cols) {
+    private function pluckVerificationCodeIndex($cols) {
 
-        $data = Module::where('status',true)->get($cols);
+        $data = VerificationCode::where('status',true)->get($cols);
         return $data;
     
     }
 
 
-    private function filterModuleListing($requester , $params) {
+    private function filterVerificationCodeListing($requester , $params) {
 
-        error_log('Filtering modules....');
-        $data = $this->getModuleListing($requester);
+        error_log('Filtering verificationcodes....');
+        $data = $this->getVerificationCodeListing($requester);
 
         if($params->keyword){
-            error_log('Filtering modules with keyword....');
+            error_log('Filtering verificationcodes with keyword....');
             $keyword = $params->keyword;
             $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
@@ -59,7 +58,7 @@ trait ModuleServices {
 
              
         if($params->fromdate){
-            error_log('Filtering modules with fromdate....');
+            error_log('Filtering verificationcodes with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
@@ -67,7 +66,7 @@ trait ModuleServices {
         }
 
         if($params->todate){
-            error_log('Filtering modules with todate....');
+            error_log('Filtering verificationcodes with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
@@ -76,7 +75,7 @@ trait ModuleServices {
         } 
 
         if($params->status){
-            error_log('Filtering modules with status....');
+            error_log('Filtering verificationcodes with status....');
             if($params->status == 'true'){
                 $data = $data->where('status', true);
             }else if($params->status == 'false'){
@@ -87,7 +86,7 @@ trait ModuleServices {
         }
         
         if($params->onsale){
-            error_log('Filtering modules with on sale status....');
+            error_log('Filtering verificationcodes with on sale status....');
             if($params->onsale == 'true'){
                 $data = $data->where('onsale', true);
             }else if($params->onsale == 'false'){
@@ -104,13 +103,13 @@ trait ModuleServices {
     }
 
     
-    private function pluckModuleFilter($cols , $params) {
+    private function pluckVerificationCodeFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
-        $data = Module::where('status',true)->get();
+        $data = VerificationCode::where('status',true)->get();
 
         if($params->keyword){
-            error_log('Filtering modules with keyword....');
+            error_log('Filtering verificationcodes with keyword....');
             $keyword = $params->keyword;
             $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
@@ -125,7 +124,7 @@ trait ModuleServices {
 
              
         if($params->fromdate){
-            error_log('Filtering modules with fromdate....');
+            error_log('Filtering verificationcodes with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
@@ -133,7 +132,7 @@ trait ModuleServices {
         }
 
         if($params->todate){
-            error_log('Filtering modules with todate....');
+            error_log('Filtering verificationcodes with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
@@ -142,7 +141,7 @@ trait ModuleServices {
         } 
         
         if($params->onsale){
-            error_log('Filtering modules with on sale status....');
+            error_log('Filtering verificationcodes with on sale status....');
             if($params->onsale == 'true'){
                 $data = $data->where('onsale', true);
             }else if($params->onsale == 'false'){
@@ -164,28 +163,27 @@ trait ModuleServices {
     }
 
 
-    private function getModule($requester , $uid) {
-        $data = Module::where('uid', $uid)->where('status', 1)->first();
+    private function getVerificationCode($requester , $uid) {
+        $data = VerificationCode::where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function pluckModule($cols , $uid) {
-        $data = Module::where('uid', $uid)->where('status', 1)->get($cols)->first();
+    private function pluckVerificationCode($cols , $uid) {
+        $data = VerificationCode::where('uid', $uid)->where('status', 1)->get($cols)->first();
         return $data;
     }
 
-    private function createModule($requester , $params) {
+    private function createVerificationCode($requester , $params) {
 
-        $data = new Module();
-        $data->uid = Carbon::now()->timestamp . Module::count();
+        $data = new VerificationCode();
+        $data->uid = Carbon::now()->timestamp . VerificationCode::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
-        $data->provider = $params->provider;
         $data->status = true;
 
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'store', 'module');
+            $this->createLog($requester->id , [$data->id], 'store', 'verificationcode');
         } catch (Exception $e) {
             return null;
         }
@@ -193,16 +191,15 @@ trait ModuleServices {
         return $data->refresh();
     }
 
-    //Make Sure Module is not empty when calling this function
-    private function updateModule($requester, $data,  $params) {
+    //Make Sure VerificationCode is not empty when calling this function
+    private function updateVerificationCode($requester, $data,  $params) {
         
         $data->name = $params->name;
         $data->desc = $params->desc;
-        $data->provider = $params->provider;
-        
+
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'update', 'module');
+            $this->createLog($requester->id , [$data->id], 'update', 'verificationcode');
         } catch (Exception $e) {
             return null;
         }
@@ -210,12 +207,12 @@ trait ModuleServices {
         return $data->refresh();
     }
 
-    private function deleteModule($requester , $id) {
-        $data = Module::find($id);
+    private function deleteVerificationCode($requester , $id) {
+        $data = VerificationCode::find($id);
         $data->status = false;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'delete', 'module');
+            $this->createLog($requester->id , [$data->id], 'delete', 'verificationcode');
         } catch (Exception $e) {
             return null;
         }

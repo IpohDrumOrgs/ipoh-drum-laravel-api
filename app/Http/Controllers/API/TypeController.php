@@ -434,6 +434,7 @@ class TypeController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/type (POST)
         $this->validate($request, [
@@ -450,12 +451,14 @@ class TypeController extends Controller
         $type = $this->createType($request->user(), $params);
 
         if ($this->isEmpty($type)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('Type');
             $data['data'] = $type;
@@ -508,6 +511,7 @@ class TypeController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        DB::beginTransaction();
         // api/type/{typeid} (PUT) 
         error_log('Updating type of uid: ' . $uid);
         $type = $this->getType($request->user(), $uid);
@@ -518,6 +522,7 @@ class TypeController extends Controller
         ]);
 
         if ($this->isEmpty($type)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Type');
             $data['status'] = 'error';
@@ -533,12 +538,14 @@ class TypeController extends Controller
         $params = json_decode(json_encode($params));
         $type = $this->updateType($request->user(), $type, $params);
         if ($this->isEmpty($type)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getErrorMsg('Type');
             $data['status'] = 'error';
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('Type');
             $data['data'] = $type;
@@ -573,11 +580,13 @@ class TypeController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/type/{typeid} (DELETE)
         error_log('Deleting type of uid: ' . $uid);
         $type = $this->getType($request->user(), $uid);
         if ($this->isEmpty($type)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('Type');
             $data['data'] = null;
@@ -586,12 +595,14 @@ class TypeController extends Controller
         }
         $type = $this->deleteType($request->user(), $type->id);
         if ($this->isEmpty($type)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['data'] = null;
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Type');
             $data['data'] = $type;

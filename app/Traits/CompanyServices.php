@@ -21,7 +21,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use DB;
 
 trait CompanyServices {
 
@@ -32,27 +31,21 @@ trait CompanyServices {
         $data = collect();
         $companies = $requester->companies;
         foreach($companies as $company){
-            $clearance = $this->checkClearance($requester, $company ,  $this->getModule('company','index'));
-            error_log($clearance);
+            $clearance = $this->checkClearance($requester, $company ,  $this->checkModule('company','index'));
             switch ($clearance) {
                 //System Wide
                 case 1:
+                error_log('break');
                     $temp = Company::where('status', true)->get();
                     $data = $data->merge($temp);
-                    break;
+                    break 2;
                 //Company Wide
                 case 2:
-                    $temp = $requester->companies;
-                    $data = $data->merge($temp);
-                    break;
                 //Group Wide
                 case 3:
-                    $temp = $requester->companies;
-                    $data = $data->merge($temp);
-                    break;
                 //Own Wide
                 case 4:
-                    $temp = $requester->companies;
+                    $temp = $requester->companies()->where('status',true)->get();
                     $data = $data->merge($temp);
                     break;
                 default:
@@ -61,7 +54,7 @@ trait CompanyServices {
     
         }
         
-        $data = $data->unique('id');
+        $data = $data->unique('id')->sortBy('id');
 
         return $data;
     
@@ -195,7 +188,6 @@ trait CompanyServices {
 
     private function createCompany($requester , $params) {
 
-        DB::beginTransaction();
         $data = new Company();
         $data->uid = Carbon::now()->timestamp . Company::count();
         $data->name = $params->name;
@@ -222,18 +214,15 @@ trait CompanyServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'store', 'company');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     //Make Sure Company is not empty when calling this function
     private function updateCompany($requester, $data,  $params) {
         
-        DB::beginTransaction();
         $data->name = $params->name;
         $data->email1 = $params->email1;
         $data->email2 = $params->email2;
@@ -257,27 +246,22 @@ trait CompanyServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'company');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     private function deleteCompany($requester , $id) {
-        DB::beginTransaction();
         $data = Company::find($id);
         $data->status = false;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'delete', 'company');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 

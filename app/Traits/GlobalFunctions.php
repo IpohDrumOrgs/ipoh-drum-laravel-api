@@ -97,7 +97,7 @@ trait GlobalFunctions {
         }
     }
     
-    public function getModule($provider,$name) {
+    public function checkModule($provider,$name) {
 
         $module = Module::where('provider',$provider)->where('name',$name)->first();
         if(empty($module)){
@@ -146,15 +146,15 @@ trait GlobalFunctions {
 
     
     //Split the string to array
-    public function splitToArray($params){
+    public function splitToArray($data){
         if($this->isEmpty($data)){
             return null;
         }else{
-            $params = collect(explode(',' , $params));
-            $params = $params->map(function ($item, $key) {
+            $data = collect(explode(',' , $data));
+            $data = $data->map(function ($item, $key) {
                 return trim($item);
             });
-            return $params->toArray();
+            return $data->toArray();
         }
     }
 
@@ -185,4 +185,5 @@ trait GlobalFunctions {
             return Carbon::parse($data);
         }
     }
+
 }

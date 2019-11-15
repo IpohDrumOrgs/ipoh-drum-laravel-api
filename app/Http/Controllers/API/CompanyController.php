@@ -557,6 +557,7 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/company (POST)
         $this->validate($request, [
@@ -592,12 +593,14 @@ class CompanyController extends Controller
         $company = $this->createCompany($request->user(), $params);
 
         if ($this->isEmpty($company)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('Company');
             $data['data'] = $company;
@@ -755,6 +758,7 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        DB::beginTransaction();
         // api/company/{companyid} (PUT) 
         error_log('Updating company of uid: ' . $uid);
         $company = $this->getCompany($request->user(), $uid);
@@ -771,6 +775,7 @@ class CompanyController extends Controller
         ]);
         
         if ($this->isEmpty($company)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Company');
             $data['status'] = 'error';
@@ -798,12 +803,14 @@ class CompanyController extends Controller
         $params = json_decode(json_encode($params));
         $company = $this->updateCompany($request->user(), $company, $params);
         if ($this->isEmpty($company)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getErrorMsg('Company');
             $data['status'] = 'error';
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('Company');
             $data['data'] = $company;
@@ -840,9 +847,11 @@ class CompanyController extends Controller
     {
         // TODO ONLY TOGGLES THE status = 1/0
         // api/company/{companyid} (DELETE)
+        DB::beginTransaction();
         error_log('Deleting company of uid: ' . $uid);
         $company = $this->getCompany($request->user(), $uid);
         if ($this->isEmpty($company)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('Company');
             $data['data'] = null;
@@ -851,12 +860,14 @@ class CompanyController extends Controller
         }
         $company = $this->deleteCompany($request->user(), $company->id);
         if ($this->isEmpty($company)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['data'] = null;
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Company');
             $data['data'] = $company;

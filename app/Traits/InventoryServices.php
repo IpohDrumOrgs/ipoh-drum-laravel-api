@@ -8,52 +8,23 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use DB;
+use App\Traits\StoreServices;
 
 trait InventoryServices {
 
-    use GlobalFunctions, LogServices;
+    use GlobalFunctions, LogServices, StoreServices;
 
     private function getInventoryListing($requester) {
 
         $data = collect();
-        $companies = $requester->companies;
-        foreach($companies as $company){
-            $clearance = $this->checkClearance($requester, $company ,  $this->getModule('inventory','index'));
-            error_log($clearance);
-            switch ($clearance) {
-                //System Wide
-                case 1:
-                    $temp = Inventory::where('status', true)->get();
-                    $data = $data->merge($temp);
-                    break;
-                //Inventory Wide
-                case 2:
-                //Group Wide
-                case 3:
-                    $stores = $company->stores;
-                    foreach($stores as $store){
-                        $data = $data->merge($store->inventories);
-                    }
-                    $stores = $requester->stores;
-                    foreach($stores as $store){
-                        $data = $data->merge($store->inventories);
-                    }
-                    break;
-                //Own Wide
-                case 4:
-                    $stores = $requester->stores;
-                    foreach($stores as $store){
-                        $data = $data->merge($store->inventories);
-                    }
-                    break;
-                default:
-                    break;
-            }
-    
+               
+        //Role Based Retrieve Done in Store Services   
+        $stores = $this->getStoreListing($requester);
+        foreach($stores as $store){
+            $data = $data->merge($store->inventories()->where('status',true)->get());
         }
         
-        $data = $data->unique('id');
+        $data = $data->unique('id')->sortBy('id');
 
         return $data;
     
@@ -206,7 +177,6 @@ trait InventoryServices {
 
     private function createInventory($requester , $params) {
 
-        DB::beginTransaction();
         $data = new Inventory();
         $data->uid = Carbon::now()->timestamp . Inventory::count();
         $data->name = $params->name;
@@ -242,18 +212,15 @@ trait InventoryServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'store', 'inventory');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     //Make Sure Inventory is not empty when calling this function
     private function updateInventory($requester, $data,  $params) {
         
-        DB::beginTransaction();
         $data->name = $params->name;
         $data->code = $params->code;
         $data->sku = $params->sku;
@@ -286,27 +253,22 @@ trait InventoryServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'inventory');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     private function deleteInventory($requester , $id) {
-        DB::beginTransaction();
         $data = Inventory::find($id);
         $data->status = false;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'delete', 'inventory');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 

@@ -81,11 +81,6 @@ class User extends Authenticatable
         'updated_at' => 'datetime',
     ];
 
-    public function linkedSocialAccounts()
-    {
-        return $this->hasMany(LinkedSocialAccount::class);
-    }
-
     /**
      * user roles
      */

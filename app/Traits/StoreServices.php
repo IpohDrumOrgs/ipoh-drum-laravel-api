@@ -8,52 +8,23 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use DB;
+use App\Traits\CompanyServices;
 
 trait StoreServices {
 
-    use GlobalFunctions, LogServices;
+    use GlobalFunctions, LogServices , CompanyServices;
 
     private function getStoreListing($requester) {
 
         $data = collect();
-        $companies = $requester->companies;
+        
+        //Role Based Retrieved Done in Company Services
+        $companies = $this->getCompanyListing($requester);
         foreach($companies as $company){
-            $clearance = $this->checkClearance($requester, $company ,  $this->getModule('store','index'));
-            error_log($clearance);
-            switch ($clearance) {
-                //System Wide
-                case 1:
-                    $temp = Store::where('status', true)->get();
-                    $data = $data->merge($temp);
-                    break;
-                //Store Wide
-                case 2:
-                //Group Wide
-                case 3:
-                    $stores = $company->stores;
-                    foreach($stores as $store){
-                        $data = $data->merge($store->inventories);
-                    }
-                    $stores = $requester->stores;
-                    foreach($stores as $store){
-                        $data = $data->merge($store->inventories);
-                    }
-                    break;
-                //Own Wide
-                case 4:
-                    $stores = $requester->stores;
-                    foreach($stores as $store){
-                        $data = $data->merge($store->inventories);
-                    }
-                    break;
-                default:
-                    break;
-            }
-    
+            $data = $data->merge($company->stores()->where('status',true)->get());
         }
         
-        $data = $data->unique('id');
+        $data = $data->unique('id')->sortBy('id');
 
         return $data;
     
@@ -186,7 +157,6 @@ trait StoreServices {
 
     private function createStore($requester , $params) {
 
-        DB::beginTransaction();
         $data = new Store();
         $data->uid = Carbon::now()->timestamp . Store::count();
         $data->name = $params->name;
@@ -223,18 +193,15 @@ trait StoreServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'store', 'store');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     //Make Sure Store is not empty when calling this function
     private function updateStore($requester, $data,  $params) {
         
-        DB::beginTransaction();
         $data->name = $params->name;
         $data->contact = $params->contact;
         $data->email = $params->email;
@@ -266,27 +233,22 @@ trait StoreServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'store');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     private function deleteStore($requester , $id) {
-        DB::beginTransaction();
         $data = Store::find($id);
         $data->status = false;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'delete', 'store');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 

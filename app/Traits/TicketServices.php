@@ -8,48 +8,22 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use DB;
+use App\Traits\StoreServices;
 
 trait TicketServices {
 
-    use GlobalFunctions, LogServices;
+    use GlobalFunctions, LogServices, StoreServices;
 
     private function getTicketListing($requester) {
 
         $data = collect();
-        $companies = $requester->companies;
-        foreach($companies as $company){
-            $clearance = $this->checkClearance($requester, $company ,  $this->getModule('ticket','index'));
-            error_log($clearance);
-            switch ($clearance) {
-                //System Wide
-                case 1:
-                    $temp = Ticket::where('status', true)->get();
-                    $data = $data->merge($temp);
-                    break;
-                //Ticket Wide
-                case 2:
-                //Group Wide
-                case 3:
-                    $stores = $company->stores;
-                    foreach($stores as $store){
-                        $data = $data->merge($store->tickets);
-                    }
-                    break;
-                //Own Wide
-                case 4:
-                    $stores = $requester->stores;
-                    foreach($stores as $store){
-                        $data = $data->merge($store->tickets);
-                    }
-                    break;
-                default:
-                    break;
-            }
-    
+        //Role Based Retrieve Done in Store
+        $stores = $this->getStoreListing($requester);
+        foreach($stores as $store){
+            $data = $data->merge($store->tickets()->where('status',true)->get());
         }
-        
-        $data = $data->unique('id');
+
+        $data = $data->unique('id')->sortBy('id');
 
         return $data;
     
@@ -202,7 +176,6 @@ trait TicketServices {
 
     private function createTicket($requester , $params) {
 
-        DB::beginTransaction();
         $data = new Ticket();
         $data->uid = Carbon::now()->timestamp . Ticket::count();
         $data->name = $params->name;
@@ -237,18 +210,15 @@ trait TicketServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'store', 'ticket');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     //Make Sure Ticket is not empty when calling this function
     private function updateTicket($requester, $data,  $params) {
         
-        DB::beginTransaction();
         $data->name = $params->name;
         $data->code = $params->code;
         $data->sku = $params->sku;
@@ -280,27 +250,22 @@ trait TicketServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'ticket');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     private function deleteTicket($requester , $id) {
-        DB::beginTransaction();
         $data = Ticket::find($id);
         $data->status = false;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'delete', 'ticket');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 

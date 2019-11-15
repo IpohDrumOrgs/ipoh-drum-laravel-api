@@ -478,6 +478,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/user (POST)
         $this->validate($request, [
@@ -504,12 +505,14 @@ class UserController extends Controller
         $user = $this->createUser($request->user(), $params);
 
         if ($this->isEmpty($user)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('User');
             $data['data'] = $user;
@@ -606,6 +609,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        DB::beginTransaction();
         // api/user/{userid} (PUT)
         error_log('Updating user of uid: ' . $uid);
         $user = $this->getUser($request->user(), $uid);
@@ -614,6 +618,7 @@ class UserController extends Controller
             'name' => 'required|string|max:191',
         ]);
         if ($this->isEmpty($user)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('User');
             $data['status'] = 'error';
@@ -637,12 +642,14 @@ class UserController extends Controller
         $params = json_decode(json_encode($params));
         $user = $this->updateUser($request->user(), $user, $params);
         if ($this->isEmpty($user)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getErrorMsg('User');
             $data['status'] = 'error';
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('User');
             $data['data'] = $user;
@@ -677,11 +684,13 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/user/{userid} (DELETE)
         error_log('Deleting user of uid: ' . $uid);
         $user = $this->getUser($request->user(), $uid);
         if ($this->isEmpty($user)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('User');
             $data['data'] = null;
@@ -690,12 +699,14 @@ class UserController extends Controller
         }
         $user = $this->deleteUser($request->user(), $user->id);
         if ($this->isEmpty($user)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['data'] = null;
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('User');
             $data['data'] = $user;

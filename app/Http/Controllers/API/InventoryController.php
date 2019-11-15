@@ -561,6 +561,7 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/inventory (POST)
         
@@ -598,12 +599,14 @@ class InventoryController extends Controller
         $inventory = $this->createInventory($request->user(), $params);
 
         if ($this->isEmpty($inventory)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('Inventory');
             $data['data'] = $inventory;
@@ -766,6 +769,7 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        DB::beginTransaction();
         // api/inventory/{inventoryid} (PUT) 
         error_log('Updating inventory of uid: ' . $uid);
         $inventory = $this->getInventory($request->user(), $uid);
@@ -789,6 +793,7 @@ class InventoryController extends Controller
         ]);
       
         if ($this->isEmpty($inventory)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Inventory');
             $data['status'] = 'error';
@@ -818,12 +823,14 @@ class InventoryController extends Controller
         $params = json_decode(json_encode($params));
         $inventory = $this->updateInventory($request->user(), $inventory, $params);
         if ($this->isEmpty($inventory)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getErrorMsg('Inventory');
             $data['status'] = 'error';
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('Inventory');
             $data['data'] = $inventory;
@@ -858,11 +865,13 @@ class InventoryController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/inventory/{inventoryid} (DELETE)
         error_log('Deleting inventory of uid: ' . $uid);
         $inventory = $this->getInventory($request->user(), $uid);
         if ($this->isEmpty($inventory)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('Inventory');
             $data['data'] = null;
@@ -871,12 +880,14 @@ class InventoryController extends Controller
         }
         $inventory = $this->deleteInventory($request->user(), $inventory->id);
         if ($this->isEmpty($inventory)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['data'] = null;
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Inventory');
             $data['data'] = $inventory;

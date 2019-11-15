@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use DB;
 
 trait TypeServices {
 
@@ -15,32 +14,12 @@ trait TypeServices {
     private function getTypeListing($requester) {
 
         $data = collect();
-        $companies = $requester->companies;
-        foreach($companies as $company){
-            $clearance = $this->checkClearance($requester, $company ,  $this->getModule('type','index'));
-            error_log($clearance);
-            switch ($clearance) {
-                //System Wide
-                case 1:
-                //Type Wide
-                case 2:
-                //Group Wide
-                case 3:
-                //Own Wide
-                case 4:
-                    $temp = Type::where('status', true)->get();
-                    $data = $data->merge($temp);
-                    break;
-                default:
-                    break;
-            }
-    
-        }
+        $temp = Type::where('status', true)->get();
+        $data = $data->merge($temp);
         
-        $data = $data->unique('id');
+        $data = $data->unique('id')->sortBy('id');
 
         return $data;
-    
     }
 
     
@@ -171,7 +150,6 @@ trait TypeServices {
 
     private function createType($requester , $params) {
 
-        DB::beginTransaction();
         $data = new Type();
         $data->uid = Carbon::now()->timestamp . Type::count();
         $data->name = $params->name;
@@ -180,45 +158,37 @@ trait TypeServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'store', 'type');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     //Make Sure Type is not empty when calling this function
     private function updateType($requester, $data,  $params) {
         
-        DB::beginTransaction();
         $data->name = $params->name;
         $data->desc = $params->desc;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'type');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     private function deleteType($requester , $id) {
-        DB::beginTransaction();
         $data = Type::find($id);
         $data->status = false;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'delete', 'type');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 

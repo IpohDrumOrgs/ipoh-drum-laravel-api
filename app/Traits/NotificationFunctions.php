@@ -35,7 +35,7 @@ trait NotificationFunctions {
         return $provider. ' deleted successfully.';
     }
 
-    public function getErrorMsg($provider){
+    public function getErrorMsg(){
         return 'Something went wrong. Please Try Again Later.';
     }
 }

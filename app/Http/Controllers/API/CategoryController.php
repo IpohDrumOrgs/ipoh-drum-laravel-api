@@ -422,6 +422,15 @@ class CategoryController extends Controller
      *              type="string"
      *          )
      * ),
+     * @OA\Parameter(
+     * name="ticketids",
+     * in="query",
+     * description="Ticket Ids",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Category has been created successfully."
@@ -434,28 +443,33 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/category (POST)
         $this->validate($request, [
             'name' => 'required|string',
             'desc' => 'required|string',
+            'ticketids' => 'required|string',
         ]);
         error_log('Creating category.');
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
+            'ticketids' => $request->ticketids,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $category = $this->createCategory($request->user(), $params);
 
         if ($this->isEmpty($category)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('Category');
             $data['data'] = $category;
@@ -496,6 +510,15 @@ class CategoryController extends Controller
      *              type="string"
      *          )
      * ),
+     * @OA\Parameter(
+     * name="ticketids",
+     * in="query",
+     * description="Ticket Ids",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Category has been updated successfully."
@@ -508,6 +531,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        DB::beginTransaction();
         // api/category/{categoryid} (PUT) 
         error_log('Updating category of uid: ' . $uid);
         $category = $this->getCategory($request->user(), $uid);
@@ -515,9 +539,11 @@ class CategoryController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'desc' => 'required|string',
+            'ticketids' => 'required|string',
         ]);
 
         if ($this->isEmpty($category)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Category');
             $data['status'] = 'error';
@@ -528,17 +554,20 @@ class CategoryController extends Controller
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
+            'ticketids' => $request->ticketids,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $category = $this->updateCategory($request->user(), $category, $params);
         if ($this->isEmpty($category)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getErrorMsg('Category');
             $data['status'] = 'error';
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('Category');
             $data['data'] = $category;
@@ -573,11 +602,13 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/category/{categoryid} (DELETE)
         error_log('Deleting category of uid: ' . $uid);
         $category = $this->getCategory($request->user(), $uid);
         if ($this->isEmpty($category)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('Category');
             $data['data'] = null;
@@ -586,12 +617,14 @@ class CategoryController extends Controller
         }
         $category = $this->deleteCategory($request->user(), $category->id);
         if ($this->isEmpty($category)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['data'] = null;
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Category');
             $data['data'] = $category;

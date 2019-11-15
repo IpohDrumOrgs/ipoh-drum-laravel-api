@@ -6,38 +6,20 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use DB;
+use App\Traits\AssignDatabaseRelationship;
 
 trait CategoryServices {
 
-    use GlobalFunctions, LogServices;
+    use GlobalFunctions, LogServices, AssignDatabaseRelationship;
 
     private function getCategoryListing($requester) {
 
         $data = collect();
-        $companies = $requester->companies;
-        foreach($companies as $company){
-            $clearance = $this->checkClearance($requester, $company ,  $this->getModule('category','index'));
-            error_log($clearance);
-            switch ($clearance) {
-                //System Wide
-                case 1:
-                //Category Wide
-                case 2:
-                //Group Wide
-                case 3:
-                //Own Wide
-                case 4:
-                    $temp = Category::where('status', true)->get();
-                    $data = $data->merge($temp);
-                    break;
-                default:
-                    break;
-            }
-    
-        }
+
+        $temp = Category::where('status', true)->get();
+        $data = $data->merge($temp);
         
-        $data = $data->unique('id');
+        $data = $data->unique('id')->sortBy('id');
 
         return $data;
     
@@ -171,7 +153,6 @@ trait CategoryServices {
 
     private function createCategory($requester , $params) {
 
-        DB::beginTransaction();
         $data = new Category();
         $data->uid = Carbon::now()->timestamp . Category::count();
         $data->name = $params->name;
@@ -180,47 +161,65 @@ trait CategoryServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'store', 'category');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
+        if(!$this->isEmpty($params->ticketids)){
+
+            $ids = $this->splitToArray($params->ticketids);
+            $params = collect();
+            foreach($ids as $id){
+                $temp = collect(['id' => $id , 'remark' => null]);
+                $params = $params->push($temp);
+            }
+            $params = json_decode(json_encode($params));
+            if($this->assignTicketsToMany($data, $params)){
+
+            }
+        }
+
         return $data->refresh();
     }
 
     //Make Sure Category is not empty when calling this function
     private function updateCategory($requester, $data,  $params) {
         
-        DB::beginTransaction();
         $data->name = $params->name;
         $data->desc = $params->desc;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'category');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
+        if(!$this->isEmpty($params->ticketids)){
+
+            $ids = $this->splitToArray($params->ticketids);
+            $params = collect();
+            foreach($ids as $id){
+                $temp = collect(['id' => $id , 'remark' => null]);
+                $params = $params->push($temp);
+            }
+            $params = json_decode(json_encode($params));
+            if($this->assignTicketsToMany($data, $params)){
+
+            }
+        }
         return $data->refresh();
     }
 
     private function deleteCategory($requester , $id) {
-        DB::beginTransaction();
         $data = Category::find($id);
         $data->status = false;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'delete', 'category');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
-    
 }

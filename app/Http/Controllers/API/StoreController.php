@@ -524,6 +524,7 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/store (POST)
         
@@ -550,12 +551,14 @@ class StoreController extends Controller
         $store = $this->createStore($request->user(), $params);
 
         if ($this->isEmpty($store)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('Store');
             $data['data'] = $store;
@@ -680,6 +683,7 @@ class StoreController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        DB::beginTransaction();
         // api/store/{storeid} (PUT) 
         error_log('Updating store of uid: ' . $uid);
         $store = $this->getStore($request->user(), $uid);
@@ -689,6 +693,7 @@ class StoreController extends Controller
         ]);
         
         if ($this->isEmpty($store)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Store');
             $data['status'] = 'error';
@@ -712,12 +717,14 @@ class StoreController extends Controller
         $params = json_decode(json_encode($params));
         $store = $this->updateStore($request->user(), $store, $params);
         if ($this->isEmpty($store)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getErrorMsg('Store');
             $data['status'] = 'error';
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('Store');
             $data['data'] = $store;
@@ -752,11 +759,13 @@ class StoreController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/store/{storeid} (DELETE)
         error_log('Deleting store of uid: ' . $uid);
         $store = $this->getStore($request->user(), $uid);
         if ($this->isEmpty($store)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('Store');
             $data['data'] = null;
@@ -765,12 +774,14 @@ class StoreController extends Controller
         }
         $store = $this->deleteStore($request->user(), $store->id);
         if ($this->isEmpty($store)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['data'] = null;
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Store');
             $data['data'] = $store;

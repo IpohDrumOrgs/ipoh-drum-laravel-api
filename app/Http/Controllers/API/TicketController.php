@@ -553,6 +553,7 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/ticket (POST)
         
@@ -594,12 +595,14 @@ class TicketController extends Controller
         $ticket = $this->createTicket($request->user(), $params);
 
         if ($this->isEmpty($ticket)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getCreatedSuccessMsg('Ticket');
             $data['data'] = $ticket;
@@ -754,6 +757,7 @@ class TicketController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        DB::beginTransaction();
         // api/ticket/{ticketid} (PUT) 
         error_log('Updating ticket of uid: ' . $uid);
         $ticket = $this->getTicket($request->user(), $uid);
@@ -776,6 +780,7 @@ class TicketController extends Controller
         ]);
       
         if ($this->isEmpty($ticket)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Ticket');
             $data['status'] = 'error';
@@ -804,12 +809,14 @@ class TicketController extends Controller
         $params = json_decode(json_encode($params));
         $ticket = $this->updateTicket($request->user(), $ticket, $params);
         if ($this->isEmpty($ticket)) {
+            DB::rollBack();
             $data['data'] = null;
             $data['msg'] = $this->getErrorMsg('Ticket');
             $data['status'] = 'error';
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getUpdatedSuccessMsg('Ticket');
             $data['data'] = $ticket;
@@ -844,11 +851,13 @@ class TicketController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/ticket/{ticketid} (DELETE)
         error_log('Deleting ticket of uid: ' . $uid);
         $ticket = $this->getTicket($request->user(), $uid);
         if ($this->isEmpty($ticket)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getNotFoundMsg('Ticket');
             $data['data'] = null;
@@ -857,12 +866,14 @@ class TicketController extends Controller
         }
         $ticket = $this->deleteTicket($request->user(), $ticket->id);
         if ($this->isEmpty($ticket)) {
+            DB::rollBack();
             $data['status'] = 'error';
             $data['msg'] = $this->getErrorMsg();
             $data['data'] = null;
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
+            DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Ticket');
             $data['data'] = $ticket;

@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use DB;
 
 trait ProductFeatureServices {
 
@@ -15,29 +14,10 @@ trait ProductFeatureServices {
     private function getProductFeatureListing($requester) {
 
         $data = collect();
-        $companies = $requester->companies;
-        foreach($companies as $company){
-            $clearance = $this->checkClearance($requester, $company ,  $this->getModule('productfeature','index'));
-            error_log($clearance);
-            switch ($clearance) {
-                //System Wide
-                case 1:
-                //ProductFeature Wide
-                case 2:
-                //Group Wide
-                case 3:
-                //Own Wide
-                case 4:
-                    $temp = ProductFeature::where('status', true)->get();
-                    $data = $data->merge($temp);
-                    break;
-                default:
-                    break;
-            }
-    
-        }
+        $temp = ProductFeature::where('status', true)->get();
+        $data = $data->merge($temp);
         
-        $data = $data->unique('id');
+        $data = $data->unique('id')->sortBy('id');
 
         return $data;
     
@@ -171,7 +151,6 @@ trait ProductFeatureServices {
 
     private function createProductFeature($requester , $params) {
 
-        DB::beginTransaction();
         $data = new ProductFeature();
         $data->uid = Carbon::now()->timestamp . ProductFeature::count();
         $data->name = $params->name;
@@ -180,45 +159,37 @@ trait ProductFeatureServices {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'store', 'productfeature');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     //Make Sure ProductFeature is not empty when calling this function
     private function updateProductFeature($requester, $data,  $params) {
         
-        DB::beginTransaction();
         $data->name = $params->name;
         $data->desc = $params->desc;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'productfeature');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 
     private function deleteProductFeature($requester , $id) {
-        DB::beginTransaction();
         $data = ProductFeature::find($id);
         $data->status = false;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'delete', 'productfeature');
         } catch (Exception $e) {
-            DB::rollBack();
             return null;
         }
 
-        DB::commit();
         return $data->refresh();
     }
 

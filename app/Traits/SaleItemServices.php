@@ -3,27 +3,26 @@
 namespace App\Traits;
 use App\User;
 use App\Store;
-use App\Sale;
+use App\SaleItem;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
-use App\Traits\StoreServices;
+use App\Traits\SaleServices;
 
-trait SaleServices {
+trait SaleItemServices {
 
-    use GlobalFunctions, LogServices , StoreServices;
+    use GlobalFunctions, LogServices, SaleServices;
 
-    private function getSaleListing($requester) {
+    private function getSaleItemListing($requester) {
 
         $data = collect();
-       
+               
         //Role Based Retrieve Done in Store Services   
-        $stores = $this->getStoreListing($requester);
-        foreach($stores as $store){
-            $data = $data->merge($store->sales()->where('status',true)->get());
+        $sales = $this->getSaleListing($requester);
+        foreach($sales as $sale){
+            $data = $data->merge($sale->saleitems()->where('status',true)->get());
         }
-        
         
         $data = $data->unique('id')->sortBy('id');
 
@@ -32,21 +31,21 @@ trait SaleServices {
     }
 
     
-    private function pluckSaleIndex($cols) {
+    private function pluckSaleItemIndex($cols) {
 
-        $data = Sale::where('status',true)->get($cols);
+        $data = SaleItem::where('status',true)->get($cols);
         return $data;
     
     }
 
 
-    private function filterSaleListing($requester , $params) {
+    private function filterSaleItemListing($requester , $params) {
 
-        error_log('Filtering sales....');
-        $data = $this->getSaleListing($requester);
+        error_log('Filtering saleitems....');
+        $data = $this->getSaleItemListing($requester);
 
         if($params->keyword){
-            error_log('Filtering sales with keyword....');
+            error_log('Filtering saleitems with keyword....');
             $keyword = $params->keyword;
             $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
@@ -61,7 +60,7 @@ trait SaleServices {
 
              
         if($params->fromdate){
-            error_log('Filtering sales with fromdate....');
+            error_log('Filtering saleitems with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
@@ -69,7 +68,7 @@ trait SaleServices {
         }
 
         if($params->todate){
-            error_log('Filtering sales with todate....');
+            error_log('Filtering saleitems with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
@@ -78,7 +77,7 @@ trait SaleServices {
         } 
 
         if($params->status){
-            error_log('Filtering sales with status....');
+            error_log('Filtering saleitems with status....');
             if($params->status == 'true'){
                 $data = $data->where('status', true);
             }else if($params->status == 'false'){
@@ -95,13 +94,13 @@ trait SaleServices {
     }
 
     
-    private function pluckSaleFilter($cols , $params) {
+    private function pluckSaleItemFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
-        $data = Sale::where('status',true)->get();
+        $data = SaleItem::where('status',true)->get();
 
         if($params->keyword){
-            error_log('Filtering sales with keyword....');
+            error_log('Filtering saleitems with keyword....');
             $keyword = $params->keyword;
             $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
@@ -116,7 +115,7 @@ trait SaleServices {
 
              
         if($params->fromdate){
-            error_log('Filtering sales with fromdate....');
+            error_log('Filtering saleitems with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
@@ -124,7 +123,7 @@ trait SaleServices {
         }
 
         if($params->todate){
-            error_log('Filtering sales with todate....');
+            error_log('Filtering saleitems with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
@@ -144,55 +143,54 @@ trait SaleServices {
     }
 
 
-    private function getSale($requester , $uid) {
-        $data = Sale::where('uid', $uid)->where('status', 1)->first();
+    private function getSaleItem($requester , $uid) {
+        $data = SaleItem::where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function pluckSale($cols , $uid) {
-        $data = Sale::where('uid', $uid)->where('status', 1)->get($cols)->first();
+    private function pluckSaleItem($cols , $uid) {
+        $data = SaleItem::where('uid', $uid)->where('status', 1)->get($cols)->first();
         return $data;
     }
 
-    private function createSale($requester , $params) {
+    private function createSaleItem($requester , $params) {
 
-        $data = new Sale();
-        $data->uid = Carbon::now()->timestamp . Sale::count();
-        $data->sono = $params->sono;
-        $data->totalqty = $this->toInt($params->totalqty);
-        $data->totalcost = $this->toDouble($params->totalcost);
-        $data->linetotal = $this->toDouble($params->linetotal);
+        $data = new SaleItem();
+        $data->uid = Carbon::now()->timestamp . SaleItem::count();
+        $data->name = $params->name;
+        $data->qty = $this->toDouble($params->totalcost);
+        $data->desc = $params->desc;
+        $data->cost = $this->toDouble($params->cost);
+        $data->price = $this->toDouble($params->price);
         $data->totaldisc = $this->toDouble($params->totaldisc);
-        $data->discpctg = $this->toDouble($data->totaldisc / $data->linetotal);
-        // $data->charge = $this->toDouble($params->price);
-        $data->grandtotal = $this->toDouble($data->linetotal - $data->totaldisc);
+        $data->linetotal = $this->toDouble($linetotal);
+        $data->totalcost = $this->toDouble($params->totalcost);
         $data->payment = $this->toDouble($params->payment);
         $data->outstanding = $this->toDouble($params->outstanding);
-        $data->docdate = $this->toDate($params->docdate);
-        $data->remark = $params->remark;
+        $data->type = $params->type;
+        $data->type = $this->toDate($params->docdate);
         
-        if(!$this->isEmpty($params->userid)){
-            $data->pos = false;
-            $user = User::find($params->userid);
-            if($this->isEmpty($user)){
+        if($data->type == 'ticket'){
+            $ticket = Ticket::find($params->ticketid);
+            if($this->isEmpty($ticket)){
                 return null;
             }
-            $data->user()->associate($user);
+            $data->ticket()->associate($ticket);
+        }else if($data->type == 'inventory'){
+            $inventory = Inventory::find($params->inventoryid);
+            if($this->isEmpty($inventory)){
+                return null;
+            }
+            $data->inventory()->associate($inventory);
         }else{
-            $data->pos = true;
-        }
-
-        $store = Store::find($params->storeid);
-        if($this->isEmpty($store)){
             return null;
         }
-        $data->store()->associate($store);
 
-     
+       
         $data->status = true;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'store', 'sale');
+            $this->createLog($requester->id , [$data->id], 'store', 'saleitem');
         } catch (Exception $e) {
             return null;
         }
@@ -200,43 +198,42 @@ trait SaleServices {
         return $data->refresh();
     }
 
-    //Make Sure Sale is not empty when calling this function
-    private function updateSale($requester, $data,  $params) {
+    //Make Sure SaleItem is not empty when calling this function
+    private function updateSaleItem($requester, $data,  $params) {
         
-        $data->sono = $params->sono;
-        $data->totalqty = $this->toInt($params->totalqty);
-        $data->totalcost = $this->toDouble($params->totalcost);
-        $data->linetotal = $this->toDouble($params->linetotal);
+        $data->name = $params->name;
+        $data->qty = $this->toDouble($params->totalcost);
+        $data->desc = $params->desc;
+        $data->cost = $this->toDouble($params->cost);
+        $data->price = $this->toDouble($params->price);
         $data->totaldisc = $this->toDouble($params->totaldisc);
-        $data->discpctg = $this->toDouble($data->totaldisc / $data->linetotal);
-        // $data->charge = $this->toDouble($params->price);
-        $data->grandtotal = $this->toDouble($data->linetotal - $data->totaldisc);
+        $data->linetotal = $this->toDouble($linetotal);
+        $data->totalcost = $this->toDouble($params->totalcost);
         $data->payment = $this->toDouble($params->payment);
         $data->outstanding = $this->toDouble($params->outstanding);
-        $data->docdate = $this->toDate($params->docdate);
-        $data->remark = $params->remark;
+        $data->type = $params->type;
+        $data->type = $this->toDate($params->docdate);
         
-        if(!$this->isEmpty($params->userid)){
-            $data->pos = false;
-            $user = User::find($params->userid);
-            if($this->isEmpty($user)){
+        if($data->type == 'ticket'){
+            $ticket = Ticket::find($params->ticketid);
+            if($this->isEmpty($ticket)){
                 return null;
             }
-            $data->user()->associate($user);
+            $data->ticket()->associate($ticket);
+        }else if($data->type == 'inventory'){
+            $inventory = Inventory::find($params->inventoryid);
+            if($this->isEmpty($inventory)){
+                return null;
+            }
+            $data->inventory()->associate($inventory);
         }else{
-            $data->pos = true;
-        }
-
-        $store = Store::find($params->storeid);
-        if($this->isEmpty($store)){
             return null;
         }
-        $data->store()->associate($store);
-
+        
         $data->status = true;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'update', 'sale');
+            $this->createLog($requester->id , [$data->id], 'update', 'saleitem');
         } catch (Exception $e) {
             return null;
         }
@@ -244,12 +241,12 @@ trait SaleServices {
         return $data->refresh();
     }
 
-    private function deleteSale($requester , $id) {
-        $data = Sale::find($id);
+    private function deleteSaleItem($requester , $id) {
+        $data = SaleItem::find($id);
         $data->status = false;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'delete', 'sale');
+            $this->createLog($requester->id , [$data->id], 'delete', 'saleitem');
         } catch (Exception $e) {
             return null;
         }

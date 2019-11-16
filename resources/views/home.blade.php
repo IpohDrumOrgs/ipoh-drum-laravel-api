@@ -19,5 +19,40 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div id="formWrapper" class="col-md-4 col-md-offset-4">
+            <form class="form-vertical" role="form" enctype="multipart/form-data" method="post" action="{{ route('uploadImage')  }}">
+                {{csrf_field()}}
+                @if(session()->has('status'))
+                    <div class="alert alert-info" role="alert">
+                        {{session()->get('status')}}
+                    </div>
+                @endif
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                    <input type="file" name="image_name" class="form-control" id="name" value="">
+                    @if($errors->has('image_name'))
+                        <span class="help-block">{{ $errors->first('image_name') }}</span>
+                    @endif
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Upload Image </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div class="row" id="displayImages">
+        @if($images)
+            @foreach($images as $image)
+
+                <div class="col-md-3">
+                    <a href="{{$image->imgpath}}" target="_blank">
+                        <img src="{{asset('uploads/'.$image->name)}}" class="img-responsive" alt="{{$image->name}}">
+                    </a>
+                </div>
+            @endforeach
+        @endif
+    </div>
 </div>
 @endsection

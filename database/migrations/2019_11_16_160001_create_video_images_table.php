@@ -16,8 +16,10 @@ class CreateVideoImagesTable extends Migration
         Schema::create('video_images', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('video_id')->unsigned();
+            $table->string('name');
             $table->string('imgpath')->unique();
             $table->boolean('status')->default(true);
+            $table->timestamps();
 
             $table->foreign('video_id')
                 ->references('id')

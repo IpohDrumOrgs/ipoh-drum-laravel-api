@@ -19,6 +19,7 @@ class CreateVerificationCodesTable extends Migration
             $table->string('uid')->unique();
             $table->string('code')->unique();
             $table->boolean('status')->default(true);
+            $table->timestamps();
 
             $table->foreign('ticket_id')
             ->references('id')

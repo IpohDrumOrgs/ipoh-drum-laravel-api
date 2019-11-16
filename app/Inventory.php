@@ -91,4 +91,13 @@ class Inventory extends Model
     {
         return $this->belongsToMany('App\ProductFeature')->withPivot('status','remark');
     }
+
+
+    /**
+     *
+     */
+    public function images()
+    {
+        return $this->hasMany('App\InventoryImage');
+    }
 }

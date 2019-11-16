@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 
 class SaleItemController extends Controller
 {
+    private $controllerName = '[SaleItemController]';
+
     /**
      * Display a listing of the resource.
      *

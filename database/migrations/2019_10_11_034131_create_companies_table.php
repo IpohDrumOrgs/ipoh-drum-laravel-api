@@ -18,6 +18,7 @@ class CreateCompaniesTable extends Migration
             $table->unsignedInteger('company_type_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('name');
+            $table->string('img')->nullable();
             $table->string('regno')->nullable();
             $table->string('tel1')->unique()->nullable();
             $table->string('tel2')->unique()->nullable();

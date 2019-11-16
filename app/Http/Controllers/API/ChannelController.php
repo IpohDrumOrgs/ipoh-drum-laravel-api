@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class ChannelController extends Controller
 {
+    private $controllerName = '[ChannelController]';
     /**
      * Display a listing of the resource.
      *

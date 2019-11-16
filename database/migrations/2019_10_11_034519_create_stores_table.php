@@ -20,6 +20,7 @@ class CreateStoresTable extends Migration
             $table->string('uid')->unique();
             $table->string('name');
             $table->string('contact');
+            $table->string('img')->nullable();
             $table->string('email');
             $table->double('rating');
             $table->string('address')->nullable();

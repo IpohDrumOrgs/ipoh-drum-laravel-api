@@ -17,6 +17,8 @@ class SaleController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, SaleServices, LogServices;
 
+    private $controllerName = '[SaleController]';
+
     /**
      * @OA\Get(
      *      path="/api/sale",
@@ -47,7 +49,7 @@ class SaleController extends Controller
      */
     public function index(Request $request)
     {
-        error_log('Retrieving list of sales.');
+        error_log($this->controllerName. 'Retrieving list of sales.');
         // api/sale (GET)
         $sales = $this->getSaleListing($request->user());
         if ($this->isEmpty($sales)) {

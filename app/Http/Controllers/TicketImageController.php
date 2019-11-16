@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\BackOrder;
+use App\TicketImage;
 use Illuminate\Http\Request;
 
-class BackOrderController extends Controller
+class TicketImageController extends Controller
 {
-    private $controllerName = '[BackOrderController]';
     /**
      * Display a listing of the resource.
      *
@@ -42,10 +41,10 @@ class BackOrderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\BackOrder  $backOrder
+     * @param  \App\TicketImage  $ticketImage
      * @return \Illuminate\Http\Response
      */
-    public function show(BackOrder $backOrder)
+    public function show(TicketImage $ticketImage)
     {
         //
     }
@@ -53,10 +52,10 @@ class BackOrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\BackOrder  $backOrder
+     * @param  \App\TicketImage  $ticketImage
      * @return \Illuminate\Http\Response
      */
-    public function edit(BackOrder $backOrder)
+    public function edit(TicketImage $ticketImage)
     {
         //
     }
@@ -65,10 +64,10 @@ class BackOrderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\BackOrder  $backOrder
+     * @param  \App\TicketImage  $ticketImage
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BackOrder $backOrder)
+    public function update(Request $request, TicketImage $ticketImage)
     {
         //
     }
@@ -76,10 +75,10 @@ class BackOrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\BackOrder  $backOrder
+     * @param  \App\TicketImage  $ticketImage
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BackOrder $backOrder)
+    public function destroy(TicketImage $ticketImage)
     {
         //
     }

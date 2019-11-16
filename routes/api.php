@@ -24,6 +24,7 @@ Route::group(['middleware' => ['auth:api']], function (){
         return $request->user();
     });
 
+    Route::post('/authentication', 'API\UserController@authentication');
 
     Route::get('/user-profile', 'API\UserController@getUser');
     Route::resource('user', 'API\UserController');
@@ -89,10 +90,10 @@ Route::group(['middleware' => ['auth:api']], function (){
 });
 
 
-Route::middleware('auth:api')->post('/authentication', 'API\UserController@authentication');
 
 Route::post('/register', 'API\UserController@register');
 
+// TODO: For testing purposes only
 Route::get('/pluck/modules', 'API\ModuleController@pluckIndex');
 Route::get('/pluck/module/{uid}', 'API\ModuleController@pluckShow');
 Route::get('/pluck/filter/module', 'API\ModuleController@pluckFilter');

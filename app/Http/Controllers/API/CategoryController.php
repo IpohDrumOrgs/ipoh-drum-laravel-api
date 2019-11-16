@@ -16,7 +16,7 @@ use App\Traits\LogServices;
 class CategoryController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, CategoryServices, LogServices;
-
+    private $controllerName = '[CategoryController]';
     /**
      * @OA\Get(
      *      path="/api/category",

@@ -16,7 +16,7 @@ use App\Traits\LogServices;
 class InventoryController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices;
-
+    private $controllerName = '[InventoryController]';
     /**
      * @OA\Get(
      *      path="/api/inventory",
@@ -47,7 +47,7 @@ class InventoryController extends Controller
      */
     public function index(Request $request)
     {
-        error_log('Retrieving list of inventories.');
+        error_log($this->controllerName.'Retrieving list of inventories.');
         // api/inventory (GET)
         $inventories = $this->getInventoryListing($request->user());
         if ($this->isEmpty($inventories)) {
@@ -106,9 +106,9 @@ class InventoryController extends Controller
      */
     public function pluckIndex(Request $request)
     {
-        error_log('Retrieving list of plucked inventories.');
+        error_log($this->controllerName.'Retrieving list of plucked inventories.');
         // api/pluck/inventories (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
+        error_log($this->controllerName."columns = " . collect($this->splitToArray($request->cols)));
         $inventories = $this->pluckInventoryIndex($this->splitToArray($request->cols));
         if ($this->isEmpty($inventories)) {
             $data['status'] = 'error';
@@ -190,7 +190,7 @@ class InventoryController extends Controller
      */
     public function filter(Request $request)
     {
-        error_log('Retrieving list of filtered inventories.');
+        error_log($this->controllerName.'Retrieving list of filtered inventories.');
         // api/inventory/filter (GET)
         $params = collect([
             'keyword' => $request->keyword,
@@ -289,7 +289,7 @@ class InventoryController extends Controller
      */
     public function pluckFilter(Request $request)
     {
-        error_log('Retrieving list of filtered and plucked inventories.');
+        error_log($this->controllerName.'Retrieving list of filtered and plucked inventories.');
         // api/pluck/filter/inventory (GET)
         $params = collect([
             'keyword' => $request->keyword,
@@ -347,7 +347,7 @@ class InventoryController extends Controller
     public function show(Request $request, $uid)
     {
         // api/inventory/{inventoryid} (GET)
-        error_log('Retrieving inventory of uid:' . $uid);
+        error_log($this->controllerName.'Retrieving inventory of uid:' . $uid);
         $inventory = $this->getInventory($request->user(), $uid);
         if ($this->isEmpty($inventory)) {
             $data['data'] = null;
@@ -396,9 +396,9 @@ class InventoryController extends Controller
      */
     public function pluckShow(Request $request , $uid)
     {
-        error_log('Retrieving plucked inventories.');
+        error_log($this->controllerName.'Retrieving plucked inventories.');
         // api/pluck/inventory/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
+        error_log($this->controllerName."columns = " . collect($this->splitToArray($request->cols)));
         $inventory = $this->pluckInventory($this->splitToArray($request->cols) , $uid);
         if ($this->isEmpty($inventory)) {
             $data['data'] = null;
@@ -576,7 +576,7 @@ class InventoryController extends Controller
             'stock' => 'required|numeric|min:0',
             'onsale' => 'required|numeric',
         ]);
-        error_log('Creating inventory.');
+        error_log($this->controllerName.'Creating inventory.');
         $params = collect([
             'storeid' => $request->storeid,
             'name' => $request->name,
@@ -771,7 +771,7 @@ class InventoryController extends Controller
     {
         DB::beginTransaction();
         // api/inventory/{inventoryid} (PUT) 
-        error_log('Updating inventory of uid: ' . $uid);
+        error_log($this->controllerName.'Updating inventory of uid: ' . $uid);
         $inventory = $this->getInventory($request->user(), $uid);
        
         $this->validate($request, [
@@ -868,7 +868,7 @@ class InventoryController extends Controller
         DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/inventory/{inventoryid} (DELETE)
-        error_log('Deleting inventory of uid: ' . $uid);
+        error_log($this->controllerName.'Deleting inventory of uid: ' . $uid);
         $inventory = $this->getInventory($request->user(), $uid);
         if ($this->isEmpty($inventory)) {
             DB::rollBack();

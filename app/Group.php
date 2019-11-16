@@ -29,6 +29,6 @@ class Group extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\User')->withPivot( 'desc','status','lastedit_by','created_at','updated_at');
+        return $this->belongsToMany('App\User')->withPivot( 'desc','status','created_at','updated_at');
     }
 }

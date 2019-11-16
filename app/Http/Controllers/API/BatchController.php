@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 class BatchController extends Controller
 {
+    private $controllerName = '[BatchController]';
     /**
      * Display a listing of the resource.
      *

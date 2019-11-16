@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
+    private $controllerName = '[VideoController]';
     /**
      * Display a listing of the resource.
      *

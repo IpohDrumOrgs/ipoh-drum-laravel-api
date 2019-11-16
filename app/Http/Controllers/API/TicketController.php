@@ -16,7 +16,7 @@ use App\Traits\LogServices;
 class TicketController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, TicketServices, LogServices;
-
+    private $controllerName = '[TicketController]';
     /**
      * @OA\Get(
      *      path="/api/ticket",

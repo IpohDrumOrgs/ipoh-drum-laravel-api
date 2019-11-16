@@ -16,6 +16,7 @@ use App\Traits\LogServices;
 class TypeController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, TypeServices, LogServices;
+    private $controllerName = '[TypeController]';
 
     /**
      * @OA\Get(

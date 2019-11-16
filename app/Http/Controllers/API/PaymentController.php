@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
+    private $controllerName = '[PaymentController]';
     /**
      * Display a listing of the resource.
      *

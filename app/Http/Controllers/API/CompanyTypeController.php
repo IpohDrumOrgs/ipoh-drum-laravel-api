@@ -16,7 +16,7 @@ use App\Traits\LogServices;
 class CompanyTypeController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, CompanyTypeServices, LogServices;
-
+    private $controllerName = '[CompanyTypeController]';
     /**
      * @OA\Get(
      *      path="/api/companytype",

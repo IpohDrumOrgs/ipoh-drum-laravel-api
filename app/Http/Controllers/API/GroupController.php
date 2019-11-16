@@ -16,7 +16,7 @@ use App\Traits\LogServices;
 class GroupController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, GroupServices, LogServices;
-
+    private $controllerName = '[GroupController]';
     /**
      * @OA\Get(
      *      path="/api/group",

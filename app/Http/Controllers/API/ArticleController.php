@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+    private $controllerName = '[ArticleController]';
     /**
      * Display a listing of the resource.
      *

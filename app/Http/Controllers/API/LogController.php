@@ -8,6 +8,7 @@ use App\Log;
 
 class LogController extends Controller
 {
+    private $controllerName = '[LogController]';
     /**
      * Display a listing of the resource.
      *

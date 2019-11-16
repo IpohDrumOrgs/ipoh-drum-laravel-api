@@ -16,6 +16,7 @@ use App\Traits\LogServices;
 class ModuleController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, ModuleServices, LogServices;
+    private $controllerName = '[ModuleController]';
 
     /**
      * @OA\Get(

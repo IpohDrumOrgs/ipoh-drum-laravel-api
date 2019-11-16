@@ -24,7 +24,7 @@ trait InventoryServices {
             $data = $data->merge($store->inventories()->where('status',true)->get());
         }
         
-        $data = $data->unique('id')->sortBy('id');
+        $data = $data->unique('id');
 
         return $data;
     

@@ -16,7 +16,7 @@ use App\Traits\LogServices;
 class ProductFeatureController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, ProductFeatureServices, LogServices;
-
+    private $controllerName = '[ProductFeatureController]';
     /**
      * @OA\Get(
      *      path="/api/productfeature",

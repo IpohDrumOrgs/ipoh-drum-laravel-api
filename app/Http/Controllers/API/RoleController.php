@@ -16,7 +16,7 @@ use App\Traits\LogServices;
 class RoleController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, RoleServices, LogServices;
-
+    private $controllerName = '[RoleController]';
     /**
      * @OA\Get(
      *      path="/api/role",

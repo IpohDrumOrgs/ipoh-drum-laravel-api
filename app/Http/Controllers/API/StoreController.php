@@ -16,7 +16,7 @@ use App\Traits\LogServices;
 class StoreController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, StoreServices, LogServices;
-
+    private $controllerName = '[StoreController]';
     /**
      * @OA\Get(
      *      path="/api/store",

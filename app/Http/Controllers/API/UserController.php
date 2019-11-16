@@ -17,6 +17,7 @@ class UserController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, UserServices, LogServices;
 
+    private $controllerName = '[UserController]';
     /**
      * @OA\Get(
      *      path="/api/user",
@@ -47,7 +48,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        error_log('Retrieving list of users.');
+        error_log($this->controllerName.'Retrieving list of users.');
         // api/user (GET)
         $users = $this->getUserListing($request->user());
         if ($this->isEmpty($users)) {
@@ -106,9 +107,9 @@ class UserController extends Controller
      */
     public function pluckIndex(Request $request)
     {
-        error_log('Retrieving list of plucked users.');
+        error_log($this->controllerName.'Retrieving list of plucked users.');
         // api/pluck/users (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
+        error_log($this->controllerName."columns = " . collect($this->splitToArray($request->cols)));
         $users = $this->pluckUserIndex($this->splitToArray($request->cols));
         if ($this->isEmpty($users)) {
             $data['status'] = 'error';
@@ -190,7 +191,7 @@ class UserController extends Controller
      */
     public function filter(Request $request)
     {
-        error_log('Retrieving list of filtered users.');
+        error_log($this->controllerName.'Retrieving list of filtered users.');
         // api/user/filter (GET)
         $params = collect([
             'keyword' => $request->keyword,
@@ -289,7 +290,7 @@ class UserController extends Controller
      */
     public function pluckFilter(Request $request)
     {
-        error_log('Retrieving list of filtered and plucked users.');
+        error_log($this->controllerName.'Retrieving list of filtered and plucked users.');
         // api/pluck/filter/user (GET)
         $params = collect([
             'keyword' => $request->keyword,
@@ -347,7 +348,7 @@ class UserController extends Controller
     public function show(Request $request, $uid)
     {
         // api/user/{userid} (GET)
-        error_log('Retrieving user of uid:' . $uid);
+        error_log($this->controllerName.'Retrieving user of uid:' . $uid);
         $user = $this->getUser($request->user(), $uid);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
@@ -396,9 +397,9 @@ class UserController extends Controller
      */
     public function pluckShow(Request $request , $uid)
     {
-        error_log('Retrieving plucked users.');
+        error_log($this->controllerName.'Retrieving plucked users.');
         // api/pluck/user/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
+        error_log($this->controllerName."columns = " . collect($this->splitToArray($request->cols)));
         $user = $this->pluckUser($this->splitToArray($request->cols) , $uid);
         if ($this->isEmpty($user)) {
             $data['data'] = null;
@@ -485,7 +486,7 @@ class UserController extends Controller
             'email' => 'nullable|string|email|max:191|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
-        error_log('Creating user.');
+        error_log($this->controllerName.'Creating user.');
         $params = collect([
             'icno' => $request->icno,
             'name' => $request->name,
@@ -611,7 +612,7 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         // api/user/{userid} (PUT)
-        error_log('Updating user of uid: ' . $uid);
+        error_log($this->controllerName.'Updating user of uid: ' . $uid);
         $user = $this->getUser($request->user(), $uid);
         $this->validate($request, [
             'email' => 'required|string|max:191|unique:users,email,' . $user->id,
@@ -687,7 +688,7 @@ class UserController extends Controller
         DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/user/{userid} (DELETE)
-        error_log('Deleting user of uid: ' . $uid);
+        error_log($this->controllerName.'Deleting user of uid: ' . $uid);
         $user = $this->getUser($request->user(), $uid);
         if ($this->isEmpty($user)) {
             DB::rollBack();
@@ -736,7 +737,7 @@ class UserController extends Controller
     public function authentication(Request $request)
     {
         // TODO Authenticate currently logged in user
-        error_log('Authenticating user.');
+        error_log($this->controllerName.'Authenticating user.');
         return response()->json($request->user(), 200);
     }
 
@@ -787,7 +788,7 @@ class UserController extends Controller
     public function register(Request $request)
     {
         // TODO Registers users without needing authorization
-        error_log('Registering user.'); 
+        error_log($this->controllerName.'Registering user.');
         // api/register (POST)
         $this->validate($request, [
             'name' => 'required|string|max:191',

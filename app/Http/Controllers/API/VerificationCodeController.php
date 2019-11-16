@@ -16,6 +16,7 @@ use App\Traits\LogServices;
 class VerificationCodeController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, VerificationCodeServices, LogServices;
+    private $controllerName = '[VerificationCodeController]';
 
     /**
      * @OA\Get(

@@ -33,7 +33,6 @@ class CreateCompaniesTable extends Migration
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->boolean('status')->default(1);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
 
             $table->foreign('company_type_id')

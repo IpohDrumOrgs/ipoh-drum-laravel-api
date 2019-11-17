@@ -20,7 +20,6 @@ class CreateGroupUserTable extends Migration
             $table->string('desc')->nullable();
             $table->boolean('status')->default(1);
             $table->boolean('parentgroup')->default(1);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

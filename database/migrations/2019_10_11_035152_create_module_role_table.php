@@ -18,7 +18,6 @@ class CreateModuleRoleTable extends Migration
             $table->unsignedInteger('module_id')->unsigned();
             $table->unsignedInteger('role_id')->unsigned();
             $table->integer('clearance')->nullable();
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
 
             $table->foreign('module_id')

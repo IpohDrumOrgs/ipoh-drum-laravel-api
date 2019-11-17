@@ -398,7 +398,7 @@ class TypeController extends Controller
         }
     }
 
-    
+
     /**
      * @OA\Post(
      *   tags={"TypeControllerService"},
@@ -423,6 +423,15 @@ class TypeController extends Controller
      *              type="string"
      *          )
      * ),
+     * @OA\Parameter(
+     * name="icon",
+     * in="query",
+     * description="Icon",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Type has been created successfully."
@@ -441,11 +450,13 @@ class TypeController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'desc' => 'required|string',
+            'icon' => 'required|string',
         ]);
         error_log('Creating type.');
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
+            'icon' => $request->icon,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
@@ -481,7 +492,7 @@ class TypeController extends Controller
      *     description="Type_ID, NOT 'ID'.",
      *     required=true,
      *     @OA\Schema(type="string")
-     *   ), 
+     *   ),
      * * @OA\Parameter(
      * name="name",
      * in="query",
@@ -500,6 +511,15 @@ class TypeController extends Controller
      *              type="string"
      *          )
      * ),
+     * @OA\Parameter(
+     * name="icon",
+     * in="query",
+     * description="Icon",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Type has been updated successfully."
@@ -513,13 +533,14 @@ class TypeController extends Controller
     public function update(Request $request, $uid)
     {
         DB::beginTransaction();
-        // api/type/{typeid} (PUT) 
+        // api/type/{typeid} (PUT)
         error_log('Updating type of uid: ' . $uid);
         $type = $this->getType($request->user(), $uid);
         error_log($type);
         $this->validate($request, [
             'name' => 'required|string',
             'desc' => 'required|string',
+            'icon' => 'required|string',
         ]);
 
         if ($this->isEmpty($type)) {
@@ -530,10 +551,11 @@ class TypeController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        
+
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
+            'icon' => $request->icon,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));

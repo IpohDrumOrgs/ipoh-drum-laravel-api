@@ -22,18 +22,18 @@ trait VerificationCodeServices {
             $data = $data->merge($ticket->verificationcodes()->where('status',true)->get());
         }
 
-        $data = $data->unique('id')->sortBy('id');
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckVerificationCodeIndex($cols) {
 
         $data = VerificationCode::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -52,11 +52,11 @@ trait VerificationCodeServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering verificationcodes with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -71,8 +71,8 @@ trait VerificationCodeServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering verificationcodes with status....');
@@ -84,7 +84,7 @@ trait VerificationCodeServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
+
         if($params->onsale){
             error_log('Filtering verificationcodes with on sale status....');
             if($params->onsale == 'true'){
@@ -96,13 +96,13 @@ trait VerificationCodeServices {
             }
         }
 
-       
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckVerificationCodeFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -118,11 +118,11 @@ trait VerificationCodeServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering verificationcodes with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -137,9 +137,9 @@ trait VerificationCodeServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
-        
+
+        }
+
         if($params->onsale){
             error_log('Filtering verificationcodes with on sale status....');
             if($params->onsale == 'true'){
@@ -157,9 +157,9 @@ trait VerificationCodeServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -193,7 +193,7 @@ trait VerificationCodeServices {
 
     //Make Sure VerificationCode is not empty when calling this function
     private function updateVerificationCode($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->desc = $params->desc;
 
@@ -220,5 +220,5 @@ trait VerificationCodeServices {
         return $data->refresh();
     }
 
-    
+
 }

@@ -17,7 +17,7 @@ class CreateInventoryImagesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('inventory_id')->unsigned();
             $table->string('name');
-            $table->string('imgpath')->unique();
+            $table->string('imgpath');
             $table->boolean('status')->default(true);
             $table->timestamps();
 

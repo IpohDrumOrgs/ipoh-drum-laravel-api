@@ -2517,6 +2517,34 @@
                 }
             }
         },
+        "/api/onsale/inventory/{uid}": {
+            "get": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Retrieves onsale inventory by Uid.",
+                "operationId": "getOnSaleInventoryByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Inventory_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the inventory."
+                    }
+                }
+            }
+        },
         "/api/module": {
             "get": {
                 "tags": [
@@ -3322,6 +3350,51 @@
                         "required": true,
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of productfeatures"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productfeatures"
+                    }
+                }
+            }
+        },
+        "/api/productfeature/{uid}/products": {
+            "get": {
+                "tags": [
+                    "ProductFeatureControllerService"
+                ],
+                "summary": "Get list of featured products",
+                "description": "Returns list of featured products",
+                "operationId": "getFeaturedProductListByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductFeature ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
                         }
                     }
                 ],
@@ -5619,6 +5692,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "icon",
+                        "in": "query",
+                        "description": "Icon",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -5869,6 +5951,15 @@
                         "name": "desc",
                         "in": "query",
                         "description": "Type Description",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "icon",
+                        "in": "query",
+                        "description": "Icon",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -7014,6 +7105,36 @@
                 },
                 "type": "object"
             },
+            "ProductFeature": {
+                "title": "ProductFeature",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "img": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "Sale": {
                 "title": "Sale",
                 "properties": {
@@ -7086,6 +7207,36 @@
                 },
                 "type": "object"
             },
+            "Type": {
+                "title": "Type",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "icon": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "title": "User",
                 "properties": {
@@ -7093,7 +7244,7 @@
                         "type": "integer"
                     },
                     "uid": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "name": {
                         "type": "string"

@@ -16,18 +16,18 @@ trait TypeServices {
         $data = collect();
         $temp = Type::where('status', true)->get();
         $data = $data->merge($temp);
-        
-        $data = $data->unique('id')->sortBy('id');
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
     }
 
-    
+
     private function pluckTypeIndex($cols) {
 
         $data = Type::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -46,11 +46,11 @@ trait TypeServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering types with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -65,8 +65,8 @@ trait TypeServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering types with status....');
@@ -78,15 +78,15 @@ trait TypeServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
 
-       
+
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckTypeFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -102,11 +102,11 @@ trait TypeServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering types with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -121,10 +121,10 @@ trait TypeServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
 
-       
+        }
+
+
 
         $data = $data->unique('id');
 
@@ -132,9 +132,9 @@ trait TypeServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -154,6 +154,7 @@ trait TypeServices {
         $data->uid = Carbon::now()->timestamp . Type::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
+        $data->icon = $params->icon;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'store', 'type');
@@ -166,9 +167,10 @@ trait TypeServices {
 
     //Make Sure Type is not empty when calling this function
     private function updateType($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->desc = $params->desc;
+        $data->icon = $params->icon;
         try {
             $data->save();
             $this->createLog($requester->id , [$data->id], 'update', 'type');
@@ -192,5 +194,5 @@ trait TypeServices {
         return $data->refresh();
     }
 
-    
+
 }

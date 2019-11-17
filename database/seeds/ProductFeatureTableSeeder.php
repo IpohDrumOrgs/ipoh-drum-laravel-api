@@ -14,17 +14,35 @@ class ProductFeatureTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
         $faker = Faker::create();
 
-        for($x=0 ; $x<50 ; $x++){
-            $productfeature = new ProductFeature();
-            $productfeature->uid =  Carbon::now()->timestamp . '-' . (ProductFeature::count() + 1);
-            $productfeature->name =  $faker->unique()->jobTitle;
-            $productfeature->desc = $faker->sentence;
-            $productfeature->status = true;
-            $productfeature->save();
-        }
-        
+        $productfeature = new ProductFeature();
+        $productfeature->uid =  Carbon::now()->timestamp . '-' . (ProductFeature::count() + 1);
+        $productfeature->name =  'Special Deals';
+        $productfeature->desc = $faker->sentence;
+        $productfeature->status = true;
+        $productfeature->save();
+
+        $productfeature = new ProductFeature();
+        $productfeature->uid =  Carbon::now()->timestamp . '-' . (ProductFeature::count() + 1);
+        $productfeature->name =  'Promotion';
+        $productfeature->desc = $faker->sentence;
+        $productfeature->status = true;
+        $productfeature->save();
+
+        $productfeature = new ProductFeature();
+        $productfeature->uid =  Carbon::now()->timestamp . '-' . (ProductFeature::count() + 1);
+        $productfeature->name =  'Flash Sale';
+        $productfeature->desc = $faker->sentence;
+        $productfeature->status = true;
+        $productfeature->save();
+
+        $productfeature = new ProductFeature();
+        $productfeature->uid =  Carbon::now()->timestamp . '-' . (ProductFeature::count() + 1);
+        $productfeature->name =  'Recommendation';
+        $productfeature->desc = $faker->sentence;
+        $productfeature->status = true;
+        $productfeature->save();
     }
 }

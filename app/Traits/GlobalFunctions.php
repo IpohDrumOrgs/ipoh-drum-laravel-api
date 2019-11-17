@@ -17,12 +17,12 @@ trait GlobalFunctions {
 
 
     public function checkAccessibility($user, $company ,  $clearance) {
-        
+
         $usermodule = $user->role->modules()->wherePivot('module_id',$module->id)->wherePivot('role_id',$user->role->id)->first();
         if(empty($usermodule)){
             return false;
-        }else{ 
-            
+        }else{
+
             //Get User company for wide checking
             $groups = $user->groups;
             $companies = collect();
@@ -32,7 +32,7 @@ trait GlobalFunctions {
                     $companies = $companies->push($branch);
                 }
             }
-            
+
             $ownwide = false;
             $companywide = false;
             //Performance that affected the wide
@@ -66,13 +66,13 @@ trait GlobalFunctions {
                 return false;
             }
 
-            
+
         }
 
 
-        
+
     }
-    
+
     public function checkClearance($user, $company, $module) {
         if($user == null || $module == null){
             return null;
@@ -90,13 +90,13 @@ trait GlobalFunctions {
             $module = $role->modules()->wherePivot('module_id',$module->id)->first();
             if(empty($module)){
                 return null;
-            }else{ 
+            }else{
                 return $module->pivot->clearance;
             }
-       
+
         }
     }
-    
+
     public function checkModule($provider,$name) {
 
         $module = Module::where('provider',$provider)->where('name',$name)->first();
@@ -106,10 +106,10 @@ trait GlobalFunctions {
             return $module;
         }
     }
-    
+
     //Page Pagination
     public function paginateResult($data , $result , $page){
-        
+
         if($result == null || $result == "" || $result == 0){
             $result = 10;
         }
@@ -123,11 +123,11 @@ trait GlobalFunctions {
 
     //Get Maximun Pages
     public function getMaximumPaginationPage($dataNo , $result){
-        
+
         if($result == null  || $result == "" || $result == 0){
             $result = 10;
         }
-        
+
         $maximunPage = ceil($dataNo / $result);
 
         return $maximunPage;
@@ -135,7 +135,7 @@ trait GlobalFunctions {
 
     //Get Maximun Pages
     public function isEmpty($collection){
-        
+
         $collection = collect($collection);
         if($collection == null  || empty($collection) || $collection->count() == 0){
             return true;
@@ -144,7 +144,7 @@ trait GlobalFunctions {
         }
     }
 
-    
+
     //Split the string to array
     public function splitToArray($data){
         if($this->isEmpty($data)){
@@ -158,7 +158,7 @@ trait GlobalFunctions {
         }
     }
 
-    
+
     //convert string to double
     public function toDouble($data){
         if($this->isEmpty($data)){
@@ -176,13 +176,39 @@ trait GlobalFunctions {
             return (int)$data;
         }
     }
-    
+
     //convert string to double
     public function toDate($data){
         if($this->isEmpty($data)){
             return null;
         }else{
             return Carbon::parse($data);
+        }
+    }
+
+
+    //pluck cols inside single data
+    public function itemPluckCols($data , $cols){
+        $data = collect($data);
+        if($this->isEmpty($data) ||$this->isEmpty($cols) ){
+            return null;
+        }else{
+            $data = $data->only($cols);
+            return $data;
+        }
+    }
+
+    //pluck cols inside multiple data
+    public function itemsPluckCols($data , $cols){
+        $data = collect($data);
+        if($this->isEmpty($data) ||$this->isEmpty($cols) ){
+            return null;
+        }else{
+            $data = $data->map(function($item)use($cols){
+                return $item->only($cols);
+            });
+
+            return $data;
         }
     }
 

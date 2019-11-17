@@ -30,7 +30,6 @@ class CreateStoresTable extends Migration
             $table->string('country')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('companyBelongings')->default(true);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

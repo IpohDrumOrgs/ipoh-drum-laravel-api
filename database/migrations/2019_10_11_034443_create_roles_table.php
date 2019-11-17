@@ -19,7 +19,6 @@ class CreateRolesTable extends Migration
             $table->string('name')->unique();
             $table->string('desc')->nullable();
             $table->boolean('status')->default(1);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
         });
     }

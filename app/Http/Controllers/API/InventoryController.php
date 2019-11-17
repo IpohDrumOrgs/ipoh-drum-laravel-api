@@ -415,7 +415,7 @@ class InventoryController extends Controller
         }
     }
 
-    
+
     /**
      * @OA\Post(
      *   tags={"InventoryControllerService"},
@@ -564,7 +564,7 @@ class InventoryController extends Controller
         DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/inventory (POST)
-        
+
         $this->validate($request, [
             'storeid' => 'required',
             'name' => 'required|string|max:191',
@@ -770,10 +770,10 @@ class InventoryController extends Controller
     public function update(Request $request, $uid)
     {
         DB::beginTransaction();
-        // api/inventory/{inventoryid} (PUT) 
+        // api/inventory/{inventoryid} (PUT)
         error_log($this->controllerName.'Updating inventory of uid: ' . $uid);
         $inventory = $this->getInventory($request->user(), $uid);
-       
+
         $this->validate($request, [
             'storeid' => 'required',
             'name' => 'required|string|max:191',
@@ -791,7 +791,7 @@ class InventoryController extends Controller
             'stockthreshold' => 'nullable|numeric|min:0',
             'onsale' => 'required|boolean',
         ]);
-      
+
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
             $data['data'] = null;
@@ -800,7 +800,7 @@ class InventoryController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        
+
         $params = collect([
             'storeid' => $request->storeid,
             'name' => $request->name,
@@ -818,7 +818,7 @@ class InventoryController extends Controller
             'stockthreshold' => $request->stockthreshold,
             'onsale' => $request->onsale,
         ]);
-        
+
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $inventory = $this->updateInventory($request->user(), $inventory, $params);
@@ -891,6 +891,52 @@ class InventoryController extends Controller
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Inventory');
             $data['data'] = $inventory;
+            $data['code'] = 200;
+            return response()->json($data, 200);
+        }
+    }
+
+
+    /**
+     * @OA\Get(
+     *   tags={"InventoryControllerService"},
+     *   path="/api/onsale/inventory/{uid}",
+     *   summary="Retrieves onsale inventory by Uid.",
+     *     operationId="getOnSaleInventoryByUid",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Inventory_ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Inventory has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieve the inventory."
+     *   )
+     * )
+     */
+    public function getOnSaleInventory(Request $request, $uid)
+    {
+        // api/inventory/{inventoryid} (GET)
+        error_log($this->controllerName.'Retrieving onsale inventory of uid:' . $uid);
+        $cols = $this->inventoryDefaultCols();
+        $inventory = $this->getInventory($request->user(),$uid);
+        $inventory = $this->itemPluckCols($inventory , $cols);
+        if ($this->isEmpty($inventory)) {
+            $data['data'] = null;
+            $data['msg'] = $this->getNotFoundMsg('Inventory');
+            $data['status'] = 'error';
+            $data['code'] = 404;
+            return response()->json($data, 404);
+        } else {
+            $data['data'] = $inventory;
+            $data['msg'] = $this->getRetrievedSuccessMsg('Inventory');
+            $data['status'] = 'success';
             $data['code'] = 200;
             return response()->json($data, 200);
         }

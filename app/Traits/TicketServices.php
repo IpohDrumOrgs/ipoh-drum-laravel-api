@@ -23,18 +23,18 @@ trait TicketServices {
             $data = $data->merge($store->tickets()->where('status',true)->get());
         }
 
-        $data = $data->unique('id')->sortBy('id');
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckTicketIndex($cols) {
 
         $data = Ticket::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -53,11 +53,11 @@ trait TicketServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering tickets with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -72,8 +72,8 @@ trait TicketServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering tickets with status....');
@@ -85,7 +85,7 @@ trait TicketServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
+
         if($params->onsale){
             error_log('Filtering tickets with on sale status....');
             if($params->onsale == 'true'){
@@ -97,13 +97,13 @@ trait TicketServices {
             }
         }
 
-       
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckTicketFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -119,11 +119,11 @@ trait TicketServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering tickets with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -138,9 +138,9 @@ trait TicketServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
-        
+
+        }
+
         if($params->onsale){
             error_log('Filtering tickets with on sale status....');
             if($params->onsale == 'true'){
@@ -158,9 +158,9 @@ trait TicketServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -193,7 +193,7 @@ trait TicketServices {
         $data->salesqty = 0;
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
-        
+
         if(!$this->isEmpty($data->promostartdate) || !$this->isEmpty($data->promoenddate)){
             $data->onpromo = true;
         }else{
@@ -218,7 +218,7 @@ trait TicketServices {
 
     //Make Sure Ticket is not empty when calling this function
     private function updateTicket($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->code = $params->code;
         $data->sku = $params->sku;
@@ -233,7 +233,7 @@ trait TicketServices {
         $data->stock = $this->toInt($params->stock);
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
-        
+
         if(!$this->isEmpty($data->promostartdate) || !$this->isEmpty($data->promoenddate)){
             $data->onpromo = true;
         }else{
@@ -269,5 +269,11 @@ trait TicketServices {
         return $data->refresh();
     }
 
-    
+
+    public function ticketDefaultCols() {
+
+        return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate', 'enddate' , 'stock', 'salesqty' , 'warrantyperiod'];
+
+    }
+
 }

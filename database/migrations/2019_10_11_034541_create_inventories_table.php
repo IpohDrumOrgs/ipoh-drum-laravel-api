@@ -20,7 +20,10 @@ class CreateInventoriesTable extends Migration
             $table->string('code');
             $table->string('sku');
             $table->string('name');
+            $table->string('imgpath')->nullable();
             $table->string('desc')->nullable();
+            $table->decimal('shippingfees',8,2)->default(0.00);
+            $table->decimal('rating',8,2)->default(0.00);
             $table->decimal('cost',8,2)->default(0.00);
             $table->decimal('price',8,2)->default(0.00);
             $table->decimal('disc',8,2)->default(0.00);
@@ -35,7 +38,6 @@ class CreateInventoriesTable extends Migration
             $table->boolean('status')->default(1);
             $table->boolean('onsale')->default(1);
             $table->boolean('onpromo')->default(0);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
 
             $table->foreign('store_id')

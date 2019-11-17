@@ -20,9 +20,8 @@ class CreateGroupsTable extends Migration
             $table->string('name');
             $table->string('desc')->nullable();
             $table->boolean('status')->default(1);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
-            
+
             $table->foreign('company_id')
             ->references('id')
             ->on('companies')

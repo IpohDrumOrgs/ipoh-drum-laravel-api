@@ -29,7 +29,7 @@ class User extends Authenticatable
     }
 
     /** @OA\Property(property="id", type="integer"),
-     * @OA\Property(property="uid", type="integer"),
+     * @OA\Property(property="uid", type="string"),
      * @OA\Property(property="name", type="string"),
      * @OA\Property(property="email", type="string"),
      * @OA\Property(property="icno", type="string"),
@@ -52,7 +52,7 @@ class User extends Authenticatable
      */
 
 
-    
+
 
     protected $fillable = [
         'uid', 'email', 'name', 'password'
@@ -106,7 +106,7 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Group')->withPivot('desc', 'status', 'lastedit_by', 'created_at', 'updated_at');
     }
 
-    
+
      /**
      *  activity that done by user
      */
@@ -115,7 +115,7 @@ class User extends Authenticatable
         return $this->belongsToMany('App\User','logs','operator_id','affector_id')->withPivot('id', 'action','model','created_at','updated_at');
     }
 
-    
+
     /**
      * activity that affected the user
      */

@@ -19,7 +19,10 @@ class CreateTicketsTable extends Migration
             $table->string('uid')->unique();
             $table->string('name');
             $table->string('sku');
+            $table->string('imgpath')->nullable();
             $table->string('code');
+            $table->decimal('shippingfees',8,2)->default(0.00);
+            $table->decimal('rating',8,2)->default(0.00);
             $table->string('desc')->nullable();
             $table->decimal('price',8,2)->default(0.00);
             $table->decimal('disc',8,2)->default(0.00);
@@ -34,7 +37,6 @@ class CreateTicketsTable extends Migration
             $table->boolean('onsale')->default(1);
             $table->boolean('onpromo')->default(0);
             $table->boolean('status')->default(1);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
 
             $table->foreign('store_id')

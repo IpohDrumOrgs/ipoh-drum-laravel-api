@@ -26,7 +26,6 @@ class CreateBatchesTable extends Migration
             $table->boolean('backorder')->default(0);
             $table->unsignedInteger('batchno')->unsigned();
             $table->unsignedInteger('salesqty')->unsigned()->default(0);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
 
 

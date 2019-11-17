@@ -18,19 +18,19 @@ trait CategoryServices {
 
         $temp = Category::where('status', true)->get();
         $data = $data->merge($temp);
-        
-        $data = $data->unique('id')->sortBy('id');
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckCategoryIndex($cols) {
 
         $data = Category::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -49,11 +49,11 @@ trait CategoryServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering categories with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -68,8 +68,8 @@ trait CategoryServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering categories with status....');
@@ -81,15 +81,15 @@ trait CategoryServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
 
-       
+
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckCategoryFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -105,11 +105,11 @@ trait CategoryServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering categories with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -124,10 +124,10 @@ trait CategoryServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
 
-       
+        }
+
+
 
         $data = $data->unique('id');
 
@@ -135,9 +135,9 @@ trait CategoryServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -183,7 +183,7 @@ trait CategoryServices {
 
     //Make Sure Category is not empty when calling this function
     private function updateCategory($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->desc = $params->desc;
         try {

@@ -17,26 +17,26 @@ trait SaleServices {
     private function getSaleListing($requester) {
 
         $data = collect();
-       
-        //Role Based Retrieve Done in Store Services   
+
+        //Role Based Retrieve Done in Store Services
         $stores = $this->getStoreListing($requester);
         foreach($stores as $store){
             $data = $data->merge($store->sales()->where('status',true)->get());
         }
-        
-        
-        $data = $data->unique('id')->sortBy('id');
+
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckSaleIndex($cols) {
 
         $data = Sale::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -55,11 +55,11 @@ trait SaleServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering sales with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -74,8 +74,8 @@ trait SaleServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering sales with status....');
@@ -87,14 +87,14 @@ trait SaleServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
-       
+
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckSaleFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -110,11 +110,11 @@ trait SaleServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering sales with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -129,8 +129,8 @@ trait SaleServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         $data = $data->unique('id');
 
@@ -138,9 +138,9 @@ trait SaleServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -170,7 +170,7 @@ trait SaleServices {
         $data->outstanding = $this->toDouble($params->outstanding);
         $data->docdate = $this->toDate($params->docdate);
         $data->remark = $params->remark;
-        
+
         if(!$this->isEmpty($params->userid)){
             $data->pos = false;
             $user = User::find($params->userid);
@@ -188,7 +188,7 @@ trait SaleServices {
         }
         $data->store()->associate($store);
 
-     
+
         $data->status = true;
         try {
             $data->save();
@@ -202,7 +202,7 @@ trait SaleServices {
 
     //Make Sure Sale is not empty when calling this function
     private function updateSale($requester, $data,  $params) {
-        
+
         $data->sono = $params->sono;
         $data->totalqty = $this->toInt($params->totalqty);
         $data->totalcost = $this->toDouble($params->totalcost);
@@ -215,7 +215,7 @@ trait SaleServices {
         $data->outstanding = $this->toDouble($params->outstanding);
         $data->docdate = $this->toDate($params->docdate);
         $data->remark = $params->remark;
-        
+
         if(!$this->isEmpty($params->userid)){
             $data->pos = false;
             $user = User::find($params->userid);
@@ -257,5 +257,5 @@ trait SaleServices {
         return $data->refresh();
     }
 
-    
+
 }

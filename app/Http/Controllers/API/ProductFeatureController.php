@@ -12,10 +12,12 @@ use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\ProductFeatureServices;
 use App\Traits\LogServices;
+use App\Traits\InventoryServices;
+use App\Traits\TicketServices;
 
 class ProductFeatureController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, ProductFeatureServices, LogServices;
+    use GlobalFunctions, NotificationFunctions, ProductFeatureServices, LogServices ,TicketServices, InventoryServices;
     private $controllerName = '[ProductFeatureController]';
     /**
      * @OA\Get(
@@ -397,7 +399,7 @@ class ProductFeatureController extends Controller
         }
     }
 
-    
+
     /**
      * @OA\Post(
      *   tags={"ProductFeatureControllerService"},
@@ -480,7 +482,7 @@ class ProductFeatureController extends Controller
      *     description="ProductFeature_ID, NOT 'ID'.",
      *     required=true,
      *     @OA\Schema(type="string")
-     *   ), 
+     *   ),
      * * @OA\Parameter(
      * name="name",
      * in="query",
@@ -512,7 +514,7 @@ class ProductFeatureController extends Controller
     public function update(Request $request, $uid)
     {
         DB::beginTransaction();
-        // api/productfeature/{productfeatureid} (PUT) 
+        // api/productfeature/{productfeatureid} (PUT)
         error_log('Updating productfeature of uid: ' . $uid);
         $productfeature = $this->getProductFeature($request->user(), $uid);
         error_log($productfeature);
@@ -529,7 +531,7 @@ class ProductFeatureController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        
+
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
@@ -606,6 +608,85 @@ class ProductFeatureController extends Controller
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('ProductFeature');
             $data['data'] = $productfeature;
+            $data['code'] = 200;
+            return response()->json($data, 200);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *      path="/api/productfeature/{uid}/products",
+     *      operationId="getFeaturedProductListByUid",
+     *      tags={"ProductFeatureControllerService"},
+     *      summary="Get list of featured products",
+     *      description="Returns list of featured products",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="ProductFeature ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successfully retrieved list of productfeatures"
+     *       ),
+     *       @OA\Response(
+     *          response="default",
+     *          description="Unable to retrieve list of productfeatures")
+     *    )
+     */
+    public function getFeaturedProducts(Request $request , $uid)
+    {
+        error_log('Retrieving list of featured products.');
+        // api/productfeature (GET)
+        $productfeature = $this->getProductFeature($request->user(), $uid);
+        if ($this->isEmpty($productfeature)) {
+            $data['status'] = 'error';
+            $data['data'] = null;
+            $data['msg'] = $this->getNotFoundMsg('Product Feature');
+            $data['code'] = 404;
+            return response()->json($data, 404);
+        }
+
+        //Get Data
+        $inventories = $productfeature->inventories()->where('inventories.onsale' , true)->get();
+        $tickets = $productfeature->tickets()->where('tickets.onsale' , true)->get();
+
+        $inventories = $this->itemsPluckCols($inventories , $this->inventoryDefaultCols());
+        $tickets = $this->itemsPluckCols($tickets , $this->ticketDefaultCols());
+
+        $mergeddata = collect();
+        $mergeddata = $mergeddata->merge($inventories);
+        $mergeddata = $mergeddata->merge($tickets);
+
+        if ($this->isEmpty($mergeddata)) {
+            $data['status'] = 'error';
+            $data['data'] = null;
+            $data['maximumPages'] = 0;
+            $data['msg'] = $this->getNotFoundMsg('Product Features');
+            $data['code'] = 404;
+            return response()->json($data, 404);
+        } else {
+            //Page Pagination Result List
+            //Default return 10
+            $paginateddata = $this->paginateResult($mergeddata, $request->pageSize, $request->pageNumber);
+            $data['status'] = 'success';
+            $data['data'] = $paginateddata;
+            $data['maximumPages'] = $this->getMaximumPaginationPage($mergeddata->count(), $request->pageSize);
+            $data['msg'] = $this->getRetrievedSuccessMsg('Featured Products');
             $data['code'] = 200;
             return response()->json($data, 200);
         }

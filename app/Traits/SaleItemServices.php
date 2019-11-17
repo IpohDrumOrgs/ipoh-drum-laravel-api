@@ -17,25 +17,25 @@ trait SaleItemServices {
     private function getSaleItemListing($requester) {
 
         $data = collect();
-               
-        //Role Based Retrieve Done in Store Services   
+
+        //Role Based Retrieve Done in Store Services
         $sales = $this->getSaleListing($requester);
         foreach($sales as $sale){
             $data = $data->merge($sale->saleitems()->where('status',true)->get());
         }
-        
-        $data = $data->unique('id')->sortBy('id');
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckSaleItemIndex($cols) {
 
         $data = SaleItem::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -54,11 +54,11 @@ trait SaleItemServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering saleitems with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -73,8 +73,8 @@ trait SaleItemServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering saleitems with status....');
@@ -86,14 +86,14 @@ trait SaleItemServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
-       
+
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckSaleItemFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -109,11 +109,11 @@ trait SaleItemServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering saleitems with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -128,8 +128,8 @@ trait SaleItemServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         $data = $data->unique('id');
 
@@ -137,9 +137,9 @@ trait SaleItemServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -169,7 +169,7 @@ trait SaleItemServices {
         $data->outstanding = $this->toDouble($params->outstanding);
         $data->type = $params->type;
         $data->type = $this->toDate($params->docdate);
-        
+
         if($data->type == 'ticket'){
             $ticket = Ticket::find($params->ticketid);
             if($this->isEmpty($ticket)){
@@ -186,7 +186,7 @@ trait SaleItemServices {
             return null;
         }
 
-       
+
         $data->status = true;
         try {
             $data->save();
@@ -200,7 +200,7 @@ trait SaleItemServices {
 
     //Make Sure SaleItem is not empty when calling this function
     private function updateSaleItem($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->qty = $this->toDouble($params->totalcost);
         $data->desc = $params->desc;
@@ -213,7 +213,7 @@ trait SaleItemServices {
         $data->outstanding = $this->toDouble($params->outstanding);
         $data->type = $params->type;
         $data->type = $this->toDate($params->docdate);
-        
+
         if($data->type == 'ticket'){
             $ticket = Ticket::find($params->ticketid);
             if($this->isEmpty($ticket)){
@@ -229,7 +229,7 @@ trait SaleItemServices {
         }else{
             return null;
         }
-        
+
         $data->status = true;
         try {
             $data->save();
@@ -254,5 +254,5 @@ trait SaleItemServices {
         return $data->refresh();
     }
 
-    
+
 }

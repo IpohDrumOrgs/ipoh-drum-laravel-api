@@ -17,25 +17,25 @@ trait StoreServices {
     private function getStoreListing($requester) {
 
         $data = collect();
-        
+
         //Role Based Retrieved Done in Company Services
         $companies = $this->getCompanyListing($requester);
         foreach($companies as $company){
             $data = $data->merge($company->stores()->where('status',true)->get());
         }
-        
-        $data = $data->unique('id')->sortBy('id');
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckStoreIndex($cols) {
 
         $data = Store::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -54,11 +54,11 @@ trait StoreServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering stores with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -73,8 +73,8 @@ trait StoreServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering stores with status....');
@@ -86,14 +86,14 @@ trait StoreServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
-       
+
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckStoreFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -109,11 +109,11 @@ trait StoreServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering stores with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -128,10 +128,10 @@ trait StoreServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
 
-       
+        }
+
+
 
         $data = $data->unique('id');
 
@@ -139,9 +139,9 @@ trait StoreServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -201,7 +201,7 @@ trait StoreServices {
 
     //Make Sure Store is not empty when calling this function
     private function updateStore($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->contact = $params->contact;
         $data->email = $params->email;
@@ -252,5 +252,5 @@ trait StoreServices {
         return $data->refresh();
     }
 
-    
+
 }

@@ -15,27 +15,27 @@ trait RoleServices {
 
     private function getRoleListing($requester) {
 
-      
+
         $data = collect();
-               
-        //Role Based Retrieve Done in Company Services   
+
+        //Role Based Retrieve Done in Company Services
         $companies = $this->getCompanyListing($requester);
         foreach($companies as $company){
             $data = $data->merge($company->roles()->where('status',true)->get());
         }
-        
-        $data = $data->unique('id')->sortBy('id');
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckRoleIndex($cols) {
 
         $data = Role::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -54,11 +54,11 @@ trait RoleServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering roles with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -73,8 +73,8 @@ trait RoleServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering roles with status....');
@@ -86,7 +86,7 @@ trait RoleServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
+
         if($params->onsale){
             error_log('Filtering roles with on sale status....');
             if($params->onsale == 'true'){
@@ -98,13 +98,13 @@ trait RoleServices {
             }
         }
 
-       
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckRoleFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -120,11 +120,11 @@ trait RoleServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering roles with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -139,9 +139,9 @@ trait RoleServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
-        
+
+        }
+
         if($params->onsale){
             error_log('Filtering roles with on sale status....');
             if($params->onsale == 'true'){
@@ -159,9 +159,9 @@ trait RoleServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -195,7 +195,7 @@ trait RoleServices {
 
     //Make Sure Role is not empty when calling this function
     private function updateRole($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->desc = $params->desc;
 
@@ -222,5 +222,5 @@ trait RoleServices {
         return $data->refresh();
     }
 
-    
+
 }

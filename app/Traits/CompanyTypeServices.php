@@ -15,22 +15,22 @@ trait CompanyTypeServices {
     private function getCompanyTypeListing($requester) {
 
         $data = collect();
-        
+
         $temp = CompanyType::where('status', true)->get();
         $data = $data->merge($temp);
-        
-        $data = $data->unique('id')->sortBy('id');
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckCompanyTypeIndex($cols) {
 
         $data = CompanyType::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -49,11 +49,11 @@ trait CompanyTypeServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering companytypes with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -68,8 +68,8 @@ trait CompanyTypeServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering companytypes with status....');
@@ -81,7 +81,7 @@ trait CompanyTypeServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
+
         if($params->onsale){
             error_log('Filtering companytypes with on sale status....');
             if($params->onsale == 'true'){
@@ -93,13 +93,13 @@ trait CompanyTypeServices {
             }
         }
 
-       
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckCompanyTypeFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -115,11 +115,11 @@ trait CompanyTypeServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering companytypes with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -134,9 +134,9 @@ trait CompanyTypeServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
-        
+
+        }
+
         if($params->onsale){
             error_log('Filtering companytypes with on sale status....');
             if($params->onsale == 'true'){
@@ -154,9 +154,9 @@ trait CompanyTypeServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -190,7 +190,7 @@ trait CompanyTypeServices {
 
     //Make Sure CompanyType is not empty when calling this function
     private function updateCompanyType($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->desc = $params->desc;
 
@@ -217,5 +217,5 @@ trait CompanyTypeServices {
         return $data->refresh();
     }
 
-    
+
 }

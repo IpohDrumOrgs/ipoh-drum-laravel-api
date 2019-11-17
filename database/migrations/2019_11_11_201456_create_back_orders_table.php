@@ -28,7 +28,6 @@ class CreateBackOrdersTable extends Migration
             $table->decimal('totalcost',8,2)->default(0.00);
             $table->decimal('grandtotal',8,2)->default(0.00);
             $table->string('type')->default('inventory');
-            $table->string('lastedit_by')->nullable();
             $table->date('docdate')->nullable();
             $table->string('status')->default('open');
             $table->timestamps();

@@ -29,26 +29,34 @@ class Ticket extends Model
     {
         return $this->hasMany('App\VerificationCode');
     }
-    
+
     /**
-     * 
+     *
      */
     public function categories()
     {
         return $this->belongsToMany('App\Category')->withPivot('status','remark');
     }
     /**
-     * 
+     *
      */
     public function types()
     {
         return $this->belongsToMany('App\Type')->withPivot('status','remark');
     }
     /**
-     * 
+     *
      */
     public function productfeatures()
     {
         return $this->belongsToMany('App\ProductFeature')->withPivot('status','remark');
+    }
+
+    /**
+     *
+     */
+    public function images()
+    {
+        return $this->hasMany('App\TicketImage');
     }
 }

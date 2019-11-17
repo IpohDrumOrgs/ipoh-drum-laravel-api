@@ -20,7 +20,6 @@ class CreateModulesTable extends Migration
             $table->string('desc')->nullable();
             $table->string('provider');
             $table->boolean('status')->default(1);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
         });
     }

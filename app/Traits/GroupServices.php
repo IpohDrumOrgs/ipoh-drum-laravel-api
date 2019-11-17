@@ -38,21 +38,21 @@ trait GroupServices {
                 default:
                     break;
             }
-    
+
         }
-        
-        $data = $data->unique('id');
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckGroupIndex($cols) {
 
         $data = Group::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -71,11 +71,11 @@ trait GroupServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering groups with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -90,8 +90,8 @@ trait GroupServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering groups with status....');
@@ -103,7 +103,7 @@ trait GroupServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
+
         if($params->onsale){
             error_log('Filtering groups with on sale status....');
             if($params->onsale == 'true'){
@@ -115,13 +115,13 @@ trait GroupServices {
             }
         }
 
-       
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckGroupFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -137,11 +137,11 @@ trait GroupServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering groups with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -156,9 +156,9 @@ trait GroupServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
-        
+
+        }
+
         if($params->onsale){
             error_log('Filtering groups with on sale status....');
             if($params->onsale == 'true'){
@@ -176,9 +176,9 @@ trait GroupServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -219,7 +219,7 @@ trait GroupServices {
 
     //Make Sure Group is not empty when calling this function
     private function updateGroup($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->desc = $params->desc;
 
@@ -252,5 +252,5 @@ trait GroupServices {
         return $data->refresh();
     }
 
-    
+
 }

@@ -32,7 +32,6 @@ class CreateUsersTable extends Migration
             $table->boolean('status')->default(1);
             $table->dateTime('last_login')->nullable();
             $table->dateTime('last_active')->nullable();
-            $table->string('lastedit_by')->nullable();
             $table->rememberToken();
             $table->timestamps();
 

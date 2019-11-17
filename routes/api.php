@@ -45,9 +45,6 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('role', 'API\RoleController');
     Route::resource('log', 'API\LogController');
     Route::resource('module', 'API\ModuleController');
-    Route::resource('category', 'API\CategoryController');
-    Route::resource('type', 'API\TypeController');
-    Route::resource('productfeature', 'API\ProductFeatureController');
     Route::resource('inventory', 'API\InventoryController');
     Route::resource('store', 'API\StoreController');
     Route::resource('ticket', 'API\TicketController');
@@ -92,6 +89,21 @@ Route::group(['middleware' => ['auth:api']], function (){
 
 
 Route::post('/register', 'API\UserController@register');
+
+
+Route::resource('category', 'API\CategoryController');
+
+Route::resource('type', 'API\TypeController');
+
+Route::resource('productfeature', 'API\ProductFeatureController');
+Route::get('/productfeature/{uid}/products', 'API\ProductFeatureController@getFeaturedProducts');
+
+
+Route::get('/onsale/inventory/{uid}', 'API\InventoryController@getOnSaleInventory');
+
+
+
+
 
 // TODO: For testing purposes only
 Route::get('/pluck/modules', 'API\ModuleController@pluckIndex');

@@ -17,25 +17,25 @@ trait InventoryServices {
     private function getInventoryListing($requester) {
 
         $data = collect();
-               
-        //Role Based Retrieve Done in Store Services   
+
+        //Role Based Retrieve Done in Store Services
         $stores = $this->getStoreListing($requester);
         foreach($stores as $store){
             $data = $data->merge($store->inventories()->where('status',true)->get());
         }
-        
-        $data = $data->unique('id');
+
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;
-    
+
     }
 
-    
+
     private function pluckInventoryIndex($cols) {
 
         $data = Inventory::where('status',true)->get($cols);
         return $data;
-    
+
     }
 
 
@@ -54,11 +54,11 @@ trait InventoryServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering inventories with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -73,8 +73,8 @@ trait InventoryServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
+
+        }
 
         if($params->status){
             error_log('Filtering inventories with status....');
@@ -86,7 +86,7 @@ trait InventoryServices {
                 $data = $data->where('status', '!=', null);
             }
         }
-        
+
         if($params->onsale){
             error_log('Filtering inventories with on sale status....');
             if($params->onsale == 'true'){
@@ -98,13 +98,13 @@ trait InventoryServices {
             }
         }
 
-       
+
         $data = $data->unique('id');
 
         return $data;
     }
 
-    
+
     private function pluckInventoryFilter($cols , $params) {
 
         //Unauthorized users cannot access deleted data
@@ -120,11 +120,11 @@ trait InventoryServices {
                 }else{
                     return false;
                 }
-            
+
             });
         }
 
-             
+
         if($params->fromdate){
             error_log('Filtering inventories with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
@@ -139,9 +139,9 @@ trait InventoryServices {
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
             });
-            
-        } 
-        
+
+        }
+
         if($params->onsale){
             error_log('Filtering inventories with on sale status....');
             if($params->onsale == 'true'){
@@ -159,9 +159,9 @@ trait InventoryServices {
         $data = $data->map(function($item)use($cols){
             return $item->only($cols);
         });
-        
+
         return $data;
-    
+
     }
 
 
@@ -195,7 +195,7 @@ trait InventoryServices {
         $data->warrantyperiod = $this->toInt($params->warrantyperiod);
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
-        
+
         if(!$this->isEmpty($data->promostartdate) || !$this->isEmpty($data->promoenddate)){
             $data->onpromo = true;
         }else{
@@ -220,7 +220,7 @@ trait InventoryServices {
 
     //Make Sure Inventory is not empty when calling this function
     private function updateInventory($requester, $data,  $params) {
-        
+
         $data->name = $params->name;
         $data->code = $params->code;
         $data->sku = $params->sku;
@@ -272,5 +272,10 @@ trait InventoryServices {
         return $data->refresh();
     }
 
-    
+    public function inventoryDefaultCols() {
+
+        return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate' , 'stock', 'salesqty' , 'warrantyperiod'];
+
+    }
+
 }

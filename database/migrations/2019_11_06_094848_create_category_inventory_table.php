@@ -18,7 +18,6 @@ class CreateCategoryInventoryTable extends Migration
             $table->unsignedInteger('category_id')->unsigned();
             $table->unsignedInteger('inventory_id')->unsigned();
             $table->text('remark')->nullable();
-            $table->boolean('status')->default(true);
 
             $table->foreign('category_id')
             ->references('id')
@@ -31,7 +30,7 @@ class CreateCategoryInventoryTable extends Migration
             ->on('inventories')
             ->onUpdate('cascade')
             ->onDelete('restrict');
-            
+
         });
     }
 

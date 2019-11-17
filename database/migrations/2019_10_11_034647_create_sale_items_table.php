@@ -31,7 +31,6 @@ class CreateSaleItemsTable extends Migration
             $table->decimal('outstanding',8,2)->default(0.00);
             $table->string('status')->default('open');
             $table->string('type')->default('inventory');
-            $table->string('lastedit_by')->nullable();
             $table->date('docdate')->nullable();
             $table->rememberToken();
             $table->timestamps();

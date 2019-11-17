@@ -17,9 +17,9 @@ class CreateTypesTable extends Migration
             $table->increments('id')->unique();
             $table->string('uid')->unique();
             $table->string('name');
+            $table->string('icon')->nullable();
             $table->string('desc')->nullable();
             $table->boolean('status')->default(1);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
         });
     }

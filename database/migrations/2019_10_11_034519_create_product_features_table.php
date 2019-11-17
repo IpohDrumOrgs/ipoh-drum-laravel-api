@@ -20,7 +20,6 @@ class CreateProductFeaturesTable extends Migration
             $table->string('img')->nullable();
             $table->string('desc')->nullable();
             $table->boolean('status')->default(1);
-            $table->string('lastedit_by')->nullable();
             $table->timestamps();
         });
     }

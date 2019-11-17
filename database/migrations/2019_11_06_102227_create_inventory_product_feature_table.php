@@ -18,7 +18,6 @@ class CreateInventoryProductFeatureTable extends Migration
             $table->unsignedInteger('product_feature_id')->unsigned();
             $table->unsignedInteger('inventory_id')->unsigned();
             $table->text('remark')->nullable();
-            $table->boolean('status')->default(true);
 
             $table->foreign('product_feature_id')
             ->references('id')

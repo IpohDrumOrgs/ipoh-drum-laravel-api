@@ -18,7 +18,6 @@ class CreateInventoryTypeTable extends Migration
             $table->unsignedInteger('type_id')->unsigned();
             $table->unsignedInteger('inventory_id')->unsigned();
             $table->text('remark')->nullable();
-            $table->boolean('status')->default(true);
 
             $table->foreign('type_id')
             ->references('id')

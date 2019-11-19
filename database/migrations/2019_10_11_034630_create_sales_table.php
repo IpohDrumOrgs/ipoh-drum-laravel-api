@@ -29,8 +29,7 @@ class CreateSalesTable extends Migration
             $table->decimal('payment',8,2)->default(0.00);
             $table->decimal('outstanding',8,2)->default(0.00);
             $table->string('status')->default('open');
-            $table->string('lastedit_by')->nullable();
-            $table->string('remark')->nullable();
+            $table->text('remark')->nullable();
             $table->dateTime('docdate')->nullable();
             $table->boolean('pos')->default(true);
             $table->rememberToken();

@@ -25,6 +25,7 @@ class StoreTableSeeder extends Seeder
             $store->rating =  $faker->numberBetween($min = 0.0, $max = 5.0);;
             $store->address = $faker->sentence;
             $store->state = $faker->unique()->jobTitle;
+            $store->desc = $faker->sentence;
             $store->postcode = $faker->unique()->jobTitle;
             $store->country = $faker->unique()->jobTitle;
             $store->status = true;

@@ -20,9 +20,11 @@ class CreateStoresTable extends Migration
             $table->string('uid')->unique();
             $table->string('name');
             $table->string('contact');
-            $table->string('img')->nullable();
+            $table->longText('desc');
+            $table->string('imgpath')->nullable();
             $table->string('email');
-            $table->double('rating');
+            $table->decimal('rating',8,2)->default(0.00);
+            $table->decimal('fsminpurchase',8,2)->default(0.00);
             $table->string('address')->nullable();
             $table->string('state')->nullable();
             $table->string('postcode')->nullable();

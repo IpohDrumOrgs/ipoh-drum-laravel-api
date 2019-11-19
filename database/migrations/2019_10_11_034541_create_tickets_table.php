@@ -16,26 +16,21 @@ class CreateTicketsTable extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->increments('id')->unique();
             $table->unsignedInteger('store_id')->unsigned();
+            $table->unsignedInteger('product_promotion_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name');
             $table->string('sku');
-            $table->string('imgpath')->nullable();
             $table->string('code');
-            $table->decimal('shippingfees',8,2)->default(0.00);
+            $table->string('imgpath')->nullable();
+            $table->longText('desc')->nullable();
             $table->decimal('rating',8,2)->default(0.00);
-            $table->string('desc')->nullable();
             $table->decimal('price',8,2)->default(0.00);
-            $table->decimal('disc',8,2)->default(0.00);
-            $table->decimal('discpctg',8,2)->default(0.00);
-            $table->decimal('promoprice',8,2)->default(0.00);
-            $table->dateTime('promostartdate')->nullable();
-            $table->dateTime('promoenddate')->nullable();
-            $table->integer('stock')->default(0);
+            $table->integer('qty')->default(0);
+            $table->integer('promoendqty')->default(0);
             $table->integer('salesqty')->default(0);
             $table->dateTime('enddate');
             $table->integer('stockthreshold')->default(0);
             $table->boolean('onsale')->default(1);
-            $table->boolean('onpromo')->default(0);
             $table->boolean('status')->default(1);
             $table->timestamps();
 
@@ -44,6 +39,13 @@ class CreateTicketsTable extends Migration
             ->on('stores')
             ->onUpdate('cascade')
             ->onDelete('restrict');
+            
+            $table->foreign('product_promotion_id')
+            ->references('id')
+            ->on('product_promotions')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+            
         });
     }
 

@@ -17,14 +17,14 @@ class CreatePaymentsTable extends Migration
             $table->increments('id');
             $table->string('uid')->unique();
             $table->unsignedInteger('user_id')->nullable();
-            $table->string('description')->nullable();
+            $table->text('desc')->nullable();
             //Denote if user pay for installment or sales
             $table->string('type')->nullable();
             $table->string('method')->nullable();
             $table->string('reference')->nullable();
             $table->decimal('amt', 8, 2)->default(0.00);
             $table->decimal('discount', 8, 2)->default(0.00);
-            $table->string('remark')->nullable();
+            $table->text('remark')->nullable();
             $table->string('creator')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();

@@ -61,13 +61,6 @@ class Inventory extends Model
     }
 
 
-    /**
-     * Get the saleitems of the inventory.
-     */
-    public function saleitems()
-    {
-        return $this->hasMany('App\SaleItem');
-    }
 
     
     /**
@@ -99,5 +92,53 @@ class Inventory extends Model
     public function images()
     {
         return $this->hasMany('App\InventoryImage');
+    }
+    
+    /**
+     *
+     */
+    public function inventoryfamilies()
+    {
+        return $this->hasMany('App\InventoryFamily');
+    }
+
+    /**
+     *
+     */
+    public function productreviews()
+    {
+        return $this->hasMany('App\ProductReview');
+    }
+    
+    /**
+     *
+     */
+    public function promotion()
+    {
+        return $this->belongsTo('App\ProductPromotion', 'product_promotion_id');
+    }
+
+    /**
+     *
+     */
+    public function warranty()
+    {
+        return $this->belongsTo('App\Warranty');
+    }
+    
+    /**
+     *
+     */
+    public function shipping()
+    {
+        return $this->belongsTo('App\Shipping');
+    }
+
+    /**
+     *
+     */
+    public function characteristics(){
+
+        return $this->belongsToMany('App\ProductCharacteristic','inventory_product_characteristic' , 'inventory_id' , 'characteristic_id')->withPivot('remark');
     }
 }

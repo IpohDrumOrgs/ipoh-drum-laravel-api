@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInventoryBatchTable extends Migration
+class CreateInventoryProductCharacteristicTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,18 @@ class CreateInventoryBatchTable extends Migration
      */
     public function up()
     {
-        Schema::create('inventory_batch', function (Blueprint $table) {
+        Schema::create('inventory_product_characteristic', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('characteristic_id')->unsigned();
             $table->unsignedInteger('inventory_id')->unsigned();
-            $table->string('code');
-            $table->string('sku');
-            $table->integer('qty')->default(0);
-            $table->timestamps();
+            $table->text('remark')->nullable();
+            $table->boolean('status')->default(true);
+
+            $table->foreign('characteristic_id')
+            ->references('id')
+            ->on('product_characteristics')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
 
             $table->foreign('inventory_id')
             ->references('id')
@@ -36,6 +41,6 @@ class CreateInventoryBatchTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory_batch');
+        Schema::dropIfExists('inventory_product_characteristic');
     }
 }

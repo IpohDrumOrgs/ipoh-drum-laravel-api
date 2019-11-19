@@ -15,6 +15,7 @@ class CreateArticleImagesTable extends Migration
     {
         Schema::create('article_images', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('uid')->unique();
             $table->unsignedInteger('article_id')->unsigned();
             $table->string('name');
             $table->string('imgpath')->unique();

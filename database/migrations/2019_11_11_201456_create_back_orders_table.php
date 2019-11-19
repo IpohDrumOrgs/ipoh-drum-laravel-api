@@ -20,7 +20,7 @@ class CreateBackOrdersTable extends Migration
             $table->unsignedInteger('sale_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->integer('qty')->default(0);
-            $table->string('desc')->nullable();
+            $table->text('desc')->nullable();
             $table->decimal('cost',8,2)->default(0.00);
             $table->decimal('price',8,2)->default(0.00);
             $table->decimal('totaldisc',8,2)->default(0.00);

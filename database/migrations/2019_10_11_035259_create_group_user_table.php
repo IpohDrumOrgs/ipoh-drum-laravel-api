@@ -17,7 +17,7 @@ class CreateGroupUserTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id')->unsigned();
             $table->unsignedInteger('group_id')->unsigned();
-            $table->string('desc')->nullable();
+            $table->text('desc')->nullable();
             $table->boolean('status')->default(1);
             $table->boolean('parentgroup')->default(1);
             $table->timestamps();

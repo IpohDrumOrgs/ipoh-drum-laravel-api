@@ -59,4 +59,53 @@ class Ticket extends Model
     {
         return $this->hasMany('App\TicketImage');
     }
+
+    
+    /**
+     *
+     */
+    public function ticketfamilies()
+    {
+        return $this->hasMany('App\TicketFamily');
+    }
+
+    /**
+     *
+     */
+    public function productreviews()
+    {
+        return $this->hasMany('App\ProductReviews');
+    }
+    
+    /**
+     *
+     */
+    public function promotion()
+    {
+        return $this->belongsTo('App\ProductPromotion');
+    }
+
+    /**
+     *
+     */
+    public function warranty()
+    {
+        return $this->belongsTo('App\Warranty');
+    }
+    
+    /**
+     *
+     */
+    public function shipping()
+    {
+        return $this->belongsTo('App\Shipping');
+    }
+
+    /**
+     *
+     */
+    public function characteristics(){
+
+        return $this->belongsToMany('App\ProductCharacteristic','ticket_product_characteristic' , 'inventory_id' , 'characteristic_id')->withPivot('remark');
+    }
 }

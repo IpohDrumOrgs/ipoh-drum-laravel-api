@@ -34,18 +34,18 @@ class SaleItem extends Model
     /**
      * Get the inventory of the purchase item.
      */
-    public function inventory()
+    public function inventoryfamily()
     {
-        return $this->belongsTo('App\Inventory');
+        return $this->belongsTo('App\InventoryFamily');
     }
     
     
     /**
      * Get the inventory of the purchase item.
      */
-    public function ticket()
+    public function ticketfamily()
     {
-        return $this->belongsTo('App\Ticket');
+        return $this->belongsTo('App\TicketFamily');
     }
     /**
      * Get the inventory of the purchase item.

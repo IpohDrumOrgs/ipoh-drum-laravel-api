@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBatchesTable extends Migration
+class CreateInventoryFamiliesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,27 +13,26 @@ class CreateBatchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('batches', function (Blueprint $table) {
-            $table->increments('id')->unique();
-            $table->unsignedInteger('inventory_id')->unsigned()->nullable();
+        Schema::create('inventory_families', function (Blueprint $table) { $table->increments('id')->unique();
+            $table->unsignedInteger('inventory_id')->unsigned();
             $table->string('uid')->unique();
-            $table->integer('stock')->default(0);
-            $table->unsignedInteger('warrantyperiod')->default(0);
-            $table->decimal('price',8,2)->default(0.00);
+            $table->string('name');
+            $table->string('desc')->nullable();
+            $table->string('imgpath')->nullable();
             $table->decimal('cost',8,2)->default(0.00);
+            $table->decimal('price',8,2)->default(0.00);
+            $table->integer('qty')->default(0);
+            $table->integer('salesqty')->default(0);
+            $table->boolean('onsale')->default(1);
             $table->boolean('status')->default(1);
-            $table->boolean('curbatch')->default(0);
-            $table->boolean('backorder')->default(0);
-            $table->unsignedInteger('batchno')->unsigned();
-            $table->unsignedInteger('salesqty')->unsigned()->default(0);
             $table->timestamps();
-
 
             $table->foreign('inventory_id')
             ->references('id')
             ->on('inventories')
             ->onUpdate('cascade')
             ->onDelete('restrict');
+            
         });
     }
 
@@ -44,6 +43,6 @@ class CreateBatchesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('batches');
+        Schema::dropIfExists('inventory_families');
     }
 }

@@ -6,6 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model
 {
+    /**
+    * 
+    */
+    public function vouchers()
+    {
+        return $this->hasMany('App\Voucher');
+    }
+    
+    /**
+    * 
+    */
+    public function storereviews()
+    {
+        return $this->hasMany('App\StoreReview');
+    }
      /**
      * 
      */

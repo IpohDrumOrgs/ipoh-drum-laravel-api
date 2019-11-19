@@ -17,7 +17,7 @@ class CreateModulesTable extends Migration
             $table->increments('id')->unique();
             $table->string('uid')->unique();
             $table->string('name');
-            $table->string('desc')->nullable();
+            $table->text('desc')->nullable();
             $table->string('provider');
             $table->boolean('status')->default(1);
             $table->timestamps();

@@ -17,7 +17,7 @@ class CreateRolesTable extends Migration
             $table->increments('id')->unique();
             $table->string('uid')->unique();
             $table->string('name')->unique();
-            $table->string('desc')->nullable();
+            $table->text('desc')->nullable();
             $table->boolean('status')->default(1);
             $table->timestamps();
         });

@@ -166,7 +166,7 @@ trait InventoryServices {
 
 
     private function getInventory($requester , $uid) {
-        $data = Inventory::where('uid', $uid)->where('status', 1)->first();
+        $data = Inventory::where('uid', $uid)->with('store')->with('inventoryfamilies')->with('promotion')->with('shipping')->with('productreviews')->with('warranty')->where('status', 1)->first();
         return $data;
     }
 
@@ -274,7 +274,7 @@ trait InventoryServices {
 
     public function inventoryDefaultCols() {
 
-        return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate' , 'stock', 'salesqty' , 'warrantyperiod'];
+        return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'productreviews'];
 
     }
 

@@ -147,4 +147,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Purchase', 'user_id');
     }
+
+    /**
+     * Get the created purchases of the user.
+     */
+    public function productreviews()
+    {
+        return $this->hasMany('App\ProductReview');
+    }
 }

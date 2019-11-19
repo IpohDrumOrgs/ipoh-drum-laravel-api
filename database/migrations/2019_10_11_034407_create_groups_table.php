@@ -18,7 +18,7 @@ class CreateGroupsTable extends Migration
             $table->unsignedInteger('company_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('name');
-            $table->string('desc')->nullable();
+            $table->text('desc')->nullable();
             $table->boolean('status')->default(1);
             $table->timestamps();
 

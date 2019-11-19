@@ -15,6 +15,7 @@ class CreateTicketImagesTable extends Migration
     {
         Schema::create('ticket_images', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('uid')->unique();
             $table->unsignedInteger('ticket_id')->unsigned();
             $table->string('name');
             $table->string('imgpath');

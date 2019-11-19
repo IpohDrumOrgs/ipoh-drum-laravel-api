@@ -15,6 +15,7 @@ class CreateVideoImagesTable extends Migration
     {
         Schema::create('video_images', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('uid')->unique();
             $table->unsignedInteger('video_id')->unsigned();
             $table->string('name');
             $table->string('imgpath')->unique();

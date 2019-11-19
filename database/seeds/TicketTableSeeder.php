@@ -57,7 +57,7 @@ class TicketTableSeeder extends Seeder
             $ticket->sku = $faker->unique()->ean8;
             $ticket->price = $faker->randomDigit;
             $ticket->desc = $faker->sentence;
-            $ticket->stock = $faker->randomDigit;
+            $ticket->qty = $faker->randomDigit;
             $ticket->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
             $ticket->stockthreshold = $faker->randomDigit;
             $ticket->salesqty = 0;
@@ -67,6 +67,7 @@ class TicketTableSeeder extends Seeder
 
             $ticket->save();
             $image = new TicketImage();
+            $image->uid = Carbon::now()->timestamp . '-' . (TicketImage::count() + 1);
             $image->name = $faker->unique()->jobTitle;
             $image->imgpath = $ticket->imgpath;
             $image->ticket()->associate($ticket);
@@ -74,6 +75,7 @@ class TicketTableSeeder extends Seeder
 
             for($y = 0 ; $y < 7 ; $y++){
                 $image = new TicketImage();
+                $image->uid = Carbon::now()->timestamp . '-' . (TicketImage::count() + 1);
                 $image->name = $faker->unique()->jobTitle;
                 $image->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
                 $image->ticket()->associate($ticket);

@@ -9,7 +9,14 @@ use App\Category;
 use App\InventoryImage;
 use App\Type;
 use App\ProductFeature;
+use App\ProductReview;
+use App\ProductCharacteristic;
+use App\InventoryFamily;
+use App\Warranty;
+use App\Shipping;
+use App\ProductPromotion;
 use App\Batch;
+use App\User;
 use Carbon\Carbon;
 
 
@@ -58,16 +65,58 @@ class InventoryTableSeeder extends Seeder
             $inventory->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
             $inventory->cost = $faker->randomDigit;
             $inventory->price = $faker->randomDigit;
+            $inventory->rating = $faker->randomElement([0,1,2,3,4,5]);
             $inventory->desc = $faker->sentence;
-            $inventory->stock = $faker->randomDigit;
+            $inventory->qty = $faker->randomDigit;
             $inventory->stockthreshold = $faker->randomDigit;
             $inventory->salesqty = 0;
+
             $store = Store::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));
             $inventory->store()->associate($store);
+            
+            $productpromotion = ProductPromotion::find($faker->randomElement([1,2,3,null]));
+            $inventory->promotion()->associate($productpromotion);
+
+            $shipping = Shipping::find($faker->randomElement([1,2,null]));
+            $inventory->shipping()->associate($shipping);
+
+            $warranty = Warranty::find($faker->randomElement([1,2,null]));
+            $inventory->warranty()->associate($warranty);
+
+            if($inventory->promotion != null){
+                if($inventory->promotion->qty > 0){
+                    $inventory->promoendqty = $inventory->salesqty + $inventory->promotion->qty;
+                }
+            }
 
             $inventory->save();
 
+            $inventoryfamily = new InventoryFamily();
+            $inventoryfamily->uid = Carbon::now()->timestamp . '-' . (InventoryFamily::count() + 1);
+            $inventoryfamily->name = $faker->unique()->jobTitle;
+            $inventoryfamily->desc = $faker->sentence;
+            $inventoryfamily->cost = $faker->randomDigit;
+            $inventoryfamily->price = $faker->randomDigit;
+            $inventoryfamily->qty = $inventory->qty;
+            $inventoryfamily->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
+            $inventoryfamily->inventory()->associate($inventory);
+            $inventoryfamily->save();
+
+            for($y = 0 ; $y < 4 ; $y++){
+                $inventoryfamily = new InventoryFamily();
+                $inventoryfamily->uid = Carbon::now()->timestamp . '-' . (InventoryFamily::count() + 1);
+                $inventoryfamily->name = $faker->unique()->jobTitle;
+                $inventoryfamily->desc = $faker->sentence;
+                $inventoryfamily->cost = $faker->randomDigit;
+                $inventoryfamily->price = $faker->randomDigit;
+                $inventoryfamily->qty = 0;
+                $inventoryfamily->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
+                $inventoryfamily->inventory()->associate($inventory);
+                $inventoryfamily->save();
+            }
+
             $image = new InventoryImage();
+            $image->uid = Carbon::now()->timestamp . '-' . (InventoryImage::count() + 1);
             $image->name = $faker->unique()->jobTitle;
             $image->imgpath = $inventory->imgpath;
             $image->inventory()->associate($inventory);
@@ -75,11 +124,13 @@ class InventoryTableSeeder extends Seeder
 
             for($y = 0 ; $y < 7 ; $y++){
                 $image = new InventoryImage();
+                $image->uid = Carbon::now()->timestamp . '-' . (InventoryImage::count() + 1);
                 $image->name = $faker->unique()->jobTitle;
                 $image->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
                 $image->inventory()->associate($inventory);
                 $image->save();
             }
+
             $category = Category::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));
             $inventory->categories()->attach($category);
 
@@ -88,6 +139,9 @@ class InventoryTableSeeder extends Seeder
 
             $productfeature = ProductFeature::find($faker->randomElement([1,2,3,4]));
             $inventory->productfeatures()->attach($productfeature);
+            
+            $productcharacteristic = ProductCharacteristic::find($faker->randomElement([1,2,3,null]));
+            $inventory->characteristics()->attach($productcharacteristic);
 
             // $batch = new Batch();
             // $batch->uid = $inventory->uid.'-'.($inventory->batches()->where('status','!=','cancel')->count() + 1);
@@ -99,6 +153,22 @@ class InventoryTableSeeder extends Seeder
             // $batch->curbatch = true;
             // $batch->inventory()->associate($inventory);
             // $batch->save();
+        }
+        
+        for($x=0; $x<50; $x++){
+            $productreview = new ProductReview();
+            $productreview->uid =  Carbon::now()->timestamp . '-' . (ProductReview::count() + 1);
+            $productreview->title =  $faker->unique()->jobTitle;
+            $productreview->desc = $faker->sentence;
+            $productreview->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
+            $productreview->rating = $faker->randomElement([0,1,2,3,4,5]);
+            $productreview->like = $faker->randomDigit;
+            $productreview->dislike = $faker->randomDigit;
+            $productreview->status = true;
+            $inventory = Inventory::find($faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12]));
+            $productreview->inventory()->associate($inventory);
+            $productreview->user()->associate(User::find($faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12,null])));
+            $productreview->save();
         }
     }
 }

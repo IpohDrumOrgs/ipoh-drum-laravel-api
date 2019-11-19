@@ -15,6 +15,7 @@ class CreateInventoryImagesTable extends Migration
     {
         Schema::create('inventory_images', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('uid')->unique();
             $table->unsignedInteger('inventory_id')->unsigned();
             $table->string('name');
             $table->string('imgpath');

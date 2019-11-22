@@ -11,7 +11,7 @@ trait TypeServices {
 
     use GlobalFunctions, LogServices;
 
-    private function getTypeListing($requester) {
+    private function getTypes($requester) {
 
         $data = collect();
         $temp = Type::where('status', true)->get();
@@ -23,18 +23,10 @@ trait TypeServices {
     }
 
 
-    private function pluckTypeIndex($cols) {
 
-        $data = Type::where('status',true)->get($cols);
-        return $data;
-
-    }
-
-
-    private function filterTypeListing($requester , $params) {
+    private function filterTypes($data , $params) {
 
         error_log('Filtering types....');
-        $data = $this->getTypeListing($requester);
 
         if($params->keyword){
             error_log('Filtering types with keyword....');
@@ -87,68 +79,13 @@ trait TypeServices {
     }
 
 
-    private function pluckTypeFilter($cols , $params) {
 
-        //Unauthorized users cannot access deleted data
-        $data = Type::where('status',true)->get();
-
-        if($params->keyword){
-            error_log('Filtering types with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->uid, $keyword) == TRUE || stristr($item->name, $keyword) == TRUE) {
-                    return true;
-                }else{
-                    return false;
-                }
-
-            });
-        }
-
-
-        if($params->fromdate){
-            error_log('Filtering types with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering types with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-
-        }
-
-
-
-        $data = $data->unique('id');
-
-        //Pluck Columns
-        $data = $data->map(function($item)use($cols){
-            return $item->only($cols);
-        });
-
-        return $data;
-
-    }
-
-
-    private function getType($requester , $uid) {
+    private function getType($uid) {
         $data = Type::where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function pluckType($cols , $uid) {
-        $data = Type::where('uid', $uid)->where('status', 1)->get($cols)->first();
-        return $data;
-    }
-
-    private function createType($requester , $params) {
+    private function createType($params) {
 
         $data = new Type();
         $data->uid = Carbon::now()->timestamp . Type::count();
@@ -157,7 +94,6 @@ trait TypeServices {
         $data->icon = $params->icon;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'store', 'type');
         } catch (Exception $e) {
             return null;
         }
@@ -166,14 +102,13 @@ trait TypeServices {
     }
 
     //Make Sure Type is not empty when calling this function
-    private function updateType($requester, $data,  $params) {
+    private function updateType($data,  $params) {
 
         $data->name = $params->name;
         $data->desc = $params->desc;
         $data->icon = $params->icon;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'update', 'type');
         } catch (Exception $e) {
             return null;
         }
@@ -181,12 +116,10 @@ trait TypeServices {
         return $data->refresh();
     }
 
-    private function deleteType($requester , $id) {
-        $data = Type::find($id);
+    private function deleteType($data) {
         $data->status = false;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'delete', 'type');
         } catch (Exception $e) {
             return null;
         }

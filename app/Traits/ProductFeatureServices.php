@@ -11,7 +11,7 @@ trait ProductFeatureServices {
 
     use GlobalFunctions, LogServices;
 
-    private function getProductFeatureListing($requester) {
+    private function getProductFeatures($requester) {
 
         $data = collect();
         $temp = ProductFeature::where('status', true)->get();
@@ -24,18 +24,9 @@ trait ProductFeatureServices {
     }
 
 
-    private function pluckProductFeatureIndex($cols) {
-
-        $data = ProductFeature::where('status',true)->get($cols);
-        return $data;
-
-    }
-
-
-    private function filterProductFeatureListing($requester , $params) {
+    private function filterProductFeatures($data , $params) {
 
         error_log('Filtering productfeatures....');
-        $data = $this->getProductFeatureListing($requester);
 
         if($params->keyword){
             error_log('Filtering productfeatures with keyword....');
@@ -87,77 +78,21 @@ trait ProductFeatureServices {
         return $data;
     }
 
-
-    private function pluckProductFeatureFilter($cols , $params) {
-
-        //Unauthorized users cannot access deleted data
-        $data = ProductFeature::where('status',true)->get();
-
-        if($params->keyword){
-            error_log('Filtering productfeatures with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->uid, $keyword) == TRUE || stristr($item->name, $keyword) == TRUE) {
-                    return true;
-                }else{
-                    return false;
-                }
-
-            });
-        }
-
-
-        if($params->fromdate){
-            error_log('Filtering productfeatures with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering productfeatures with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-
-        }
-
-
-
-        $data = $data->unique('id');
-
-        //Pluck Columns
-        $data = $data->map(function($item)use($cols){
-            return $item->only($cols);
-        });
-
-        return $data;
-
-    }
-
-
-    private function getProductFeature($requester , $uid) {
+    private function getProductFeature( $uid) {
         $data = ProductFeature::where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function pluckProductFeature($cols , $uid) {
-        $data = ProductFeature::where('uid', $uid)->where('status', 1)->get($cols)->first();
-        return $data;
-    }
-
-    private function createProductFeature($requester , $params) {
+    private function createProductFeature($params) {
 
         $data = new ProductFeature();
         $data->uid = Carbon::now()->timestamp . ProductFeature::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
+        $data->icon = $params->icon;
+        $data->imgpath = $params->imgpath;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'store', 'productfeature');
         } catch (Exception $e) {
             return null;
         }
@@ -166,13 +101,14 @@ trait ProductFeatureServices {
     }
 
     //Make Sure ProductFeature is not empty when calling this function
-    private function updateProductFeature($requester, $data,  $params) {
+    private function updateProductFeature($data,  $params) {
 
         $data->name = $params->name;
         $data->desc = $params->desc;
+        $data->icon = $params->icon;
+        $data->imgpath = $params->imgpath;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'update', 'productfeature');
         } catch (Exception $e) {
             return null;
         }
@@ -180,12 +116,10 @@ trait ProductFeatureServices {
         return $data->refresh();
     }
 
-    private function deleteProductFeature($requester , $id) {
-        $data = ProductFeature::find($id);
+    private function deleteProductFeature($data) {
         $data->status = false;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'delete', 'productfeature');
         } catch (Exception $e) {
             return null;
         }

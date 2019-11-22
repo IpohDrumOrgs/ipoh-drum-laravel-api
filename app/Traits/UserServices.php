@@ -26,7 +26,7 @@ trait UserServices {
 
     use GlobalFunctions, LogServices;
 
-    private function getUserListing($requester) {
+    private function getUsers($requester) {
 
         $data = collect();
         $companies = $requester->companies;
@@ -67,19 +67,10 @@ trait UserServices {
     
     }
 
-    
-    private function pluckUserIndex($cols) {
 
-        $data = User::where('status',true)->get($cols);
-        return $data;
-    
-    }
-
-
-    private function filterUserListing($requester , $params) {
+    private function filterUsers($data , $params) {
 
         error_log('Filtering users....');
-        $data = $this->getUserListing($requester);
 
         if($params->keyword){
             error_log('Filtering users with keyword....');
@@ -138,75 +129,13 @@ trait UserServices {
         return $data;
     }
 
-    
-    private function pluckUserFilter($cols , $params) {
 
-        //Unauthorized users cannot access deleted data
-        $data = User::where('status',true)->get();
-
-        if($params->keyword){
-            error_log('Filtering users with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->email, $keyword) == TRUE || stristr($item->icno, $keyword) == TRUE ) {
-                    return true;
-                }else{
-                    return false;
-                }
-            
-            });
-        }
-
-             
-        if($params->fromdate){
-            error_log('Filtering users with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering users with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-            
-        } 
-        
-        if($params->company_id){
-            error_log('Filtering users with company id....');
-            $company_id = $params->company_id;
-            $data = $data->filter(function ($item) use($company_id) {
-                return $item->companies->contains('id' , $company_id);
-            });
-        }
-
-        $data = $data->unique('id');
-
-        //Pluck Columns
-        $data = $data->map(function($item)use($cols){
-            return $item->only($cols);
-        });
-        
-        return $data;
-    
-    }
-
-
-    private function getUser($requester , $uid) {
+    private function getUser($uid) {
         $data = User::with('roles', 'groups.company')->where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function pluckUser($cols , $uid) {
-        $data = User::where('uid', $uid)->where('status', 1)->get($cols)->first();
-        return $data;
-    }
-
-    private function createUser($requester , $params) {
+    private function createUser($params) {
 
 
             $data = new User();
@@ -226,7 +155,6 @@ trait UserServices {
             $data->status = true;
             try {
                 $data->save();
-                $this->createLog($requester->id , [$data->id], 'store', 'user');
             } catch (Exception $e) {
                 return null;
             }
@@ -237,7 +165,7 @@ trait UserServices {
     }
 
     //Make Sure User is not empty when calling this function
-    private function updateUser($requester, $data,  $params) {
+    private function updateUser($data,  $params) {
         
         $grouparr = [];
         $data->name = $params->name;
@@ -253,7 +181,6 @@ trait UserServices {
         $data->country = $params->country;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'update', 'user');
         } catch (Exception $e) {
             return null;
         }
@@ -261,12 +188,10 @@ trait UserServices {
         return $data->refresh();
     }
 
-    private function deleteUser($requester , $id) {
-        $data = User::find($id);
+    private function deleteUser($data) {
         $data->status = false;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'delete', 'user');
         } catch (Exception $e) {
             return null;
         }

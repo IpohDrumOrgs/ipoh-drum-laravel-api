@@ -20,7 +20,7 @@ class CategoryController extends Controller
     /**
      * @OA\Get(
      *      path="/api/category",
-     *      operationId="getCategoryList",
+     *      operationId="getCategories",
      *      tags={"CategoryControllerService"},
      *      summary="Get list of categories",
      *      description="Returns list of categories",
@@ -49,7 +49,7 @@ class CategoryController extends Controller
     {
         error_log('Retrieving list of categories.');
         // api/category (GET)
-        $categories = $this->getCategoryListing($request->user());
+        $categories = $this->getCategories($request->user());
         if ($this->isEmpty($categories)) {
             $data['status'] = 'error';
             $data['data'] = null;
@@ -69,71 +69,11 @@ class CategoryController extends Controller
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/categories",
-     *      operationId="pluckCategoryList",
-     *      tags={"CategoryControllerService"},
-     *      summary="pluck list of categories",
-     *      description="Returns list of plucked categories",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of categories"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of categories")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked categories.');
-        // api/pluck/categories (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $categories = $this->pluckCategoryIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($categories)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Categories');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($categories, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Categories');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/category",
-     *      operationId="filterCategoryList",
+     *      operationId="filterCategories",
      *      tags={"CategoryControllerService"},
      *      summary="Filter list of categories",
      *      description="Returns list of filtered categories",
@@ -164,7 +104,7 @@ class CategoryController extends Controller
      *   @OA\Parameter(
      *     name="todate",
      *     in="query",
-     *     description="To string for filter",
+     *     description="To date for filter",
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
@@ -195,7 +135,8 @@ class CategoryController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $categories = $this->filterCategoryListing($request->user(), $params);
+        $categories = $this->getCategories($request->user());
+        $categories = $this->filterCategories($categories, $params);
 
         if ($this->isEmpty($categories)) {
             $data['data'] = null;
@@ -216,93 +157,7 @@ class CategoryController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/category",
-     *      operationId="filterPluckedCategoryList",
-     *      tags={"CategoryControllerService"},
-     *      summary="Filter list of plucked categories",
-     *      description="Returns list of filtered categories",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered categories"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of categories")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked categories.');
-        // api/pluck/filter/category (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'category_id' => $request->category_id,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $categories = $this->pluckCategoryFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($categories)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Categories');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($categories, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Categories');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
+   
     /**
      * @OA\Get(
      *   tags={"CategoryControllerService"},
@@ -330,7 +185,7 @@ class CategoryController extends Controller
     {
         // api/category/{categoryid} (GET)
         error_log('Retrieving category of uid:' . $uid);
-        $category = $this->getCategory($request->user(), $uid);
+        $category = $this->getCategory($uid);
         if ($this->isEmpty($category)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Category');
@@ -346,58 +201,7 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/category/{uid}",
-     *      operationId="pluckCategoryByUid",
-     *      tags={"CategoryControllerService"},
-     *      summary="pluck category",
-     *      description="Returns plucked categories",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Category_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of categories"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of categories")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked categories.');
-        // api/pluck/category/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $category = $this->pluckCategory($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($category)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Category');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Category');
-            $data['data'] = $category;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-    
+  
     /**
      * @OA\Post(
      *   tags={"CategoryControllerService"},
@@ -422,15 +226,6 @@ class CategoryController extends Controller
      *              type="string"
      *          )
      * ),
-     * @OA\Parameter(
-     * name="ticketids",
-     * in="query",
-     * description="Ticket Ids",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Category has been created successfully."
@@ -449,17 +244,16 @@ class CategoryController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'desc' => 'required|string',
-            'ticketids' => 'required|string',
         ]);
         error_log('Creating category.');
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
-            'ticketids' => $request->ticketids,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $category = $this->createCategory($request->user(), $params);
+        $category = $this->createCategory($params);
+        $this->createLog($request->user()->id , [$category->id], 'store', 'category');
 
         if ($this->isEmpty($category)) {
             DB::rollBack();
@@ -534,7 +328,7 @@ class CategoryController extends Controller
         DB::beginTransaction();
         // api/category/{categoryid} (PUT) 
         error_log('Updating category of uid: ' . $uid);
-        $category = $this->getCategory($request->user(), $uid);
+        $category = $this->getCategory($uid);
         error_log($category);
         $this->validate($request, [
             'name' => 'required|string',
@@ -558,7 +352,8 @@ class CategoryController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $category = $this->updateCategory($request->user(), $category, $params);
+        $category = $this->updateCategory($category, $params);
+        $this->createLog($request->user()->id , [$category->id], 'update', 'category');
         if ($this->isEmpty($category)) {
             DB::rollBack();
             $data['data'] = null;
@@ -606,7 +401,7 @@ class CategoryController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/category/{categoryid} (DELETE)
         error_log('Deleting category of uid: ' . $uid);
-        $category = $this->getCategory($request->user(), $uid);
+        $category = $this->getCategory($uid);
         if ($this->isEmpty($category)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -615,7 +410,8 @@ class CategoryController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $category = $this->deleteCategory($request->user(), $category->id);
+        $category = $this->deleteCategory($category);
+        $this->createLog($request->user()->id , [$category->id], 'delete', 'category');
         if ($this->isEmpty($category)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -627,7 +423,7 @@ class CategoryController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Category');
-            $data['data'] = $category;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }

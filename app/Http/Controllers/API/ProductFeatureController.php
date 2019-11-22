@@ -22,7 +22,7 @@ class ProductFeatureController extends Controller
     /**
      * @OA\Get(
      *      path="/api/productfeature",
-     *      operationId="getProductFeatureList",
+     *      operationId="getProductFeatures",
      *      tags={"ProductFeatureControllerService"},
      *      summary="Get list of productfeatures",
      *      description="Returns list of productfeatures",
@@ -51,12 +51,12 @@ class ProductFeatureController extends Controller
     {
         error_log('Retrieving list of productfeatures.');
         // api/productfeature (GET)
-        $productfeatures = $this->getProductFeatureListing($request->user());
+        $productfeatures = $this->getProductFeatures($request->user());
         if ($this->isEmpty($productfeatures)) {
             $data['status'] = 'error';
             $data['data'] = null;
             $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Product Features');
+            $data['msg'] = $this->getNotFoundMsg('ProductFeatures');
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
@@ -66,76 +66,16 @@ class ProductFeatureController extends Controller
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
             $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Product Features');
+            $data['msg'] = $this->getRetrievedSuccessMsg('ProductFeatures');
             $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/productfeatures",
-     *      operationId="pluckProductFeatureList",
-     *      tags={"ProductFeatureControllerService"},
-     *      summary="pluck list of productfeatures",
-     *      description="Returns list of plucked productfeatures",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of productfeatures"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of productfeatures")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked productfeatures.');
-        // api/pluck/productfeatures (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $productfeatures = $this->pluckProductFeatureIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($productfeatures)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Product Features');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Product Features');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/productfeature",
-     *      operationId="filterProductFeatureList",
+     *      operationId="filterProductFeatures",
      *      tags={"ProductFeatureControllerService"},
      *      summary="Filter list of productfeatures",
      *      description="Returns list of filtered productfeatures",
@@ -166,7 +106,7 @@ class ProductFeatureController extends Controller
      *   @OA\Parameter(
      *     name="todate",
      *     in="query",
-     *     description="To string for filter",
+     *     description="To date for filter",
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
@@ -197,12 +137,13 @@ class ProductFeatureController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $productfeatures = $this->filterProductFeatureListing($request->user(), $params);
+        $productfeatures = $this->getProductFeatures($request->user());
+        $productfeatures = $this->filterProductFeatures($productfeatures, $params);
 
         if ($this->isEmpty($productfeatures)) {
             $data['data'] = null;
             $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Product Features');
+            $data['msg'] = $this->getNotFoundMsg('ProductFeatures');
             $data['code'] = 404;
             return response()->json($data, 404);
         } else {
@@ -211,100 +152,14 @@ class ProductFeatureController extends Controller
             $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
             $data['data'] = $paginateddata;
             $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Product Features');
+            $data['msg'] = $this->getRetrievedSuccessMsg('ProductFeatures');
             $data['code'] = 200;
             return response()->json($data, 200);
         }
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/productfeature",
-     *      operationId="filterPluckedProductFeatureList",
-     *      tags={"ProductFeatureControllerService"},
-     *      summary="Filter list of plucked productfeatures",
-     *      description="Returns list of filtered productfeatures",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered productfeatures"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of productfeatures")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked productfeatures.');
-        // api/pluck/filter/productfeature (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'productfeature_id' => $request->productfeature_id,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $productfeatures = $this->pluckProductFeatureFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($productfeatures)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Product Features');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Product Features');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
+   
     /**
      * @OA\Get(
      *   tags={"ProductFeatureControllerService"},
@@ -332,7 +187,7 @@ class ProductFeatureController extends Controller
     {
         // api/productfeature/{productfeatureid} (GET)
         error_log('Retrieving productfeature of uid:' . $uid);
-        $productfeature = $this->getProductFeature($request->user(), $uid);
+        $productfeature = $this->getProductFeature($uid);
         if ($this->isEmpty($productfeature)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('ProductFeature');
@@ -348,58 +203,8 @@ class ProductFeatureController extends Controller
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/productfeature/{uid}",
-     *      operationId="pluckProductFeatureByUid",
-     *      tags={"ProductFeatureControllerService"},
-     *      summary="pluck productfeature",
-     *      description="Returns plucked productfeatures",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="ProductFeature_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of productfeatures"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of productfeatures")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked productfeatures.');
-        // api/pluck/productfeature/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $productfeature = $this->pluckProductFeature($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($productfeature)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('ProductFeature');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('ProductFeature');
-            $data['data'] = $productfeature;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-
+  
+   
     /**
      * @OA\Post(
      *   tags={"ProductFeatureControllerService"},
@@ -420,6 +225,22 @@ class ProductFeatureController extends Controller
      * in="query",
      * description="ProductFeature Description",
      * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="icon",
+     * in="query",
+     * description="ProductFeature icon",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="imgpath",
+     * in="query",
+     * description="ProductFeature image path",
      * @OA\Schema(
      *              type="string"
      *          )
@@ -447,10 +268,12 @@ class ProductFeatureController extends Controller
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
+            'icon' => $request->icon,
+            'imgpath' => $request->imgpath,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $productfeature = $this->createProductFeature($request->user(), $params);
+        $productfeature = $this->createProductFeature($params);
 
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
@@ -501,6 +324,22 @@ class ProductFeatureController extends Controller
      *              type="string"
      *          )
      * ),
+     * @OA\Parameter(
+     * name="icon",
+     * in="query",
+     * description="ProductFeature icon",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="imgpath",
+     * in="query",
+     * description="ProductFeature image path",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="ProductFeature has been updated successfully."
@@ -516,7 +355,7 @@ class ProductFeatureController extends Controller
         DB::beginTransaction();
         // api/productfeature/{productfeatureid} (PUT)
         error_log('Updating productfeature of uid: ' . $uid);
-        $productfeature = $this->getProductFeature($request->user(), $uid);
+        $productfeature = $this->getProductFeature($uid);
         error_log($productfeature);
         $this->validate($request, [
             'name' => 'required|string',
@@ -535,10 +374,12 @@ class ProductFeatureController extends Controller
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
+            'icon' => $request->icon,
+            'imgpath' => $request->imgpath,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $productfeature = $this->updateProductFeature($request->user(), $productfeature, $params);
+        $productfeature = $this->updateProductFeature($productfeature, $params);
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
             $data['data'] = null;
@@ -586,7 +427,7 @@ class ProductFeatureController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/productfeature/{productfeatureid} (DELETE)
         error_log('Deleting productfeature of uid: ' . $uid);
-        $productfeature = $this->getProductFeature($request->user(), $uid);
+        $productfeature = $this->getProductFeature($uid);
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -595,7 +436,8 @@ class ProductFeatureController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $productfeature = $this->deleteProductFeature($request->user(), $productfeature->id);
+        $productfeature = $this->deleteProductFeature($productfeature);
+        $this->createLog($request->user()->id , [$productfeature->id], 'delete', 'productfeature');
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -607,7 +449,7 @@ class ProductFeatureController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('ProductFeature');
-            $data['data'] = $productfeature;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }
@@ -652,7 +494,7 @@ class ProductFeatureController extends Controller
     {
         error_log('Retrieving list of featured products.');
         // api/productfeature (GET)
-        $productfeature = $this->getProductFeature($request->user(), $uid);
+        $productfeature = $this->getProductFeature($uid);
         if ($this->isEmpty($productfeature)) {
             $data['status'] = 'error';
             $data['data'] = null;

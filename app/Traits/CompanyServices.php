@@ -26,9 +26,10 @@ trait CompanyServices {
 
     use GlobalFunctions, LogServices;
 
-    private function getCompanyListing($requester) {
+    private function getCompanies($requester) {
 
         $data = collect();
+        error_log($requester);
         $companies = $requester->companies;
         foreach($companies as $company){
             $clearance = $this->checkClearance($requester, $company ,  $this->checkModule('company','index'));
@@ -61,18 +62,10 @@ trait CompanyServices {
     }
 
 
-    private function pluckCompanyIndex($cols) {
 
-        $data = Company::where('status',true)->get($cols);
-        return $data;
-
-    }
-
-
-    private function filterCompanyListing($requester , $params) {
+    private function filterCompanies($data , $params) {
 
         error_log('Filtering companies....');
-        $data = $this->getCompanyListing($requester);
 
         if($params->keyword){
             error_log('Filtering companies with keyword....');
@@ -124,69 +117,12 @@ trait CompanyServices {
         return $data;
     }
 
-
-    private function pluckCompanyFilter($cols , $params) {
-
-        //Unauthorized users cannot access deleted data
-        $data = Company::where('status',true)->get();
-
-        if($params->keyword){
-            error_log('Filtering companies with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->regno, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
-                    return true;
-                }else{
-                    return false;
-                }
-
-            });
-        }
-
-
-        if($params->fromdate){
-            error_log('Filtering companies with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering companies with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-
-        }
-
-
-
-        $data = $data->unique('id');
-
-        //Pluck Columns
-        $data = $data->map(function($item)use($cols){
-            return $item->only($cols);
-        });
-
-        return $data;
-
-    }
-
-
-    private function getCompany($requester , $uid) {
+    private function getCompany($uid) {
         $data = Company::where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function pluckCompany($cols , $uid) {
-        $data = Company::where('uid', $uid)->where('status', 1)->get($cols)->first();
-        return $data;
-    }
-
-    private function createCompany($requester , $params) {
+    private function createCompany($params) {
 
         $data = new Company();
         $data->uid = Carbon::now()->timestamp . Company::count();
@@ -212,7 +148,6 @@ trait CompanyServices {
         $data->status = true;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'store', 'company');
         } catch (Exception $e) {
             return null;
         }
@@ -221,7 +156,7 @@ trait CompanyServices {
     }
 
     //Make Sure Company is not empty when calling this function
-    private function updateCompany($requester, $data,  $params) {
+    private function updateCompany($data,  $params) {
 
         $data->name = $params->name;
         $data->email1 = $params->email1;
@@ -244,7 +179,6 @@ trait CompanyServices {
         $data->companytype()->associate($companytype);
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'update', 'company');
         } catch (Exception $e) {
             return null;
         }
@@ -252,12 +186,10 @@ trait CompanyServices {
         return $data->refresh();
     }
 
-    private function deleteCompany($requester , $id) {
-        $data = Company::find($id);
+    private function deleteCompany($data) {
         $data->status = false;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'delete', 'company');
         } catch (Exception $e) {
             return null;
         }

@@ -20,20 +20,20 @@ class StoreController extends Controller
     /**
      * @OA\Get(
      *      path="/api/store",
-     *      operationId="getStoreList",
+     *      operationId="getStores",
      *      tags={"StoreControllerService"},
      *      summary="Get list of stores",
      *      description="Returns list of stores",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
-     *     description="Page number.",
+     *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size.",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -49,7 +49,7 @@ class StoreController extends Controller
     {
         error_log('Retrieving list of stores.');
         // api/store (GET)
-        $stores = $this->getStoreListing($request->user());
+        $stores = $this->getStores($request->user());
         if ($this->isEmpty($stores)) {
             $data['status'] = 'error';
             $data['data'] = null;
@@ -69,71 +69,11 @@ class StoreController extends Controller
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/stores",
-     *      operationId="pluckStoreList",
-     *      tags={"StoreControllerService"},
-     *      summary="pluck list of stores",
-     *      description="Returns list of plucked stores",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of stores"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of stores")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked stores.');
-        // api/pluck/stores (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $stores = $this->pluckStoreIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($stores)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Stores');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($stores, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($stores->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Stores');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/store",
-     *      operationId="filterStoreList",
+     *      operationId="filterStores",
      *      tags={"StoreControllerService"},
      *      summary="Filter list of stores",
      *      description="Returns list of filtered stores",
@@ -146,7 +86,7 @@ class StoreController extends Controller
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -164,19 +104,13 @@ class StoreController extends Controller
      *   @OA\Parameter(
      *     name="todate",
      *     in="query",
-     *     description="To string for filter",
+     *     description="To date for filter",
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
      *     name="status",
      *     in="query",
      *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onsale",
-     *     in="query",
-     *     description="onsale for filter",
      *     @OA\Schema(type="string")
      *   ),
      *      @OA\Response(
@@ -197,11 +131,12 @@ class StoreController extends Controller
             'fromdate' => $request->fromdate,
             'todate' => $request->todate,
             'status' => $request->status,
-            'onsale' => $request->onsale,
+            'store_id' => $request->store_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $stores = $this->filterStoreListing($request->user(), $params);
+        $stores = $this->getStores($request->user());
+        $stores = $this->filterStores($stores, $params);
 
         if ($this->isEmpty($stores)) {
             $data['data'] = null;
@@ -222,105 +157,7 @@ class StoreController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/store",
-     *      operationId="filterPluckedStoreList",
-     *      tags={"StoreControllerService"},
-     *      summary="Filter list of plucked stores",
-     *      description="Returns list of filtered stores",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onsale",
-     *     in="query",
-     *     description="onsale for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered stores"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of stores")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked stores.');
-        // api/pluck/filter/store (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'onsale' => $request->onsale,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $stores = $this->pluckStoreFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($stores)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Stores');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($stores, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($stores->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Stores');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
+   
     /**
      * @OA\Get(
      *   tags={"StoreControllerService"},
@@ -348,7 +185,7 @@ class StoreController extends Controller
     {
         // api/store/{storeid} (GET)
         error_log('Retrieving store of uid:' . $uid);
-        $store = $this->getStore($request->user(), $uid);
+        $store = $this->getStore($uid);
         if ($this->isEmpty($store)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Store');
@@ -364,58 +201,8 @@ class StoreController extends Controller
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/store/{uid}",
-     *      operationId="pluckStoreByUid",
-     *      tags={"StoreControllerService"},
-     *      summary="pluck store",
-     *      description="Returns plucked stores",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Store_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of stores"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of stores")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked stores.');
-        // api/pluck/store/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $store = $this->pluckStore($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($store)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Store');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Store');
-            $data['data'] = $store;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-    
+  
+     
     /**
      * @OA\Post(
      *   tags={"StoreControllerService"},
@@ -460,6 +247,14 @@ class StoreController extends Controller
      * name="contact",
      * in="query",
      * description="Contact",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="desc",
+     * in="query",
+     * description="Description",
      * @OA\Schema(
      *              type="string"
      *          )
@@ -530,11 +325,13 @@ class StoreController extends Controller
         
         $this->validate($request, [
             'name' => 'required|string|max:191',
+            'desc' => 'required|string',
             'companyBelongings' => 'required|boolean',
         ]);
         error_log('Creating store.');
         $params = collect([
             'name' => $request->name,
+            'desc' => $request->desc,
             'contact' => $request->contact,
             'email' => $request->email,
             'address' => $request->address,
@@ -548,7 +345,7 @@ class StoreController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $store = $this->createStore($request->user(), $params);
+        $store = $this->createStore($params);
 
         if ($this->isEmpty($store)) {
             DB::rollBack();
@@ -613,6 +410,14 @@ class StoreController extends Controller
      * required=true,
      * @OA\Schema(
      *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="desc",
+     * in="query",
+     * description="Description",
+     * @OA\Schema(
+     *              type="string"
      *          )
      * ),
      * @OA\Parameter(
@@ -686,9 +491,10 @@ class StoreController extends Controller
         DB::beginTransaction();
         // api/store/{storeid} (PUT) 
         error_log('Updating store of uid: ' . $uid);
-        $store = $this->getStore($request->user(), $uid);
+        $store = $this->getStore($uid);
         $this->validate($request, [
             'name' => 'required|string|max:191',
+            'desc' => 'required|string',
             'companyBelongings' => 'required|boolean',
         ]);
         
@@ -702,6 +508,7 @@ class StoreController extends Controller
         }
         $params = collect([
             'name' => $request->name,
+            'desc' => $request->desc,
             'contact' => $request->contact,
             'email' => $request->email,
             'address' => $request->address,
@@ -715,7 +522,7 @@ class StoreController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $store = $this->updateStore($request->user(), $store, $params);
+        $store = $this->updateStore($store, $params);
         if ($this->isEmpty($store)) {
             DB::rollBack();
             $data['data'] = null;
@@ -763,7 +570,7 @@ class StoreController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/store/{storeid} (DELETE)
         error_log('Deleting store of uid: ' . $uid);
-        $store = $this->getStore($request->user(), $uid);
+        $store = $this->getStore($uid);
         if ($this->isEmpty($store)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -772,7 +579,8 @@ class StoreController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $store = $this->deleteStore($request->user(), $store->id);
+        $store = $this->deleteStore($store);
+        $this->createLog($request->user()->id , [$store->id], 'delete', 'store');
         if ($this->isEmpty($store)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -784,10 +592,11 @@ class StoreController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Store');
-            $data['data'] = $store;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
+
 
 }

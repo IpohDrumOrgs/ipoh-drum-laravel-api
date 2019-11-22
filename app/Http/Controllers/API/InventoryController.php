@@ -17,23 +17,23 @@ class InventoryController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices;
     private $controllerName = '[InventoryController]';
-    /**
+     /**
      * @OA\Get(
      *      path="/api/inventory",
-     *      operationId="getInventoryList",
+     *      operationId="getInventories",
      *      tags={"InventoryControllerService"},
      *      summary="Get list of inventories",
      *      description="Returns list of inventories",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
-     *     description="Page number.",
+     *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size.",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -47,9 +47,9 @@ class InventoryController extends Controller
      */
     public function index(Request $request)
     {
-        error_log($this->controllerName.'Retrieving list of inventories.');
+        error_log('Retrieving list of inventories.');
         // api/inventory (GET)
-        $inventories = $this->getInventoryListing($request->user());
+        $inventories = $this->getInventories($request->user());
         if ($this->isEmpty($inventories)) {
             $data['status'] = 'error';
             $data['data'] = null;
@@ -69,71 +69,11 @@ class InventoryController extends Controller
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/inventories",
-     *      operationId="pluckInventoryList",
-     *      tags={"InventoryControllerService"},
-     *      summary="pluck list of inventories",
-     *      description="Returns list of plucked inventories",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of inventories"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of inventories")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log($this->controllerName.'Retrieving list of plucked inventories.');
-        // api/pluck/inventories (GET)
-        error_log($this->controllerName."columns = " . collect($this->splitToArray($request->cols)));
-        $inventories = $this->pluckInventoryIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($inventories)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Inventories');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($inventories, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/inventory",
-     *      operationId="filterInventoryList",
+     *      operationId="filterInventories",
      *      tags={"InventoryControllerService"},
      *      summary="Filter list of inventories",
      *      description="Returns list of filtered inventories",
@@ -146,7 +86,7 @@ class InventoryController extends Controller
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -164,19 +104,19 @@ class InventoryController extends Controller
      *   @OA\Parameter(
      *     name="todate",
      *     in="query",
-     *     description="To string for filter",
+     *     description="To date for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="onsale",
+     *     in="query",
+     *     description="On sale for filter",
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
      *     name="status",
      *     in="query",
      *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onsale",
-     *     in="query",
-     *     description="onsale for filter",
      *     @OA\Schema(type="string")
      *   ),
      *      @OA\Response(
@@ -190,7 +130,7 @@ class InventoryController extends Controller
      */
     public function filter(Request $request)
     {
-        error_log($this->controllerName.'Retrieving list of filtered inventories.');
+        error_log('Retrieving list of filtered inventories.');
         // api/inventory/filter (GET)
         $params = collect([
             'keyword' => $request->keyword,
@@ -198,10 +138,12 @@ class InventoryController extends Controller
             'todate' => $request->todate,
             'status' => $request->status,
             'onsale' => $request->onsale,
+            'inventory_id' => $request->inventory_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $inventories = $this->filterInventoryListing($request->user(), $params);
+        $inventories = $this->getInventories($request->user());
+        $inventories = $this->filterInventories($inventories, $params);
 
         if ($this->isEmpty($inventories)) {
             $data['data'] = null;
@@ -222,105 +164,7 @@ class InventoryController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/inventory",
-     *      operationId="filterPluckedInventoryList",
-     *      tags={"InventoryControllerService"},
-     *      summary="Filter list of plucked inventories",
-     *      description="Returns list of filtered inventories",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onsale",
-     *     in="query",
-     *     description="onsale for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered inventories"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of inventories")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log($this->controllerName.'Retrieving list of filtered and plucked inventories.');
-        // api/pluck/filter/inventory (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'onsale' => $request->onsale,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $inventories = $this->pluckInventoryFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($inventories)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Inventories');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($inventories, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
+   
     /**
      * @OA\Get(
      *   tags={"InventoryControllerService"},
@@ -347,8 +191,8 @@ class InventoryController extends Controller
     public function show(Request $request, $uid)
     {
         // api/inventory/{inventoryid} (GET)
-        error_log($this->controllerName.'Retrieving inventory of uid:' . $uid);
-        $inventory = $this->getInventory($request->user(), $uid);
+        error_log('Retrieving inventory of uid:' . $uid);
+        $inventory = $this->getInventory($uid);
         if ($this->isEmpty($inventory)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Inventory');
@@ -364,58 +208,8 @@ class InventoryController extends Controller
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/inventory/{uid}",
-     *      operationId="pluckInventoryByUid",
-     *      tags={"InventoryControllerService"},
-     *      summary="pluck inventory",
-     *      description="Returns plucked inventories",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Inventory_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of inventories"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of inventories")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log($this->controllerName.'Retrieving plucked inventories.');
-        // api/pluck/inventory/{uid} (GET)
-        error_log($this->controllerName."columns = " . collect($this->splitToArray($request->cols)));
-        $inventory = $this->pluckInventory($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($inventory)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Inventory');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Inventory');
-            $data['data'] = $inventory;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-
+  
+    
     /**
      * @OA\Post(
      *   tags={"InventoryControllerService"},
@@ -435,6 +229,33 @@ class InventoryController extends Controller
      * name="storeid",
      * in="query",
      * description="Store ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="promotionid",
+     * in="query",
+     * description="Promotion ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="warrantyid",
+     * in="query",
+     * description="Warranty ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="shippingid",
+     * in="query",
+     * description="Shipping ID",
      * required=true,
      * @OA\Schema(
      *              type="integer"
@@ -466,6 +287,14 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
+     * name="imgpath",
+     * in="query",
+     * description="Image Path",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
      * name="cost",
      * in="query",
      * description="Product Cost",
@@ -484,53 +313,13 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="disc",
-     * in="query",
-     * description="Product Discount",
-     * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promoprice",
-     * in="query",
-     * description="Promotion Price",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promostartdate",
-     * in="query",
-     * description="Promotion Start Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promoenddate",
-     * in="query",
-     * description="Promotion End Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="stock",
+     * name="qty",
      * in="query",
      * description="Stock Qty",
      * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
-     * ),
-     * @OA\Parameter(
-     * name="warrantyperiod",
-     * in="query",
-     * description="Warranty Period",
-     * @OA\Schema(
-     *  type="integer"
-     *  )
      * ),
      * @OA\Parameter(
      * name="stockthreshold",
@@ -573,30 +362,29 @@ class InventoryController extends Controller
             'desc' => 'nullable',
             'cost' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:0',
+            'qty' => 'required|numeric|min:0',
             'onsale' => 'required|numeric',
         ]);
         error_log($this->controllerName.'Creating inventory.');
         $params = collect([
             'storeid' => $request->storeid,
+            'promotionid' => $request->promotionid,
+            'warrantyid' => $request->warrantyid,
+            'shippingid' => $request->shippingid,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
             'desc' => $request->desc,
+            'imgpath' => $request->imgpath,
             'cost' => $request->cost,
             'price' => $request->price,
-            'disc' => $request->disc,
-            'promoprice' => $request->promoprice,
-            'promostartdate' => $request->promostartdate,
-            'promoenddate' => $request->promoenddate,
-            'stock' => $request->stock,
-            'warrantyperiod' => $request->warrantyperiod,
+            'qty' => $request->qty,
             'stockthreshold' => $request->stockthreshold,
             'onsale' => $request->onsale,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $inventory = $this->createInventory($request->user(), $params);
+        $inventory = $this->createInventory($params);
 
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
@@ -629,7 +417,7 @@ class InventoryController extends Controller
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
-   * @OA\Parameter(
+     * @OA\Parameter(
      * name="name",
      * in="query",
      * description="Inventoryname",
@@ -642,6 +430,33 @@ class InventoryController extends Controller
      * name="storeid",
      * in="query",
      * description="Store ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="promotionid",
+     * in="query",
+     * description="Promotion ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="warrantyid",
+     * in="query",
+     * description="Warranty ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="shippingid",
+     * in="query",
+     * description="Shipping ID",
      * required=true,
      * @OA\Schema(
      *              type="integer"
@@ -673,76 +488,43 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
+     * name="imgpath",
+     * in="query",
+     * description="Image Path",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
      * name="cost",
      * in="query",
-     * required=true,
      * description="Product Cost",
+     * required=true,
      * @OA\Schema(
      *              type="number"
      *          )
      * ),
      * @OA\Parameter(
      * name="price",
-     * required=true,
      * in="query",
      * description="Product Selling Price",
-     * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="disc",
-     * in="query",
-     * description="Product Discount",
-     * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promoprice",
-     * in="query",
-     * description="Promotion Price",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promostartdate",
-     * in="query",
-     * description="Promotion Start Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promoenddate",
-     * in="query",
-     * description="Promotion End Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="stock",
-     * in="query",
      * required=true,
+     * @OA\Schema(
+     *              type="number"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="qty",
+     * in="query",
      * description="Stock Qty",
+     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
-     * name="warrantyperiod",
-     * in="query",
-     * description="Warranty Period",
-     * @OA\Schema(
-     *  type="integer"
-     *  )
-     * ),
-     * @OA\Parameter(
      * name="stockthreshold",
      * in="query",
-     * required=true,
      * description="Stock Threshold",
      * @OA\Schema(
      *              type="integer"
@@ -751,8 +533,8 @@ class InventoryController extends Controller
      * @OA\Parameter(
      * name="onsale",
      * in="query",
-     * required=true,
      * description="On Sale",
+     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -772,7 +554,7 @@ class InventoryController extends Controller
         DB::beginTransaction();
         // api/inventory/{inventoryid} (PUT)
         error_log($this->controllerName.'Updating inventory of uid: ' . $uid);
-        $inventory = $this->getInventory($request->user(), $uid);
+        $inventory = $this->getInventory($uid);
 
         $this->validate($request, [
             'storeid' => 'required',
@@ -782,14 +564,8 @@ class InventoryController extends Controller
             'desc' => 'nullable',
             'cost' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
-            'disc' => 'nullable|numeric|min:0',
-            'promoprice' => 'nullable|numeric|min:0',
-            'promostartdate' => 'nullable|date',
-            'promoenddate' => 'nullable|date',
-            'stock' => 'required|numeric|min:0',
-            'warrantyperiod' => 'nullable|numeric|min:0',
-            'stockthreshold' => 'nullable|numeric|min:0',
-            'onsale' => 'required|boolean',
+            'qty' => 'required|numeric|min:0',
+            'onsale' => 'required|numeric',
         ]);
 
         if ($this->isEmpty($inventory)) {
@@ -803,25 +579,24 @@ class InventoryController extends Controller
 
         $params = collect([
             'storeid' => $request->storeid,
+            'promotionid' => $request->promotionid,
+            'warrantyid' => $request->warrantyid,
+            'shippingid' => $request->shippingid,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
+            'imgpath' => $request->imgpath,
             'desc' => $request->desc,
             'cost' => $request->cost,
             'price' => $request->price,
-            'disc' => $request->disc,
-            'promoprice' => $request->promoprice,
-            'promostartdate' => $request->promostartdate,
-            'promoenddate' => $request->promoenddate,
-            'stock' => $request->stock,
-            'warrantyperiod' => $request->warrantyperiod,
+            'qty' => $request->qty,
             'stockthreshold' => $request->stockthreshold,
             'onsale' => $request->onsale,
         ]);
 
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $inventory = $this->updateInventory($request->user(), $inventory, $params);
+        $inventory = $this->updateInventory($inventory, $params);
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
             $data['data'] = null;
@@ -868,8 +643,8 @@ class InventoryController extends Controller
         DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/inventory/{inventoryid} (DELETE)
-        error_log($this->controllerName.'Deleting inventory of uid: ' . $uid);
-        $inventory = $this->getInventory($request->user(), $uid);
+        error_log('Deleting inventory of uid: ' . $uid);
+        $inventory = $this->getInventory($uid);
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -878,7 +653,8 @@ class InventoryController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $inventory = $this->deleteInventory($request->user(), $inventory->id);
+        $inventory = $this->deleteInventory($inventory);
+        $this->createLog($request->user()->id , [$inventory->id], 'delete', 'inventory');
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -890,7 +666,7 @@ class InventoryController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Inventory');
-            $data['data'] = $inventory;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }
@@ -925,8 +701,15 @@ class InventoryController extends Controller
         // api/inventory/{inventoryid} (GET)
         error_log($this->controllerName.'Retrieving onsale inventory of uid:' . $uid);
         $cols = $this->inventoryDefaultCols();
-        $inventory = $this->getInventory($request->user(),$uid);
-        $inventory = $this->itemPluckCols($inventory , $cols);
+        $inventory = $this->getInventory($uid);
+        if($inventory->onsale){
+            $inventory = $this->itemPluckCols($inventory , $cols);
+            $inventory = json_decode(json_encode($inventory));
+            $inventory = $this->calculatePromotionPrice($inventory);
+            $inventory = $this->countProductReviews($inventory);
+        }else{
+            $inventory = null;
+        }
         if ($this->isEmpty($inventory)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Inventory');

@@ -74,7 +74,7 @@ class Ticket extends Model
      */
     public function productreviews()
     {
-        return $this->hasMany('App\ProductReviews');
+        return $this->hasMany('App\ProductReview');
     }
     
     /**
@@ -82,7 +82,7 @@ class Ticket extends Model
      */
     public function promotion()
     {
-        return $this->belongsTo('App\ProductPromotion');
+        return $this->belongsTo('App\ProductPromotion', 'product_promotion_id');
     }
 
     /**
@@ -106,6 +106,6 @@ class Ticket extends Model
      */
     public function characteristics(){
 
-        return $this->belongsToMany('App\ProductCharacteristic','ticket_product_characteristic' , 'inventory_id' , 'characteristic_id')->withPivot('remark');
+        return $this->belongsToMany('App\ProductCharacteristic','inventory_product_characteristic' , 'ticket_id' , 'characteristic_id')->withPivot('remark');
     }
 }

@@ -20,20 +20,20 @@ class RoleController extends Controller
     /**
      * @OA\Get(
      *      path="/api/role",
-     *      operationId="getRoleList",
+     *      operationId="getRoles",
      *      tags={"RoleControllerService"},
      *      summary="Get list of roles",
      *      description="Returns list of roles",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
-     *     description="Page number.",
+     *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size.",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -49,7 +49,7 @@ class RoleController extends Controller
     {
         error_log('Retrieving list of roles.');
         // api/role (GET)
-        $roles = $this->getRoleListing($request->user());
+        $roles = $this->getRoles($request->user());
         if ($this->isEmpty($roles)) {
             $data['status'] = 'error';
             $data['data'] = null;
@@ -69,71 +69,11 @@ class RoleController extends Controller
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/roles",
-     *      operationId="pluckRoleList",
-     *      tags={"RoleControllerService"},
-     *      summary="pluck list of roles",
-     *      description="Returns list of plucked roles",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of roles"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of roles")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked roles.');
-        // api/pluck/roles (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $roles = $this->pluckRoleIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($roles)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Roles');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($roles, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($roles->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Roles');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/role",
-     *      operationId="filterRoleList",
+     *      operationId="filterRoles",
      *      tags={"RoleControllerService"},
      *      summary="Filter list of roles",
      *      description="Returns list of filtered roles",
@@ -146,7 +86,7 @@ class RoleController extends Controller
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -164,19 +104,13 @@ class RoleController extends Controller
      *   @OA\Parameter(
      *     name="todate",
      *     in="query",
-     *     description="To string for filter",
+     *     description="To date for filter",
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
      *     name="status",
      *     in="query",
      *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onrole",
-     *     in="query",
-     *     description="onrole for filter",
      *     @OA\Schema(type="string")
      *   ),
      *      @OA\Response(
@@ -197,11 +131,12 @@ class RoleController extends Controller
             'fromdate' => $request->fromdate,
             'todate' => $request->todate,
             'status' => $request->status,
-            'onrole' => $request->onrole,
+            'role_id' => $request->role_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $roles = $this->filterRoleListing($request->user(), $params);
+        $roles = $this->getRoles($request->user());
+        $roles = $this->filterRoles($roles, $params);
 
         if ($this->isEmpty($roles)) {
             $data['data'] = null;
@@ -222,105 +157,7 @@ class RoleController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/role",
-     *      operationId="filterPluckedRoleList",
-     *      tags={"RoleControllerService"},
-     *      summary="Filter list of plucked roles",
-     *      description="Returns list of filtered roles",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onrole",
-     *     in="query",
-     *     description="onrole for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered roles"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of roles")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked roles.');
-        // api/pluck/filter/role (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'onrole' => $request->onrole,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $roles = $this->pluckRoleFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($roles)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Roles');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($roles, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($roles->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Roles');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
+   
     /**
      * @OA\Get(
      *   tags={"RoleControllerService"},
@@ -348,7 +185,7 @@ class RoleController extends Controller
     {
         // api/role/{roleid} (GET)
         error_log('Retrieving role of uid:' . $uid);
-        $role = $this->getRole($request->user(), $uid);
+        $role = $this->getRole($uid);
         if ($this->isEmpty($role)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Role');
@@ -364,58 +201,7 @@ class RoleController extends Controller
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/role/{uid}",
-     *      operationId="pluckRoleByUid",
-     *      tags={"RoleControllerService"},
-     *      summary="pluck role",
-     *      description="Returns plucked roles",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Role_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of roles"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of roles")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked roles.');
-        // api/pluck/role/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $role = $this->pluckRole($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($role)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Role');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Role');
-            $data['data'] = $role;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-    
+  
     /**
      * @OA\Post(
      *   tags={"RoleControllerService"},
@@ -466,7 +252,7 @@ class RoleController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $role = $this->createRole($request->user(), $params);
+        $role = $this->createRole($params);
 
         if ($this->isEmpty($role)) {
             DB::rollBack();
@@ -531,7 +317,7 @@ class RoleController extends Controller
         DB::beginTransaction();
         // api/role/{roleid} (PUT) 
         error_log('Updating role of uid: ' . $uid);
-        $role = $this->getRole($request->user(), $uid);
+        $role = $this->getRole($uid);
        
        
         $this->validate($request, [
@@ -555,7 +341,7 @@ class RoleController extends Controller
         
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $role = $this->updateRole($request->user(), $role, $params);
+        $role = $this->updateRole($role, $params);
         if ($this->isEmpty($role)) {
             DB::rollBack();
             $data['data'] = null;
@@ -603,7 +389,7 @@ class RoleController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/role/{roleid} (DELETE)
         error_log('Deleting role of uid: ' . $uid);
-        $role = $this->getRole($request->user(), $uid);
+        $role = $this->getRole($uid);
         if ($this->isEmpty($role)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -612,7 +398,8 @@ class RoleController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $role = $this->deleteRole($request->user(), $role->id);
+        $role = $this->deleteRole($role);
+        $this->createLog($request->user()->id , [$role->id], 'delete', 'role');
         if ($this->isEmpty($role)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -624,7 +411,7 @@ class RoleController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Role');
-            $data['data'] = $role;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }

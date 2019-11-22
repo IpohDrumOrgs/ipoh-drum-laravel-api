@@ -20,20 +20,20 @@ class TicketController extends Controller
     /**
      * @OA\Get(
      *      path="/api/ticket",
-     *      operationId="getTicketList",
+     *      operationId="getTickets",
      *      tags={"TicketControllerService"},
      *      summary="Get list of tickets",
      *      description="Returns list of tickets",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
-     *     description="Page number.",
+     *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size.",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -49,7 +49,7 @@ class TicketController extends Controller
     {
         error_log('Retrieving list of tickets.');
         // api/ticket (GET)
-        $tickets = $this->getTicketListing($request->user());
+        $tickets = $this->getTickets($request->user());
         if ($this->isEmpty($tickets)) {
             $data['status'] = 'error';
             $data['data'] = null;
@@ -69,71 +69,11 @@ class TicketController extends Controller
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/tickets",
-     *      operationId="pluckTicketList",
-     *      tags={"TicketControllerService"},
-     *      summary="pluck list of tickets",
-     *      description="Returns list of plucked tickets",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of tickets"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of tickets")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked tickets.');
-        // api/pluck/tickets (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $tickets = $this->pluckTicketIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($tickets)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Tickets');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($tickets, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($tickets->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Tickets');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/ticket",
-     *      operationId="filterTicketList",
+     *      operationId="filterTickets",
      *      tags={"TicketControllerService"},
      *      summary="Filter list of tickets",
      *      description="Returns list of filtered tickets",
@@ -146,7 +86,7 @@ class TicketController extends Controller
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -164,19 +104,19 @@ class TicketController extends Controller
      *   @OA\Parameter(
      *     name="todate",
      *     in="query",
-     *     description="To string for filter",
+     *     description="To date for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="onsale",
+     *     in="query",
+     *     description="On sale for filter",
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
      *     name="status",
      *     in="query",
      *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onsale",
-     *     in="query",
-     *     description="onsale for filter",
      *     @OA\Schema(type="string")
      *   ),
      *      @OA\Response(
@@ -198,10 +138,12 @@ class TicketController extends Controller
             'todate' => $request->todate,
             'status' => $request->status,
             'onsale' => $request->onsale,
+            'ticket_id' => $request->ticket_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $tickets = $this->filterTicketListing($request->user(), $params);
+        $tickets = $this->getTickets($request->user());
+        $tickets = $this->filterTickets($tickets, $params);
 
         if ($this->isEmpty($tickets)) {
             $data['data'] = null;
@@ -222,105 +164,7 @@ class TicketController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/ticket",
-     *      operationId="filterPluckedTicketList",
-     *      tags={"TicketControllerService"},
-     *      summary="Filter list of plucked tickets",
-     *      description="Returns list of filtered tickets",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onsale",
-     *     in="query",
-     *     description="onsale for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered tickets"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of tickets")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked tickets.');
-        // api/pluck/filter/ticket (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'onsale' => $request->onsale,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $tickets = $this->pluckTicketFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($tickets)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Tickets');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($tickets, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($tickets->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Tickets');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
+   
     /**
      * @OA\Get(
      *   tags={"TicketControllerService"},
@@ -348,7 +192,7 @@ class TicketController extends Controller
     {
         // api/ticket/{ticketid} (GET)
         error_log('Retrieving ticket of uid:' . $uid);
-        $ticket = $this->getTicket($request->user(), $uid);
+        $ticket = $this->getTicket($uid);
         if ($this->isEmpty($ticket)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Ticket');
@@ -364,57 +208,7 @@ class TicketController extends Controller
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/ticket/{uid}",
-     *      operationId="pluckTicketByUid",
-     *      tags={"TicketControllerService"},
-     *      summary="pluck ticket",
-     *      description="Returns plucked tickets",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Ticket_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of tickets"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of tickets")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked tickets.');
-        // api/pluck/ticket/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $ticket = $this->pluckTicket($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($ticket)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Ticket');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Ticket');
-            $data['data'] = $ticket;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+  
     
     /**
      * @OA\Post(
@@ -422,6 +216,7 @@ class TicketController extends Controller
      *   path="/api/ticket",
      *   summary="Creates a ticket.",
      *   operationId="createTicket",
+     
      * @OA\Parameter(
      * name="name",
      * in="query",
@@ -435,6 +230,15 @@ class TicketController extends Controller
      * name="storeid",
      * in="query",
      * description="Store ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="promotionid",
+     * in="query",
+     * description="Promotion ID",
      * required=true,
      * @OA\Schema(
      *              type="integer"
@@ -466,6 +270,14 @@ class TicketController extends Controller
      *          )
      * ),
      * @OA\Parameter(
+     * name="imgpath",
+     * in="query",
+     * description="Image Path",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
      * name="price",
      * in="query",
      * description="Product Selling Price",
@@ -475,48 +287,7 @@ class TicketController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="disc",
-     * in="query",
-     * description="Product Discount",
-     * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promoprice",
-     * in="query",
-     * description="Promotion Price",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promostartdate",
-     * in="query",
-     * description="Promotion Start Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promoenddate",
-     * in="query",
-     * description="Promotion End Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="enddate",
-     * in="query",
-     * description="Ticket End Date",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="stock",
+     * name="qty",
      * in="query",
      * description="Stock Qty",
      * required=true,
@@ -530,6 +301,15 @@ class TicketController extends Controller
      * description="Stock Threshold",
      * @OA\Schema(
      *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="enddate",
+     * in="query",
+     * description="Valid end date",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
      *          )
      * ),
      * @OA\Parameter(
@@ -556,43 +336,36 @@ class TicketController extends Controller
         DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/ticket (POST)
-        
+
         $this->validate($request, [
             'storeid' => 'required',
             'name' => 'required|string|max:191',
             'code' => 'nullable',
             'sku' => 'required|string|max:191',
             'desc' => 'nullable',
+            'cost' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
-            'disc' => 'nullable|numeric|min:0',
-            'promoprice' => 'nullable|numeric|min:0',
-            'promostartdate' => 'nullable|date',
-            'promoenddate' => 'nullable|date',
-            'enddate' =>  'required|date',
-            'stock' => 'required|numeric|min:0',
-            'stockthreshold' => 'nullable|numeric|min:0',
-            'onsale' => 'required|boolean',
+            'qty' => 'required|numeric|min:0',
+            'onsale' => 'required|numeric',
         ]);
-        error_log('Creating ticket.');
+        error_log($this->controllerName.'Creating ticket.');
         $params = collect([
             'storeid' => $request->storeid,
+            'promotionid' => $request->promotionid,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
+            'imgpath' => $request->imgpath,
             'desc' => $request->desc,
             'price' => $request->price,
-            'disc' => $request->disc,
-            'promoprice' => $request->promoprice,
-            'promostartdate' => $request->promostartdate,
-            'promoenddate' => $request->promoenddate,
             'enddate' => $request->enddate,
-            'stock' => $request->stock,
+            'qty' => $request->qty,
             'stockthreshold' => $request->stockthreshold,
             'onsale' => $request->onsale,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $ticket = $this->createTicket($request->user(), $params);
+        $ticket = $this->createTicket($params);
 
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
@@ -625,7 +398,7 @@ class TicketController extends Controller
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
-   * @OA\Parameter(
+     * @OA\Parameter(
      * name="name",
      * in="query",
      * description="Ticketname",
@@ -638,6 +411,15 @@ class TicketController extends Controller
      * name="storeid",
      * in="query",
      * description="Store ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="promotionid",
+     * in="query",
+     * description="Promotion ID",
      * required=true,
      * @OA\Schema(
      *              type="integer"
@@ -669,60 +451,27 @@ class TicketController extends Controller
      *          )
      * ),
      * @OA\Parameter(
+     * name="imgpath",
+     * in="query",
+     * description="Image Path",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
      * name="price",
-     * required=true,
      * in="query",
      * description="Product Selling Price",
+     * required=true,
      * @OA\Schema(
      *              type="number"
      *          )
      * ),
      * @OA\Parameter(
-     * name="disc",
+     * name="qty",
      * in="query",
-     * description="Product Discount",
-     * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promoprice",
-     * in="query",
-     * description="Promotion Price",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promostartdate",
-     * in="query",
-     * description="Promotion Start Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="promoenddate",
-     * in="query",
-     * description="Promotion End Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="enddate",
-     * in="query",
-     * description="Ticket End Date",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="stock",
-     * in="query",
-     * required=true,
      * description="Stock Qty",
+     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -730,17 +479,25 @@ class TicketController extends Controller
      * @OA\Parameter(
      * name="stockthreshold",
      * in="query",
-     * required=true,
      * description="Stock Threshold",
      * @OA\Schema(
      *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
+     * name="enddate",
+     * in="query",
+     * description="Valid end date",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
      * name="onsale",
      * in="query",
-     * required=true,
      * description="On Sale",
+     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -758,10 +515,10 @@ class TicketController extends Controller
     public function update(Request $request, $uid)
     {
         DB::beginTransaction();
-        // api/ticket/{ticketid} (PUT) 
-        error_log('Updating ticket of uid: ' . $uid);
-        $ticket = $this->getTicket($request->user(), $uid);
-       
+        // api/ticket/{ticketid} (PUT)
+        error_log($this->controllerName.'Updating ticket of uid: ' . $uid);
+        $ticket = $this->getTicket($uid);
+
         $this->validate($request, [
             'storeid' => 'required',
             'name' => 'required|string|max:191',
@@ -769,16 +526,11 @@ class TicketController extends Controller
             'sku' => 'required|string|max:191',
             'desc' => 'nullable',
             'price' => 'required|numeric|min:0',
-            'disc' => 'nullable|numeric|min:0',
-            'promoprice' => 'nullable|numeric|min:0',
-            'promostartdate' => 'nullable|date',
-            'promoenddate' => 'nullable|date',
-            'enddate' =>  'required|date',
-            'stock' => 'required|numeric|min:0',
-            'stockthreshold' => 'nullable|numeric|min:0',
-            'onsale' => 'required|boolean',
+            'qty' => 'required|numeric|min:0',
+            'onsale' => 'required|numeric',
+            'enddate' => 'required|date',
         ]);
-      
+
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
             $data['data'] = null;
@@ -787,27 +539,25 @@ class TicketController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        
+
         $params = collect([
             'storeid' => $request->storeid,
+            'promotionid' => $request->promotionid,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
+            'imgpath' => $request->imgpath,
             'desc' => $request->desc,
             'price' => $request->price,
-            'disc' => $request->disc,
-            'promoprice' => $request->promoprice,
-            'promostartdate' => $request->promostartdate,
-            'promoenddate' => $request->promoenddate,
             'enddate' => $request->enddate,
-            'stock' => $request->stock,
+            'qty' => $request->qty,
             'stockthreshold' => $request->stockthreshold,
             'onsale' => $request->onsale,
         ]);
-        
+
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $ticket = $this->updateTicket($request->user(), $ticket, $params);
+        $ticket = $this->updateTicket($ticket, $params);
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
             $data['data'] = null;
@@ -855,7 +605,7 @@ class TicketController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/ticket/{ticketid} (DELETE)
         error_log('Deleting ticket of uid: ' . $uid);
-        $ticket = $this->getTicket($request->user(), $uid);
+        $ticket = $this->getTicket($uid);
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -864,7 +614,8 @@ class TicketController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $ticket = $this->deleteTicket($request->user(), $ticket->id);
+        $ticket = $this->deleteTicket($ticket);
+        $this->createLog($request->user()->id , [$ticket->id], 'delete', 'ticket');
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -876,10 +627,11 @@ class TicketController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Ticket');
-            $data['data'] = $ticket;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
+
 
 }

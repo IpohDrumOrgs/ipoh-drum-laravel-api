@@ -29,6 +29,20 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::get('/user-profile', 'API\UserController@getUser');
     Route::resource('user', 'API\UserController');
 
+    Route::post('/category', 'API\CategoryController@store');
+    Route::get('/category/{uid}', 'API\CategoryController@show');
+    Route::put('/category/{uid}', 'API\CategoryController@update');
+    Route::delete('/category/{uid}', 'API\CategoryController@destroy');
+
+    Route::post('/type', 'API\TypeController@store');
+    Route::get('/type/{uid}', 'API\TypeController@show');
+    Route::put('/type/{uid}', 'API\TypeController@update');
+    Route::delete('/type/{uid}', 'API\TypeController@destroy');
+
+    Route::post('/productfeature', 'API\ProductFeatureController@store');
+    Route::get('/productfeature/{uid}', 'API\ProductFeatureController@show');
+    Route::put('/productfeature/{uid}', 'API\ProductFeatureController@update');
+    Route::delete('/productfeature/{uid}', 'API\ProductFeatureController@destroy');
 
     Route::resource('group', 'API\GroupController');
 
@@ -87,61 +101,15 @@ Route::group(['middleware' => ['auth:api']], function (){
 });
 
 
+Route::get('/category', 'API\CategoryController@index');
+Route::get('/type', 'API\TypeController@index');
+Route::get('/productfeature', 'API\ProductFeatureController@index');
 
 Route::post('/register', 'API\UserController@register');
 
-
-Route::resource('category', 'API\CategoryController');
-
-Route::resource('type', 'API\TypeController');
-
-Route::resource('productfeature', 'API\ProductFeatureController');
 Route::get('/productfeature/{uid}/products', 'API\ProductFeatureController@getFeaturedProducts');
 
 
 Route::get('/onsale/inventory/{uid}', 'API\InventoryController@getOnSaleInventory');
 
 
-
-
-
-// TODO: For testing purposes only
-Route::get('/pluck/modules', 'API\ModuleController@pluckIndex');
-Route::get('/pluck/module/{uid}', 'API\ModuleController@pluckShow');
-Route::get('/pluck/filter/module', 'API\ModuleController@pluckFilter');
-
-Route::get('/pluck/roles', 'API\RoleController@pluckIndex');
-Route::get('/pluck/role/{uid}', 'API\RoleController@pluckShow');
-Route::get('/pluck/filter/role', 'API\RoleController@pluckFilter');
-
-Route::get('/pluck/users', 'API\UserController@pluckIndex');
-Route::get('/pluck/user/{uid}', 'API\UserController@pluckShow');
-Route::get('/pluck/filter/user', 'API\UserController@pluckFilter');
-
-Route::get('/pluck/companies', 'API\CompanyController@pluckIndex');
-Route::get('/pluck/company/{uid}', 'API\CompanyController@pluckShow');
-Route::get('/pluck/filter/company', 'API\CompanyController@pluckFilter');
-
-Route::get('/pluck/inventories', 'API\InventoryController@pluckIndex');
-Route::get('/pluck/inventory/{uid}', 'API\InventoryController@pluckShow');
-Route::get('/pluck/filter/inventory', 'API\InventoryController@pluckFilter');
-
-Route::get('/pluck/tickets', 'API\TicketController@pluckIndex');
-Route::get('/pluck/ticket/{uid}', 'API\TicketController@pluckShow');
-Route::get('/pluck/filter/ticket', 'API\TicketController@pluckFilter');
-
-Route::get('/pluck/categories', 'API\CategoryController@pluckIndex');
-Route::get('/pluck/category/{uid}', 'API\CategoryController@pluckShow');
-Route::get('/pluck/filter/category', 'API\CategoryController@pluckFilter');
-
-Route::get('/pluck/types', 'API\TypeController@pluckIndex');
-Route::get('/pluck/type/{uid}', 'API\TypeController@pluckShow');
-Route::get('/pluck/filter/type', 'API\TypeController@pluckFilter');
-
-Route::get('/pluck/productfeatures', 'API\ProductFeatureController@pluckIndex');
-Route::get('/pluck/productfeature/{uid}', 'API\ProductFeatureController@pluckShow');
-Route::get('/pluck/filter/productfeature', 'API\ProductFeatureController@pluckFilter');
-
-Route::get('/pluck/stores', 'API\StoreController@pluckIndex');
-Route::get('/pluck/store/{uid}', 'API\StoreController@pluckShow');
-Route::get('/pluck/filter/store', 'API\StoreController@pluckFilter');

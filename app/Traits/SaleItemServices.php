@@ -14,12 +14,12 @@ trait SaleItemServices {
 
     use GlobalFunctions, LogServices, SaleServices;
 
-    private function getSaleItemListing($requester) {
+    private function getSaleItems($requester) {
 
         $data = collect();
 
         //Role Based Retrieve Done in Store Services
-        $sales = $this->getSaleListing($requester);
+        $sales = $this->getSales($requester);
         foreach($sales as $sale){
             $data = $data->merge($sale->saleitems()->where('status',true)->get());
         }
@@ -31,18 +31,11 @@ trait SaleItemServices {
     }
 
 
-    private function pluckSaleItemIndex($cols) {
-
-        $data = SaleItem::where('status',true)->get($cols);
-        return $data;
-
-    }
 
 
-    private function filterSaleItemListing($requester , $params) {
+    private function filterSaleItems($data , $params) {
 
         error_log('Filtering saleitems....');
-        $data = $this->getSaleItemListing($requester);
 
         if($params->keyword){
             error_log('Filtering saleitems with keyword....');
@@ -93,67 +86,12 @@ trait SaleItemServices {
         return $data;
     }
 
-
-    private function pluckSaleItemFilter($cols , $params) {
-
-        //Unauthorized users cannot access deleted data
-        $data = SaleItem::where('status',true)->get();
-
-        if($params->keyword){
-            error_log('Filtering saleitems with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->regno, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
-                    return true;
-                }else{
-                    return false;
-                }
-
-            });
-        }
-
-
-        if($params->fromdate){
-            error_log('Filtering saleitems with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering saleitems with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-
-        }
-
-        $data = $data->unique('id');
-
-        //Pluck Columns
-        $data = $data->map(function($item)use($cols){
-            return $item->only($cols);
-        });
-
-        return $data;
-
-    }
-
-
-    private function getSaleItem($requester , $uid) {
+    private function getSaleItem($uid) {
         $data = SaleItem::where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function pluckSaleItem($cols , $uid) {
-        $data = SaleItem::where('uid', $uid)->where('status', 1)->get($cols)->first();
-        return $data;
-    }
-
-    private function createSaleItem($requester , $params) {
+    private function createSaleItem($params) {
 
         $data = new SaleItem();
         $data->uid = Carbon::now()->timestamp . SaleItem::count();
@@ -190,7 +128,6 @@ trait SaleItemServices {
         $data->status = true;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'store', 'saleitem');
         } catch (Exception $e) {
             return null;
         }
@@ -199,7 +136,7 @@ trait SaleItemServices {
     }
 
     //Make Sure SaleItem is not empty when calling this function
-    private function updateSaleItem($requester, $data,  $params) {
+    private function updateSaleItem($data,  $params) {
 
         $data->name = $params->name;
         $data->qty = $this->toDouble($params->totalcost);
@@ -233,7 +170,6 @@ trait SaleItemServices {
         $data->status = true;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'update', 'saleitem');
         } catch (Exception $e) {
             return null;
         }
@@ -241,12 +177,11 @@ trait SaleItemServices {
         return $data->refresh();
     }
 
-    private function deleteSaleItem($requester , $id) {
+    private function deleteSaleItem($id) {
         $data = SaleItem::find($id);
         $data->status = false;
         try {
             $data->save();
-            $this->createLog($requester->id , [$data->id], 'delete', 'saleitem');
         } catch (Exception $e) {
             return null;
         }

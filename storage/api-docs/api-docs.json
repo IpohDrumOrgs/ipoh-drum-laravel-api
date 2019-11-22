@@ -22,7 +22,7 @@
                 ],
                 "summary": "Get list of categories",
                 "description": "Returns list of categories",
-                "operationId": "getCategoryList",
+                "operationId": "getCategories",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -74,15 +74,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "ticketids",
-                        "in": "query",
-                        "description": "Ticket Ids",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -95,51 +86,6 @@
                 }
             }
         },
-        "/api/pluck/categories": {
-            "get": {
-                "tags": [
-                    "CategoryControllerService"
-                ],
-                "summary": "pluck list of categories",
-                "description": "Returns list of plucked categories",
-                "operationId": "pluckCategoryList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of categories"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of categories"
-                    }
-                }
-            }
-        },
         "/api/filter/category": {
             "get": {
                 "tags": [
@@ -147,7 +93,7 @@
                 ],
                 "summary": "Filter list of categories",
                 "description": "Returns list of filtered categories",
-                "operationId": "filterCategoryList",
+                "operationId": "filterCategories",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -184,7 +130,7 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To string for filter",
+                        "description": "To date for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -193,75 +139,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered categories"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of categories"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/category": {
-            "get": {
-                "tags": [
-                    "CategoryControllerService"
-                ],
-                "summary": "Filter list of plucked categories",
-                "description": "Returns list of filtered categories",
-                "operationId": "filterPluckedCategoryList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -384,44 +261,6 @@
                 }
             }
         },
-        "/api/pluck/category/{uid}": {
-            "get": {
-                "tags": [
-                    "CategoryControllerService"
-                ],
-                "summary": "pluck category",
-                "description": "Returns plucked categories",
-                "operationId": "pluckCategoryByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Category_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of categories"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of categories"
-                    }
-                }
-            }
-        },
         "/api/company": {
             "get": {
                 "tags": [
@@ -429,7 +268,7 @@
                 ],
                 "summary": "Get list of companies",
                 "description": "Returns list of companies",
-                "operationId": "getCompanyList",
+                "operationId": "getCompanies",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -598,51 +437,6 @@
                 }
             }
         },
-        "/api/pluck/companies": {
-            "get": {
-                "tags": [
-                    "CompanyControllerService"
-                ],
-                "summary": "pluck list of companies",
-                "description": "Returns list of plucked companies",
-                "operationId": "pluckCompanyList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of companies"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of companies"
-                    }
-                }
-            }
-        },
         "/api/filter/company": {
             "get": {
                 "tags": [
@@ -650,7 +444,7 @@
                 ],
                 "summary": "Filter list of companies",
                 "description": "Returns list of filtered companies",
-                "operationId": "filterCompanyList",
+                "operationId": "filterCompanies",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -696,99 +490,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "company_id",
-                        "in": "query",
-                        "description": "Company id for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered companies"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of companies"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/company": {
-            "get": {
-                "tags": [
-                    "CompanyControllerService"
-                ],
-                "summary": "Filter list of plucked companies",
-                "description": "Returns list of filtered companies",
-                "operationId": "filterPluckedCompanyList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "company_id",
-                        "in": "query",
-                        "description": "Company id for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -1007,44 +708,6 @@
                 }
             }
         },
-        "/api/pluck/company/{uid}": {
-            "get": {
-                "tags": [
-                    "CompanyControllerService"
-                ],
-                "summary": "pluck company",
-                "description": "Returns plucked companies",
-                "operationId": "pluckCompanyByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Company_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of companies"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of companies"
-                    }
-                }
-            }
-        },
         "/api/companytype": {
             "get": {
                 "tags": [
@@ -1052,12 +715,12 @@
                 ],
                 "summary": "Get list of companytypes",
                 "description": "Returns list of companytypes",
-                "operationId": "getCompanyTypeList",
+                "operationId": "getCompanyTypes",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -1065,7 +728,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1115,51 +778,6 @@
                 }
             }
         },
-        "/api/pluck/companytypes": {
-            "get": {
-                "tags": [
-                    "CompanyTypeControllerService"
-                ],
-                "summary": "pluck list of companytypes",
-                "description": "Returns list of plucked companytypes",
-                "operationId": "pluckCompanyTypeList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of companytypes"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of companytypes"
-                    }
-                }
-            }
-        },
         "/api/filter/companytype": {
             "get": {
                 "tags": [
@@ -1167,7 +785,7 @@
                 ],
                 "summary": "Filter list of companytypes",
                 "description": "Returns list of filtered companytypes",
-                "operationId": "filterCompanyTypeList",
+                "operationId": "filterCompanyTypes",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -1180,7 +798,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1213,99 +831,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "oncompanytype",
-                        "in": "query",
-                        "description": "oncompanytype for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered companytypes"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of companytypes"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/companytype": {
-            "get": {
-                "tags": [
-                    "CompanyTypeControllerService"
-                ],
-                "summary": "Filter list of plucked companytypes",
-                "description": "Returns list of filtered companytypes",
-                "operationId": "filterPluckedCompanyTypeList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "oncompanytype",
-                        "in": "query",
-                        "description": "oncompanytype for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -1418,44 +943,6 @@
                 }
             }
         },
-        "/api/pluck/companytype/{uid}": {
-            "get": {
-                "tags": [
-                    "CompanyTypeControllerService"
-                ],
-                "summary": "pluck companytype",
-                "description": "Returns plucked companytypes",
-                "operationId": "pluckCompanyTypeByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "CompanyType_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of companytypes"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of companytypes"
-                    }
-                }
-            }
-        },
         "/api/group": {
             "get": {
                 "tags": [
@@ -1463,12 +950,12 @@
                 ],
                 "summary": "Get list of groups",
                 "description": "Returns list of groups",
-                "operationId": "getGroupList",
+                "operationId": "getGroups",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -1476,7 +963,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1535,51 +1022,6 @@
                 }
             }
         },
-        "/api/pluck/groups": {
-            "get": {
-                "tags": [
-                    "GroupControllerService"
-                ],
-                "summary": "pluck list of groups",
-                "description": "Returns list of plucked groups",
-                "operationId": "pluckGroupList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of groups"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of groups"
-                    }
-                }
-            }
-        },
         "/api/filter/group": {
             "get": {
                 "tags": [
@@ -1587,7 +1029,7 @@
                 ],
                 "summary": "Filter list of groups",
                 "description": "Returns list of filtered groups",
-                "operationId": "filterGroupList",
+                "operationId": "filterGroups",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -1600,7 +1042,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1633,99 +1075,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "ongroup",
-                        "in": "query",
-                        "description": "ongroup for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered groups"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of groups"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/group": {
-            "get": {
-                "tags": [
-                    "GroupControllerService"
-                ],
-                "summary": "Filter list of plucked groups",
-                "description": "Returns list of filtered groups",
-                "operationId": "filterPluckedGroupList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "ongroup",
-                        "in": "query",
-                        "description": "ongroup for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -1847,44 +1196,6 @@
                 }
             }
         },
-        "/api/pluck/group/{uid}": {
-            "get": {
-                "tags": [
-                    "GroupControllerService"
-                ],
-                "summary": "pluck group",
-                "description": "Returns plucked groups",
-                "operationId": "pluckGroupByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Group_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of groups"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of groups"
-                    }
-                }
-            }
-        },
         "/api/inventory": {
             "get": {
                 "tags": [
@@ -1892,12 +1203,12 @@
                 ],
                 "summary": "Get list of inventories",
                 "description": "Returns list of inventories",
-                "operationId": "getInventoryList",
+                "operationId": "getInventories",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -1905,7 +1216,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -1946,6 +1257,33 @@
                         }
                     },
                     {
+                        "name": "promotionid",
+                        "in": "query",
+                        "description": "Promotion ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warrantyid",
+                        "in": "query",
+                        "description": "Warranty ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "shippingid",
+                        "in": "query",
+                        "description": "Shipping ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "code",
                         "in": "query",
                         "description": "Code",
@@ -1971,6 +1309,14 @@
                         }
                     },
                     {
+                        "name": "imgpath",
+                        "in": "query",
+                        "description": "Image Path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "cost",
                         "in": "query",
                         "description": "Product Cost",
@@ -1989,50 +1335,10 @@
                         }
                     },
                     {
-                        "name": "disc",
-                        "in": "query",
-                        "description": "Product Discount",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "promoprice",
-                        "in": "query",
-                        "description": "Promotion Price",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "promostartdate",
-                        "in": "query",
-                        "description": "Promotion Start Date",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "promoenddate",
-                        "in": "query",
-                        "description": "Promotion End Date",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "stock",
+                        "name": "qty",
                         "in": "query",
                         "description": "Stock Qty",
                         "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "warrantyperiod",
-                        "in": "query",
-                        "description": "Warranty Period",
                         "schema": {
                             "type": "integer"
                         }
@@ -2065,51 +1371,6 @@
                 }
             }
         },
-        "/api/pluck/inventories": {
-            "get": {
-                "tags": [
-                    "InventoryControllerService"
-                ],
-                "summary": "pluck list of inventories",
-                "description": "Returns list of plucked inventories",
-                "operationId": "pluckInventoryList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of inventories"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of inventories"
-                    }
-                }
-            }
-        },
         "/api/filter/inventory": {
             "get": {
                 "tags": [
@@ -2117,7 +1378,7 @@
                 ],
                 "summary": "Filter list of inventories",
                 "description": "Returns list of filtered inventories",
-                "operationId": "filterInventoryList",
+                "operationId": "filterInventories",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -2130,7 +1391,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2154,7 +1415,15 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To string for filter",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On sale for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -2163,99 +1432,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "onsale for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered inventories"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of inventories"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/inventory": {
-            "get": {
-                "tags": [
-                    "InventoryControllerService"
-                ],
-                "summary": "Filter list of plucked inventories",
-                "description": "Returns list of filtered inventories",
-                "operationId": "filterPluckedInventoryList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "onsale for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -2333,6 +1509,33 @@
                         }
                     },
                     {
+                        "name": "promotionid",
+                        "in": "query",
+                        "description": "Promotion ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warrantyid",
+                        "in": "query",
+                        "description": "Warranty ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "shippingid",
+                        "in": "query",
+                        "description": "Shipping ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "code",
                         "in": "query",
                         "description": "Code",
@@ -2358,6 +1561,14 @@
                         }
                     },
                     {
+                        "name": "imgpath",
+                        "in": "query",
+                        "description": "Image Path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "cost",
                         "in": "query",
                         "description": "Product Cost",
@@ -2376,39 +1587,7 @@
                         }
                     },
                     {
-                        "name": "disc",
-                        "in": "query",
-                        "description": "Product Discount",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "promoprice",
-                        "in": "query",
-                        "description": "Promotion Price",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "promostartdate",
-                        "in": "query",
-                        "description": "Promotion Start Date",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "promoenddate",
-                        "in": "query",
-                        "description": "Promotion End Date",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "stock",
+                        "name": "qty",
                         "in": "query",
                         "description": "Stock Qty",
                         "required": true,
@@ -2417,18 +1596,9 @@
                         }
                     },
                     {
-                        "name": "warrantyperiod",
-                        "in": "query",
-                        "description": "Warranty Period",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
                         "name": "stockthreshold",
                         "in": "query",
                         "description": "Stock Threshold",
-                        "required": true,
                         "schema": {
                             "type": "integer"
                         }
@@ -2479,44 +1649,6 @@
                 }
             }
         },
-        "/api/pluck/inventory/{uid}": {
-            "get": {
-                "tags": [
-                    "InventoryControllerService"
-                ],
-                "summary": "pluck inventory",
-                "description": "Returns plucked inventories",
-                "operationId": "pluckInventoryByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Inventory_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of inventories"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of inventories"
-                    }
-                }
-            }
-        },
         "/api/onsale/inventory/{uid}": {
             "get": {
                 "tags": [
@@ -2552,12 +1684,12 @@
                 ],
                 "summary": "Get list of modules",
                 "description": "Returns list of modules",
-                "operationId": "getModuleList",
+                "operationId": "getModules",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -2565,7 +1697,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2624,51 +1756,6 @@
                 }
             }
         },
-        "/api/pluck/modules": {
-            "get": {
-                "tags": [
-                    "ModuleControllerService"
-                ],
-                "summary": "pluck list of modules",
-                "description": "Returns list of plucked modules",
-                "operationId": "pluckModuleList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of modules"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of modules"
-                    }
-                }
-            }
-        },
         "/api/filter/module": {
             "get": {
                 "tags": [
@@ -2676,7 +1763,7 @@
                 ],
                 "summary": "Filter list of modules",
                 "description": "Returns list of filtered modules",
-                "operationId": "filterModuleList",
+                "operationId": "filterModules",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -2689,7 +1776,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -2713,7 +1800,7 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To string for filter",
+                        "description": "To date for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -2722,99 +1809,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onmodule",
-                        "in": "query",
-                        "description": "onmodule for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered modules"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of modules"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/module": {
-            "get": {
-                "tags": [
-                    "ModuleControllerService"
-                ],
-                "summary": "Filter list of plucked modules",
-                "description": "Returns list of filtered modules",
-                "operationId": "filterPluckedModuleList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onmodule",
-                        "in": "query",
-                        "description": "onmodule for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -2936,44 +1930,6 @@
                 }
             }
         },
-        "/api/pluck/module/{uid}": {
-            "get": {
-                "tags": [
-                    "ModuleControllerService"
-                ],
-                "summary": "pluck module",
-                "description": "Returns plucked modules",
-                "operationId": "pluckModuleByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Module_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of modules"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of modules"
-                    }
-                }
-            }
-        },
         "/api/productfeature": {
             "get": {
                 "tags": [
@@ -2981,7 +1937,7 @@
                 ],
                 "summary": "Get list of productfeatures",
                 "description": "Returns list of productfeatures",
-                "operationId": "getProductFeatureList",
+                "operationId": "getProductFeatures",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -3033,6 +1989,22 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "icon",
+                        "in": "query",
+                        "description": "ProductFeature icon",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "imgpath",
+                        "in": "query",
+                        "description": "ProductFeature image path",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -3045,51 +2017,6 @@
                 }
             }
         },
-        "/api/pluck/productfeatures": {
-            "get": {
-                "tags": [
-                    "ProductFeatureControllerService"
-                ],
-                "summary": "pluck list of productfeatures",
-                "description": "Returns list of plucked productfeatures",
-                "operationId": "pluckProductFeatureList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of productfeatures"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of productfeatures"
-                    }
-                }
-            }
-        },
         "/api/filter/productfeature": {
             "get": {
                 "tags": [
@@ -3097,7 +2024,7 @@
                 ],
                 "summary": "Filter list of productfeatures",
                 "description": "Returns list of filtered productfeatures",
-                "operationId": "filterProductFeatureList",
+                "operationId": "filterProductFeatures",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -3134,7 +2061,7 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To string for filter",
+                        "description": "To date for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -3143,75 +2070,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered productfeatures"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of productfeatures"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/productfeature": {
-            "get": {
-                "tags": [
-                    "ProductFeatureControllerService"
-                ],
-                "summary": "Filter list of plucked productfeatures",
-                "description": "Returns list of filtered productfeatures",
-                "operationId": "filterPluckedProductFeatureList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -3287,6 +2145,22 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "icon",
+                        "in": "query",
+                        "description": "ProductFeature icon",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "imgpath",
+                        "in": "query",
+                        "description": "ProductFeature image path",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -3321,44 +2195,6 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the productfeature."
-                    }
-                }
-            }
-        },
-        "/api/pluck/productfeature/{uid}": {
-            "get": {
-                "tags": [
-                    "ProductFeatureControllerService"
-                ],
-                "summary": "pluck productfeature",
-                "description": "Returns plucked productfeatures",
-                "operationId": "pluckProductFeatureByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "ProductFeature_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of productfeatures"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of productfeatures"
                     }
                 }
             }
@@ -3415,12 +2251,12 @@
                 ],
                 "summary": "Get list of roles",
                 "description": "Returns list of roles",
-                "operationId": "getRoleList",
+                "operationId": "getRoles",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -3428,7 +2264,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -3478,51 +2314,6 @@
                 }
             }
         },
-        "/api/pluck/roles": {
-            "get": {
-                "tags": [
-                    "RoleControllerService"
-                ],
-                "summary": "pluck list of roles",
-                "description": "Returns list of plucked roles",
-                "operationId": "pluckRoleList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of roles"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of roles"
-                    }
-                }
-            }
-        },
         "/api/filter/role": {
             "get": {
                 "tags": [
@@ -3530,7 +2321,7 @@
                 ],
                 "summary": "Filter list of roles",
                 "description": "Returns list of filtered roles",
-                "operationId": "filterRoleList",
+                "operationId": "filterRoles",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -3543,7 +2334,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -3567,7 +2358,7 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To string for filter",
+                        "description": "To date for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -3576,99 +2367,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onrole",
-                        "in": "query",
-                        "description": "onrole for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered roles"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of roles"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/role": {
-            "get": {
-                "tags": [
-                    "RoleControllerService"
-                ],
-                "summary": "Filter list of plucked roles",
-                "description": "Returns list of filtered roles",
-                "operationId": "filterPluckedRoleList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onrole",
-                        "in": "query",
-                        "description": "onrole for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -3777,44 +2475,6 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the role."
-                    }
-                }
-            }
-        },
-        "/api/pluck/role/{uid}": {
-            "get": {
-                "tags": [
-                    "RoleControllerService"
-                ],
-                "summary": "pluck role",
-                "description": "Returns plucked roles",
-                "operationId": "pluckRoleByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Role_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of roles"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of roles"
                     }
                 }
             }
@@ -4467,12 +3127,12 @@
                 ],
                 "summary": "Get list of stores",
                 "description": "Returns list of stores",
-                "operationId": "getStoreList",
+                "operationId": "getStores",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -4480,7 +3140,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -4545,6 +3205,14 @@
                         }
                     },
                     {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "email",
                         "in": "query",
                         "description": "Email",
@@ -4603,51 +3271,6 @@
                 }
             }
         },
-        "/api/pluck/stores": {
-            "get": {
-                "tags": [
-                    "StoreControllerService"
-                ],
-                "summary": "pluck list of stores",
-                "description": "Returns list of plucked stores",
-                "operationId": "pluckStoreList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of stores"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of stores"
-                    }
-                }
-            }
-        },
         "/api/filter/store": {
             "get": {
                 "tags": [
@@ -4655,7 +3278,7 @@
                 ],
                 "summary": "Filter list of stores",
                 "description": "Returns list of filtered stores",
-                "operationId": "filterStoreList",
+                "operationId": "filterStores",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -4668,7 +3291,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -4692,7 +3315,7 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To string for filter",
+                        "description": "To date for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -4701,99 +3324,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "onsale for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered stores"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of stores"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/store": {
-            "get": {
-                "tags": [
-                    "StoreControllerService"
-                ],
-                "summary": "Filter list of plucked stores",
-                "description": "Returns list of filtered stores",
-                "operationId": "filterPluckedStoreList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "onsale for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -4884,6 +3414,14 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Description",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -4979,44 +3517,6 @@
                 }
             }
         },
-        "/api/pluck/store/{uid}": {
-            "get": {
-                "tags": [
-                    "StoreControllerService"
-                ],
-                "summary": "pluck store",
-                "description": "Returns plucked stores",
-                "operationId": "pluckStoreByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Store_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of stores"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of stores"
-                    }
-                }
-            }
-        },
         "/api/ticket": {
             "get": {
                 "tags": [
@@ -5024,12 +3524,12 @@
                 ],
                 "summary": "Get list of tickets",
                 "description": "Returns list of tickets",
-                "operationId": "getTicketList",
+                "operationId": "getTickets",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -5037,7 +3537,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -5078,6 +3578,15 @@
                         }
                     },
                     {
+                        "name": "promotionid",
+                        "in": "query",
+                        "description": "Promotion ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "code",
                         "in": "query",
                         "description": "Code",
@@ -5103,6 +3612,14 @@
                         }
                     },
                     {
+                        "name": "imgpath",
+                        "in": "query",
+                        "description": "Image Path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "price",
                         "in": "query",
                         "description": "Product Selling Price",
@@ -5112,48 +3629,7 @@
                         }
                     },
                     {
-                        "name": "disc",
-                        "in": "query",
-                        "description": "Product Discount",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "promoprice",
-                        "in": "query",
-                        "description": "Promotion Price",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "promostartdate",
-                        "in": "query",
-                        "description": "Promotion Start Date",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "promoenddate",
-                        "in": "query",
-                        "description": "Promotion End Date",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "enddate",
-                        "in": "query",
-                        "description": "Ticket End Date",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "stock",
+                        "name": "qty",
                         "in": "query",
                         "description": "Stock Qty",
                         "required": true,
@@ -5167,6 +3643,15 @@
                         "description": "Stock Threshold",
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "description": "Valid end date",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -5189,51 +3674,6 @@
                 }
             }
         },
-        "/api/pluck/tickets": {
-            "get": {
-                "tags": [
-                    "TicketControllerService"
-                ],
-                "summary": "pluck list of tickets",
-                "description": "Returns list of plucked tickets",
-                "operationId": "pluckTicketList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of tickets"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of tickets"
-                    }
-                }
-            }
-        },
         "/api/filter/ticket": {
             "get": {
                 "tags": [
@@ -5241,7 +3681,7 @@
                 ],
                 "summary": "Filter list of tickets",
                 "description": "Returns list of filtered tickets",
-                "operationId": "filterTicketList",
+                "operationId": "filterTickets",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -5254,7 +3694,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -5278,7 +3718,15 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To string for filter",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On sale for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -5287,99 +3735,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "onsale for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered tickets"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of tickets"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/ticket": {
-            "get": {
-                "tags": [
-                    "TicketControllerService"
-                ],
-                "summary": "Filter list of plucked tickets",
-                "description": "Returns list of filtered tickets",
-                "operationId": "filterPluckedTicketList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "onsale for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -5457,6 +3812,15 @@
                         }
                     },
                     {
+                        "name": "promotionid",
+                        "in": "query",
+                        "description": "Promotion ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "code",
                         "in": "query",
                         "description": "Code",
@@ -5482,6 +3846,14 @@
                         }
                     },
                     {
+                        "name": "imgpath",
+                        "in": "query",
+                        "description": "Image Path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "price",
                         "in": "query",
                         "description": "Product Selling Price",
@@ -5491,48 +3863,7 @@
                         }
                     },
                     {
-                        "name": "disc",
-                        "in": "query",
-                        "description": "Product Discount",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "promoprice",
-                        "in": "query",
-                        "description": "Promotion Price",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "promostartdate",
-                        "in": "query",
-                        "description": "Promotion Start Date",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "promoenddate",
-                        "in": "query",
-                        "description": "Promotion End Date",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "enddate",
-                        "in": "query",
-                        "description": "Ticket End Date",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "stock",
+                        "name": "qty",
                         "in": "query",
                         "description": "Stock Qty",
                         "required": true,
@@ -5544,9 +3875,17 @@
                         "name": "stockthreshold",
                         "in": "query",
                         "description": "Stock Threshold",
-                        "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "description": "Valid end date",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -5591,44 +3930,6 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the ticket."
-                    }
-                }
-            }
-        },
-        "/api/pluck/ticket/{uid}": {
-            "get": {
-                "tags": [
-                    "TicketControllerService"
-                ],
-                "summary": "pluck ticket",
-                "description": "Returns plucked tickets",
-                "operationId": "pluckTicketByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Ticket_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of tickets"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of tickets"
                     }
                 }
             }

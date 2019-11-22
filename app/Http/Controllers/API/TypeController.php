@@ -21,7 +21,7 @@ class TypeController extends Controller
     /**
      * @OA\Get(
      *      path="/api/type",
-     *      operationId="getTypeList",
+     *      operationId="getTypes",
      *      tags={"TypeControllerService"},
      *      summary="Get list of types",
      *      description="Returns list of types",
@@ -50,7 +50,7 @@ class TypeController extends Controller
     {
         error_log('Retrieving list of types.');
         // api/type (GET)
-        $types = $this->getTypeListing($request->user());
+        $types = $this->getTypes($request->user());
         if ($this->isEmpty($types)) {
             $data['status'] = 'error';
             $data['data'] = null;
@@ -70,71 +70,11 @@ class TypeController extends Controller
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/types",
-     *      operationId="pluckTypeList",
-     *      tags={"TypeControllerService"},
-     *      summary="pluck list of types",
-     *      description="Returns list of plucked types",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of types"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of types")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked types.');
-        // api/pluck/types (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $types = $this->pluckTypeIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($types)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Types');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($types, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Types');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/type",
-     *      operationId="filterTypeList",
+     *      operationId="filterTypes",
      *      tags={"TypeControllerService"},
      *      summary="Filter list of types",
      *      description="Returns list of filtered types",
@@ -165,7 +105,7 @@ class TypeController extends Controller
      *   @OA\Parameter(
      *     name="todate",
      *     in="query",
-     *     description="To string for filter",
+     *     description="To date for filter",
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
@@ -196,7 +136,8 @@ class TypeController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $types = $this->filterTypeListing($request->user(), $params);
+        $types = $this->getTypes($request->user());
+        $types = $this->filterTypes($types, $params);
 
         if ($this->isEmpty($types)) {
             $data['data'] = null;
@@ -217,93 +158,7 @@ class TypeController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/type",
-     *      operationId="filterPluckedTypeList",
-     *      tags={"TypeControllerService"},
-     *      summary="Filter list of plucked types",
-     *      description="Returns list of filtered types",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered types"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of types")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked types.');
-        // api/pluck/filter/type (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'type_id' => $request->type_id,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $types = $this->pluckTypeFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($types)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Types');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($types, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Types');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
+   
     /**
      * @OA\Get(
      *   tags={"TypeControllerService"},
@@ -331,7 +186,7 @@ class TypeController extends Controller
     {
         // api/type/{typeid} (GET)
         error_log('Retrieving type of uid:' . $uid);
-        $type = $this->getType($request->user(), $uid);
+        $type = $this->getType($uid);
         if ($this->isEmpty($type)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Type');
@@ -347,58 +202,7 @@ class TypeController extends Controller
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/type/{uid}",
-     *      operationId="pluckTypeByUid",
-     *      tags={"TypeControllerService"},
-     *      summary="pluck type",
-     *      description="Returns plucked types",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Type_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of types"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of types")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked types.');
-        // api/pluck/type/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $type = $this->pluckType($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($type)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Type');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Type');
-            $data['data'] = $type;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-
+  
     /**
      * @OA\Post(
      *   tags={"TypeControllerService"},
@@ -460,7 +264,7 @@ class TypeController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $type = $this->createType($request->user(), $params);
+        $type = $this->createType($params);
 
         if ($this->isEmpty($type)) {
             DB::rollBack();
@@ -535,7 +339,7 @@ class TypeController extends Controller
         DB::beginTransaction();
         // api/type/{typeid} (PUT)
         error_log('Updating type of uid: ' . $uid);
-        $type = $this->getType($request->user(), $uid);
+        $type = $this->getType($uid);
         error_log($type);
         $this->validate($request, [
             'name' => 'required|string',
@@ -559,7 +363,7 @@ class TypeController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $type = $this->updateType($request->user(), $type, $params);
+        $type = $this->updateType($type, $params);
         if ($this->isEmpty($type)) {
             DB::rollBack();
             $data['data'] = null;
@@ -577,6 +381,7 @@ class TypeController extends Controller
             return response()->json($data, 200);
         }
     }
+
 
     /**
      * @OA\Delete(
@@ -607,7 +412,7 @@ class TypeController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/type/{typeid} (DELETE)
         error_log('Deleting type of uid: ' . $uid);
-        $type = $this->getType($request->user(), $uid);
+        $type = $this->getType($uid);
         if ($this->isEmpty($type)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -616,7 +421,8 @@ class TypeController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $type = $this->deleteType($request->user(), $type->id);
+        $type = $this->deleteType($type);
+        $this->createLog($request->user()->id , [$type->id], 'delete', 'type');
         if ($this->isEmpty($type)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -628,7 +434,7 @@ class TypeController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Type');
-            $data['data'] = $type;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }

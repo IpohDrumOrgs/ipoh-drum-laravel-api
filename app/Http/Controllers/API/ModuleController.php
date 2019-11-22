@@ -17,24 +17,23 @@ class ModuleController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, ModuleServices, LogServices;
     private $controllerName = '[ModuleController]';
-
-    /**
+/**
      * @OA\Get(
      *      path="/api/module",
-     *      operationId="getModuleList",
+     *      operationId="getModules",
      *      tags={"ModuleControllerService"},
      *      summary="Get list of modules",
      *      description="Returns list of modules",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
-     *     description="Page number.",
+     *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size.",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -50,7 +49,7 @@ class ModuleController extends Controller
     {
         error_log('Retrieving list of modules.');
         // api/module (GET)
-        $modules = $this->getModuleListing($request->user());
+        $modules = $this->getModules($request->user());
         if ($this->isEmpty($modules)) {
             $data['status'] = 'error';
             $data['data'] = null;
@@ -70,71 +69,11 @@ class ModuleController extends Controller
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/modules",
-     *      operationId="pluckModuleList",
-     *      tags={"ModuleControllerService"},
-     *      summary="pluck list of modules",
-     *      description="Returns list of plucked modules",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of modules"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of modules")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked modules.');
-        // api/pluck/modules (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $modules = $this->pluckModuleIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($modules)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Modules');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($modules, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($modules->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Modules');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/module",
-     *      operationId="filterModuleList",
+     *      operationId="filterModules",
      *      tags={"ModuleControllerService"},
      *      summary="Filter list of modules",
      *      description="Returns list of filtered modules",
@@ -147,7 +86,7 @@ class ModuleController extends Controller
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
@@ -165,19 +104,13 @@ class ModuleController extends Controller
      *   @OA\Parameter(
      *     name="todate",
      *     in="query",
-     *     description="To string for filter",
+     *     description="To date for filter",
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Parameter(
      *     name="status",
      *     in="query",
      *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onmodule",
-     *     in="query",
-     *     description="onmodule for filter",
      *     @OA\Schema(type="string")
      *   ),
      *      @OA\Response(
@@ -198,11 +131,12 @@ class ModuleController extends Controller
             'fromdate' => $request->fromdate,
             'todate' => $request->todate,
             'status' => $request->status,
-            'onmodule' => $request->onmodule,
+            'module_id' => $request->module_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $modules = $this->filterModuleListing($request->user(), $params);
+        $modules = $this->getModules($request->user());
+        $modules = $this->filterModules($modules, $params);
 
         if ($this->isEmpty($modules)) {
             $data['data'] = null;
@@ -223,105 +157,7 @@ class ModuleController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/module",
-     *      operationId="filterPluckedModuleList",
-     *      tags={"ModuleControllerService"},
-     *      summary="Filter list of plucked modules",
-     *      description="Returns list of filtered modules",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onmodule",
-     *     in="query",
-     *     description="onmodule for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered modules"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of modules")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked modules.');
-        // api/pluck/filter/module (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'onmodule' => $request->onmodule,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $modules = $this->pluckModuleFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($modules)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Modules');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($modules, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($modules->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Modules');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
+   
     /**
      * @OA\Get(
      *   tags={"ModuleControllerService"},
@@ -349,7 +185,7 @@ class ModuleController extends Controller
     {
         // api/module/{moduleid} (GET)
         error_log('Retrieving module of uid:' . $uid);
-        $module = $this->getModule($request->user(), $uid);
+        $module = $this->getModule($uid);
         if ($this->isEmpty($module)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Module');
@@ -365,58 +201,8 @@ class ModuleController extends Controller
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/module/{uid}",
-     *      operationId="pluckModuleByUid",
-     *      tags={"ModuleControllerService"},
-     *      summary="pluck module",
-     *      description="Returns plucked modules",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Module_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of modules"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of modules")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked modules.');
-        // api/pluck/module/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $module = $this->pluckModule($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($module)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Module');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Module');
-            $data['data'] = $module;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-    
+  
+      
     /**
      * @OA\Post(
      *   tags={"ModuleControllerService"},
@@ -478,7 +264,7 @@ class ModuleController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $module = $this->createModule($request->user(), $params);
+        $module = $this->createModule($params);
 
         if ($this->isEmpty($module)) {
             DB::rollBack();
@@ -552,7 +338,7 @@ class ModuleController extends Controller
         DB::beginTransaction();
         // api/module/{moduleid} (PUT) 
         error_log('Updating module of uid: ' . $uid);
-        $module = $this->getModule($request->user(), $uid);
+        $module = $this->getModule($uid);
        
        
         $this->validate($request, [
@@ -578,7 +364,7 @@ class ModuleController extends Controller
         
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $module = $this->updateModule($request->user(), $module, $params);
+        $module = $this->updateModule($module, $params);
         if ($this->isEmpty($module)) {
             DB::rollBack();
             $data['data'] = null;
@@ -596,6 +382,7 @@ class ModuleController extends Controller
             return response()->json($data, 200);
         }
     }
+
 
     /**
      * @OA\Delete(
@@ -626,7 +413,7 @@ class ModuleController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/module/{moduleid} (DELETE)
         error_log('Deleting module of uid: ' . $uid);
-        $module = $this->getModule($request->user(), $uid);
+        $module = $this->getModule($uid);
         if ($this->isEmpty($module)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -635,7 +422,8 @@ class ModuleController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $module = $this->deleteModule($request->user(), $module->id);
+        $module = $this->deleteModule($module);
+        $this->createLog($request->user()->id , [$module->id], 'delete', 'module');
         if ($this->isEmpty($module)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -647,10 +435,11 @@ class ModuleController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Module');
-            $data['data'] = $module;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
+
 
 }

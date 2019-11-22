@@ -17,10 +17,10 @@ class CompanyController extends Controller
 {
     use GlobalFunctions, NotificationFunctions, CompanyServices, LogServices;
     private $controllerName = '[CompanyController]';
-    /**
+     /**
      * @OA\Get(
      *      path="/api/company",
-     *      operationId="getCompanyList",
+     *      operationId="getCompanies",
      *      tags={"CompanyControllerService"},
      *      summary="Get list of companies",
      *      description="Returns list of companies",
@@ -49,7 +49,7 @@ class CompanyController extends Controller
     {
         error_log('Retrieving list of companies.');
         // api/company (GET)
-        $companies = $this->getCompanyListing($request->user());
+        $companies = $this->getCompanies($request->user());
         if ($this->isEmpty($companies)) {
             $data['status'] = 'error';
             $data['data'] = null;
@@ -69,71 +69,11 @@ class CompanyController extends Controller
             return response()->json($data, 200);
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/companies",
-     *      operationId="pluckCompanyList",
-     *      tags={"CompanyControllerService"},
-     *      summary="pluck list of companies",
-     *      description="Returns list of plucked companies",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of companies"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of companies")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked companies.');
-        // api/pluck/companies (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $companies = $this->pluckCompanyIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($companies)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Companies');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($companies, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Companies');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/company",
-     *      operationId="filterCompanyList",
+     *      operationId="filterCompanies",
      *      tags={"CompanyControllerService"},
      *      summary="Filter list of companies",
      *      description="Returns list of filtered companies",
@@ -173,12 +113,6 @@ class CompanyController extends Controller
      *     description="status for filter",
      *     @OA\Schema(type="string")
      *   ),
-     *   @OA\Parameter(
-     *     name="company_id",
-     *     in="query",
-     *     description="Company id for filter",
-     *     @OA\Schema(type="string")
-     *   ),
      *      @OA\Response(
      *          response=200,
      *          description="Successfully retrieved list of filtered companies"
@@ -201,7 +135,8 @@ class CompanyController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $companies = $this->filterCompanyListing($request->user(), $params);
+        $companies = $this->getCompanies($request->user());
+        $companies = $this->filterCompanies($companies, $params);
 
         if ($this->isEmpty($companies)) {
             $data['data'] = null;
@@ -222,104 +157,6 @@ class CompanyController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/company",
-     *      operationId="filterPluckedCompanyList",
-     *      tags={"CompanyControllerService"},
-     *      summary="Filter list of plucked companies",
-     *      description="Returns list of filtered companies",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="company_id",
-     *     in="query",
-     *     description="Company id for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered companies"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of companies")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked companies.');
-        // api/pluck/filter/company (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'company_id' => $request->company_id,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $companies = $this->pluckCompanyFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($companies)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Companies');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($companies, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Companies');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
 
     /**
      * @OA\Get(
@@ -348,7 +185,7 @@ class CompanyController extends Controller
     {
         // api/company/{companyid} (GET)
         error_log('Retrieving company of uid:' . $uid);
-        $company = $this->getCompany($request->user(), $uid);
+        $company = $this->getCompany($uid);
         if ($this->isEmpty($company)) {
             $data['data'] = null;
             $data['msg'] = $this->getNotFoundMsg('Company');
@@ -363,59 +200,7 @@ class CompanyController extends Controller
             return response()->json($data, 200);
         }
     }
-
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/company/{uid}",
-     *      operationId="pluckCompanyByUid",
-     *      tags={"CompanyControllerService"},
-     *      summary="pluck company",
-     *      description="Returns plucked companies",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Company_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of companies"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of companies")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked companies.');
-        // api/pluck/company/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $company = $this->pluckCompany($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($company)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Company');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Company');
-            $data['data'] = $company;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-    
+     
     /**
      * @OA\Post(
      *   tags={"CompanyControllerService"},
@@ -590,7 +375,7 @@ class CompanyController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $company = $this->createCompany($request->user(), $params);
+        $company = $this->createCompany($params);
 
         if ($this->isEmpty($company)) {
             DB::rollBack();
@@ -761,7 +546,7 @@ class CompanyController extends Controller
         DB::beginTransaction();
         // api/company/{companyid} (PUT) 
         error_log('Updating company of uid: ' . $uid);
-        $company = $this->getCompany($request->user(), $uid);
+        $company = $this->getCompany($uid);
         error_log($company);
         $this->validate($request, [
             'email1' => 'required|email|max:191|unique:companies,email1,' . $company->id.'|unique:companies,email2,' . $company->id,
@@ -801,7 +586,7 @@ class CompanyController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $company = $this->updateCompany($request->user(), $company, $params);
+        $company = $this->updateCompany($company, $params);
         if ($this->isEmpty($company)) {
             DB::rollBack();
             $data['data'] = null;
@@ -819,6 +604,7 @@ class CompanyController extends Controller
             return response()->json($data, 200);
         }
     }
+
 
     /**
      * @OA\Delete(
@@ -845,11 +631,11 @@ class CompanyController extends Controller
      */
     public function destroy(Request $request, $uid)
     {
+        DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
         // api/company/{companyid} (DELETE)
-        DB::beginTransaction();
         error_log('Deleting company of uid: ' . $uid);
-        $company = $this->getCompany($request->user(), $uid);
+        $company = $this->getCompany($uid);
         if ($this->isEmpty($company)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -858,7 +644,8 @@ class CompanyController extends Controller
             $data['code'] = 404;
             return response()->json($data, 404);
         }
-        $company = $this->deleteCompany($request->user(), $company->id);
+        $company = $this->deleteCompany($company);
+        $this->createLog($request->user()->id , [$company->id], 'delete', 'company');
         if ($this->isEmpty($company)) {
             DB::rollBack();
             $data['status'] = 'error';
@@ -870,10 +657,11 @@ class CompanyController extends Controller
             DB::commit();
             $data['status'] = 'success';
             $data['msg'] = $this->getDeletedSuccessMsg('Company');
-            $data['data'] = $company;
+            $data['data'] = null;
             $data['code'] = 200;
             return response()->json($data, 200);
         }
     }
+
 
 }

@@ -508,6 +508,11 @@ class ProductFeatureController extends Controller
         $tickets = $productfeature->tickets()->where('tickets.onsale' , true)->get();
 
         $inventories = $this->itemsPluckCols($inventories , $this->inventoryDefaultCols());
+        $inventories = json_decode(json_encode($inventories));
+        $inventories = collect($inventories)->map(function ($item, $key) {
+
+            return $this->calculatePromotionPrice($item);
+        });
         $tickets = $this->itemsPluckCols($tickets , $this->ticketDefaultCols());
 
         $mergeddata = collect();

@@ -235,6 +235,8 @@ trait InventoryServices {
             }else{
                 $data->promoprice = $data->price - ($data->price * $data->promotion->discpctg);
             }
+            
+            $data->promopctg = $this->toDouble($data->promoprice / $data->price);
         }
 
         return $data;

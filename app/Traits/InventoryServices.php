@@ -98,7 +98,7 @@ trait InventoryServices {
 
     private function getInventory($uid) {
 
-        $data = Inventory::where('uid', $uid)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies','images','productreviews','characteristics')->first();
+        $data = Inventory::where('uid', $uid)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','productreviews','characteristics')->first();
         return $data;
 
     }

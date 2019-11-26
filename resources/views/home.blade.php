@@ -42,7 +42,7 @@
 
         </div>
     </div>
-    <div class="row" id="displayImages">
+    <!-- <div class="row" id="displayImages">
         @if($images)
             @foreach($images as $image)
 
@@ -53,6 +53,6 @@
                 </div>
             @endforeach
         @endif
-    </div>
+    </div> -->
 </div>
 @endsection

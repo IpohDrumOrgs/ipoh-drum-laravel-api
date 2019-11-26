@@ -262,6 +262,14 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
+     * name="inventoryfamilies",
+     * in="query",
+     * description="Inventory Families",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
      * name="code",
      * in="query",
      * description="Code",
@@ -371,6 +379,7 @@ class InventoryController extends Controller
             'promotionid' => $request->promotionid,
             'warrantyid' => $request->warrantyid,
             'shippingid' => $request->shippingid,
+            'inventoryfamilies' => $request->inventoryfamilies,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
@@ -384,7 +393,10 @@ class InventoryController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $inventory = $this->createInventory($params);
+        $t = json_decode(($params->inventoryfamilies));
+        // $t = (object) $this->splitToArray($params->inventoryfamilies);
+        return $t;
+        // $inventory = $this->createInventory($params);
 
         if ($this->isEmpty($inventory)) {
             DB::rollBack();

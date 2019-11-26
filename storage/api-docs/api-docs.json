@@ -1284,6 +1284,14 @@
                         }
                     },
                     {
+                        "name": "inventoryfamilies",
+                        "in": "query",
+                        "description": "Inventory Families",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "code",
                         "in": "query",
                         "description": "Code",
@@ -3941,7 +3949,7 @@
                 ],
                 "summary": "Get list of types",
                 "description": "Returns list of types",
-                "operationId": "getTypeList",
+                "operationId": "getTypes",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -4014,51 +4022,6 @@
                 }
             }
         },
-        "/api/pluck/types": {
-            "get": {
-                "tags": [
-                    "TypeControllerService"
-                ],
-                "summary": "pluck list of types",
-                "description": "Returns list of plucked types",
-                "operationId": "pluckTypeList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of types"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of types"
-                    }
-                }
-            }
-        },
         "/api/filter/type": {
             "get": {
                 "tags": [
@@ -4066,7 +4029,7 @@
                 ],
                 "summary": "Filter list of types",
                 "description": "Returns list of filtered types",
-                "operationId": "filterTypeList",
+                "operationId": "filterTypes",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -4103,7 +4066,7 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To string for filter",
+                        "description": "To date for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -4112,75 +4075,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered types"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of types"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/type": {
-            "get": {
-                "tags": [
-                    "TypeControllerService"
-                ],
-                "summary": "Filter list of plucked types",
-                "description": "Returns list of filtered types",
-                "operationId": "filterPluckedTypeList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -4299,44 +4193,6 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the type."
-                    }
-                }
-            }
-        },
-        "/api/pluck/type/{uid}": {
-            "get": {
-                "tags": [
-                    "TypeControllerService"
-                ],
-                "summary": "pluck type",
-                "description": "Returns plucked types",
-                "operationId": "pluckTypeByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Type_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of types"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of types"
                     }
                 }
             }

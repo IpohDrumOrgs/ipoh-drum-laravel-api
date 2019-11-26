@@ -7,6 +7,7 @@ use Faker\Factory as Faker;
 use App\Company;
 use App\Category;
 use App\InventoryImage;
+use App\Pattern;
 use App\Type;
 use App\ProductFeature;
 use App\ProductReview;
@@ -113,6 +114,19 @@ class InventoryTableSeeder extends Seeder
                 $inventoryfamily->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
                 $inventoryfamily->inventory()->associate($inventory);
                 $inventoryfamily->save();
+
+                for($z = 0 ; $z < $faker->randomElement([0,1,2,3,4,5]) ; $z++){
+                    $pattern = new Pattern();
+                    $pattern->uid = Carbon::now()->timestamp . '-' . (Pattern::count() + 1);
+                    $pattern->name = $faker->unique()->jobTitle;
+                    $pattern->desc = $faker->sentence;
+                    $pattern->cost = $faker->randomDigit;
+                    $pattern->price = $faker->randomDigit;
+                    $pattern->qty = 0;
+                    $pattern->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
+                    $pattern->inventoryfamily()->associate($inventoryfamily);
+                    $pattern->save();
+                }
             }
 
             $image = new InventoryImage();

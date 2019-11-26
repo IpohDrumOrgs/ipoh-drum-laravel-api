@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInventoryFamiliesTable extends Migration
+class CreatePatternsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateInventoryFamiliesTable extends Migration
      */
     public function up()
     {
-        Schema::create('inventory_families', function (Blueprint $table) { 
+        Schema::create('patterns', function (Blueprint $table) {
             $table->increments('id')->unique();
-            $table->unsignedInteger('inventory_id')->unsigned();
+            $table->unsignedInteger('inventory_family_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('name');
             $table->string('desc')->nullable();
@@ -28,12 +28,11 @@ class CreateInventoryFamiliesTable extends Migration
             $table->boolean('status')->default(1);
             $table->timestamps();
 
-            $table->foreign('inventory_id')
+            $table->foreign('inventory_family_id')
             ->references('id')
-            ->on('inventories')
+            ->on('inventory_families')
             ->onUpdate('cascade')
             ->onDelete('restrict');
-            
         });
     }
 
@@ -44,6 +43,6 @@ class CreateInventoryFamiliesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory_families');
+        Schema::dropIfExists('patterns');
     }
 }

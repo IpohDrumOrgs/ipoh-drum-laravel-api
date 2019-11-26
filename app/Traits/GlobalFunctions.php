@@ -150,12 +150,28 @@ trait GlobalFunctions {
         if($this->isEmpty($data)){
             return null;
         }else{
-            $data = collect(explode(',' , $data));
-            $data = $data->map(function ($item, $key) {
-                return trim($item);
-            });
+            if(stristr($data, ':') == TRUE){
+                $data = collect(explode(',' , $data));
+                $finalarray = collect();
+                $data->each(function ($item, $key)use($finalarray){
+                    $temp = explode(':' , $item);
+                    $finalarray->put($temp[0], $temp[1]);
+                });
+                return $finalarray->toArray();
+            }else{
+                $data = collect(explode(',' , $data));
+                $data = $data->map(function ($item) {
+                    return trim($item);
+                });
+            }
             return $data->toArray();
         }
+    }
+
+    
+    //Split the string to object
+    public function splitToObject($data){
+        return  (object) $this->splitToArray($data);
     }
 
 

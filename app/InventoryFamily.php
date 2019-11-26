@@ -22,4 +22,12 @@ class InventoryFamily extends Model
     {
         return $this->hasMany('App\SaleItem');
     }
+    
+    /**
+     *
+     */
+    public function patterns()
+    {
+        return $this->hasMany('App\Pattern');
+    }
 }

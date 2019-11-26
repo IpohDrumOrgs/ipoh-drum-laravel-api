@@ -224,7 +224,7 @@ trait InventoryServices {
 
     public function inventoryDefaultCols() {
 
-        return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'productreviews'];
+        return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'productreviews','inventoryfamilies'];
 
     }
     
@@ -236,7 +236,9 @@ trait InventoryServices {
                 $data->promoprice = $data->price - ($data->price * $data->promotion->discpctg);
             }
             
-            $data->promopctg = $this->toDouble($data->promoprice / $data->price);
+            if($data->price != 0){
+                $data->promopctg = $this->toDouble($data->promoprice / $data->price);
+            }
         }
 
         return $data;

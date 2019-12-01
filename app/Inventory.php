@@ -12,25 +12,24 @@ class Inventory extends Model
 {
     /** @OA\Property(property="id", type="integer"),
      * @OA\Property(property="store_id", type="integer"),
+     * @OA\Property(property="product_promotion_id", type="integer"),
+     * @OA\Property(property="shipping_id", type="integer"),
+     * @OA\Property(property="warranty_id", type="integer"),
      * @OA\Property(property="uid", type="string"),
      * @OA\Property(property="code", type="string"),
      * @OA\Property(property="sku", type="string"),
      * @OA\Property(property="name", type="string"),
+     * @OA\Property(property="imgpath", type="string"),
      * @OA\Property(property="desc", type="string"),
+     * @OA\Property(property="rating", type="number"),
      * @OA\Property(property="cost", type="number"),
      * @OA\Property(property="price", type="number"),
-     * @OA\Property(property="disc", type="number"),
-     * @OA\Property(property="discpctg", type="number"),
-     * @OA\Property(property="promoprice", type="number"),
-     * @OA\Property(property="promostartdate", type="string"),
-     * @OA\Property(property="promoenddate", type="string"),
-     * @OA\Property(property="stock", type="integer"),
+     * @OA\Property(property="qty", type="integer"),
+     * @OA\Property(property="promoendqty", type="integer"),
      * @OA\Property(property="salesqty", type="integer"),
-     * @OA\Property(property="warrantyperiod", type="integer"),
      * @OA\Property(property="stockthreshold", type="integer"),
-     * @OA\Property(property="backorder", type="integer"),
      * @OA\Property(property="status", type="integer"),
-     * @OA\Property(property="lastedit_by", type="string"),
+     * @OA\Property(property="onsale", type="integer"),
      * @OA\Property(property="created_at", type="string"),
      * @OA\Property(property="updated_at", type="string")
      */
@@ -51,7 +50,7 @@ class Inventory extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-    
+
     /**
      * Get the store of the inventory.
      */
@@ -62,23 +61,23 @@ class Inventory extends Model
 
 
 
-    
+
     /**
-     * 
+     *
      */
     public function categories()
     {
         return $this->belongsToMany('App\Category')->withPivot('status','remark');
     }
     /**
-     * 
+     *
      */
     public function types()
     {
         return $this->belongsToMany('App\Type')->withPivot('status','remark');
     }
     /**
-     * 
+     *
      */
     public function productfeatures()
     {
@@ -93,7 +92,7 @@ class Inventory extends Model
     {
         return $this->hasMany('App\InventoryImage');
     }
-    
+
     /**
      *
      */
@@ -109,7 +108,7 @@ class Inventory extends Model
     {
         return $this->hasMany('App\ProductReview');
     }
-    
+
     /**
      *
      */
@@ -125,7 +124,7 @@ class Inventory extends Model
     {
         return $this->belongsTo('App\Warranty');
     }
-    
+
     /**
      *
      */

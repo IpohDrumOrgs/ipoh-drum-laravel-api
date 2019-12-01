@@ -5196,6 +5196,15 @@
                     "store_id": {
                         "type": "integer"
                     },
+                    "product_promotion_id": {
+                        "type": "integer"
+                    },
+                    "shipping_id": {
+                        "type": "integer"
+                    },
+                    "warranty_id": {
+                        "type": "integer"
+                    },
                     "uid": {
                         "type": "string"
                     },
@@ -5208,8 +5217,14 @@
                     "name": {
                         "type": "string"
                     },
+                    "imgpath": {
+                        "type": "string"
+                    },
                     "desc": {
                         "type": "string"
+                    },
+                    "rating": {
+                        "type": "number"
                     },
                     "cost": {
                         "type": "number"
@@ -5217,41 +5232,23 @@
                     "price": {
                         "type": "number"
                     },
-                    "disc": {
-                        "type": "number"
+                    "qty": {
+                        "type": "integer"
                     },
-                    "discpctg": {
-                        "type": "number"
-                    },
-                    "promoprice": {
-                        "type": "number"
-                    },
-                    "promostartdate": {
-                        "type": "string"
-                    },
-                    "promoenddate": {
-                        "type": "string"
-                    },
-                    "stock": {
+                    "promoendqty": {
                         "type": "integer"
                     },
                     "salesqty": {
                         "type": "integer"
                     },
-                    "warrantyperiod": {
-                        "type": "integer"
-                    },
                     "stockthreshold": {
-                        "type": "integer"
-                    },
-                    "backorder": {
                         "type": "integer"
                     },
                     "status": {
                         "type": "integer"
                     },
-                    "lastedit_by": {
-                        "type": "string"
+                    "onsale": {
+                        "type": "integer"
                     },
                     "created_at": {
                         "type": "string"

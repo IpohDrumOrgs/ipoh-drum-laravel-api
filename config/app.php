@@ -163,6 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         \L5Swagger\L5SwaggerServiceProvider::class,
         JD\Cloudder\CloudderServiceProvider::class ,
+        Vimeo\Laravel\VimeoServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -227,6 +228,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
+        'Vimeo' => Vimeo\Laravel\Facades\Vimeo::class,
 
     ],
 

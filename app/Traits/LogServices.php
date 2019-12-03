@@ -14,6 +14,7 @@ use App\Category;
 use App\CompanyType;
 use App\Group;
 use App\Log;
+use App\ErrorLog;
 use App\Payment;
 use App\Video;
 use Carbon\Carbon;
@@ -42,6 +43,19 @@ trait LogServices {
         foreach($affectors as $affector){
             $affector->affectedlogs()->attach($operator->id , ['action' => $action , 'model' => $model]);
         }
+       
+    }
+
+    private function createErrorLog($file , $method , $desc , $exception) {
+        
+        $errorlog = new ErrorLog();
+        $errorlog->file = $file;
+        $errorlog->method = $method;
+        $errorlog->desc = $desc;
+        $errorlog->exception = $exception;
+
+        $errorlog->save();
+
        
     }
 

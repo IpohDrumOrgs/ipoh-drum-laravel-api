@@ -1248,7 +1248,7 @@
                         }
                     },
                     {
-                        "name": "storeid",
+                        "name": "store_id",
                         "in": "query",
                         "description": "Store ID",
                         "required": true,
@@ -1257,7 +1257,7 @@
                         }
                     },
                     {
-                        "name": "promotionid",
+                        "name": "product_promotion_id",
                         "in": "query",
                         "description": "Promotion ID",
                         "required": true,
@@ -1266,7 +1266,7 @@
                         }
                     },
                     {
-                        "name": "warrantyid",
+                        "name": "warranty_id",
                         "in": "query",
                         "description": "Warranty ID",
                         "required": true,
@@ -1275,7 +1275,7 @@
                         }
                     },
                     {
-                        "name": "shippingid",
+                        "name": "shipping_id",
                         "in": "query",
                         "description": "Shipping ID",
                         "required": true,
@@ -1303,7 +1303,6 @@
                         "name": "sku",
                         "in": "query",
                         "description": "Sku",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1312,14 +1311,6 @@
                         "name": "desc",
                         "in": "query",
                         "description": "Product Description",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "imgpath",
-                        "in": "query",
-                        "description": "Image Path",
                         "schema": {
                             "type": "string"
                         }
@@ -1369,6 +1360,26 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Inventory has been created successfully."
@@ -1508,7 +1519,7 @@
                         }
                     },
                     {
-                        "name": "storeid",
+                        "name": "store_id",
                         "in": "query",
                         "description": "Store ID",
                         "required": true,
@@ -1517,7 +1528,7 @@
                         }
                     },
                     {
-                        "name": "promotionid",
+                        "name": "product_promotion_id",
                         "in": "query",
                         "description": "Promotion ID",
                         "required": true,
@@ -1526,7 +1537,7 @@
                         }
                     },
                     {
-                        "name": "warrantyid",
+                        "name": "warranty_id",
                         "in": "query",
                         "description": "Warranty ID",
                         "required": true,
@@ -1535,12 +1546,20 @@
                         }
                     },
                     {
-                        "name": "shippingid",
+                        "name": "shipping_id",
                         "in": "query",
                         "description": "Shipping ID",
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "inventoryfamilies",
+                        "in": "query",
+                        "description": "Inventory Families",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -1555,7 +1574,6 @@
                         "name": "sku",
                         "in": "query",
                         "description": "Sku",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1564,14 +1582,6 @@
                         "name": "desc",
                         "in": "query",
                         "description": "Product Description",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "imgpath",
-                        "in": "query",
-                        "description": "Image Path",
                         "schema": {
                             "type": "string"
                         }
@@ -1621,12 +1631,32 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Inventory has been updated successfully."
+                        "description": "Inventory has been created successfully."
                     },
                     "default": {
-                        "description": "Unable to update the inventory."
+                        "description": "Unable to create the inventory."
                     }
                 }
             },
@@ -1657,7 +1687,7 @@
                 }
             }
         },
-        "/api/onsale/inventory/{uid}": {
+        "/api/inventory/{uid}/onsale": {
             "get": {
                 "tags": [
                     "InventoryControllerService"
@@ -3521,6 +3551,90 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the store."
+                    }
+                }
+            }
+        },
+        "/api/store/{uid}/promotions": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Retrieves store promotion plans by Uid.",
+                "operationId": "getPromotionsByStoreUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Promotions has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the promotions."
+                    }
+                }
+            }
+        },
+        "/api/store/{uid}/warranties": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Retrieves store warranties by Uid.",
+                "operationId": "getWarrantiesByStoreUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Warranties has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the warranties."
+                    }
+                }
+            }
+        },
+        "/api/store/{uid}/shippings": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Retrieves store shippings by Uid.",
+                "operationId": "getShippingsByStoreUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shippings has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the shippings."
                     }
                 }
             }

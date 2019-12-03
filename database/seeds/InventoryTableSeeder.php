@@ -64,12 +64,13 @@ class InventoryTableSeeder extends Seeder
             $inventory->name = $faker->unique()->jobTitle;
             $inventory->sku = $faker->unique()->ean8;
             $inventory->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
-            $inventory->cost = $faker->randomDigit;
-            $inventory->price = $faker->randomDigit;
+            $inventory->imgpublicid = Carbon::now()->timestamp . Inventory::count();
+            $inventory->cost = $faker->numberBetween($min = 1, $max = 1000);
+            $inventory->price = $faker->numberBetween($min = 1, $max = 1000);
             $inventory->rating = $faker->randomElement([0,1,2,3,4,5]);
             $inventory->desc = $faker->sentence;
-            $inventory->qty = $faker->randomDigit;
-            $inventory->stockthreshold = $faker->randomDigit;
+            $inventory->qty = $faker->numberBetween($min = 1, $max = 1000);
+            $inventory->stockthreshold = $faker->numberBetween($min = 1, $max = 1000);
             $inventory->salesqty = 0;
 
             $store = Store::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));
@@ -96,10 +97,11 @@ class InventoryTableSeeder extends Seeder
             $inventoryfamily->uid = Carbon::now()->timestamp . '-' . (InventoryFamily::count() + 1);
             $inventoryfamily->name = $faker->unique()->jobTitle;
             $inventoryfamily->desc = $faker->sentence;
-            $inventoryfamily->cost = $faker->randomDigit;
-            $inventoryfamily->price = $faker->randomDigit;
+            $inventoryfamily->cost = $faker->numberBetween($min = 1, $max = 1000);
+            $inventoryfamily->price = $faker->numberBetween($min = 1, $max = 1000);
             $inventoryfamily->qty = $inventory->qty;
             $inventoryfamily->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
+            $inventoryfamily->imgpublicid = Carbon::now()->timestamp . '-' . (InventoryFamily::count() + 1);
             $inventoryfamily->inventory()->associate($inventory);
             $inventoryfamily->save();
 
@@ -108,10 +110,11 @@ class InventoryTableSeeder extends Seeder
                 $inventoryfamily->uid = Carbon::now()->timestamp . '-' . (InventoryFamily::count() + 1);
                 $inventoryfamily->name = $faker->unique()->jobTitle;
                 $inventoryfamily->desc = $faker->sentence;
-                $inventoryfamily->cost = $faker->randomDigit;
-                $inventoryfamily->price = $faker->randomDigit;
+                $inventoryfamily->cost = $faker->numberBetween($min = 1, $max = 1000);
+                $inventoryfamily->price = $faker->numberBetween($min = 1, $max = 1000);
                 $inventoryfamily->qty = 0;
                 $inventoryfamily->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
+                $inventoryfamily->imgpublicid = Carbon::now()->timestamp . '-' . (InventoryFamily::count() + 1);
                 $inventoryfamily->inventory()->associate($inventory);
                 $inventoryfamily->save();
 
@@ -120,8 +123,8 @@ class InventoryTableSeeder extends Seeder
                     $pattern->uid = Carbon::now()->timestamp . '-' . (Pattern::count() + 1);
                     $pattern->name = $faker->unique()->jobTitle;
                     $pattern->desc = $faker->sentence;
-                    $pattern->cost = $faker->randomDigit;
-                    $pattern->price = $faker->randomDigit;
+                    $pattern->cost = $faker->numberBetween($min = 1, $max = 1000);
+                    $pattern->price = $faker->numberBetween($min = 1, $max = 1000);
                     $pattern->qty = 0;
                     $pattern->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
                     $pattern->inventoryfamily()->associate($inventoryfamily);
@@ -133,6 +136,7 @@ class InventoryTableSeeder extends Seeder
             $image->uid = Carbon::now()->timestamp . '-' . (InventoryImage::count() + 1);
             $image->name = $faker->unique()->jobTitle;
             $image->imgpath = $inventory->imgpath;
+            $image->imgpublicid = Carbon::now()->timestamp . '-' . (InventoryImage::count() + 1);
             $image->inventory()->associate($inventory);
             $image->save();
 
@@ -141,6 +145,7 @@ class InventoryTableSeeder extends Seeder
                 $image->uid = Carbon::now()->timestamp . '-' . (InventoryImage::count() + 1);
                 $image->name = $faker->unique()->jobTitle;
                 $image->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
+                $image->imgpublicid = Carbon::now()->timestamp . '-' . (InventoryImage::count() + 1);
                 $image->inventory()->associate($inventory);
                 $image->save();
             }
@@ -175,9 +180,10 @@ class InventoryTableSeeder extends Seeder
             $productreview->title =  $faker->unique()->jobTitle;
             $productreview->desc = $faker->sentence;
             $productreview->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
+            $productreview->imgpublicid = Carbon::now()->timestamp . '-' . (ProductReview::count() + 1);
             $productreview->rating = $faker->randomElement([0,1,2,3,4,5]);
-            $productreview->like = $faker->randomDigit;
-            $productreview->dislike = $faker->randomDigit;
+            $productreview->like = $faker->numberBetween($min = 1, $max = 1000);
+            $productreview->dislike = $faker->numberBetween($min = 1, $max = 1000);
             $productreview->status = true;
             $inventory = Inventory::find($faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12]));
             $productreview->inventory()->associate($inventory);

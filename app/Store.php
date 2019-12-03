@@ -59,4 +59,28 @@ class Store extends Model
     {
         return $this->belongsTo('App\User');
     }
+      /**
+     *
+     */
+    public function promotions()
+    {
+        return $this->hasMany('App\ProductPromotion');
+    }
+
+    /**
+     *
+     */
+    public function warranties()
+    {
+        return $this->hasMany('App\Warranty');
+    }
+    
+    /**
+     *
+     */
+    public function shippings()
+    {
+        return $this->hasMany('App\Shipping');
+    }
+
 }

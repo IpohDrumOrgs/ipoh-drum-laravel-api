@@ -229,4 +229,27 @@ trait GlobalFunctions {
     }
     
 
+    //saveModel
+    public function saveModel($data){
+        try {
+            $data->save();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+
+    }
+    
+    //saveModel
+    public function checkUndefinedProperty($data , $properties){
+        $data = (object) $data;
+        foreach($properties as $property){
+            if(!isset($data->{$property})){
+                $data->{$property} = null;
+            }
+        }
+        return $data;
+    }
+
+
 }

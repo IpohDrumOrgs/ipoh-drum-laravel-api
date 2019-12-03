@@ -15,6 +15,7 @@ class CreateWarrantiesTable extends Migration
     {
         Schema::create('warranties', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('store_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name');
             $table->text('desc')->nullable();
@@ -22,6 +23,13 @@ class CreateWarrantiesTable extends Migration
             $table->longText('policy');
             $table->boolean('status')->default(1);
             $table->timestamps();
+
+            $table->foreign('store_id')
+            ->references('id')
+            ->on('stores')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+            
         });
     }
 

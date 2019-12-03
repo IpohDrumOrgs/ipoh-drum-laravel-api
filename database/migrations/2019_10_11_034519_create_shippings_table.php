@@ -16,6 +16,7 @@ class CreateShippingsTable extends Migration
         Schema::create('shippings', function (Blueprint $table) {
             
             $table->increments('id');
+            $table->unsignedInteger('store_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name');
             $table->text('desc')->nullable();
@@ -24,6 +25,13 @@ class CreateShippingsTable extends Migration
             $table->decimal('maxdimension',8,2)->default(0.00);
             $table->boolean('status')->default(1);
             $table->timestamps();
+            
+
+            $table->foreign('store_id')
+            ->references('id')
+            ->on('stores')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
         });
     }
 

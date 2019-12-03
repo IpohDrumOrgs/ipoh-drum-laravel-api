@@ -49,6 +49,11 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('company', 'API\CompanyController');
     Route::post('/get-all-company','API\CompanyController@getAllCompany');
 
+    
+    Route::resource('store', 'API\StoreController');
+    Route::get('/store/{uid}/promotions', 'API\StoreController@getPromotions');
+    Route::get('/store/{uid}/warranties', 'API\StoreController@getWarranties');
+    Route::get('/store/{uid}/shippings', 'API\StoreController@getShippings');
     //Generate report in PDF
     // Route::get('/inventory/generate-pdf', 'API\InventoryController@exportPDF');
     // Route::get('/stocktransfer/generate-pdf', 'API\StockTransferController@exportPDF');
@@ -60,7 +65,6 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('log', 'API\LogController');
     Route::resource('module', 'API\ModuleController');
     Route::resource('inventory', 'API\InventoryController');
-    Route::resource('store', 'API\StoreController');
     Route::resource('ticket', 'API\TicketController');
     Route::resource('sale', 'API\SaleController');
     Route::resource('payment', 'API\PaymentController');
@@ -97,7 +101,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     // Route::get('/awaiting-approve', 'API\StockTransferController@awaitingApprove');
 
     // Route::post('/change-password','API\UserController@changePassword');
-
+    
 });
 
 
@@ -110,6 +114,8 @@ Route::post('/register', 'API\UserController@register');
 Route::get('/productfeature/{uid}/products', 'API\ProductFeatureController@getFeaturedProducts');
 
 
-Route::get('/onsale/inventory/{uid}', 'API\InventoryController@getOnSaleInventory');
+Route::get('/inventory/{uid}/onsale', 'API\InventoryController@getOnSaleInventory');
+
+
 
 

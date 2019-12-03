@@ -19,6 +19,7 @@ class CreatePatternsTable extends Migration
             $table->string('uid')->unique();
             $table->string('name');
             $table->string('desc')->nullable();
+            $table->string('imgpublicid')->nullable()->unique();
             $table->string('imgpath')->nullable();
             $table->decimal('cost',8,2)->default(0.00);
             $table->decimal('price',8,2)->default(0.00);

@@ -21,4 +21,11 @@ class Shipping extends Model
     {
         return $this->belongsTo('App\Ticket');
     }
+    /**
+    * 
+    */
+    public function store()
+    {
+        return $this->belongsTo('App\Store');
+    }
 }

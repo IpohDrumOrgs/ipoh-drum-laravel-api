@@ -11,11 +11,13 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\InventoryServices;
+use App\Traits\InventoryFamilyServices;
+use App\Traits\PatternServices;
 use App\Traits\LogServices;
 
 class InventoryController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices;
+    use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices, InventoryFamilyServices;
     private $controllerName = '[InventoryController]';
      /**
      * @OA\Get(
@@ -226,7 +228,7 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="storeid",
+     * name="store_id",
      * in="query",
      * description="Store ID",
      * required=true,
@@ -235,7 +237,7 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="promotionid",
+     * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
      * required=true,
@@ -244,7 +246,7 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="warrantyid",
+     * name="warranty_id",
      * in="query",
      * description="Warranty ID",
      * required=true,
@@ -253,7 +255,7 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="shippingid",
+     * name="shipping_id",
      * in="query",
      * description="Shipping ID",
      * required=true,
@@ -281,7 +283,6 @@ class InventoryController extends Controller
      * name="sku",
      * in="query",
      * description="Sku",
-     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
@@ -294,14 +295,20 @@ class InventoryController extends Controller
      *              type="string"
      *          )
      * ),
-     * @OA\Parameter(
-     * name="imgpath",
-     * in="query",
-     * description="Image Path",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
+     * 	@OA\RequestBody(
+*          required=true,
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="img",
+*                      description="Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
      * @OA\Parameter(
      * name="cost",
      * in="query",
@@ -358,12 +365,13 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
+        $proccessingimgids = collect();
         DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/inventory (POST)
 
         $this->validate($request, [
-            'storeid' => 'required',
+            'store_id' => 'required',
             'name' => 'required|string|max:191',
             'code' => 'nullable',
             'sku' => 'required|string|max:191',
@@ -375,11 +383,10 @@ class InventoryController extends Controller
         ]);
         error_log($this->controllerName.'Creating inventory.');
         $params = collect([
-            'storeid' => $request->storeid,
-            'promotionid' => $request->promotionid,
-            'warrantyid' => $request->warrantyid,
-            'shippingid' => $request->shippingid,
-            'inventoryfamilies' => $request->inventoryfamilies,
+            'store_id' => $request->store_id,
+            'product_promotion_id' => $request->product_promotion_id,
+            'warranty_id' => $request->warranty_id,
+            'shipping_id' => $request->shipping_id,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
@@ -391,28 +398,108 @@ class InventoryController extends Controller
             'stockthreshold' => $request->stockthreshold,
             'onsale' => $request->onsale,
         ]);
-        //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $t = json_decode(($params->inventoryfamilies));
-        // $t = (object) $this->splitToArray($params->inventoryfamilies);
-        return $t;
-        // $inventory = $this->createInventory($params);
-
+        $inventory = $this->createInventory($params);
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Inventory');
-            $data['data'] = $inventory;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            $this->deleteImages($proccessingimgids);
+            return $this->errorResponse();
         }
+
+
+        //Associating Image Relationship
+        if($request->file('img') != null){
+            $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
+            if(!$this->isEmpty($img)){
+                $inventory->imgpath = $img->imgurl;
+                $inventory->imgpublicid = $img->publicid;
+                $proccessingimgids->push($img->publicid);
+                if(!$this->saveModel($inventory)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+                //Attach Image to InventoryImage
+                $inventoryimage = $this->associateImageWithInventory($inventory , $img);
+                if($this->isEmpty($inventoryimage)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }else{
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+        
+        $count = 0;
+        if($request->file('sliders') != null){
+            $sliders = $request->file('sliders');
+            foreach($sliders as $slider){
+                $count++;
+                if($count > 6){
+                    break;
+                }
+                $img = $this->uploadImage($slider , "/Inventory/". $inventory->uid . "/sliders");
+                if(!$this->isEmpty($img)){
+                    $proccessingimgids->push($img->publicid);
+                    if(!$this->saveModel($inventory)){
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                    //Attach Image to InventoryImage
+                    $inventoryimage = $this->associateImageWithInventory($inventory , $img);
+                    if($this->isEmpty($inventoryimage)){
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                }else{
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }
+        }
+        
+        //Associating Inventory Family Relationship
+        $inventoryfamilies = json_decode($request->inventoryfamilies);
+        if(!$this->isEmpty($inventoryfamilies)){
+           foreach($inventoryfamilies as $inventoryfamily){
+               $inventoryfamily->inventory_id = $inventory->refresh()->id;
+               $patterns = $inventoryfamily->patterns;
+               $inventoryfamily = $this->associateInventoryFamilyWithInventory($inventory, $inventoryfamily);
+               $this->createLog($request->user()->id , [$inventoryfamily->id], 'create', 'inventoryfamily');
+
+               if($this->isEmpty($inventoryfamily)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+                foreach($patterns as $pattern){
+                    $pattern->inventoryfamilyid = $inventoryfamily->refresh()->id;
+                    $pattern = $this->associatePatternWithInventoryFamily($inventoryfamily, $pattern);
+                    $this->createLog($request->user()->id , [$pattern->id], 'create', 'pattern');
+                    if($this->isEmpty($pattern)){
+                         DB::rollBack();
+                         $this->deleteImages($proccessingimgids);
+                         return $this->errorResponse();
+                     }
+                }
+           }
+        }
+
+        
+        $this->createLog($request->user()->id , [$inventory->id], 'create', 'inventory');
+        DB::commit();
+
+        $data['status'] = 'success';
+        $data['msg'] = $this->getCreatedSuccessMsg('Inventory');
+        $data['data'] = $inventory;
+        $data['code'] = 200;
+        return response()->json($data, 200);
     }
 
 
@@ -439,7 +526,7 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="storeid",
+     * name="store_id",
      * in="query",
      * description="Store ID",
      * required=true,
@@ -448,7 +535,7 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="promotionid",
+     * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
      * required=true,
@@ -457,7 +544,7 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="warrantyid",
+     * name="warranty_id",
      * in="query",
      * description="Warranty ID",
      * required=true,
@@ -466,12 +553,20 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="shippingid",
+     * name="shipping_id",
      * in="query",
      * description="Shipping ID",
      * required=true,
      * @OA\Schema(
      *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="inventoryfamilies",
+     * in="query",
+     * description="Inventory Families",
+     * @OA\Schema(
+     *              type="string"
      *          )
      * ),
      * @OA\Parameter(
@@ -486,7 +581,6 @@ class InventoryController extends Controller
      * name="sku",
      * in="query",
      * description="Sku",
-     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
@@ -499,14 +593,20 @@ class InventoryController extends Controller
      *              type="string"
      *          )
      * ),
-     * @OA\Parameter(
-     * name="imgpath",
-     * in="query",
-     * description="Image Path",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
+     * 	@OA\RequestBody(
+*          required=true,
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="img",
+*                      description="Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
      * @OA\Parameter(
      * name="cost",
      * in="query",
@@ -553,11 +653,11 @@ class InventoryController extends Controller
      * ),
      *   @OA\Response(
      *     response=200,
-     *     description="Inventory has been updated successfully."
+     *     description="Inventory has been created successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to update the inventory."
+     *     description="Unable to create the inventory."
      *   )
      * )
      */
@@ -566,10 +666,8 @@ class InventoryController extends Controller
         DB::beginTransaction();
         // api/inventory/{inventoryid} (PUT)
         error_log($this->controllerName.'Updating inventory of uid: ' . $uid);
-        $inventory = $this->getInventory($uid);
-
         $this->validate($request, [
-            'storeid' => 'required',
+            'store_id' => 'required',
             'name' => 'required|string|max:191',
             'code' => 'nullable',
             'sku' => 'required|string|max:191',
@@ -580,51 +678,142 @@ class InventoryController extends Controller
             'onsale' => 'required|numeric',
         ]);
 
+        $inventory = $this->getInventory($uid);
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Inventory');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Inventory');
         }
 
         $params = collect([
-            'storeid' => $request->storeid,
-            'promotionid' => $request->promotionid,
-            'warrantyid' => $request->warrantyid,
-            'shippingid' => $request->shippingid,
+            'store_id' => $request->store_id,
+            'product_promotion_id' => $request->product_promotion_id,
+            'warranty_id' => $request->warranty_id,
+            'shipping_id' => $request->shipping_id,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
-            'imgpath' => $request->imgpath,
             'desc' => $request->desc,
+            'imgpath' => $request->imgpath,
             'cost' => $request->cost,
             'price' => $request->price,
             'qty' => $request->qty,
             'stockthreshold' => $request->stockthreshold,
             'onsale' => $request->onsale,
         ]);
-
-        //Convert To Json Object
         $params = json_decode(json_encode($params));
+
+        //Updating inventory
         $inventory = $this->updateInventory($inventory, $params);
-        if ($this->isEmpty($inventory)) {
+        if($this->isEmpty($inventory)){
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Inventory');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Inventory');
-            $data['data'] = $inventory;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            $this->deleteImages($proccessingimgids);
+            return $this->errorResponse();
         }
+
+        //Associating Image Relationship
+        if($request->file('img') != null){
+            $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
+            if(!$this->isEmpty($img)){
+                //Delete Previous Image
+                $this->deleteInventoryImage($inventory->imgpublicid);
+                $this->deleteImage($inventory->imgpublicid);
+                $inventory->imgpath = $img->imgurl;
+                $inventory->imgpublicid = $img->publicid;
+                $proccessingimgids->push($img->publicid);
+                if(!$this->saveModel($inventory)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+                //Attach Image to InventoryImage
+                $inventoryimage = $this->associateImageWithInventory($inventory , $img);
+                if($this->isEmpty($inventoryimage)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }else{
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+        
+        //Updating sliders
+        $count = $inventory->inventoryimage()->count();
+        if($request->file('sliders') != null){
+            $sliders = $request->file('sliders');
+            foreach($sliders as $slider){
+                $count++;
+                if($count > 6){
+                    break;
+                }
+                $img = $this->uploadImage($slider , "/Inventory/". $inventory->uid . "/sliders");
+                if(!$this->isEmpty($img)){
+                    $proccessingimgids->push($img->publicid);
+                    if(!$this->saveModel($inventory)){
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                    //Attach Image to InventoryImage
+                    $inventoryimage = $this->associateImageWithInventory($inventory , $img);
+                    if($this->isEmpty($inventoryimage)){
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                }else{
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }
+        }
+        
+        //Associating Inventory Family Relationship
+
+        $inventoryfamilies = collect(json_decode($request->inventoryfamilies));
+        $originvfamiliesids = $inventory->inventoryfamilies()->pluck('id');
+        $inventoryfamiliesids = $inventoryfamilies->pluck('id');
+        //get ids not in list previously
+        $forinsertids = $inventoryfamiliesids->diff($originvfamiliesids);
+        //get ids that not longer in inventory families
+        $fordeleteids = $originvfamiliesids->diff($inventoryfamiliesids);
+
+        foreach($forinsertids as $id){
+            $inventoryfamily = $this->getInventoryFamilyById($id);
+            if($this->isEmpty($inventoryfamily)){
+                 DB::rollBack();
+                 $this->deleteImages($proccessingimgids);
+                 return $this->notFoundResponse('InventoryFamily');
+             }
+            $inventoryfamily->inventory()->associate($inventory);
+        }
+        
+        foreach($fordeleteids as $id){
+            $inventoryfamily = $this->getInventoryFamilyById($id);
+            if($this->isEmpty($inventoryfamily)){
+                 DB::rollBack();
+                 $this->deleteImages($proccessingimgids);
+                 return $this->notFoundResponse('InventoryFamily');
+             }
+            if(!$this->deleteInventoryFamily($inventoryfamily)){
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+
+
+        $this->createLog($request->user()->id , [$inventory->id], 'update', 'inventory');
+        DB::commit();
+
+        $data['status'] = 'success';
+        $data['msg'] = $this->getUpdatedSuccessMsg('Inventory');
+        $data['data'] = $inventory;
+        $data['code'] = 200;
+        return response()->json($data, 200);
     }
 
     /**
@@ -688,7 +877,7 @@ class InventoryController extends Controller
     /**
      * @OA\Get(
      *   tags={"InventoryControllerService"},
-     *   path="/api/onsale/inventory/{uid}",
+     *   path="/api/inventory/{uid}/onsale",
      *   summary="Retrieves onsale inventory by Uid.",
      *     operationId="getOnSaleInventoryByUid",
      *   @OA\Parameter(
@@ -737,4 +926,6 @@ class InventoryController extends Controller
         }
     }
 
+    
+   
 }

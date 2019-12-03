@@ -17,8 +17,11 @@ class CreateInventoryFamiliesTable extends Migration
             $table->increments('id')->unique();
             $table->unsignedInteger('inventory_id')->unsigned();
             $table->string('uid')->unique();
+            $table->string('code')->nullable();
+            $table->string('sku')->nullable();
             $table->string('name');
             $table->string('desc')->nullable();
+            $table->string('imgpublicid')->nullable()->unique();
             $table->string('imgpath')->nullable();
             $table->decimal('cost',8,2)->default(0.00);
             $table->decimal('price',8,2)->default(0.00);

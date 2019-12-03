@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('uid')->unique();
             $table->string('name')->nullable();
             $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable()->unique();
             $table->string('email')->nullable();
             $table->string('icno')->nullable();
             $table->string('tel1')->nullable();

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 use App\Store;
+use App\ProductPromotion;
+use App\Warranty;
+use App\Shipping;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
@@ -598,5 +601,121 @@ class StoreController extends Controller
         }
     }
 
+
+    /**
+     * @OA\Get(
+     *   tags={"StoreControllerService"},
+     *   path="/api/store/{uid}/promotions",
+     *   summary="Retrieves store promotion plans by Uid.",
+     *     operationId="getPromotionsByStoreUid",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Store ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Promotions has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the promotions."
+     *   )
+     * )
+     */
+    public function getPromotions(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving store promotion plans by uid:' . $uid);
+        $store = $this->getStore($uid);
+        $promotions = collect();
+        $promotions = $promotions->merge($store->promotions()->where('status',true)->get());
+        $promotions = $promotions->merge(ProductPromotion::where('store_id' , null)->get());
+        $promotions = $promotions->unique('id')->sortBy('id')->flatten(1);
+
+        $data['data'] = $promotions;
+        $data['msg'] = $this->getRetrievedSuccessMsg('Promotions');
+        $data['status'] = 'success';
+        $data['code'] = 200;
+        return response()->json($data, 200);
+    }
+    /**
+     * @OA\Get(
+     *   tags={"StoreControllerService"},
+     *   path="/api/store/{uid}/warranties",
+     *   summary="Retrieves store warranties by Uid.",
+     *     operationId="getWarrantiesByStoreUid",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Store ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Warranties has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the warranties."
+     *   )
+     * )
+     */
+    public function getWarranties(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving store warranties by uid:' . $uid);
+        $store = $this->getStore($uid);
+        $warranties = collect();
+        $warranties = $warranties->merge($store->warranties()->where('status',true)->get());
+        $warranties = $warranties->merge(Warranty::where('store_id' , null)->get());
+        $warranties = $warranties->unique('id')->sortBy('id')->flatten(1);
+
+        $data['data'] = $warranties;
+        $data['msg'] = $this->getRetrievedSuccessMsg('Warranties');
+        $data['status'] = 'success';
+        $data['code'] = 200;
+        return response()->json($data, 200);
+    }
+
+    /**
+     * @OA\Get(
+     *   tags={"StoreControllerService"},
+     *   path="/api/store/{uid}/shippings",
+     *   summary="Retrieves store shippings by Uid.",
+     *     operationId="getShippingsByStoreUid",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Store ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Shippings has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the shippings."
+     *   )
+     * )
+     */
+    public function getShippings(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving store shippings by uid:' . $uid);
+        $store = $this->getStore($uid);
+        $shippings = collect();
+        $shippings = $shippings->merge($store->shippings()->where('status',true)->get());
+        $shippings = $shippings->merge(Shipping::where('store_id' , null)->get());
+        $shippings = $shippings->unique('id')->sortBy('id')->flatten(1);
+
+        $data['data'] = $shippings;
+        $data['msg'] = $this->getRetrievedSuccessMsg('Shippings');
+        $data['status'] = 'success';
+        $data['code'] = 200;
+        return response()->json($data, 200);
+    }
 
 }

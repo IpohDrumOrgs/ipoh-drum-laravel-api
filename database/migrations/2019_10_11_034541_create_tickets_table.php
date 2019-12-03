@@ -21,6 +21,7 @@ class CreateTicketsTable extends Migration
             $table->string('name');
             $table->string('sku');
             $table->string('code');
+            $table->string('imgpublicid')->nullable()->unique();
             $table->string('imgpath')->nullable();
             $table->longText('desc')->nullable();
             $table->decimal('rating',8,2)->default(0.00);

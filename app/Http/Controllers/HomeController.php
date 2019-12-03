@@ -48,12 +48,11 @@ class HomeController extends Controller
 
         $image_name = $request->file('image_name')->getRealPath();;
 
-        Cloudder::upload($image_name, null);
+        Cloudder::upload($image_name, null , ['folder' => "/Inventory"]);
 
         list($width, $height) = getimagesize($image_name);
 
         $image_url= Cloudder::show(Cloudder::getPublicId(), ["width" => $width, "height"=>$height]);
-
         //save to uploads directory
         $image->move(public_path("uploads"), $name);
 
@@ -66,6 +65,7 @@ class HomeController extends Controller
     public function saveImages(Request $request, $image_url)
     {
         $image = new InventoryImage();
+        $image->uid = InventoryImage::count()+1;
         $image->name = $request->file('image_name')->getClientOriginalName();
         $image->imgpath = $image_url;
         $image->inventory()->associate(Inventory::find(1));

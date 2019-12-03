@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSlidersTable extends Migration
+class CreateErrorLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateSlidersTable extends Migration
      */
     public function up()
     {
-        Schema::create('sliders', function (Blueprint $table) {
+        Schema::create('error_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('uid')->unique();
-            $table->string('page');
-            $table->string('name');
-            $table->string('imgpath');
-            $table->string('imgpublicid')->nullable()->unique();
-            $table->string('link')->nullable();
-            $table->boolean('hidden')->default(false);
+            $table->string('file')->nullable();
+            $table->text('method')->nullable();
+            $table->text('desc')->nullable();
+            $table->text('exception')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();
 
@@ -35,6 +32,6 @@ class CreateSlidersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sliders');
+        Schema::dropIfExists('error_logs');
     }
 }

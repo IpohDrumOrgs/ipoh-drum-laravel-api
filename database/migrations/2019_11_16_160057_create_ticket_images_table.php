@@ -18,6 +18,7 @@ class CreateTicketImagesTable extends Migration
             $table->string('uid')->unique();
             $table->unsignedInteger('ticket_id')->unsigned();
             $table->string('name');
+            $table->string('imgpublicid')->nullable()->unique();
             $table->string('imgpath');
             $table->boolean('status')->default(true);
             $table->timestamps();

@@ -38,4 +38,64 @@ trait NotificationFunctions {
     public function getErrorMsg(){
         return 'Something went wrong. Please Try Again Later.';
     }
+    
+    
+    public function errorResponse(){
+        $data['data'] = null;
+        $data['status'] = 'error';
+        $data['msg'] = $this->getErrorMsg();
+        $data['code'] = 404;
+        return response()->json($data, 404);
+    }
+    
+    public function notFoundResponse($provider){
+        $data['data'] = null;
+        $data['status'] = 'error';
+        $data['msg'] = $this->getNotFoundMsg($provider);
+        $data['code'] = 404;
+        return response()->json($data, 404);
+    }
+    
+    public function successResponse($provider , $data , $type){
+
+        switch($type){
+            case 'create' : 
+                $data['status'] = 'success';
+                $data['msg'] = $this->getUpdatedSuccessMsg($provider);
+                $data['data'] = $data;
+                $data['code'] = 200;
+                break;
+
+            case 'update' : 
+                $data['status'] = 'success';
+                $data['msg'] = $this->getCreatedSuccessMsg($provider);
+                $data['data'] = $data;
+                $data['code'] = 200;
+                break;
+
+            case 'retrieve' : 
+                $data['status'] = 'success';
+                $data['msg'] = $this->getRetrievedSuccessMsg($provider);
+                $data['data'] = $data;
+                $data['code'] = 200;
+                break;
+
+            case 'delete' : 
+                $data['status'] = 'success';
+                $data['msg'] = $this->getDeletedSuccessMsg($provider);
+                $data['data'] = $data;
+                $data['code'] = 200;
+                break;
+
+            default :
+                $data['status'] = 'success';
+                $data['msg'] = 'Operation success';
+                $data['data'] = $data;
+                $data['code'] = 200;
+                break;
+
+        }
+
+        return response()->json($data, 200);
+    }
 }

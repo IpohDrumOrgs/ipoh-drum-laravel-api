@@ -4,18 +4,22 @@ namespace App\Traits;
 use App\User;
 use App\Store;
 use App\Inventory;
+use App\InventoryFamily;
+use App\InventoryImage;
 use App\ProductPromotion;
 use App\Warranty;
 use App\Shipping;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
 use App\Traits\StoreServices;
+use App\Traits\ImageHostingServices;
 
 trait InventoryServices {
 
-    use GlobalFunctions, LogServices, StoreServices;
+    use GlobalFunctions, LogServices, StoreServices, ImageHostingServices;
 
     private function getInventories($requester) {
 
@@ -105,6 +109,7 @@ trait InventoryServices {
     //Make Sure Inventory is not empty when calling this function
     private function createInventory($params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->inventoryAllCols());
         $data = new Inventory();
 
         $data->uid = Carbon::now()->timestamp . Inventory::count();
@@ -112,20 +117,19 @@ trait InventoryServices {
         $data->code = $params->code;
         $data->sku = $params->sku;
         $data->desc = $params->desc;
-        $data->imgpath = $params->imgpath;
         $data->cost = $this->toDouble($params->cost);
         $data->price = $this->toDouble($params->price);
         $data->qty = $this->toInt($params->qty);
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
 
-        $store = Store::find($params->storeid);
+        $store = Store::find($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
         $data->store()->associate($store);
         
-        $promotion = ProductPromotion::find($params->promotionid);
+        $promotion = ProductPromotion::find($params->product_promotion_id);
         if($this->isEmpty($promotion)){
             return null;
         }else{
@@ -136,49 +140,50 @@ trait InventoryServices {
 
         $data->promotion()->associate($promotion);
         
-        $warranty = Warranty::find($params->warrantyid);
+        $warranty = Warranty::find($params->warranty_id);
         if($this->isEmpty($warranty)){
             return null;
         }
         $data->warranty()->associate($warranty);
 
-        $shipping = Shipping::find($params->shippingid);
+        $shipping = Shipping::find($params->shipping_id);
         if($this->isEmpty($shipping)){
             return null;
         }
         $data->shipping()->associate($shipping);
 
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+
+        if(!$this->saveModel($data)){
             return null;
         }
-
+        
+      
         return $data->refresh();
     }
 
     //Make Sure Inventory is not empty when calling this function
     private function updateInventory($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->inventoryAllCols());
+
         $data->name = $params->name;
         $data->code = $params->code;
         $data->sku = $params->sku;
         $data->desc = $params->desc;
-        $data->imgpath = $params->imgpath;
         $data->cost = $this->toDouble($params->cost);
         $data->price = $this->toDouble($params->price);
         $data->qty = $this->toInt($params->qty);
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
 
-        $store = Store::find($params->storeid);
+        $store = Store::find($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
         $data->store()->associate($store);
-        error_log('here');
-        $promotion = ProductPromotion::find($params->promotionid);
+        
+        $promotion = ProductPromotion::find($params->product_promotion_id);
         if($this->isEmpty($promotion)){
             return null;
         }else{
@@ -189,42 +194,91 @@ trait InventoryServices {
 
         $data->promotion()->associate($promotion);
         
-        $warranty = Warranty::find($params->warrantyid);
+        $warranty = Warranty::find($params->warranty_id);
         if($this->isEmpty($warranty)){
             return null;
         }
         $data->warranty()->associate($warranty);
 
-        $shipping = Shipping::find($params->shippingid);
+        $shipping = Shipping::find($params->shipping_id);
         if($this->isEmpty($shipping)){
             return null;
         }
         $data->shipping()->associate($shipping);
 
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+
+        if(!$this->saveModel($data)){
             return null;
         }
-
+        
+      
         return $data->refresh();
+
     }
 
     private function deleteInventory($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
-        return $data->refresh();
     }
 
+    //Relationship Associating
+    //===============================================================================================================================================================================
+    public function associateImageWithInventory($data, $params)
+    {
+        $image = new InventoryImage();
+        $image->uid = Carbon::now()->timestamp . InventoryImage::count();
+        $image->name = $params->name;
+        $image->imgpath = $params->imgurl;
+        $image->imgpublicid = $params->publicid;
+        $image->inventory()->associate($data);
+        if($this->saveModel($image)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function associateInventoryFamilyWithInventory($data, $params)
+    {
+        
+        $inventoryfamily = $this->createInventoryFamily($params);
+        $inventoryfamily->inventory()->associate($data);
+        if($this->saveModel($inventoryfamily)){
+            return $inventoryfamily;
+        }else{
+            return null;
+        }
+    }
+
+    
+    //Relationship Deassociating
+    //===============================================================================================================================================================================
+    public function deleteInventoryImage($publicid)
+    {
+        $image =  InventoryImage::where('imgpublicid' , $publicid)->first();
+        if(!$this->isEmpty($image)){
+            $image->delete();
+        }
+    }
+    
+
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
     public function inventoryDefaultCols() {
 
         return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'productreviews','inventoryfamilies'];
+
+    }
+    
+
+    public function inventoryAllCols() {
+
+        return ['id','store_id', 'product_promotion_id', 'shipping_id' ,'warranty_id', 'uid', 'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 'cost' , 'price' , 'qty','promoendqty','salesqty','stockthreshold','status','onsale'];
 
     }
     
@@ -237,7 +291,9 @@ trait InventoryServices {
             }
             
             if($data->price != 0){
-                $data->promopctg = $this->toDouble($data->promoprice / $data->price);
+                $data->promopctg = $this->toDouble($data->promoprice / $data->price ) * 100;
+            }else{
+                $data->promopctg = 0;
             }
         }
 
@@ -255,6 +311,8 @@ trait InventoryServices {
         return $data;
 
     }
+
+    
 
 
 }

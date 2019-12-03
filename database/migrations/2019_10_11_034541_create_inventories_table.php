@@ -20,9 +20,10 @@ class CreateInventoriesTable extends Migration
             $table->unsignedInteger('shipping_id')->unsigned()->nullable();
             $table->unsignedInteger('warranty_id')->unsigned()->nullable();
             $table->string('uid')->unique();
-            $table->string('code');
-            $table->string('sku');
+            $table->string('code')->nullable();
+            $table->string('sku')->nullable();
             $table->string('name');
+            $table->string('imgpublicid')->nullable()->unique();
             $table->string('imgpath')->nullable();
             $table->longText('desc')->nullable();
             $table->decimal('rating',8,2)->default(0.00);

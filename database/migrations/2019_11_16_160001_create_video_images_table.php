@@ -18,6 +18,7 @@ class CreateVideoImagesTable extends Migration
             $table->string('uid')->unique();
             $table->unsignedInteger('video_id')->unsigned();
             $table->string('name');
+            $table->string('imgpublicid')->nullable()->unique();
             $table->string('imgpath')->unique();
             $table->boolean('status')->default(true);
             $table->timestamps();

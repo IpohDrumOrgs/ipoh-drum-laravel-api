@@ -21,6 +21,7 @@ class CreateProductReviewsTable extends Migration
             $table->string('title');
             $table->string('desc')->nullable();
             $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable()->unique();
             $table->string('type')->default('inventory');
             $table->decimal('rating',8,2)->default(0.00);
             $table->integer('like')->default(0);

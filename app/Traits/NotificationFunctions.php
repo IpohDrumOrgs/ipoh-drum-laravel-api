@@ -41,61 +41,61 @@ trait NotificationFunctions {
     
     
     public function errorResponse(){
-        $data['data'] = null;
-        $data['status'] = 'error';
-        $data['msg'] = $this->getErrorMsg();
-        $data['code'] = 404;
-        return response()->json($data, 404);
+        $response['data'] = null;
+        $response['status'] = 'error';
+        $response['msg'] = $this->getErrorMsg();
+        $response['code'] = 404;
+        return response()->json($response, 404);
     }
     
     public function notFoundResponse($provider){
-        $data['data'] = null;
-        $data['status'] = 'error';
-        $data['msg'] = $this->getNotFoundMsg($provider);
-        $data['code'] = 404;
-        return response()->json($data, 404);
+        $response['data'] = null;
+        $response['status'] = 'error';
+        $response['msg'] = $this->getNotFoundMsg($provider);
+        $response['code'] = 404;
+        return response()->json($response, 404);
     }
     
     public function successResponse($provider , $data , $type){
 
         switch($type){
             case 'create' : 
-                $data['status'] = 'success';
-                $data['msg'] = $this->getUpdatedSuccessMsg($provider);
-                $data['data'] = $data;
-                $data['code'] = 200;
+                $response['status'] = 'success';
+                $response['msg'] = $this->getUpdatedSuccessMsg($provider);
+                $response['data'] = $data;
+                $response['code'] = 200;
                 break;
 
             case 'update' : 
-                $data['status'] = 'success';
-                $data['msg'] = $this->getCreatedSuccessMsg($provider);
-                $data['data'] = $data;
-                $data['code'] = 200;
+                $response['status'] = 'success';
+                $response['msg'] = $this->getCreatedSuccessMsg($provider);
+                $response['data'] = $data;
+                $response['code'] = 200;
                 break;
 
             case 'retrieve' : 
-                $data['status'] = 'success';
-                $data['msg'] = $this->getRetrievedSuccessMsg($provider);
-                $data['data'] = $data;
-                $data['code'] = 200;
+                $response['status'] = 'success';
+                $response['msg'] = $this->getRetrievedSuccessMsg($provider);
+                $response['data'] = $data;
+                $response['code'] = 200;
                 break;
 
             case 'delete' : 
-                $data['status'] = 'success';
-                $data['msg'] = $this->getDeletedSuccessMsg($provider);
-                $data['data'] = $data;
-                $data['code'] = 200;
+                $response['status'] = 'success';
+                $response['msg'] = $this->getDeletedSuccessMsg($provider);
+                $response['data'] = $data;
+                $response['code'] = 200;
                 break;
 
             default :
-                $data['status'] = 'success';
-                $data['msg'] = 'Operation success';
-                $data['data'] = $data;
-                $data['code'] = 200;
+                $response['status'] = 'success';
+                $response['msg'] = 'Operation success';
+                $response['data'] = $data;
+                $response['code'] = 200;
                 break;
 
         }
 
-        return response()->json($data, 200);
+        return response()->json($response, 200);
     }
 }

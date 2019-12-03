@@ -2282,6 +2282,357 @@
                 }
             }
         },
+        "/api/productpromotion": {
+            "get": {
+                "tags": [
+                    "ProductPromotionControllerService"
+                ],
+                "summary": "Get list of productpromotions",
+                "description": "Returns list of productpromotions",
+                "operationId": "getProductPromotions",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of productpromotions"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productpromotions"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ProductPromotionControllerService"
+                ],
+                "summary": "Creates a productpromotion.",
+                "operationId": "createProductPromotion",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "ProductPromotionname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Promotion description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "qty",
+                        "in": "query",
+                        "description": "Limited Qty",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Promotion Discount",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discpctg",
+                        "in": "query",
+                        "description": "Promotion Discount Percentage",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discbyprice",
+                        "in": "query",
+                        "description": "Promotion discount by price",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "promostartdate",
+                        "in": "query",
+                        "description": "Promotion Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promoenddate",
+                        "in": "query",
+                        "description": "Promotion End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductPromotion has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the productpromotion."
+                    }
+                }
+            }
+        },
+        "/api/filter/productpromotion": {
+            "get": {
+                "tags": [
+                    "ProductPromotionControllerService"
+                ],
+                "summary": "Filter list of productpromotions",
+                "description": "Returns list of filtered productpromotions",
+                "operationId": "filterProductPromotions",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered productpromotions"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productpromotions"
+                    }
+                }
+            }
+        },
+        "/api/productpromotion/{uid}": {
+            "get": {
+                "tags": [
+                    "ProductPromotionControllerService"
+                ],
+                "summary": "Retrieves productpromotion by Uid.",
+                "operationId": "getProductPromotionByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductPromotion_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductPromotion has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the productpromotion."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ProductPromotionControllerService"
+                ],
+                "summary": "Update productpromotion by Uid.",
+                "operationId": "updateProductPromotionByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductPromotion_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "ProductPromotionname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Promotion description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "qty",
+                        "in": "query",
+                        "description": "Limited Qty",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Promotion Discount",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discpctg",
+                        "in": "query",
+                        "description": "Promotion Discount Percentage",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discbyprice",
+                        "in": "query",
+                        "description": "Promotion discount by price",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "promostartdate",
+                        "in": "query",
+                        "description": "Promotion Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "promoenddate",
+                        "in": "query",
+                        "description": "Promotion End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductPromotion has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the productpromotion."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ProductPromotionControllerService"
+                ],
+                "summary": "Set productpromotion's 'status' to 0.",
+                "operationId": "deleteProductPromotionByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductPromotion ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductPromotion has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the productpromotion."
+                    }
+                }
+            }
+        },
         "/api/role": {
             "get": {
                 "tags": [
@@ -3154,6 +3505,313 @@
                     },
                     "default": {
                         "description": "Unable to retrieve list of sales"
+                    }
+                }
+            }
+        },
+        "/api/shipping": {
+            "get": {
+                "tags": [
+                    "ShippingControllerService"
+                ],
+                "summary": "Get list of shippings",
+                "description": "Returns list of shippings",
+                "operationId": "getShippings",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of shippings"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of shippings"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ShippingControllerService"
+                ],
+                "summary": "Creates a shipping.",
+                "operationId": "createShipping",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Shippingname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Shipping description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Shipping price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "maxweight",
+                        "in": "query",
+                        "description": "Shipping maximum weight",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "maxdimension",
+                        "in": "query",
+                        "description": "Shipping maximum dimension",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shipping has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the shipping."
+                    }
+                }
+            }
+        },
+        "/api/filter/shipping": {
+            "get": {
+                "tags": [
+                    "ShippingControllerService"
+                ],
+                "summary": "Filter list of shippings",
+                "description": "Returns list of filtered shippings",
+                "operationId": "filterShippings",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered shippings"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of shippings"
+                    }
+                }
+            }
+        },
+        "/api/shipping/{uid}": {
+            "get": {
+                "tags": [
+                    "ShippingControllerService"
+                ],
+                "summary": "Retrieves shipping by Uid.",
+                "operationId": "getShippingByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Shipping_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shipping has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the shipping."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ShippingControllerService"
+                ],
+                "summary": "Update shipping by Uid.",
+                "operationId": "updateShippingByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Shipping_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Shippingname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Shipping description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Shipping price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "maxweight",
+                        "in": "query",
+                        "description": "Shipping maximum weight",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "maxdimension",
+                        "in": "query",
+                        "description": "Shipping maximum dimension",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shipping has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the shipping."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ShippingControllerService"
+                ],
+                "summary": "Set shipping's 'status' to 0.",
+                "operationId": "deleteShippingByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Shipping ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shipping has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the shipping."
                     }
                 }
             }
@@ -5294,6 +5952,295 @@
                     },
                     "default": {
                         "description": "Unable to retrieve list of verificationcodes"
+                    }
+                }
+            }
+        },
+        "/api/warranty": {
+            "get": {
+                "tags": [
+                    "WarrantyControllerService"
+                ],
+                "summary": "Get list of warranties",
+                "description": "Returns list of warranties",
+                "operationId": "getWarranties",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of warranties"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of warranties"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "WarrantyControllerService"
+                ],
+                "summary": "Creates a warranty.",
+                "operationId": "createWarranty",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Warrantyname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Warranty description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "description": "Warranty Period",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "policy",
+                        "in": "query",
+                        "description": "Warranty Policy",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Warranty has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the warranty."
+                    }
+                }
+            }
+        },
+        "/api/filter/warranty": {
+            "get": {
+                "tags": [
+                    "WarrantyControllerService"
+                ],
+                "summary": "Filter list of warranties",
+                "description": "Returns list of filtered warranties",
+                "operationId": "filterWarranties",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered warranties"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of warranties"
+                    }
+                }
+            }
+        },
+        "/api/warranty/{uid}": {
+            "get": {
+                "tags": [
+                    "WarrantyControllerService"
+                ],
+                "summary": "Retrieves warranty by Uid.",
+                "operationId": "getWarrantyByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Warranty_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Warranty has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the warranty."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "WarrantyControllerService"
+                ],
+                "summary": "Update warranty by Uid.",
+                "operationId": "updateWarrantyByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Warranty_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Warrantyname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Warranty description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "description": "Warranty Period",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "policy",
+                        "in": "query",
+                        "description": "Warranty Policy",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Warranty has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the warranty."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "WarrantyControllerService"
+                ],
+                "summary": "Set warranty's 'status' to 0.",
+                "operationId": "deleteWarrantyByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Warranty ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Warranty has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the warranty."
                     }
                 }
             }

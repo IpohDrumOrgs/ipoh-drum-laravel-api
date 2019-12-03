@@ -3,31 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="35cfe8ca-25ce-4ad0-bdff-0fc4734b6903" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Category.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Category.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/InventoryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/InventoryController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/ProductFeatureController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/ProductFeatureController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/ProductFeature.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/ProductFeature.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/CategoryServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/CategoryServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/CompanyServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/CompanyServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/CompanyTypeServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/CompanyTypeServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/GlobalFunctions.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/GlobalFunctions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/GroupServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/GroupServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/InventoryServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/InventoryServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/ModuleServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/ModuleServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/ProductFeatureServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/ProductFeatureServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/RoleServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/RoleServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/SaleItemServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/SaleItemServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/SaleServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/SaleServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/StoreServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/StoreServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/TicketServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/TicketServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/TypeServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/TypeServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/VerificationCodeServices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/VerificationCodeServices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Type.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Type.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2019_10_11_034541_create_inventories_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_10_11_034541_create_inventories_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2019_11_06_094848_create_category_inventory_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_11_06_094848_create_category_inventory_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2019_11_06_101916_create_inventory_type_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_11_06_101916_create_inventory_type_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2019_11_06_102227_create_inventory_product_feature_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_11_06_102227_create_inventory_product_feature_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Inventory.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Inventory.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage/api-docs/api-docs.json" beforeDir="false" afterPath="$PROJECT_DIR$/storage/api-docs/api-docs.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -218,6 +194,9 @@
       <workItem from="1573964041673" duration="325000" />
       <workItem from="1573965674901" duration="705000" />
       <workItem from="1573996049701" duration="2097000" />
+      <workItem from="1574948183014" duration="1888000" />
+      <workItem from="1575122622803" duration="1824000" />
+      <workItem from="1575159225647" duration="2007000" />
     </task>
     <servers />
   </component>

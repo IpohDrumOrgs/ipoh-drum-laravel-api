@@ -178,7 +178,7 @@ trait GlobalFunctions {
     //convert string to double
     public function toDouble($data){
         if($this->isEmpty($data)){
-            return null;
+            return 0.00;
         }else{
             return number_format((float)($data), 2,'.','');
         }
@@ -187,7 +187,7 @@ trait GlobalFunctions {
     //convert string to double
     public function toInt($data){
         if($this->isEmpty($data)){
-            return null;
+            return 0;
         }else{
             return (int)$data;
         }

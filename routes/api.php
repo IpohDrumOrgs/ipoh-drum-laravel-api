@@ -28,79 +28,65 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::get('/user-profile', 'API\UserController@getUser');
     Route::resource('user', 'API\UserController');
+    Route::get('/filter/user', 'API\UserController@filter');
 
-    Route::post('/category', 'API\CategoryController@store');
-    Route::get('/category/{uid}', 'API\CategoryController@show');
-    Route::put('/category/{uid}', 'API\CategoryController@update');
-    Route::delete('/category/{uid}', 'API\CategoryController@destroy');
-
-    Route::post('/type', 'API\TypeController@store');
-    Route::get('/type/{uid}', 'API\TypeController@show');
-    Route::put('/type/{uid}', 'API\TypeController@update');
-    Route::delete('/type/{uid}', 'API\TypeController@destroy');
-
-    Route::post('/productfeature', 'API\ProductFeatureController@store');
-    Route::get('/productfeature/{uid}', 'API\ProductFeatureController@show');
-    Route::put('/productfeature/{uid}', 'API\ProductFeatureController@update');
-    Route::delete('/productfeature/{uid}', 'API\ProductFeatureController@destroy');
 
     Route::resource('group', 'API\GroupController');
+    Route::get('/filter/group', 'API\GroupController@filter');
 
     Route::resource('company', 'API\CompanyController');
     Route::post('/get-all-company','API\CompanyController@getAllCompany');
+    Route::get('/filter/company', 'API\CompanyController@filter');
 
+    Route::resource('companytype', 'API\CompanyTypeController');
+    Route::get('/filter/companytype', 'API\CompanyTypeController@filter');
+
+    Route::resource('role', 'API\RoleController');
+    Route::get('/filter/role', 'API\RoleController@filter');
+
+    Route::resource('log', 'API\LogController');
+    Route::get('/filter/log', 'API\LogController@filter');
+
+    Route::resource('module', 'API\ModuleController');
+    Route::get('/filter/module', 'API\ModuleController@filter');
+
+    //Store Related Route =======================================================
     
+    Route::resource('/category', 'API\CategoryController');
+    Route::get('/filter/category', 'API\CategoryController@filter');
+
+    Route::resource('/type', 'API\TypeController');
+    Route::get('/filter/type', 'API\TypeController@filter');
+
+    Route::resource('/productfeature', 'API\ProductFeatureController');
+    Route::get('/filter/productfeature', 'API\ProductFeatureController@filter');
+
     Route::resource('store', 'API\StoreController');
+    Route::get('/filter/store', 'API\StoreController@filter');
     Route::get('/store/{uid}/promotions', 'API\StoreController@getPromotions');
     Route::get('/store/{uid}/warranties', 'API\StoreController@getWarranties');
     Route::get('/store/{uid}/shippings', 'API\StoreController@getShippings');
-    //Generate report in PDF
-    // Route::get('/inventory/generate-pdf', 'API\InventoryController@exportPDF');
-    // Route::get('/stocktransfer/generate-pdf', 'API\StockTransferController@exportPDF');
-    // Route::get('/generate-pdf', 'API\SaleController@exportPDF')->name('generate-pdf');
 
-    // Route::resource('account', 'API\AccountController');
-    Route::resource('companytype', 'API\CompanyTypeController');
-    Route::resource('role', 'API\RoleController');
-    Route::resource('log', 'API\LogController');
-    Route::resource('module', 'API\ModuleController');
+    Route::resource('productpromotion', 'API\ProductPromotionController');
+    Route::get('/filter/productpromotion', 'API\ProductPromotionController@filter');
+
+    Route::resource('warranty', 'API\WarrantyController');
+    Route::get('/filter/warranty', 'API\WarrantyController@filter');
+
+    Route::resource('shipping', 'API\ShippingController');
+    Route::get('/filter/shipping', 'API\ShippingController@filter');
+
     Route::resource('inventory', 'API\InventoryController');
-    Route::resource('ticket', 'API\TicketController');
-    Route::resource('sale', 'API\SaleController');
-    Route::resource('payment', 'API\PaymentController');
-    // Route::resource('purchase', 'API\PurchaseController');
-    // Route::resource('batch', 'API\BatchController');
-    // Route::resource('stocktransfer', 'API\StockTransferController');
-    // Route::resource('inventorybatch', 'API\InventoryBatchController');
-    // // Route::resource('report', 'API\ReportController');
-    // Route::resource('pricelist', 'API\PriceListController');
-
-    //Filter
-    Route::get('/filter/user', 'API\UserController@filter');
-    Route::get('/filter/group', 'API\GroupController@filter');
-    Route::get('/filter/company', 'API\CompanyController@filter');
-    Route::get('/filter/companytype', 'API\CompanyTypeController@filter');
-    Route::get('/filter/role', 'API\RoleController@filter');
-    Route::get('/filter/log', 'API\LogController@filter');
-    Route::get('/filter/module', 'API\ModuleController@filter');
-    Route::get('/filter/category', 'API\CategoryController@filter');
-    Route::get('/filter/type', 'API\TypeController@filter');
-    Route::get('/filter/productfeature', 'API\ProductFeatureController@filter');
     Route::get('/filter/inventory', 'API\InventoryController@filter');
-    Route::get('/filter/store', 'API\StoreController@filter');
+
+    Route::resource('ticket', 'API\TicketController');
     Route::get('/filter/ticket', 'API\TicketController@filter');
-    Route::get('/filter/inventorybatch', 'API\InventoryBatchController@filter');
+
+    Route::resource('sale', 'API\SaleController');
     Route::get('/filter/sale', 'API\SaleController@filter');
+
+    Route::resource('payment', 'API\PaymentController');
     Route::get('/filter/payment', 'API\PaymentController@filter');
-    Route::get('/filter/purchase', 'API\PurchaseController@filter');
-    Route::get('/filter/batch', 'API\BatchController@filter');
-    Route::get('/filter/stocktransfer', 'API\StockTransferController@filter');
-    Route::get('/filter/get-cashiers', 'API\UserController@getCashiers');
-    Route::get('/filter/filter-report', 'API\ReportController@filter');
-
-    // Route::get('/awaiting-approve', 'API\StockTransferController@awaitingApprove');
-
-    // Route::post('/change-password','API\UserController@changePassword');
     
 });
 

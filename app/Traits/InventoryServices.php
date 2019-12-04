@@ -283,33 +283,37 @@ trait InventoryServices {
     }
     
     public function calculatePromotionPrice($data) {
-        if(!$this->isEmpty($data->promotion)){
-            if($data->promotion->discbyprice){
-                $data->promoprice = $data->price - $data->promotion->disc;
-            }else{
-                $data->promoprice = $data->price - ($data->price * $data->promotion->discpctg);
+        if(isset($data->promotion)){
+            if(!$this->isEmpty($data->promotion)){
+                if($data->promotion->discbyprice){
+                    $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
+                }else{
+                    $data->promoprice =  $this->toDouble($data->price - ($data->price * $data->promotion->discpctg));
+                }
+                
+                if($data->price != 0){
+                    $data->promopctg = $this->toDouble($data->promoprice / $data->price ) * 100;
+                }else{
+                    $data->promopctg = 0;
+                }
             }
-            
-            if($data->price != 0){
-                $data->promopctg = $this->toDouble($data->promoprice / $data->price ) * 100;
-            }else{
-                $data->promopctg = 0;
-            }
+    
         }
 
         return $data;
-
     }
     
     public function countProductReviews($data) {
-        if(!$this->isEmpty($data->productreviews)){
-            $data->totalproductreview = collect($data->productreviews)->count();
-        }else{
-            $data->totalproductreview = 0;
+        if(isset($data->productreviews)){
+            if(!$this->isEmpty($data->productreviews)){
+                $data->totalproductreview = collect($data->productreviews)->count();
+            }else{
+                $data->totalproductreview = 0;
+            }
+
         }
 
         return $data;
-
     }
 
     

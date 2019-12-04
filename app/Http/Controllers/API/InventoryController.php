@@ -196,17 +196,9 @@ class InventoryController extends Controller
         error_log('Retrieving inventory of uid:' . $uid);
         $inventory = $this->getInventory($uid);
         if ($this->isEmpty($inventory)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Inventory');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Inventory');
         } else {
-            $data['data'] = $inventory;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Inventory');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Inventory', $inventory, 'retrieve');
         }
     }
 
@@ -495,11 +487,7 @@ class InventoryController extends Controller
         $this->createLog($request->user()->id , [$inventory->id], 'create', 'inventory');
         DB::commit();
 
-        $data['status'] = 'success';
-        $data['msg'] = $this->getCreatedSuccessMsg('Inventory');
-        $data['data'] = $inventory;
-        $data['code'] = 200;
-        return response()->json($data, 200);
+        return $this->successResponse('Inventory', $inventory, 'create');
     }
 
 
@@ -809,11 +797,7 @@ class InventoryController extends Controller
         $this->createLog($request->user()->id , [$inventory->id], 'update', 'inventory');
         DB::commit();
 
-        $data['status'] = 'success';
-        $data['msg'] = $this->getUpdatedSuccessMsg('Inventory');
-        $data['data'] = $inventory;
-        $data['code'] = 200;
-        return response()->json($data, 200);
+        return $this->successResponse('Inventory', $inventory, 'update');
     }
 
     /**
@@ -848,28 +832,16 @@ class InventoryController extends Controller
         $inventory = $this->getInventory($uid);
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Inventory');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Inventory');
         }
         $inventory = $this->deleteInventory($inventory);
         $this->createLog($request->user()->id , [$inventory->id], 'delete', 'inventory');
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Inventory');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Inventory', $inventory, 'delete');
         }
     }
 
@@ -912,17 +884,9 @@ class InventoryController extends Controller
             $inventory = null;
         }
         if ($this->isEmpty($inventory)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Inventory');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Inventory');
         } else {
-            $data['data'] = $inventory;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Inventory');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Inventory', $inventory, 'retrieve');
         }
     }
 

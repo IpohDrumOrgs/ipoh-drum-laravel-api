@@ -22,4 +22,12 @@ class ProductPromotion extends Model
     {
         return $this->hasMany('App\Ticket');
     }
+    
+    /**
+    * 
+    */
+    public function store()
+    {
+        return $this->belongsTo('App\Store');
+    }
 }

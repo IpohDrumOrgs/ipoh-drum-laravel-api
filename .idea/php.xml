@@ -95,7 +95,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
       <path value="$PROJECT_DIR$/vendor/symfony/finder" />
       <path value="$PROJECT_DIR$/vendor/symfony/routing" />
-      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
       <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/vendor/symfony/translation" />
@@ -111,6 +110,13 @@
       <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
       <path value="$PROJECT_DIR$/vendor/jrm2k6/cloudder" />
       <path value="$PROJECT_DIR$/vendor/cloudinary/cloudinary_php" />
+      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/vendor/predis/predis" />
+      <path value="$PROJECT_DIR$/vendor/ankitpokhrel/tus-php" />
+      <path value="$PROJECT_DIR$/vendor/graham-campbell/manager" />
+      <path value="$PROJECT_DIR$/vendor/vimeo/laravel" />
+      <path value="$PROJECT_DIR$/vendor/vimeo/vimeo-api" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

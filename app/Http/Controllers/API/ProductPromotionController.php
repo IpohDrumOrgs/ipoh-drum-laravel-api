@@ -496,11 +496,11 @@ class ProductPromotionController extends Controller
             return $this->notFoundResponse('ProductPromotion');
         }
         $productpromotion = $this->deleteProductPromotion($productpromotion);
-        $this->createLog($request->user()->id , [$productpromotion->id], 'delete', 'productpromotion');
         if ($this->isEmpty($productpromotion)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
+            $this->createLog($request->user()->id , [$productpromotion->id], 'delete', 'productpromotion');
             DB::commit();
             return $this->successResponse('ProductPromotion', $productpromotion, 'delete');
         }

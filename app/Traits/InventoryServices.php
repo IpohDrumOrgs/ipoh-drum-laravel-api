@@ -16,10 +16,11 @@ use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
 use App\Traits\StoreServices;
 use App\Traits\ImageHostingServices;
+use App\Traits\InventoryFamilyServices;
 
 trait InventoryServices {
 
-    use GlobalFunctions, LogServices, StoreServices, ImageHostingServices;
+    use GlobalFunctions, LogServices, StoreServices, ImageHostingServices, InventoryFamilyServices;
 
     private function getInventories($requester) {
 
@@ -219,6 +220,30 @@ trait InventoryServices {
 
     private function deleteInventory($data) {
         $data->status = false;
+
+        $reviews = $data->productreviews;   
+        foreach($reviews as $review){
+            if(!$this->deleteProductReview($review)){
+                return null;
+            }
+        }
+        
+        $inventoryfamilies = $data->inventoryfamilies;
+        foreach($inventoryfamilies as $inventoryfamily){
+            if(!$this->deleteInventoryFamily($inventoryfamily)){
+                return null;
+            }
+        }
+
+        //Cancel Inventory Image
+        $images = $data->images;
+        foreach($images as $image){
+            if(!$this->deleteInventoryImage($image->imgpublicid)){
+                error_log('deleting image');
+                return null;
+            }
+        }
+
         if($this->saveModel($data)){
             return $data->refresh();
         }else{
@@ -261,8 +286,12 @@ trait InventoryServices {
     public function deleteInventoryImage($publicid)
     {
         $image =  InventoryImage::where('imgpublicid' , $publicid)->first();
+        $this->deleteImage($publicid);
         if(!$this->isEmpty($image)){
             $image->delete();
+            return true;
+        }else{
+            return false;
         }
     }
     

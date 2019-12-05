@@ -157,6 +157,23 @@ trait ProductPromotionServices {
     }
 
     private function deleteProductPromotion($data) {
+
+        //Remove the relationship
+        $inventories = $data->inventories;
+        foreach($inventories as $inventory){
+            $inventory->promotion()->dissociate();
+            if($this->saveModel($inventory)){
+                return null;
+            }
+        }
+        $tickets = $data->tickets;
+        foreach($tickets as $ticket){
+            $ticket->promotion()->dissociate();
+            if($this->saveModel($ticket)){
+                return null;
+            }
+        }
+        //Cancel promotion
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

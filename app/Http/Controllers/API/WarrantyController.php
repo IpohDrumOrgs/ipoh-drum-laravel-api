@@ -427,11 +427,11 @@ class WarrantyController extends Controller
             return $this->notFoundResponse('Warranty');
         }
         $warranty = $this->deleteWarranty($warranty);
-        $this->createLog($request->user()->id , [$warranty->id], 'delete', 'warranty');
         if ($this->isEmpty($warranty)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
+            $this->createLog($request->user()->id , [$warranty->id], 'delete', 'warranty');
             DB::commit();
             return $this->successResponse('Warranty', $warranty, 'delete');
         }

@@ -143,7 +143,7 @@ class InventoryTableSeeder extends Seeder
             for($y = 0 ; $y < 7 ; $y++){
                 $image = new InventoryImage();
                 $image->uid = Carbon::now()->timestamp . '-' . (InventoryImage::count() + 1);
-                $image->name = $faker->unique()->jobTitle;
+                $image->name = $faker->jobTitle;
                 $image->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
                 $image->imgpublicid = Carbon::now()->timestamp . '-' . (InventoryImage::count() + 1);
                 $image->inventory()->associate($inventory);
@@ -174,10 +174,10 @@ class InventoryTableSeeder extends Seeder
             // $batch->save();
         }
         
-        for($x=0; $x<50; $x++){
+        for($x=0; $x<200; $x++){
             $productreview = new ProductReview();
             $productreview->uid =  Carbon::now()->timestamp . '-' . (ProductReview::count() + 1);
-            $productreview->title =  $faker->unique()->jobTitle;
+            $productreview->title =  $faker->jobTitle;
             $productreview->desc = $faker->sentence;
             $productreview->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
             $productreview->imgpublicid = Carbon::now()->timestamp . '-' . (ProductReview::count() + 1);
@@ -185,9 +185,9 @@ class InventoryTableSeeder extends Seeder
             $productreview->like = $faker->numberBetween($min = 1, $max = 1000);
             $productreview->dislike = $faker->numberBetween($min = 1, $max = 1000);
             $productreview->status = true;
-            $inventory = Inventory::find($faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12]));
+            $inventory = Inventory::find( $faker->numberBetween($min = 1, $max = 50));
             $productreview->inventory()->associate($inventory);
-            $productreview->user()->associate(User::find($faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12,null])));
+            $productreview->user()->associate(User::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11,12])));
             $productreview->save();
         }
     }

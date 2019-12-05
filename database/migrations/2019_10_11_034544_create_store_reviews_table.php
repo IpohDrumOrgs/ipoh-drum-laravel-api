@@ -14,6 +14,7 @@ class CreateStoreReviewsTable extends Migration
     public function up()
     {
         Schema::create('store_reviews', function (Blueprint $table) {
+            $table->increments('id')->unique();
             $table->unsignedInteger('store_id')->unsigned();
             $table->unsignedInteger('user_id')->unsigned();
             $table->string('uid')->unique();

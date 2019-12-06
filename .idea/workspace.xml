@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35cfe8ca-25ce-4ad0-bdff-0fc4734b6903" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Inventory.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Inventory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ProductPromotion.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/ProductPromotion.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Shipping.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Shipping.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Warranty.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Warranty.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage/api-docs/api-docs.json" beforeDir="false" afterPath="$PROJECT_DIR$/storage/api-docs/api-docs.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,20 +20,6 @@
     <execution>
       <executable />
     </execution>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>$data['status'] = 'success';</find>
-      <find>authenticate</find>
-      <find>update</find>
-      <find>code</find>
-      <find>register</find>
-      <find>authenticated</find>
-      <find>index</find>
-      <find>store</find>
-      <find>double</find>
-      <find>error_log</find>
-    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -207,6 +195,7 @@
       <workItem from="1575210396688" duration="824000" />
       <workItem from="1575330494114" duration="2996000" />
       <workItem from="1575465711458" duration="1206000" />
+      <workItem from="1575552039847" duration="6528000" />
     </task>
     <servers />
   </component>

@@ -6278,6 +6278,9 @@
                     "name": {
                         "type": "string"
                     },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
                     "imgpath": {
                         "type": "string"
                     },
@@ -6336,6 +6339,54 @@
                         "type": "string"
                     },
                     "desc": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductPromotion": {
+                "title": "ProductPromotion",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "store_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "qty": {
+                        "type": "integer"
+                    },
+                    "disc": {
+                        "type": "number"
+                    },
+                    "discpctg": {
+                        "type": "number"
+                    },
+                    "discbyprice": {
+                        "type": "integer"
+                    },
+                    "promostartdate": {
+                        "type": "string"
+                    },
+                    "promoenddate": {
                         "type": "string"
                     },
                     "status": {
@@ -6412,6 +6463,45 @@
                     },
                     "remember_token": {
                         "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Shipping": {
+                "title": "Shipping",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "store_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "maxweight": {
+                        "type": "number"
+                    },
+                    "maxdimension": {
+                        "type": "number"
+                    },
+                    "status": {
+                        "type": "integer"
                     },
                     "created_at": {
                         "type": "string"
@@ -6511,6 +6601,42 @@
                     },
                     "remember_token": {
                         "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Warranty": {
+                "title": "Warranty",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "store_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "period": {
+                        "type": "integer"
+                    },
+                    "policy": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
                     },
                     "created_at": {
                         "type": "string"

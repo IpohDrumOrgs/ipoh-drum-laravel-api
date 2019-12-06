@@ -19,6 +19,7 @@ class Inventory extends Model
      * @OA\Property(property="code", type="string"),
      * @OA\Property(property="sku", type="string"),
      * @OA\Property(property="name", type="string"),
+     * @OA\Property(property="imgpublicid", type="string"),
      * @OA\Property(property="imgpath", type="string"),
      * @OA\Property(property="desc", type="string"),
      * @OA\Property(property="rating", type="number"),
@@ -35,7 +36,7 @@ class Inventory extends Model
      */
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that shoul{d be cast to native types.
      *
      * @var array
      */

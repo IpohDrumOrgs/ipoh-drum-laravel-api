@@ -183,6 +183,12 @@ trait InventoryFamilyServices {
     }
 
     private function deleteInventoryFamily($data) {
+        $patterns = $data->patterns;
+        foreach($patterns as $pattern){
+            if(!$this->deletePattern($pattern)){
+                return null;
+            }
+        }
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

@@ -54,8 +54,10 @@ trait ImageHostingServices {
         if($id){
             try{
                 Cloudder::destroy($id);
+                return true;
             }catch(Exxception $e){
                 $this->createErrorLog('ImageHostingServices' , 'deleteImage', 'error when deleting image '. $id , $e->getMessage());
+                return false;
             }
         }
     } 

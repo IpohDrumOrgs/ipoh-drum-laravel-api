@@ -14,12 +14,13 @@ class CreateProductReviewsTable extends Migration
     public function up()
     {
         Schema::create('product_reviews', function (Blueprint $table) {
+            $table->increments('id')->unique();
             $table->unsignedInteger('inventory_id')->unsigned()->nullable();
             $table->unsignedInteger('ticket_id')->unsigned()->nullable();
             $table->unsignedInteger('user_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('title');
-            $table->string('desc')->nullable();
+            $table->string('desc');
             $table->string('imgpath')->nullable();
             $table->string('imgpublicid')->nullable()->unique();
             $table->string('type')->default('inventory');

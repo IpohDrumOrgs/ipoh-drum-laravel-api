@@ -2633,6 +2633,343 @@
                 }
             }
         },
+        "/api/productreview": {
+            "get": {
+                "tags": [
+                    "ProductReviewControllerService"
+                ],
+                "summary": "Get list of productreviews",
+                "description": "Returns list of productreviews",
+                "operationId": "getProductReviews",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of productreviews"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productreviews"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ProductReviewControllerService"
+                ],
+                "summary": "Creates a productreview.",
+                "operationId": "createProductReview",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "ProductReview title",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "inventory_id",
+                        "in": "query",
+                        "description": "Inventory ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ticket_id",
+                        "in": "query",
+                        "description": "Ticket ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Review description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Review type",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "Review rating",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ProductReview has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the productreview."
+                    }
+                }
+            }
+        },
+        "/api/filter/productreview": {
+            "get": {
+                "tags": [
+                    "ProductReviewControllerService"
+                ],
+                "summary": "Filter list of productreviews",
+                "description": "Returns list of filtered productreviews",
+                "operationId": "filterProductReviews",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered productreviews"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of productreviews"
+                    }
+                }
+            }
+        },
+        "/api/productreview/{uid}": {
+            "get": {
+                "tags": [
+                    "ProductReviewControllerService"
+                ],
+                "summary": "Retrieves productreview by Uid.",
+                "operationId": "getProductReviewByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductReview_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductReview has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the productreview."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ProductReviewControllerService"
+                ],
+                "summary": "Update productreview by Uid.",
+                "operationId": "updateProductReviewByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductReview_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "ProductReview title",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "inventory_id",
+                        "in": "query",
+                        "description": "Inventory ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ticket_id",
+                        "in": "query",
+                        "description": "Ticket ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Review description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Review type",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "Review rating",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ProductReview has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the productreview."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ProductReviewControllerService"
+                ],
+                "summary": "Set productreview's 'status' to 0.",
+                "operationId": "deleteProductReviewByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ProductReview ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductReview has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the productreview."
+                    }
+                }
+            }
+        },
         "/api/role": {
             "get": {
                 "tags": [

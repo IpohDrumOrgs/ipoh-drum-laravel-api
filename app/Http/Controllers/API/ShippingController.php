@@ -448,11 +448,11 @@ class ShippingController extends Controller
             return $this->notFoundResponse('Shipping');
         }
         $shipping = $this->deleteShipping($shipping);
-        $this->createLog($request->user()->id , [$shipping->id], 'delete', 'shipping');
         if ($this->isEmpty($shipping)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
+            $this->createLog($request->user()->id , [$shipping->id], 'delete', 'shipping');
             DB::commit();
             return $this->successResponse('Shipping', $shipping, 'delete');
         }

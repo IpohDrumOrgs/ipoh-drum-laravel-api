@@ -70,6 +70,10 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('productpromotion', 'API\ProductPromotionController');
     Route::get('/filter/productpromotion', 'API\ProductPromotionController@filter');
 
+    Route::resource('productreview', 'API\ProductReviewController');
+    Route::get('/filter/productreview', 'API\ProductReviewController@filter');
+    // Route::post('/productreview/{uid}/edit', 'API\ProductReviewController@update');
+
     Route::resource('warranty', 'API\WarrantyController');
     Route::get('/filter/warranty', 'API\WarrantyController@filter');
 

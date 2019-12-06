@@ -703,8 +703,12 @@ class InventoryController extends Controller
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
                 //Delete Previous Image
-                $this->deleteInventoryImage($inventory->imgpublicid);
-                $this->deleteImage($inventory->imgpublicid);
+                if(!$this->deleteInventoryImage($inventory->imgpublicid)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+                
                 $inventory->imgpath = $img->imgurl;
                 $inventory->imgpublicid = $img->publicid;
                 $proccessingimgids->push($img->publicid);
@@ -835,11 +839,11 @@ class InventoryController extends Controller
             return $this->notFoundResponse('Inventory');
         }
         $inventory = $this->deleteInventory($inventory);
-        $this->createLog($request->user()->id , [$inventory->id], 'delete', 'inventory');
         if ($this->isEmpty($inventory)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
+            $this->createLog($request->user()->id , [$inventory->id], 'delete', 'inventory');
             DB::commit();
             return $this->successResponse('Inventory', $inventory, 'delete');
         }

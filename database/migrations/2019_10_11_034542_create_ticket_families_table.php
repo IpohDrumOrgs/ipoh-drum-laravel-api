@@ -14,6 +14,7 @@ class CreateTicketFamiliesTable extends Migration
     public function up()
     {
         Schema::create('ticket_families', function (Blueprint $table) {
+            $table->increments('id')->unique();
             $table->unsignedInteger('ticket_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('name');

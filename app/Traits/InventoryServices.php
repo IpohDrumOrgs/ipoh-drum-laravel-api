@@ -120,9 +120,9 @@ trait InventoryServices {
         $data->desc = $params->desc;
         $data->cost = $this->toDouble($params->cost);
         $data->price = $this->toDouble($params->price);
-        $data->qty = $this->toInt($params->qty);
+        // $data->qty = $this->toInt($params->qty);
         $data->stockthreshold = $this->toInt($params->stockthreshold);
-        $data->onsale = $params->onsale;
+        // $data->onsale = $params->onsale;
 
         $store = Store::find($params->store_id);
         if($this->isEmpty($store)){

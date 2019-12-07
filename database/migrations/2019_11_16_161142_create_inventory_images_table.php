@@ -17,7 +17,8 @@ class CreateInventoryImagesTable extends Migration
             $table->increments('id');
             $table->string('uid')->unique();
             $table->unsignedInteger('inventory_id')->unsigned();
-            $table->string('name');
+            $table->string('name')->nullable();
+            $table->string('desc')->nullable();
             $table->string('imgpublicid')->nullable()->unique();
             $table->string('imgpath');
             $table->boolean('status')->default(true);

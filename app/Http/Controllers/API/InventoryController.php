@@ -320,27 +320,9 @@ class InventoryController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="qty",
-     * in="query",
-     * description="Stock Qty",
-     * required=true,
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
      * name="stockthreshold",
      * in="query",
      * description="Stock Threshold",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="onsale",
-     * in="query",
-     * description="On Sale",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )

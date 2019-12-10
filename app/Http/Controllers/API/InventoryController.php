@@ -378,6 +378,7 @@ class InventoryController extends Controller
 
         //Associating Image Relationship
         if($request->file('img') != null){
+            error_log('Image Is Detected');
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
                 $inventory->imgpath = $img->imgurl;
@@ -404,6 +405,7 @@ class InventoryController extends Controller
         
         $count = 0;
         if($request->file('sliders') != null){
+            error_log('Slider Images Is Detected');
             $sliders = $request->file('sliders');
             foreach($sliders as $slider){
                 $count++;

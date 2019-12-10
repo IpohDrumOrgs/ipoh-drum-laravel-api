@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 use JD\Cloudder\Facades\Cloudder;
 use App\InventoryImage;
 use App\Inventory;
-
+use App\Traits\VideoHostingServices;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    use VideoHostingServices;
     /**
      * Create a new controller instance.
      *
@@ -70,5 +71,16 @@ class HomeController extends Controller
         $image->imgpath = $image_url;
         $image->inventory()->associate(Inventory::find(1));
         $image->save();
+    }
+
+    
+    public function uploadVideo(Request $request)
+    {
+        
+        
+        $video = $request->file('image_name');
+
+        $this->uploadVideos($video , "/Video");
+        return redirect()->back()->with('status', 'Image Uploaded Successfully');
     }
 }

@@ -15,11 +15,18 @@ class CreatePlaylistsTable extends Migration
     {
         Schema::create('playlists', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('channel_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name')->unique();
             $table->boolean('private')->default(false);
             $table->boolean('status')->default(true);
             $table->timestamps();
+            
+            $table->foreign('channel_id')
+            ->references('id')
+            ->on('channels')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
         });
     }
 

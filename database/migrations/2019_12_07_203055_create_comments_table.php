@@ -16,13 +16,13 @@ class CreateCommentsTable extends Migration
         Schema::create('comments', function (Blueprint $table) {
             
             $table->increments('id');
-            $table->unsignedInteger('video_id')->unsigned();
-            $table->unsignedInteger('article_id')->unsigned();
-            $table->unsignedInteger('article_image_id')->unsigned();
+            $table->unsignedInteger('video_id')->unsigned()->nullable();
+            $table->unsignedInteger('article_id')->unsigned()->nullable();
+            $table->unsignedInteger('article_image_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('text');
-            $table->string('imgpath');
-            $table->string('imgpublicid');
+            $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable();
             $table->integer('like')->default(0);
             $table->integer('dislike')->default(0);
             $table->string('type')->default('video');

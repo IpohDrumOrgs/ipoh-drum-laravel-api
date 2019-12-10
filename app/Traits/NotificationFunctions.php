@@ -61,14 +61,14 @@ trait NotificationFunctions {
         switch($type){
             case 'create' : 
                 $response['status'] = 'success';
-                $response['msg'] = $this->getUpdatedSuccessMsg($provider);
+                $response['msg'] = $this->getCreatedSuccessMsg($provider);
                 $response['data'] = $data;
                 $response['code'] = 200;
                 break;
 
             case 'update' : 
                 $response['status'] = 'success';
-                $response['msg'] = $this->getCreatedSuccessMsg($provider);
+                $response['msg'] = $this->getUpdatedSuccessMsg($provider);
                 $response['data'] = $data;
                 $response['code'] = 200;
                 break;

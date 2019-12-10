@@ -8,24 +8,22 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\LogServices;
 
-trait ImageHostingServices {
+trait VideoHostingServices {
 
     use GlobalFunctions, LogServices;
 
-    public function uploadImage($img , $folder)
+    public function uploadVideos($video , $folder)
     {
-        if($img && $folder){
+        if($video && $folder){
             try{
     
-            $name = $img->getClientOriginalName();
+            $name = $video->getClientOriginalName();
     
-            $realpath = $img->getRealPath();;
+            $realpath = $video->getRealPath();
             error_log($realpath);
-            Cloudder::upload($realpath, null, ['folder' => $folder, 'quality' => 'auto']);
-    
-            list($width, $height) = getimagesize($realpath);
-    
-            $imgurl= Cloudder::show(Cloudder::getPublicId(), ["width" => $width, "height"=>$height]);
+            $uploadresponse = Cloudder::uploadVideo($realpath, null , array( "folder" => $folder , "chunk_size" => 100000000));
+            error_log(collect($uploadresponse));
+            $imgurl= Cloudder::show(Cloudder::getPublicId());
             //save to uploads directory
             $data['imgurl'] = $imgurl;
             $data['publicid'] = Cloudder::getPublicId();
@@ -33,22 +31,22 @@ trait ImageHostingServices {
             return (object) $data;
 
             }catch(Exception $e){
-                $this->createErrorLog('ImageHostingServices' , 'deleteImages', 'error when uploading image ' , $e->getMessage());
+                $this->createErrorLog('VideoHostingServices' , 'deleteVideos', 'error when uploading video ' , $e->getMessage());
                 return null;
             }
         }
 
     }
 
-    public function deleteImages($ids)
+    public function deleteVideos($ids)
     {
             foreach($ids as $id){
-                $this->deleteImage($id);
+                $this->deleteVideo($id);
             }
     } 
 
     
-    public function deleteImage($id)
+    public function deleteVideo($id)
     {
         
         if($id){
@@ -56,7 +54,7 @@ trait ImageHostingServices {
                 Cloudder::destroy($id);
                 return true;
             }catch(Exxception $e){
-                $this->createErrorLog('ImageHostingServices' , 'deleteImage', 'error when deleting image '. $id , $e->getMessage());
+                $this->createErrorLog('VideoHostingServices' , 'deleteVideo', 'error when deleting video '. $id , $e->getMessage());
                 return false;
             }
         }

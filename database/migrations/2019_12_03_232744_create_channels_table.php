@@ -15,8 +15,8 @@ class CreateChannelsTable extends Migration
     {
         Schema::create('channels', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('company_id')->unsigned();
-            $table->unsignedInteger('user_id')->unsigned();
+            $table->unsignedInteger('company_id')->unsigned()->nullable();
+            $table->unsignedInteger('user_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name')->unique();
             $table->string('desc');

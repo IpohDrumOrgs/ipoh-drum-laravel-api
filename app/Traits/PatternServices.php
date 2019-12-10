@@ -117,7 +117,7 @@ trait PatternServices {
         $data->qty = $this->toInt($params->qty);
         $data->onsale = $params->onsale;
 
-        $inventoryfamily = InventoryFamily::find($params->inventoryfamilyid);
+        $inventoryfamily = InventoryFamily::find($params->inventory_family_id);
         if($this->isEmpty($inventoryfamily)){
             return null;
         }

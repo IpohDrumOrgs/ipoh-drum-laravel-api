@@ -576,11 +576,7 @@ class StoreController extends Controller
         $store = $this->getStore($uid);
         if ($this->isEmpty($store)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Store');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Store');
         }
         $store = $this->deleteStore($store);
         $this->createLog($request->user()->id , [$store->id], 'delete', 'store');
@@ -629,6 +625,10 @@ class StoreController extends Controller
     {
         error_log($this->controllerName.'Retrieving store promotion plans by uid:' . $uid);
         $store = $this->getStore($uid);
+        if ($this->isEmpty($store)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Store');
+        }
         $promotions = collect();
         $promotions = $promotions->merge($store->promotions()->where('status',true)->get());
         $promotions = $promotions->merge(ProductPromotion::where('store_id' , null)->get());
@@ -667,6 +667,10 @@ class StoreController extends Controller
     {
         error_log($this->controllerName.'Retrieving store warranties by uid:' . $uid);
         $store = $this->getStore($uid);
+        if ($this->isEmpty($store)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Store');
+        }
         $warranties = collect();
         $warranties = $warranties->merge($store->warranties()->where('status',true)->get());
         $warranties = $warranties->merge(Warranty::where('store_id' , null)->get());
@@ -706,6 +710,10 @@ class StoreController extends Controller
     {
         error_log($this->controllerName.'Retrieving store shippings by uid:' . $uid);
         $store = $this->getStore($uid);
+        if ($this->isEmpty($store)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Store');
+        }
         $shippings = collect();
         $shippings = $shippings->merge($store->shippings()->where('status',true)->get());
         $shippings = $shippings->merge(Shipping::where('store_id' , null)->get());

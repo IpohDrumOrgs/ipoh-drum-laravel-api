@@ -121,7 +121,7 @@ trait InventoryFamilyServices {
         $data->qty = $this->toInt($params->qty);
         $data->onsale = $params->onsale;
 
-        $inventory = Inventory::find($params->inventoryid);
+        $inventory = Inventory::find($params->inventory_id);
         if($this->isEmpty($inventory)){
             return null;
         }

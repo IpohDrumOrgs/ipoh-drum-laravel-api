@@ -1327,34 +1327,16 @@
                     {
                         "name": "price",
                         "in": "query",
-                        "description": "Product Selling Price",
+                        "description": "Product Base Price",
                         "required": true,
                         "schema": {
                             "type": "number"
                         }
                     },
                     {
-                        "name": "qty",
-                        "in": "query",
-                        "description": "Stock Qty",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
                         "name": "stockthreshold",
                         "in": "query",
                         "description": "Stock Threshold",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "On Sale",
-                        "required": true,
                         "schema": {
                             "type": "integer"
                         }

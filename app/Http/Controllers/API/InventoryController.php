@@ -363,7 +363,6 @@ class InventoryController extends Controller
             'code' => $request->code,
             'sku' => $request->sku,
             'desc' => $request->desc,
-            'imgpath' => $request->imgpath,
             'cost' => $request->cost,
             'price' => $request->price,
             'stockthreshold' => $request->stockthreshold,
@@ -436,11 +435,16 @@ class InventoryController extends Controller
         
         //Associating Inventory Family Relationship
         $inventoryfamilies = json_decode($request->inventoryfamilies);
+        $temp = json_decode(json_encode($request->inventoryfamilies));
+        error_log("inventoryfamilies");
+        error_log(collect($inventoryfamilies));
         $inventorytotalqty = 0;
         $inventoryfamilytotalqty = 0;
         $onsale = false;
         if(!$this->isEmpty($inventoryfamilies)){
            foreach($inventoryfamilies as $inventoryfamily){
+            error_log('qty');
+                error_log($inventoryfamily->qty);
             $inventoryfamilytotalqty += $inventoryfamily->qty;
             
             if($inventoryfamily->onsale && !$onsale){
@@ -459,8 +463,8 @@ class InventoryController extends Controller
                 }
                 $patterntotalqty = 0;
                 foreach($patterns as $pattern){
-                    $patterntotalqty += $patterns->qty;
-                    $pattern->inventoryfamilyid = $inventoryfamily->refresh()->id;
+                    $patterntotalqty += $pattern->qty;
+                    $pattern->inventory_family_id = $inventoryfamily->refresh()->id;
                     $pattern = $this->associatePatternWithInventoryFamily($inventoryfamily, $pattern);
                     $this->createLog($request->user()->id , [$pattern->id], 'create', 'pattern');
                     if($this->isEmpty($pattern)){

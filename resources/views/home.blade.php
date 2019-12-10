@@ -21,7 +21,7 @@
     </div>
     <div class="row">
         <div id="formWrapper" class="col-md-4 col-md-offset-4">
-            <form class="form-vertical" role="form" enctype="multipart/form-data" method="post" action="{{ route('uploadImage')  }}">
+            <form class="form-vertical" role="form" enctype="multipart/form-data" method="post" action="{{ route('uploadVideo')  }}">
                 {{csrf_field()}}
                 @if(session()->has('status'))
                     <div class="alert alert-info" role="alert">

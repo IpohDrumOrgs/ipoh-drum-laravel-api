@@ -22,9 +22,9 @@ class CreateVideosTable extends Migration
             $table->string('desc');
             $table->string('videopath');
             $table->string('videopublicid');
-            $table->string('imgpath');
-            $table->string('imgpublicid');
-            $table->string('totallength');
+            $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable();
+            $table->string('totallength')->default(0);
             $table->integer('view')->default(0);
             $table->integer('like')->default(0);
             $table->integer('dislike')->default(0);
@@ -33,6 +33,7 @@ class CreateVideosTable extends Migration
             $table->decimal('disc',8,2)->default(0.00);
             $table->boolean('discbyprice')->default(true);
             $table->boolean('free')->default(true);
+            $table->integer('salesqty')->default(0);
             $table->string('scope')->default('public');
             $table->boolean('agerestrict')->default(false);
             $table->boolean('status')->default(true);

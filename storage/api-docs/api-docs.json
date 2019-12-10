@@ -1355,6 +1355,14 @@
                                             "type": "string",
                                             "format": "binary"
                                         }
+                                    },
+                                    "sliders": {
+                                        "description": "Sliders Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
                                     }
                                 },
                                 "type": "object"

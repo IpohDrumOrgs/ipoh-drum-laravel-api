@@ -298,6 +298,12 @@ class InventoryController extends Controller
 *                      type="file",
 *                      @OA\Items(type="string", format="binary")
 *                   ),
+*                  @OA\Property(
+*                      property="sliders",
+*                      description="Sliders Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
 *               ),
 *           ),
 *       ),

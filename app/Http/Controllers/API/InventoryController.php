@@ -259,6 +259,7 @@ class InventoryController extends Controller
      * name="inventoryfamilies",
      * in="query",
      * description="Inventory Families",
+     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
@@ -501,6 +502,10 @@ class InventoryController extends Controller
 
                 $inventorytotalqty += $this->toInt($inventoryfamily->qty);
            }
+        }else{
+            DB::rollBack();
+            $this->deleteImages($proccessingimgids);
+            return $this->errorResponse();
         }
 
         $inventory->qty = $this->toInt($inventorytotalqty);

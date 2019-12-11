@@ -728,4 +728,45 @@ class StoreController extends Controller
         return response()->json($data, 200);
     }
 
+    
+    /**
+     * @OA\Get(
+     *   tags={"StoreControllerService"},
+     *   path="/api/store/{uid}/inventories",
+     *   summary="Retrieves store inventories by Uid.",
+     *     operationId="getInventoriesByStoreUid",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Store ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Inventories has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the inventories."
+     *   )
+     * )
+     */
+    public function getInventories(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving store inventories by uid:' . $uid);
+        $store = $this->getStore($uid);
+        if ($this->isEmpty($store)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Store');
+        }
+        $inventories = $store->inventories()->where('status' , true)->get();
+
+        $data['data'] = $inventories;
+        $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
+        $data['status'] = 'success';
+        $data['code'] = 200;
+        return response()->json($data, 200);
+    }
+
 }

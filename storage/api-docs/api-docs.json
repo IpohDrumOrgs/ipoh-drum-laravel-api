@@ -4625,6 +4625,34 @@
                 }
             }
         },
+        "/api/store/{uid}/inventories": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Retrieves store inventories by Uid.",
+                "operationId": "getInventoriesByStoreUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventories has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the inventories."
+                    }
+                }
+            }
+        },
         "/api/ticket": {
             "get": {
                 "tags": [

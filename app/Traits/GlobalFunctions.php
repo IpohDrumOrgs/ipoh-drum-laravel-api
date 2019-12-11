@@ -116,7 +116,7 @@ trait GlobalFunctions {
         if($page == null || $page == "" || $page == 0){
             $page = 1;
         }
-        $data = $data->slice(($page-1) * $result)->take($result);
+        $data = $data->slice(($page-1) * $result)->take($result)->flatten(1);
 
         return $data;
     }

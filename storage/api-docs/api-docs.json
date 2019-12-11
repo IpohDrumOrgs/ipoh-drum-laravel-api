@@ -1287,6 +1287,7 @@
                         "name": "inventoryfamilies",
                         "in": "query",
                         "description": "Inventory Families",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }

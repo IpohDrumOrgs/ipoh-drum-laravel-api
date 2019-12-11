@@ -29,14 +29,12 @@ trait CompanyServices {
     private function getCompanies($requester) {
 
         $data = collect();
-        error_log($requester);
         $companies = $requester->companies;
         foreach($companies as $company){
             $clearance = $this->checkClearance($requester, $company ,  $this->checkModule('company','index'));
             switch ($clearance) {
                 //System Wide
                 case 1:
-                error_log('break');
                     $temp = Company::where('status', true)->get();
                     $data = $data->merge($temp);
                     break 2;

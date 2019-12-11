@@ -54,24 +54,9 @@ class StoreController extends Controller
         // api/store (GET)
         $stores = $this->getStores($request->user());
         if ($this->isEmpty($stores)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['totalResult'] = $stores->count();
-            $data['msg'] = $this->getNotFoundMsg('Stores');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Stores');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($stores, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($stores->count(), $request->pageSize);
-            $data['totalResult'] = $stores->count();
-            $data['msg'] = $this->getRetrievedSuccessMsg('Stores');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Stores', $stores, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -144,20 +129,9 @@ class StoreController extends Controller
         $stores = $this->filterStores($stores, $params);
 
         if ($this->isEmpty($stores)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Stores');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($stores, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($stores->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Stores');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->errorPaginateResponse('Stores');
+        } else {            
+            return $this->successPaginateResponse('Stores', $stores, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -192,17 +166,9 @@ class StoreController extends Controller
         error_log('Retrieving store of uid:' . $uid);
         $store = $this->getStore($uid);
         if ($this->isEmpty($store)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Store');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Store');
         } else {
-            $data['data'] = $store;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Store');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Store', $store, 'retrieve');
         }
     }
 
@@ -613,6 +579,18 @@ class StoreController extends Controller
      *     required=true,
      *     @OA\SChema(type="string")
      *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
      *   @OA\Response(
      *     response=200,
      *     description="Promotions has been retrieved successfully."
@@ -636,11 +614,12 @@ class StoreController extends Controller
         $promotions = $promotions->merge(ProductPromotion::where('store_id' , null)->get());
         $promotions = $promotions->unique('id')->sortBy('id')->flatten(1);
 
-        $data['data'] = $promotions;
-        $data['msg'] = $this->getRetrievedSuccessMsg('Promotions');
-        $data['status'] = 'success';
-        $data['code'] = 200;
-        return response()->json($data, 200);
+        
+        if ($this->isEmpty($promotions)) {
+            return $this->errorPaginateResponse('Promotions');
+        } else {            
+            return $this->successPaginateResponse('Promotions', $promotions, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
     }
     /**
      * @OA\Get(
@@ -654,6 +633,18 @@ class StoreController extends Controller
      *     description="Store ID, NOT 'ID'.",
      *     required=true,
      *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Response(
      *     response=200,
@@ -678,11 +669,11 @@ class StoreController extends Controller
         $warranties = $warranties->merge(Warranty::where('store_id' , null)->get());
         $warranties = $warranties->unique('id')->sortBy('id')->flatten(1);
 
-        $data['data'] = $warranties;
-        $data['msg'] = $this->getRetrievedSuccessMsg('Warranties');
-        $data['status'] = 'success';
-        $data['code'] = 200;
-        return response()->json($data, 200);
+        if ($this->isEmpty($warranties)) {
+            return $this->errorPaginateResponse('Warranties');
+        } else {            
+            return $this->successPaginateResponse('Warranties', $warranties, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
     }
 
     /**
@@ -697,6 +688,18 @@ class StoreController extends Controller
      *     description="Store ID, NOT 'ID'.",
      *     required=true,
      *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Response(
      *     response=200,
@@ -721,11 +724,11 @@ class StoreController extends Controller
         $shippings = $shippings->merge(Shipping::where('store_id' , null)->get());
         $shippings = $shippings->unique('id')->sortBy('id')->flatten(1);
 
-        $data['data'] = $shippings;
-        $data['msg'] = $this->getRetrievedSuccessMsg('Shippings');
-        $data['status'] = 'success';
-        $data['code'] = 200;
-        return response()->json($data, 200);
+        if ($this->isEmpty($shippings)) {
+            return $this->errorPaginateResponse('Shippings');
+        } else {            
+            return $this->successPaginateResponse('Shippigs', $shippings, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
     }
 
     
@@ -741,6 +744,18 @@ class StoreController extends Controller
      *     description="Store ID, NOT 'ID'.",
      *     required=true,
      *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Response(
      *     response=200,
@@ -762,11 +777,11 @@ class StoreController extends Controller
         }
         $inventories = $store->inventories()->where('status' , true)->get();
 
-        $data['data'] = $inventories;
-        $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
-        $data['status'] = 'success';
-        $data['code'] = 200;
-        return response()->json($data, 200);
+        if ($this->isEmpty($inventories)) {
+            return $this->errorPaginateResponse('Inventories');
+        } else {            
+            return $this->successPaginateResponse('Inventories', $inventories, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
     }
 
 }

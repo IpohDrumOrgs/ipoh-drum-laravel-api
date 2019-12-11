@@ -18,7 +18,7 @@ class CreateArticlesTable extends Migration
             $table->unsignedInteger('blogger_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('title');
-            $table->string('desc');
+            $table->string('desc')->nullable();
             $table->integer('view')->default(0);
             $table->integer('like')->default(0);
             $table->integer('dislike')->default(0);

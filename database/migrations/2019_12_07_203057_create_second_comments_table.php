@@ -18,8 +18,8 @@ class CreateSecondCommentsTable extends Migration
             $table->unsignedInteger('comment_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('text');
-            $table->string('imgpath');
-            $table->string('imgpublicid');
+            $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable();
             $table->integer('like')->default(0);
             $table->integer('dislike')->default(0);
             $table->boolean('status')->default(true);

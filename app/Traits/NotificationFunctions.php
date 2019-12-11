@@ -11,9 +11,12 @@ use App\PurchaseItem;
 use App\SaleItem;
 use App\Sale;
 use Carbon\Carbon;
+use App\Traits\GlobalFunctions;
 use DB;
 
 trait NotificationFunctions {
+
+    use GlobalFunctions;
 
     public function getRetrievedSuccessMsg($provider){
         return $provider. ' retrieved successfully.';
@@ -97,5 +100,32 @@ trait NotificationFunctions {
         }
 
         return response()->json($response, 200);
+    }
+
+    public function successPaginateResponse($provider , $data , $pageSize, $pageNumber){
+
+        //Page Pagination Result List
+        //Default return 10
+        $paginateddata = $this->paginateResult($data, $pageSize, $pageNumber);
+        $response['status'] = 'success';
+        $response['data'] = $paginateddata;
+        $response['maximumPages'] = $this->getMaximumPaginationPage($data->count(), $pageSize);
+        $response['totalResult'] = $data->count();
+        $response['msg'] = $this->getRetrievedSuccessMsg($provider);
+        $response['code'] = 200;
+
+        return response()->json($response, 200);
+    }
+    
+    public function errorPaginateResponse($provider){
+
+        $response['status'] = 'error';
+        $response['data'] = null;
+        $response['maximumPages'] = 0;
+        $response['totalResult'] = 0;
+        $response['msg'] = $this->getNotFoundMsg($provider);
+        $response['code'] = 404;
+
+        return response()->json($response, 404);
     }
 }

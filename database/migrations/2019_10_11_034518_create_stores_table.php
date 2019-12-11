@@ -22,9 +22,10 @@ class CreateStoresTable extends Migration
             $table->string('contact');
             $table->longText('desc');
             $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable();
             $table->string('email');
             $table->decimal('rating',8,2)->default(0.00);
-            $table->decimal('fsminpurchase',8,2)->default(0.00);
+            $table->decimal('freeshippingminpurchase',8,2)->default(0.00);
             $table->string('address')->nullable();
             $table->string('state')->nullable();
             $table->string('postcode')->nullable();

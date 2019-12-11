@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Channel;
 use App\Video;
 use App\Comment;
+use App\SecondComment;
 use Faker\Factory as Faker;
 use App\Company;
 use App\User;
@@ -43,7 +44,8 @@ class ChannelTableSeeder extends Seeder
             "https://res.cloudinary.com/dmtxkcmay/image/upload/v1573965780/Inventory/544a32fb-1559013872-4742b6b7d1b9e1f5a7fb351a52dc2b0d_fzig8a.jpg",
             "https://res.cloudinary.com/dmtxkcmay/image/upload/v1573965745/Inventory/DFEgU7QVwAA8NnG_noulzy.jpg",
         ];
-        for($x=0 ; $x<50 ; $x++){
+
+        for($x=0 ; $x<10 ; $x++){
             $channel = new Channel();
 
             $channel->uid = Carbon::now()->timestamp. Channel::count();
@@ -64,55 +66,57 @@ class ChannelTableSeeder extends Seeder
 
             $channel->save();
 
-            for($y = 0 ; $y < 4 ; $y++){
-                $video = new Video();
-                $video->uid = Carbon::now()->timestamp . Video::count();
-                $video->title = $faker->jobTitle;
-                $video->desc = $faker->sentence;
-                $video->videopath = $video[$faker->randomElement([0,1,2,3,4])];
-                $video->videopublicid = Carbon::now()->timestamp;
-                $video->totallength = "10:00";
-                $video->view = $faker->numberBetween($min = 1000, $max = 100000);
-                $video->like =  $faker->numberBetween($min = 1000, $max = 100000);
-                $video->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
-                $video->scope = $video[$faker->randomElement(['public', 'private'])];
-                $video->free = $faker->boolean();
-                $video->agerestrict = false;
+        }
 
-                if(!$video->free){
-                    
-                    $video->price = $faker->numberBetween($min = 1, $max = 1000);
-                    $video->discpctg = $faker->boolean($min = 0, $max = 1);
-                    $video->disc = $faker->numberBetween($min = 1, $max = 1000);
-                    $video->discbyprice = $faker->boolean();
-                }
-                $video->channel()->associate($channel);
-                $video->save();
+        for($y = 0 ; $y < 50 ; $y++){
+            $video = new Video();
+            $video->uid = Carbon::now()->timestamp . Video::count();
+            $video->title = $faker->jobTitle;
+            $video->desc = $faker->sentence;
+            $video->videopath = $videos[$faker->randomElement([0,1,2,3,4])];
+            $video->videopublicid = Carbon::now()->timestamp;
+            $video->totallength = "10:00";
+            $video->view = $faker->numberBetween($min = 1000, $max = 100000);
+            $video->like =  $faker->numberBetween($min = 1000, $max = 100000);
+            $video->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
+            $video->scope = $faker->randomElement(['public', 'private']);
+            $video->free = $faker->boolean();
+            $video->agerestrict = false;
 
-                for($z = 0 ; $z < 20 ; $z++){
-                    $comment = new Comment();
-                    $comment->uid = Carbon::now()->timestamp . Comment::count();
-                    $comment->text = $faker->sentence;
-                    $comment->type = 'video';
-                    $comment->like =  $faker->numberBetween($min = 1000, $max = 100000);
-                    $comment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
-
-                    $comment->video()->associate($video);
-                    $comment->save();
-                    
-                    for($a = 0 ; $a < 4 ; $a++){
-                        $scomment = new SecondComment();
-                        $scomment->uid = Carbon::now()->timestamp . Comment::count();
-                        $scomment->text = $faker->sentence;
-                        $scomment->like =  $faker->numberBetween($min = 1000, $max = 100000);
-                        $scomment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
-
-                        $scomment->comment()->associate($comment);
-                        $scomment->save();
-                    }
-                }
+            if(!$video->free){
+                
+                $video->price = $faker->numberBetween($min = 1, $max = 1000);
+                $video->discpctg = $faker->boolean($min = 0, $max = 1);
+                $video->disc = $faker->numberBetween($min = 1, $max = 1000);
+                $video->discbyprice = $faker->boolean();
             }
+            $video->channel()->associate(Channel::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11])));
+            $video->save();
 
+        }
+
+        for($z = 0 ; $z < 50 ; $z++){
+            $comment = new Comment();
+            $comment->uid = Carbon::now()->timestamp . Comment::count();
+            $comment->text = $faker->sentence;
+            $comment->type = 'video';
+            $comment->like =  $faker->numberBetween($min = 1000, $max = 100000);
+            $comment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
+
+            $comment->video()->associate(Video::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11])));
+            $comment->save();
+            
+        }
+        
+        for($a = 0 ; $a < 50 ; $a++){
+            $scomment = new SecondComment();
+            $scomment->uid = Carbon::now()->timestamp . SecondComment::count();
+            $scomment->text = $faker->sentence;
+            $scomment->like =  $faker->numberBetween($min = 1000, $max = 100000);
+            $scomment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
+
+            $scomment->comment()->associate(Comment::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11])));
+            $scomment->save();
         }
     }
 }

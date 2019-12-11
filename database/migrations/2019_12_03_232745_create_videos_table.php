@@ -16,10 +16,10 @@ class CreateVideosTable extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('channel_id')->unsigned();
-            $table->unsignedInteger('playlist_id')->unsigned();
+            $table->unsignedInteger('playlist_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('title');
-            $table->string('desc');
+            $table->string('desc')->nullable();
             $table->string('videopath');
             $table->string('videopublicid');
             $table->string('imgpath')->nullable();

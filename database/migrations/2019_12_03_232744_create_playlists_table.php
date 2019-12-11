@@ -18,7 +18,7 @@ class CreatePlaylistsTable extends Migration
             $table->unsignedInteger('channel_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name')->unique();
-            $table->boolean('private')->default(false);
+            $table->string('scope')->default('public');
             $table->boolean('status')->default(true);
             $table->timestamps();
             

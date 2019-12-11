@@ -19,10 +19,10 @@ class CreateBloggersTable extends Migration
             $table->unsignedInteger('user_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name')->unique();
-            $table->string('desc');
-            $table->string('email');
-            $table->string('imgpath');
-            $table->string('imgpublicid');
+            $table->string('desc')->nullable();
+            $table->string('email')->nullable();
+            $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable();
             $table->string('tel1')->nullable();
             $table->boolean('companyBelongings')->default(false);
             $table->boolean('status')->default(true);

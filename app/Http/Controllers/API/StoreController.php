@@ -57,6 +57,7 @@ class StoreController extends Controller
             $data['status'] = 'error';
             $data['data'] = null;
             $data['maximumPages'] = 0;
+            $data['totalResult'] = $this->toInt($request->pageSize * $request->pageNumber);
             $data['msg'] = $this->getNotFoundMsg('Stores');
             $data['code'] = 404;
             return response()->json($data, 404);
@@ -67,6 +68,7 @@ class StoreController extends Controller
             $data['status'] = 'success';
             $data['data'] = $paginateddata;
             $data['maximumPages'] = $this->getMaximumPaginationPage($stores->count(), $request->pageSize);
+            $data['totalResult'] = $this->toInt($request->pageSize * $request->pageNumber);
             $data['msg'] = $this->getRetrievedSuccessMsg('Stores');
             $data['code'] = 200;
             return response()->json($data, 200);

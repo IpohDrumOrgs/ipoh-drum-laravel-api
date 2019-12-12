@@ -71,7 +71,7 @@ class InventoryController extends Controller
             return response()->json($data, 200);
         }
     }
-    
+
     /**
      * @OA\Get(
      *      path="/api/filter/inventory",
@@ -166,7 +166,7 @@ class InventoryController extends Controller
 
     }
 
-   
+
     /**
      * @OA\Get(
      *   tags={"InventoryControllerService"},
@@ -202,8 +202,8 @@ class InventoryController extends Controller
         }
     }
 
-  
-    
+
+
     /**
      * @OA\Post(
      *   tags={"InventoryControllerService"},
@@ -409,7 +409,7 @@ class InventoryController extends Controller
                 return $this->errorResponse();
             }
         }
-        
+
         $count = 0;
         if($request->file('sliders') != null){
             error_log('Slider Images Is Detected');
@@ -441,7 +441,7 @@ class InventoryController extends Controller
                 }
             }
         }
-        
+
         //Associating Inventory Family Relationship
         $inventoryfamilies = json_decode($request->inventoryfamilies);
         $temp = json_decode(json_encode($request->inventoryfamilies));
@@ -455,7 +455,7 @@ class InventoryController extends Controller
             error_log('qty');
                 error_log($inventoryfamily->qty);
             $inventoryfamilytotalqty += $inventoryfamily->qty;
-            
+
             if($inventoryfamily->onsale && !$onsale){
                 $onsale = true;
             }
@@ -481,7 +481,7 @@ class InventoryController extends Controller
                         $this->deleteImages($proccessingimgids);
                         return $this->errorResponse();
                     }
-                    
+
                     if($pattern->onsale && !$onsale){
                         $onsale = true;
                     }
@@ -510,7 +510,7 @@ class InventoryController extends Controller
 
         $inventory->qty = $this->toInt($inventorytotalqty);
         $inventory->onsale = $onsale;
-        
+
         if(!$this->saveModel($inventory)){
             DB::rollBack();
             $this->deleteImages($proccessingimgids);
@@ -741,7 +741,7 @@ class InventoryController extends Controller
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
                 }
-                
+
                 $inventory->imgpath = $img->imgurl;
                 $inventory->imgpublicid = $img->publicid;
                 $proccessingimgids->push($img->publicid);
@@ -763,7 +763,7 @@ class InventoryController extends Controller
                 return $this->errorResponse();
             }
         }
-        
+
         //Updating sliders
         $count = $inventory->inventoryimage()->count();
         if($request->file('sliders') != null){
@@ -795,7 +795,7 @@ class InventoryController extends Controller
                 }
             }
         }
-        
+
         //Associating Inventory Family Relationship
 
         $inventoryfamilies = collect(json_decode($request->inventoryfamilies));
@@ -815,7 +815,7 @@ class InventoryController extends Controller
              }
             $inventoryfamily->inventory()->associate($inventory);
         }
-        
+
         foreach($fordeleteids as $id){
             $inventoryfamily = $this->getInventoryFamilyById($id);
             if($this->isEmpty($inventoryfamily)){
@@ -927,6 +927,53 @@ class InventoryController extends Controller
         }
     }
 
-    
-   
+
+    // TODO: TEst upload image
+    /** @OA\Post(
+     *  tags={"InventoryControllerService"},
+     *   path="/api/thumbnail",
+     *   summary="Upload inventory thumbnail.",
+     *   operationId="uploadInventoryThumbnail",
+     *     @OA\Parameter(
+     * name="uid",
+     * in="query",
+     * description="InventoryUID",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="img",
+     *                      description="Image",
+     *                      type="file",
+     *                      @OA\Items(type="string", format="binary")
+     *                   )
+     *               )
+     *           )
+     *       ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Thumbnail uploaded"
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to upload thumbnail."
+     *   )
+     * )
+     */
+    public function uploadInventoryThumbnail(Request $request) {
+        error_log('Uploading inventory thumbnail');
+        //Associating Image Relationship
+        if($request->file('img') != null){
+            error_log('Image Is Detected');
+        } else {
+            error_log('no image');
+        }
+    }
 }

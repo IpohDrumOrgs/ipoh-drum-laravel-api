@@ -134,28 +134,34 @@ trait InventoryServices {
         }
         $data->store()->associate($store);
         
-        $promotion = $this->getProductPromotionById($params->product_promotion_id);
-        if($this->isEmpty($promotion)){
-            return null;
-        }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
+        if($params->product_promotion_id){
+            $promotion = $this->getProductPromotionById($params->product_promotion_id);
+            if($this->isEmpty($promotion)){
+                return null;
+            }else{
+                if($promotion->qty > 0){
+                    $data->promoendqty = $data->salesqty + $promotion->qty;
+                }
             }
+            $data->promotion()->associate($promotion);
         }
 
-        $data->promotion()->associate($promotion);
         
-        $warranty = $this->getWarrantyById($params->warranty_id);
-        if($this->isEmpty($warranty)){
-            return null;
+        if($params->warranty_id){
+            $warranty = $this->getWarrantyById($params->warranty_id);
+            if($this->isEmpty($warranty)){
+                return null;
+            }
+            $data->warranty()->associate($warranty);
         }
-        $data->warranty()->associate($warranty);
 
-        $shipping = $this->getShippingById($params->shipping_id);
-        if($this->isEmpty($shipping)){
-            return null;
+        if($params->shipping_id){
+            $shipping = $this->getShippingById($params->shipping_id);
+            if($this->isEmpty($shipping)){
+                return null;
+            }
+            $data->shipping()->associate($shipping);
         }
-        $data->shipping()->associate($shipping);
 
         $data->status = true;
 
@@ -188,30 +194,36 @@ trait InventoryServices {
             return null;
         }
         $data->store()->associate($store);
-        
-        $promotion = $this->getProductPromotionById($params->product_promotion_id);
-        if($this->isEmpty($promotion)){
-            return null;
-        }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
+       
+        if($params->product_promotion_id){
+            $promotion = $this->getProductPromotionById($params->product_promotion_id);
+            if($this->isEmpty($promotion)){
+                return null;
+            }else{
+                if($promotion->qty > 0){
+                    $data->promoendqty = $data->salesqty + $promotion->qty;
+                }
             }
+            $data->promotion()->associate($promotion);
         }
 
-        $data->promotion()->associate($promotion);
         
-        $warranty = $this->getWarrantyById($params->warranty_id);
-        if($this->isEmpty($warranty)){
-            return null;
+        if($params->warranty_id){
+            $warranty = $this->getWarrantyById($params->warranty_id);
+            if($this->isEmpty($warranty)){
+                return null;
+            }
+            $data->warranty()->associate($warranty);
         }
-        $data->warranty()->associate($warranty);
 
-        $shipping = $this->getShippingById($params->shipping_id);
-        if($this->isEmpty($shipping)){
-            return null;
+        if($params->shipping_id){
+            $shipping = $this->getShippingById($params->shipping_id);
+            if($this->isEmpty($shipping)){
+                return null;
+            }
+            $data->shipping()->associate($shipping);
         }
-        $data->shipping()->associate($shipping);
-        
+
         $data->status = true;
 
         if(!$this->saveModel($data)){

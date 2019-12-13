@@ -50,23 +50,11 @@ class ModuleController extends Controller
         error_log('Retrieving list of modules.');
         // api/module (GET)
         $modules = $this->getModules($request->user());
+       
         if ($this->isEmpty($modules)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Modules');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Modules');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($modules, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($modules->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Modules');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Modules', $modules, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -139,20 +127,9 @@ class ModuleController extends Controller
         $modules = $this->filterModules($modules, $params);
 
         if ($this->isEmpty($modules)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Modules');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Modules');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($modules, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($modules->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Modules');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Modules', $modules, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -187,17 +164,9 @@ class ModuleController extends Controller
         error_log('Retrieving module of uid:' . $uid);
         $module = $this->getModule($uid);
         if ($this->isEmpty($module)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Module');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Module');
         } else {
-            $data['data'] = $module;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Module');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Module', $module, 'retrieve');
         }
     }
 
@@ -268,18 +237,10 @@ class ModuleController extends Controller
 
         if ($this->isEmpty($module)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Module');
-            $data['data'] = $module;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Module', $module, 'create');
         }
     }
 
@@ -349,11 +310,7 @@ class ModuleController extends Controller
       
         if ($this->isEmpty($module)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Module');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Module');
         }
         
         $params = collect([
@@ -367,19 +324,10 @@ class ModuleController extends Controller
         $module = $this->updateModule($module, $params);
         if ($this->isEmpty($module)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Module');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Module');
-            $data['data'] = $module;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Module', $module, 'update');
         }
     }
 
@@ -416,28 +364,16 @@ class ModuleController extends Controller
         $module = $this->getModule($uid);
         if ($this->isEmpty($module)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Module');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Module');
         }
         $module = $this->deleteModule($module);
         $this->createLog($request->user()->id , [$module->id], 'delete', 'module');
         if ($this->isEmpty($module)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Module');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Module', $module, 'delete');
         }
     }
 

@@ -11,14 +11,11 @@ use App\Shipping;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\InventoryServices;
-use App\Traits\ImageHostingServices;
+use App\Traits\AllServices;
 
 trait PatternServices {
 
-    use GlobalFunctions, LogServices, InventoryServices, ImageHostingServices;
+    use AllServices;
 
     private function getPatterns($paramser) {
 
@@ -104,8 +101,17 @@ trait PatternServices {
         return $data;
 
     }
+
+    private function getPatternById($id) {
+
+        $data = Pattern::where('id', $id)->where('status', true)->with('inventory')->first();
+        return $data;
+
+    }
     //Make Sure Pattern is not empty when calling this function
     private function createPattern($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->patternAllCols());
 
         $data = new Pattern();
 
@@ -117,7 +123,7 @@ trait PatternServices {
         $data->qty = $this->toInt($params->qty);
         $data->onsale = $params->onsale;
 
-        $inventoryfamily = InventoryFamily::find($params->inventory_family_id);
+        $inventoryfamily = $this->getInventoryFamilyById($params->inventory_family_id);
         if($this->isEmpty($inventoryfamily)){
             return null;
         }
@@ -129,52 +135,21 @@ trait PatternServices {
     //Make Sure Pattern is not empty when calling this function
     private function updatePattern($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->patternAllCols());
         $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
         $data->desc = $params->desc;
-        $data->imgpath = $params->imgpath;
         $data->cost = $this->toDouble($params->cost);
         $data->price = $this->toDouble($params->price);
         $data->qty = $this->toInt($params->qty);
-        $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
 
-        $store = Store::find($params->storeid);
-        if($this->isEmpty($store)){
+        $inventoryfamily = $this->getInventoryFamilyById($params->inventory_family_id);
+        if($this->isEmpty($inventoryfamily)){
             return null;
         }
-        $data->store()->associate($store);
-        error_log('here');
-        $promotion = ProductPromotion::find($params->promotionid);
-        if($this->isEmpty($promotion)){
-            return null;
-        }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
-            }
-        }
-
-        $data->promotion()->associate($promotion);
+        $data->inventoryfamily()->associate($inventoryfamily);
         
-        $warranty = Warranty::find($params->warrantyid);
-        if($this->isEmpty($warranty)){
-            return null;
-        }
-        $data->warranty()->associate($warranty);
-
-        $shipping = Shipping::find($params->shippingid);
-        if($this->isEmpty($shipping)){
-            return null;
-        }
-        $data->shipping()->associate($shipping);
-
-        $data->status = true;
-        if($this->saveModel($data)){
-            return $data->refresh();
-        }else{
-            return null;
-        }
+        return $data->refresh();
 
     }
 
@@ -187,5 +162,12 @@ trait PatternServices {
         }
     }
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function patternAllCols() {
+        
+        return ['id','uid', 'inventory_family_id', 'name' ,'desc', 'imgpath', 'imgpublicid', 
+        'cost', 'price', 'qty', 'salesqty', 'onsale', 'status'];
+    }
 
 }

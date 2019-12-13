@@ -1,24 +1,29 @@
 <?php
 
 namespace App\Traits;
+use App\User;
+use App\Store;
+use App\Voucher;
 use App\InventoryFamily;
-use App\Inventory;
+use App\ProductPromotion;
+use App\Warranty;
+use App\Shipping;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\AllServices;
 
-trait InventoryFamilyServices {
+trait VoucherServices {
 
     use AllServices;
 
-    private function getInventoryFamilies($paramser) {
+    private function getVouchers($paramser) {
 
         $data = collect();
         //Role Based Retrieve Done in Store Services
-        $inventories = $this->getInventories($paramser);
-        foreach($inventories as $inventory){
-            $data = $data->merge($inventory->inventoryfamilies()->where('status',true)->get());
+        $inventoryfamilies = $this->getInventoryFamilies($paramser);
+        foreach($inventoryfamilies as $inventoryfamily){
+            $data = $data->merge($inventoryfamily->vouchers()->where('status',true)->get());
         }
 
         $data = $data->unique('id')->sortBy('id')->flatten(1);
@@ -27,7 +32,7 @@ trait InventoryFamilyServices {
 
     }
 
-    private function filterInventoryFamilies($data , $params) {
+    private function filterVouchers($data , $params) {
 
 
         if($params->keyword){
@@ -90,76 +95,99 @@ trait InventoryFamilyServices {
         return $data;
     }
 
-    private function getInventoryFamily($uid) {
+    private function getVoucher($uid) {
 
-        $data = InventoryFamily::where('uid', $uid)->where('status', true)->with('inventory')->first();
+        $data = Voucher::where('uid', $uid)->where('status', true)->with('inventory')->first();
+        return $data;
+
+    }
+    
+    private function getVoucherById($id) {
+
+        $data = Voucher::where('id', $id)->where('status', true)->with('inventory')->first();
         return $data;
 
     }
 
-    private function getInventoryFamilyById($id) {
+    //Make Sure Voucher is not empty when calling this function
+    private function createVoucher($params) {
 
-        $data = InventoryFamily::where('id', $id)->where('status', true)->with('inventory')->first();
-        return $data;
+        $params = $this->checkUndefinedProperty($params , $this->voucherAllCols());
 
-    }
-    //Make Sure InventoryFamily is not empty when calling this function
-    private function createInventoryFamily($params) {
+        $data = new Voucher();
 
-        $params = $this->checkUndefinedProperty($params , $this->inventoryFamilyAllCols());
-
-        $data = new InventoryFamily();
-        error_log(collect($params));
-        $data->uid = Carbon::now()->timestamp . InventoryFamily::count();
+        $data->uid = Carbon::now()->timestamp . Voucher::count();
         $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
         $data->desc = $params->desc;
         $data->cost = $this->toDouble($params->cost);
         $data->price = $this->toDouble($params->price);
         $data->qty = $this->toInt($params->qty);
         $data->onsale = $params->onsale;
 
-        $inventory = $this->getInventoryById($params->inventory_id);
-        if($this->isEmpty($inventory)){
+        $inventoryfamily = $this->getInventoryFamilyById($params->inventory_family_id);
+        if($this->isEmpty($inventoryfamily)){
             return null;
         }
-        $data->inventory()->associate($inventory);
+        $data->inventoryfamily()->associate($inventoryfamily);
         
         return $data->refresh();
     }
 
-    //Make Sure InventoryFamily is not empty when calling this function
-    private function updateInventoryFamily($data,  $params) {
+    //Make Sure Voucher is not empty when calling this function
+    private function updateVoucher($data,  $params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->inventoryFamilyAllCols());
+        $params = $this->checkUndefinedProperty($params , $this->voucherAllCols());
 
         $data->name = $params->name;
         $data->code = $params->code;
         $data->sku = $params->sku;
         $data->desc = $params->desc;
+        $data->imgpath = $params->imgpath;
         $data->cost = $this->toDouble($params->cost);
         $data->price = $this->toDouble($params->price);
         $data->qty = $this->toInt($params->qty);
+        $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
 
-        $inventory = $this->getInventoryById($params->inventory_id);
-        if($this->isEmpty($inventory)){
+        $store = Store::find($params->storeid);
+        if($this->isEmpty($store)){
             return null;
         }
-        $data->inventory()->associate($inventory);
-        
-        return $data->refresh();
-
-    }
-
-    private function deleteInventoryFamily($data) {
-        $patterns = $data->patterns;
-        foreach($patterns as $pattern){
-            if(!$this->deletePattern($pattern)){
-                return null;
+        $data->store()->associate($store);
+        error_log('here');
+        $promotion = ProductPromotion::find($params->promotionid);
+        if($this->isEmpty($promotion)){
+            return null;
+        }else{
+            if($promotion->qty > 0){
+                $data->promoendqty = $data->salesqty + $promotion->qty;
             }
         }
+
+        $data->promotion()->associate($promotion);
+        
+        $warranty = Warranty::find($params->warrantyid);
+        if($this->isEmpty($warranty)){
+            return null;
+        }
+        $data->warranty()->associate($warranty);
+
+        $shipping = Shipping::find($params->shippingid);
+        if($this->isEmpty($shipping)){
+            return null;
+        }
+        $data->shipping()->associate($shipping);
+
+        $data->status = true;
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
+            return null;
+        }
+
+    }
+
+    private function deleteVoucher($data) {
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();
@@ -168,27 +196,15 @@ trait InventoryFamilyServices {
         }
     }
 
-    
-    //Modifying Display Data
+
+    // Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
-    public function inventoryFamilyAllCols() {
-        
-        return ['id','uid', 'inventory_id', 'code' ,'sku', 'name', 'desc', 'imgpath', 
-        'imgpublicid', 'cost', 'price', 'qty', 'salesqty', 'onsale', 'status'];
-    }
+    public function voucherAllCols() {
 
-    //Relationship Associating
-    //===============================================================================================================================================================================
-    public function associatePatternWithInventoryFamily($data, $params)
-    {
-        $pattern = $this->createPattern($params);
-        $pattern->inventoryfamily()->associate($data);
-        if($this->saveModel($pattern)){
-            return $pattern;
-        }else{
-            return null;
-        }
-    }
+        return ['id','uid', 'store_id', 'name', 'desc', 
+        'code', 'disc', 'discpctg', 'discbyprice', 'startdate', 'enddate', 
+        'minpurchase', 'minqty', 'minvariety', 'status'];
 
+    }
 
 }

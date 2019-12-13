@@ -13,4 +13,12 @@ class StoreReview extends Model
     {
         return $this->belongsTo('App\Store');
     }
+    
+    /**
+    * 
+    */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

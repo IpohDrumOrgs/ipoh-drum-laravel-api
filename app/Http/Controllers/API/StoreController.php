@@ -15,10 +15,11 @@ use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\StoreServices;
 use App\Traits\LogServices;
+use App\Traits\ImageHostingServices;
 
 class StoreController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, StoreServices, LogServices;
+    use GlobalFunctions, NotificationFunctions, StoreServices, LogServices, ImageHostingServices;
     private $controllerName = '[StoreController]';
     /**
      * @OA\Get(
@@ -190,7 +191,7 @@ class StoreController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="companyid",
+     * name="company_id",
      * in="query",
      * description="Company ID",
      * @OA\Schema(
@@ -198,7 +199,7 @@ class StoreController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="userid",
+     * name="user_id",
      * in="query",
      * description="User ID",
      * @OA\Schema(
@@ -278,6 +279,20 @@ class StoreController extends Controller
      *              type="string"
      *          )
      * ),
+     * 	@OA\RequestBody(
+*          required=true,
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="img",
+*                      description="Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
      *   @OA\Response(
      *     response=200,
      *     description="Store has been created successfully."
@@ -290,6 +305,7 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
+        $proccessingimgids = collect();
         DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/store (POST)
@@ -311,28 +327,40 @@ class StoreController extends Controller
             'state' => $request->state,
             'country' => $request->country,
             'companyBelongings' => $request->companyBelongings,
-            'companyid' => $request->companyid,
-            'userid' => $request->userid,
+            'company_id' => $request->company_id,
+            'user_id' => $request->user_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $store = $this->createStore($params);
-
         if ($this->isEmpty($store)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Store');
-            $data['data'] = $store;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            $this->deleteImages($proccessingimgids);
+            return $this->errorResponse();
         }
+
+        //Associating Image Relationship
+        if($request->file('img') != null){
+            $img = $this->uploadImage($request->file('img') , "/Store/". $store->uid);
+            if(!$this->isEmpty($img)){
+                $store->imgpath = $img->imgurl;
+                $store->imgpublicid = $img->publicid;
+                $proccessingimgids->push($img->publicid);
+                if(!$this->saveModel($store)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }else{
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+
+        $this->createLog($request->user()->id , [$store->id], 'create', 'store');
+        DB::commit();
+        return $this->successResponse('Store', $store, 'create');
     }
 
 
@@ -359,7 +387,7 @@ class StoreController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="companyid",
+     * name="company_id",
      * in="query",
      * description="Company ID",
      * @OA\Schema(
@@ -367,7 +395,7 @@ class StoreController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="userid",
+     * name="user_id",
      * in="query",
      * description="User ID",
      * @OA\Schema(
@@ -447,6 +475,20 @@ class StoreController extends Controller
      *              type="string"
      *          )
      * ),
+     * 	@OA\RequestBody(
+*          required=true,
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="img",
+*                      description="Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
      *   @OA\Response(
      *     response=200,
      *     description="Store has been updated successfully."
@@ -459,6 +501,7 @@ class StoreController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        $proccessingimgids = collect();
         DB::beginTransaction();
         // api/store/{storeid} (PUT) 
         error_log('Updating store of uid: ' . $uid);
@@ -471,11 +514,7 @@ class StoreController extends Controller
         
         if ($this->isEmpty($store)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Store');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Store');
         }
         $params = collect([
             'name' => $request->name,
@@ -488,28 +527,52 @@ class StoreController extends Controller
             'state' => $request->state,
             'country' => $request->country,
             'companyBelongings' => $request->companyBelongings,
-            'companyid' => $request->companyid,
-            'userid' => $request->userid,
+            'company_id' => $request->company_id,
+            'user_id' => $request->user_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $store = $this->updateStore($store, $params);
-        if ($this->isEmpty($store)) {
+        
+        if($this->isEmpty($store)){
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Store');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Store');
-            $data['data'] = $store;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            $this->deleteImages($proccessingimgids);
+            return $this->errorResponse();
         }
+
+        
+        //Associating Image Relationship
+        if($request->file('img') != null){
+
+            $img = $this->uploadImage($request->file('img') , "/Store/". $store->uid);
+            if(!$this->isEmpty($img)){
+                //Delete Previous Image
+                if(!$this->deleteImage($store->imgpublicid)){
+                    DB::rollBack();
+                    return $this->errorResponse();
+                }
+                
+                $store->imgpath = $img->imgurl;
+                $store->imgpublicid = $img->publicid;
+                $proccessingimgids->push($img->publicid);
+                if(!$this->saveModel($store)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }else{
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+        
+
+        
+        $this->createLog($request->user()->id , [$store->id], 'update', 'store');
+        DB::commit();
+
+        return $this->successResponse('Store', $store, 'update');
     }
 
     /**
@@ -550,18 +613,11 @@ class StoreController extends Controller
         $this->createLog($request->user()->id , [$store->id], 'delete', 'store');
         if ($this->isEmpty($store)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
+            $this->createLog($request->user()->id , [$store->id], 'delete', 'store');
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Store');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Store', $store, 'delete');
         }
     }
 

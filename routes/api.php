@@ -68,6 +68,9 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::get('/store/{uid}/shippings', 'API\StoreController@getShippings');
     Route::get('/store/{uid}/inventories', 'API\StoreController@getInventories');
 
+    Route::resource('storereview', 'API\StoreReviewController');
+    Route::get('/filter/storereview', 'API\StoreReviewController@filter');
+
     Route::resource('productpromotion', 'API\ProductPromotionController');
     Route::get('/filter/productpromotion', 'API\ProductPromotionController@filter');
 

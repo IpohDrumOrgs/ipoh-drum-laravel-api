@@ -50,23 +50,11 @@ class WarrantyController extends Controller
         error_log('Retrieving list of warranties.');
         // api/warranty (GET)
         $warranties = $this->getWarranties($request->user());
+        
         if ($this->isEmpty($warranties)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Warranties');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Warranties');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($warranties, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($warranties->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Warranties');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Warranties', $warranties, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -139,20 +127,9 @@ class WarrantyController extends Controller
         $warranties = $this->filterWarranties($warranties, $params);
 
         if ($this->isEmpty($warranties)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Warranties');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Warranties');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($warranties, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($warranties->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Warranties');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Warranties', $warranties, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }

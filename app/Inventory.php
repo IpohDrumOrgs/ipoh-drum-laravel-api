@@ -105,7 +105,7 @@ class Inventory extends Model
     /**
      *
      */
-    public function productreviews()
+    public function reviews()
     {
         return $this->hasMany('App\ProductReview');
     }

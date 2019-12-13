@@ -52,23 +52,11 @@ class ProductFeatureController extends Controller
         error_log('Retrieving list of productfeatures.');
         // api/productfeature (GET)
         $productfeatures = $this->getProductFeatures($request->user());
+        
         if ($this->isEmpty($productfeatures)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('ProductFeatures');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Product Features');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('ProductFeatures');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Product Features', $productfeatures, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -141,20 +129,9 @@ class ProductFeatureController extends Controller
         $productfeatures = $this->filterProductFeatures($productfeatures, $params);
 
         if ($this->isEmpty($productfeatures)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('ProductFeatures');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Product Features');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($productfeatures, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productfeatures->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('ProductFeatures');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Product Features', $productfeatures, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -189,17 +166,9 @@ class ProductFeatureController extends Controller
         error_log('Retrieving productfeature of uid:' . $uid);
         $productfeature = $this->getProductFeature($uid);
         if ($this->isEmpty($productfeature)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('ProductFeature');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Product Feature');
         } else {
-            $data['data'] = $productfeature;
-            $data['msg'] = $this->getRetrievedSuccessMsg('ProductFeature');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Product Feature', $productfeature, 'retrieve');
         }
     }
 
@@ -277,18 +246,10 @@ class ProductFeatureController extends Controller
 
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('ProductFeature');
-            $data['data'] = $productfeature;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Product Feature', $productfeature, 'create');
         }
     }
 
@@ -364,11 +325,7 @@ class ProductFeatureController extends Controller
 
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('ProductFeature');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Product Feature');
         }
 
         $params = collect([
@@ -382,19 +339,10 @@ class ProductFeatureController extends Controller
         $productfeature = $this->updateProductFeature($productfeature, $params);
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('ProductFeature');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('ProductFeature');
-            $data['data'] = $productfeature;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Product Feature', $productfeature, 'update');
         }
     }
 
@@ -430,28 +378,16 @@ class ProductFeatureController extends Controller
         $productfeature = $this->getProductFeature($uid);
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('ProductFeature');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Product Feature');
         }
         $productfeature = $this->deleteProductFeature($productfeature);
         $this->createLog($request->user()->id , [$productfeature->id], 'delete', 'productfeature');
         if ($this->isEmpty($productfeature)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('ProductFeature');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Product Feature', $productfeature, 'delete');
         }
     }
 
@@ -496,11 +432,7 @@ class ProductFeatureController extends Controller
         // api/productfeature (GET)
         $productfeature = $this->getProductFeature($uid);
         if ($this->isEmpty($productfeature)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Product Feature');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Product Feature');
         }
 
         //Get Data
@@ -520,22 +452,9 @@ class ProductFeatureController extends Controller
         $mergeddata = $mergeddata->merge($tickets);
 
         if ($this->isEmpty($mergeddata)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Product Features');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Products');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($mergeddata, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($mergeddata->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Featured Products');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Products', $mergeddata, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 

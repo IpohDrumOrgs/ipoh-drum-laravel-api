@@ -45,7 +45,7 @@ class ChannelTableSeeder extends Seeder
             "https://res.cloudinary.com/dmtxkcmay/image/upload/v1573965745/Inventory/DFEgU7QVwAA8NnG_noulzy.jpg",
         ];
 
-        for($x=0 ; $x<10 ; $x++){
+        for($x=0 ; $x<20 ; $x++){
             $channel = new Channel();
 
             $channel->uid = Carbon::now()->timestamp. Channel::count();

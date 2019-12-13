@@ -6,12 +6,11 @@ use App\Module;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\RoleServices;
+use App\Traits\AllServices;
 
 trait ModuleServices {
 
-    use GlobalFunctions, LogServices, RoleServices;
+    use AllServices;
 
     private function getModules($requester) {
 
@@ -88,7 +87,14 @@ trait ModuleServices {
         return $data;
     }
 
+    private function getModuleById($id) {
+        $data = Module::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createModule($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->moduleAllCols());
 
         $data = new Module();
         $data->uid = Carbon::now()->timestamp . Module::count();
@@ -97,9 +103,9 @@ trait ModuleServices {
         $data->provider = $params->provider;
         $data->status = true;
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -109,29 +115,35 @@ trait ModuleServices {
     //Make Sure Module is not empty when calling this function
     private function updateModule($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->moduleAllCols());
+
         $data->name = $params->name;
         $data->desc = $params->desc;
         $data->provider = $params->provider;
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
     private function deleteModule($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function moduleAllCols() {
+        
+        return ['id','uid', 'name', 'desc' ,'provider', 'status'];
+    }
 
 }

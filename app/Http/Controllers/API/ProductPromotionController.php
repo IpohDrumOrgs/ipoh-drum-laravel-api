@@ -51,23 +51,11 @@ class ProductPromotionController extends Controller
         error_log('Retrieving list of productpromotions.');
         // api/productpromotion (GET)
         $productpromotions = $this->getProductPromotions($request->user());
+        
         if ($this->isEmpty($productpromotions)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('ProductPromotions');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Product Promotions');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($productpromotions, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productpromotions->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('ProductPromotions');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Product Promotions', $productpromotions, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -140,20 +128,9 @@ class ProductPromotionController extends Controller
         $productpromotions = $this->filterProductPromotions($productpromotions, $params);
 
         if ($this->isEmpty($productpromotions)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('ProductPromotions');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Product Promotions');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($productpromotions, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($productpromotions->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('ProductPromotions');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Product Promotions', $productpromotions, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -203,21 +180,21 @@ class ProductPromotionController extends Controller
      *   summary="Creates a productpromotion.",
      *   operationId="createProductPromotion",
      * @OA\Parameter(
-     * name="name",
-     * in="query",
-     * description="ProductPromotionname",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
      * name="store_id",
      * in="query",
      * description="Store ID",
      * required=true,
      * @OA\Schema(
      *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="name",
+     * in="query",
+     * description="ProductPromotionname",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
      *          )
      * ),
      * @OA\Parameter(

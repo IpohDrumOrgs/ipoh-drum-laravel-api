@@ -5,11 +5,11 @@ use App\ProductFeature;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
+use App\Traits\AllServices;
 
 trait ProductFeatureServices {
 
-    use GlobalFunctions, LogServices;
+    use AllServices;
 
     private function getProductFeatures($requester) {
 
@@ -83,7 +83,14 @@ trait ProductFeatureServices {
         return $data;
     }
 
+    private function getProductFeatureById( $id) {
+        $data = ProductFeature::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createProductFeature($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->productFeatureAllCols());
 
         $data = new ProductFeature();
         $data->uid = Carbon::now()->timestamp . ProductFeature::count();
@@ -91,9 +98,9 @@ trait ProductFeatureServices {
         $data->desc = $params->desc;
         $data->icon = $params->icon;
         $data->imgpath = $params->imgpath;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -103,13 +110,15 @@ trait ProductFeatureServices {
     //Make Sure ProductFeature is not empty when calling this function
     private function updateProductFeature($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->productFeatureAllCols());
+
         $data->name = $params->name;
         $data->desc = $params->desc;
         $data->icon = $params->icon;
         $data->imgpath = $params->imgpath;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -118,14 +127,19 @@ trait ProductFeatureServices {
 
     private function deleteProductFeature($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function productFeatureAllCols() {
+        
+        return ['id','uid', 'name' ,'desc', 'imgpath', 'imgpublicid', 'icon', 'status'];
+    }
 }

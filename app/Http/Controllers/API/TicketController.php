@@ -51,22 +51,9 @@ class TicketController extends Controller
         // api/ticket (GET)
         $tickets = $this->getTickets($request->user());
         if ($this->isEmpty($tickets)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Tickets');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Tickets');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($tickets, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($tickets->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Tickets');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Tickets', $tickets, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -146,22 +133,10 @@ class TicketController extends Controller
         $tickets = $this->filterTickets($tickets, $params);
 
         if ($this->isEmpty($tickets)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Tickets');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Tickets');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($tickets, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($tickets->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Tickets');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Tickets', $tickets, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
-
     }
 
    
@@ -194,17 +169,9 @@ class TicketController extends Controller
         error_log('Retrieving ticket of uid:' . $uid);
         $ticket = $this->getTicket($uid);
         if ($this->isEmpty($ticket)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Ticket');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Ticket');
         } else {
-            $data['data'] = $ticket;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Ticket');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Ticket', $ticket, 'retrieve');
         }
     }
 
@@ -227,7 +194,7 @@ class TicketController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="storeid",
+     * name="store_id",
      * in="query",
      * description="Store ID",
      * required=true,
@@ -236,7 +203,7 @@ class TicketController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="promotionid",
+     * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
      * required=true,
@@ -338,7 +305,7 @@ class TicketController extends Controller
         // api/ticket (POST)
 
         $this->validate($request, [
-            'storeid' => 'required',
+            'store_id' => 'required',
             'name' => 'required|string|max:191',
             'code' => 'nullable',
             'sku' => 'required|string|max:191',
@@ -350,8 +317,8 @@ class TicketController extends Controller
         ]);
         error_log($this->controllerName.'Creating ticket.');
         $params = collect([
-            'storeid' => $request->storeid,
-            'promotionid' => $request->promotionid,
+            'store_id' => $request->store_id,
+            'product_promotion_id' => $request->product_promotion_id,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
@@ -369,18 +336,10 @@ class TicketController extends Controller
 
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Ticket');
-            $data['data'] = $ticket;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Ticket', $ticket, 'create');
         }
     }
 
@@ -408,7 +367,7 @@ class TicketController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="storeid",
+     * name="store_id",
      * in="query",
      * description="Store ID",
      * required=true,
@@ -417,7 +376,7 @@ class TicketController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="promotionid",
+     * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
      * required=true,
@@ -520,7 +479,7 @@ class TicketController extends Controller
         $ticket = $this->getTicket($uid);
 
         $this->validate($request, [
-            'storeid' => 'required',
+            'store_id' => 'required',
             'name' => 'required|string|max:191',
             'code' => 'nullable',
             'sku' => 'required|string|max:191',
@@ -533,16 +492,12 @@ class TicketController extends Controller
 
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Ticket');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Ticket');
         }
 
         $params = collect([
-            'storeid' => $request->storeid,
-            'promotionid' => $request->promotionid,
+            'store_id' => $request->store_id,
+            'product_promotion_id' => $request->product_promotion_id,
             'name' => $request->name,
             'code' => $request->code,
             'sku' => $request->sku,
@@ -560,19 +515,10 @@ class TicketController extends Controller
         $ticket = $this->updateTicket($ticket, $params);
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Ticket');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Ticket');
-            $data['data'] = $ticket;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Ticket', $ticket, 'update');
         }
     }
 
@@ -608,28 +554,16 @@ class TicketController extends Controller
         $ticket = $this->getTicket($uid);
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Ticket');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Ticket');
         }
         $ticket = $this->deleteTicket($ticket);
         $this->createLog($request->user()->id , [$ticket->id], 'delete', 'ticket');
         if ($this->isEmpty($ticket)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Ticket');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Ticket', $ticket, 'delete');
         }
     }
 

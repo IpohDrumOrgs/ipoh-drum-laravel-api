@@ -19,12 +19,11 @@ use App\Payment;
 use App\Video;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
+use App\Traits\AllServices;
 
 trait CompanyServices {
 
-    use GlobalFunctions, LogServices;
+    use AllServices;
 
     private function getCompanies($requester) {
 
@@ -120,7 +119,14 @@ trait CompanyServices {
         return $data;
     }
 
+    private function getCompanyById($id) {
+        $data = Company::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createCompany($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->companyAllCols());
 
         $data = new Company();
         $data->uid = Carbon::now()->timestamp . Company::count();
@@ -138,15 +144,15 @@ trait CompanyServices {
         $data->city = $params->city;
         $data->state = $params->state;
         $data->country = $params->country;
-        $companytype = CompanyType::find($params->companytypeid);
+        $companytype = $this->getCompanyTypeById($params->company_type_id);
         if($this->isEmpty($companytype)){
             return null;
         }
         $data->companytype()->associate($companytype);
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -155,6 +161,8 @@ trait CompanyServices {
 
     //Make Sure Company is not empty when calling this function
     private function updateCompany($data,  $params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->companyAllCols());
 
         $data->name = $params->name;
         $data->email1 = $params->email1;
@@ -170,14 +178,14 @@ trait CompanyServices {
         $data->city = $params->city;
         $data->state = $params->state;
         $data->country = $params->country;
-        $companytype = CompanyType::find($params->companytypeid);
+        $companytype = $this->getCompanyTypeById($params->company_type_id);
         if($this->isEmpty($companytype)){
             return null;
         }
         $data->companytype()->associate($companytype);
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -186,14 +194,23 @@ trait CompanyServices {
 
     private function deleteCompany($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
         return $data->refresh();
     }
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function companyAllCols() {
+
+        return ['id','uid', 'company_type_id' ,'name', 'imgpath', 'imgpublicid', 'regno', 
+        'tel1', 'tel2', 'fax1', 'fax2', 'email1', 'email2', 'address1', 'address2', 'postcode', 
+        'city', 'state', 'country', 'status'];
+
+    }
 
 }

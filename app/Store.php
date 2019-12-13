@@ -42,7 +42,7 @@ class Store extends Model
     /**
     *
     */
-    public function storereviews()
+    public function reviews()
     {
         return $this->hasMany('App\StoreReview');
     }

@@ -4,12 +4,11 @@ namespace App\Traits;
 use App\Type;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
+use App\Traits\AllServices;
 
 trait TypeServices {
 
-    use GlobalFunctions, LogServices;
+    use AllServices;
 
     private function getTypes($requester) {
 
@@ -85,31 +84,39 @@ trait TypeServices {
         return $data;
     }
 
+    private function getTypeById($id) {
+        $data = Type::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createType($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->typeAllCols());
 
         $data = new Type();
         $data->uid = Carbon::now()->timestamp . Type::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
         $data->icon = $params->icon;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
     //Make Sure Type is not empty when calling this function
     private function updateType($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->typeAllCols());
+
         $data->name = $params->name;
         $data->desc = $params->desc;
         $data->icon = $params->icon;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -118,14 +125,21 @@ trait TypeServices {
 
     private function deleteType($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
         return $data->refresh();
     }
 
+    // Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function typeAllCols() {
+
+        return ['id','uid', 'name', 'icon', 'desc','status'];
+
+    }
 
 }

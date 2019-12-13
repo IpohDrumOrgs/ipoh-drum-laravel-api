@@ -51,22 +51,9 @@ class RoleController extends Controller
         // api/role (GET)
         $roles = $this->getRoles($request->user());
         if ($this->isEmpty($roles)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Roles');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Roles');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($roles, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($roles->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Roles');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Roles', $roles, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -139,20 +126,9 @@ class RoleController extends Controller
         $roles = $this->filterRoles($roles, $params);
 
         if ($this->isEmpty($roles)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Roles');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Roles');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($roles, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($roles->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Roles');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Roles', $roles, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -187,17 +163,9 @@ class RoleController extends Controller
         error_log('Retrieving role of uid:' . $uid);
         $role = $this->getRole($uid);
         if ($this->isEmpty($role)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Role');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Role');
         } else {
-            $data['data'] = $role;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Role');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Role', $role, 'retrieve');
         }
     }
 
@@ -256,18 +224,10 @@ class RoleController extends Controller
 
         if ($this->isEmpty($role)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Role');
-            $data['data'] = $role;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Role', $role, 'create');
         }
     }
 
@@ -327,11 +287,7 @@ class RoleController extends Controller
       
         if ($this->isEmpty($role)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Role');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Role');
         }
         
         $params = collect([
@@ -344,19 +300,10 @@ class RoleController extends Controller
         $role = $this->updateRole($role, $params);
         if ($this->isEmpty($role)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Role');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Role');
-            $data['data'] = $role;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Role', $role, 'update');
         }
     }
 
@@ -392,28 +339,16 @@ class RoleController extends Controller
         $role = $this->getRole($uid);
         if ($this->isEmpty($role)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Role');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Role');
         }
         $role = $this->deleteRole($role);
         $this->createLog($request->user()->id , [$role->id], 'delete', 'role');
         if ($this->isEmpty($role)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Role');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Role', $role, 'delete');
         }
     }
 

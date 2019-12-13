@@ -52,22 +52,9 @@ class TypeController extends Controller
         // api/type (GET)
         $types = $this->getTypes($request->user());
         if ($this->isEmpty($types)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Types');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Types');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($types, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Types');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Types', $types, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -140,20 +127,9 @@ class TypeController extends Controller
         $types = $this->filterTypes($types, $params);
 
         if ($this->isEmpty($types)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Types');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Types');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($types, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($types->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Types');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Types', $types, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -188,17 +164,9 @@ class TypeController extends Controller
         error_log('Retrieving type of uid:' . $uid);
         $type = $this->getType($uid);
         if ($this->isEmpty($type)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Type');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Type');
         } else {
-            $data['data'] = $type;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Type');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Type', $type, 'retrieve');
         }
     }
 
@@ -268,18 +236,10 @@ class TypeController extends Controller
 
         if ($this->isEmpty($type)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Type');
-            $data['data'] = $type;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Type', $type, 'create');
         }
     }
 
@@ -349,11 +309,7 @@ class TypeController extends Controller
 
         if ($this->isEmpty($type)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Type');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Type');
         }
 
         $params = collect([
@@ -367,18 +323,10 @@ class TypeController extends Controller
         if ($this->isEmpty($type)) {
             DB::rollBack();
             $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Type');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Type');
-            $data['data'] = $type;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Type', $type, 'update');
         }
     }
 
@@ -415,28 +363,16 @@ class TypeController extends Controller
         $type = $this->getType($uid);
         if ($this->isEmpty($type)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Type');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Type');
         }
         $type = $this->deleteType($type);
         $this->createLog($request->user()->id , [$type->id], 'delete', 'type');
         if ($this->isEmpty($type)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Type');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Type', $type, 'delete');
         }
     }
 

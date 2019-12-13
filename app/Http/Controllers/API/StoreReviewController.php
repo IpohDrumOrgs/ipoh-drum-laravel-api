@@ -6,25 +6,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
-use App\ProductReview;
+use App\StoreReview;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
-use App\Traits\ProductReviewServices;
+use App\Traits\StoreReviewServices;
 use App\Traits\PatternServices;
 use App\Traits\LogServices;
 
-class ProductReviewController extends Controller
+class StoreReviewController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, ProductReviewServices, LogServices;
-    private $controllerName = '[ProductReviewController]';
+    use GlobalFunctions, NotificationFunctions, StoreReviewServices, LogServices;
+    private $controllerName = '[StoreReviewController]';
      /**
      * @OA\Get(
-     *      path="/api/productreview",
-     *      operationId="getProductReviews",
-     *      tags={"ProductReviewControllerService"},
-     *      summary="Get list of productreviews",
-     *      description="Returns list of productreviews",
+     *      path="/api/storereview",
+     *      operationId="getStoreReviews",
+     *      tags={"StoreReviewControllerService"},
+     *      summary="Get list of storereviews",
+     *      description="Returns list of storereviews",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
@@ -39,32 +39,32 @@ class ProductReviewController extends Controller
      *   ),
      *      @OA\Response(
      *          response=200,
-     *          description="Successfully retrieved list of productreviews"
+     *          description="Successfully retrieved list of storereviews"
      *       ),
      *       @OA\Response(
      *          response="default",
-     *          description="Unable to retrieve list of productreviews")
+     *          description="Unable to retrieve list of storereviews")
      *    )
      */
     public function index(Request $request)
     {
-        error_log('Retrieving list of productreviews.');
-        // api/productreview (GET)
-        $productreviews = $this->getProductReviews($request->user());
-        if ($this->isEmpty($productreviews)) {
-            return $this->errorPaginateResponse('Product Reviews');
+        error_log('Retrieving list of storereviews.');
+        // api/storereview (GET)
+        $storereviews = $this->getStoreReviews($request->user());
+        if ($this->isEmpty($storereviews)) {
+            return $this->errorPaginateResponse('Store Reviews');
         } else {
-            return $this->successPaginateResponse('Product Reviews', $productreviews, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+            return $this->successPaginateResponse('Store Reviews', $storereviews, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
     /**
      * @OA\Get(
-     *      path="/api/filter/productreview",
-     *      operationId="filterProductReviews",
-     *      tags={"ProductReviewControllerService"},
-     *      summary="Filter list of productreviews",
-     *      description="Returns list of filtered productreviews",
+     *      path="/api/filter/storereview",
+     *      operationId="filterStoreReviews",
+     *      tags={"StoreReviewControllerService"},
+     *      summary="Filter list of storereviews",
+     *      description="Returns list of filtered storereviews",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
@@ -103,69 +103,69 @@ class ProductReviewController extends Controller
      *   ),
      *      @OA\Response(
      *          response=200,
-     *          description="Successfully retrieved list of filtered productreviews"
+     *          description="Successfully retrieved list of filtered storereviews"
      *       ),
      *       @OA\Response(
      *          response="default",
-     *          description="Unable to retrieve list of productreviews")
+     *          description="Unable to retrieve list of storereviews")
      *    )
      */
     public function filter(Request $request)
     {
-        error_log('Retrieving list of filtered productreviews.');
-        // api/productreview/filter (GET)
+        error_log('Retrieving list of filtered storereviews.');
+        // api/storereview/filter (GET)
         $params = collect([
             'keyword' => $request->keyword,
             'fromdate' => $request->fromdate,
             'todate' => $request->todate,
             'status' => $request->status,
-            'productreview_id' => $request->productreview_id,
+            'storereview_id' => $request->storereview_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $productreviews = $this->getProductReviews($request->user());
-        $productreviews = $this->filterProductReviews($productreviews, $params);
+        $storereviews = $this->getStoreReviews($request->user());
+        $storereviews = $this->filterStoreReviews($storereviews, $params);
 
-        if ($this->isEmpty($productreviews)) {
-            return $this->errorPaginateResponse('Product Reviews');
+        if ($this->isEmpty($storereviews)) {
+            return $this->errorPaginateResponse('Store Reviews');
         } else {
-            return $this->successPaginateResponse('Product Reviews', $productreviews, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+            return $this->successPaginateResponse('Store Reviews', $storereviews, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 
    
     /**
      * @OA\Get(
-     *   tags={"ProductReviewControllerService"},
-     *   path="/api/productreview/{uid}",
-     *   summary="Retrieves productreview by Uid.",
-     *     operationId="getProductReviewByUid",
+     *   tags={"StoreReviewControllerService"},
+     *   path="/api/storereview/{uid}",
+     *   summary="Retrieves storereview by Uid.",
+     *     operationId="getStoreReviewByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
-     *     description="ProductReview_ID, NOT 'ID'.",
+     *     description="StoreReview_ID, NOT 'ID'.",
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Response(
      *     response=200,
-     *     description="ProductReview has been retrieved successfully."
+     *     description="StoreReview has been retrieved successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to retrieve the productreview."
+     *     description="Unable to retrieve the storereview."
      *   )
      * )
      */
     public function show(Request $request, $uid)
     {
-        // api/productreview/{productreviewid} (GET)
-        error_log('Retrieving productreview of uid:' . $uid);
-        $productreview = $this->getProductReview($uid);
-        if ($this->isEmpty($productreview)) {
-            return $this->notFoundResponse('ProductReview');
+        // api/storereview/{storereviewid} (GET)
+        error_log('Retrieving storereview of uid:' . $uid);
+        $storereview = $this->getStoreReview($uid);
+        if ($this->isEmpty($storereview)) {
+            return $this->notFoundResponse('StoreReview');
         } else {
-            return $this->successResponse('ProductReview', $productreview, 'retrieve');
+            return $this->successResponse('StoreReview', $storereview, 'retrieve');
         }
     }
 
@@ -173,31 +173,23 @@ class ProductReviewController extends Controller
     
     /**
      * @OA\Post(
-     *   tags={"ProductReviewControllerService"},
-     *   path="/api/productreview",
-     *   summary="Creates a productreview.",
-     *   operationId="createProductReview",
+     *   tags={"StoreReviewControllerService"},
+     *   path="/api/storereview",
+     *   summary="Creates a storereview.",
+     *   operationId="createStoreReview",
      * @OA\Parameter(
      * name="title",
      * in="query",
-     * description="ProductReview title",
+     * description="StoreReview title",
      * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="inventory_id",
+     * name="store_id",
      * in="query",
-     * description="Inventory ID",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="ticket_id",
-     * in="query",
-     * description="Ticket ID",
+     * description="Store ID",
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -224,14 +216,6 @@ class ProductReviewController extends Controller
 *           ),
 *       ),
      * @OA\Parameter(
-     * name="type",
-     * in="query",
-     * description="Review type",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
      * name="rating",
      * in="query",
      * description="Review rating",
@@ -241,11 +225,11 @@ class ProductReviewController extends Controller
      * ),
      *   @OA\Response(
      *     response=200,
-     *     description="ProductReview has been created successfully."
+     *     description="StoreReview has been created successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to create the productreview."
+     *     description="Unable to create the storereview."
      *   )
      * )
      */
@@ -253,74 +237,63 @@ class ProductReviewController extends Controller
     {
         DB::beginTransaction();
         // Can only be used by Authorized personnel
-        // api/productreview (POST)
+        // api/storereview (POST)
 
         $this->validate($request, [
             'title' => 'required|string|max:191',
             'desc' => 'required|string',
-            'type' => 'required|in:inventory,ticket',
             'rating' => 'required|numeric',
         ]);
-        error_log($this->controllerName.'Creating productreview.');
+        error_log($this->controllerName.'Creating storereview.');
         $params = collect([
             'title' => $request->title,
             'desc' => $request->desc,
-            'inventory_id' => $request->inventory_id,
-            'ticket_id' => $request->ticket_id,
+            'store_id' => $request->store_id,
             'rating' => $request->rating,
-            'type' => $request->type,
             'user_id' => $request->user()->id,
             'img' => '',
         ]);
         $params = json_decode(json_encode($params));
         $params->img = $request->file('img');
-        $productreview = $this->createProductReview($params);
-        if ($this->isEmpty($productreview)) {
+        $storereview = $this->createStoreReview($params);
+        if ($this->isEmpty($storereview)) {
             DB::rollBack();
             return $this->errorResponse();
         }
     
-        $this->createLog($request->user()->id , [$productreview->id], 'create', 'productreview');
+        $this->createLog($request->user()->id , [$storereview->id], 'create', 'storereview');
         DB::commit();
 
-        return $this->successResponse('ProductReview', $productreview, 'create');
+        return $this->successResponse('StoreReview', $storereview, 'create');
     }
 
 
     /**
      * @OA\Put(
-     *   tags={"ProductReviewControllerService"},
-     *   path="/api/productreview/{uid}",
-     *   summary="Update productreview by Uid.",
-     *     operationId="updateProductReviewByUid",
+     *   tags={"StoreReviewControllerService"},
+     *   path="/api/storereview/{uid}",
+     *   summary="Update storereview by Uid.",
+     *     operationId="updateStoreReviewByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
-     *     description="ProductReview_ID, NOT 'ID'.",
+     *     description="StoreReview_ID, NOT 'ID'.",
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
      * @OA\Parameter(
      * name="title",
      * in="query",
-     * description="ProductReview title",
+     * description="StoreReview title",
      * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="inventory_id",
+     * name="store_id",
      * in="query",
-     * description="Inventory ID",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="ticket_id",
-     * in="query",
-     * description="Ticket ID",
+     * description="Store ID",
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -347,14 +320,6 @@ class ProductReviewController extends Controller
 *           ),
 *       ),
      * @OA\Parameter(
-     * name="type",
-     * in="query",
-     * description="Review type",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
      * name="rating",
      * in="query",
      * description="Review rating",
@@ -364,78 +329,72 @@ class ProductReviewController extends Controller
      * ),
      *   @OA\Response(
      *     response=200,
-     *     description="ProductReview has been created successfully."
+     *     description="StoreReview has been created successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to create the productreview."
+     *     description="Unable to create the storereview."
      *   )
      * )
      */
     public function update(Request $request, $uid)
     {
         DB::beginTransaction();
-        // api/productreview/{productreviewid} (PUT)
-        error_log($this->controllerName.'Updating productreview of uid: ' . $uid);
+        // api/storereview/{storereviewid} (PUT)
+        error_log($this->controllerName.'Updating storereview of uid: ' . $uid);
         $this->validate($request, [
             'title' => 'required|string|max:191',
             'desc' => 'required|string',
-            'type' => 'required|in:inventory,ticket',
             'rating' => 'required|numeric',
         ]);
-        $productreview = $this->getProductReview($uid);
-        if ($this->isEmpty($productreview)) {
+        $storereview = $this->getStoreReview($uid);
+        if ($this->isEmpty($storereview)) {
             DB::rollBack();
-            return $this->notFoundResponse('ProductReview');
+            return $this->notFoundResponse('StoreReview');
         }
 
         $params = collect([
             'title' => $request->title,
             'desc' => $request->desc,
-            'inventory_id' => $request->inventory_id,
-            'ticket_id' => $request->ticket_id,
+            'store_id' => $request->store_id,
             'rating' => $request->rating,
-            'type' => $request->type,
             'user_id' => $request->user()->id,
             'img' => '',
         ]);
         $params = json_decode(json_encode($params));
-        if($request->file('img')){
-            error_log('got');
-        }
         $params->img = $request->file('img');
-        $productreview = $this->updateProductReview($productreview, $params);
-        if ($this->isEmpty($productreview)) {
+        $storereview = $this->updateStoreReview($storereview, $params);
+        if ($this->isEmpty($storereview)) {
             DB::rollBack();
             return $this->errorResponse();
         }
 
-        $this->createLog($request->user()->id , [$productreview->id], 'update', 'productreview');
+        $this->createLog($request->user()->id , [$storereview->id], 'update', 'storereview');
         DB::commit();
 
-        return $this->successResponse('ProductReview', $productreview, 'update');
+        return $this->successResponse('StoreReview', $storereview, 'update');
     }
 
     /**
      * @OA\Delete(
-     *   tags={"ProductReviewControllerService"},
-     *   path="/api/productreview/{uid}",
-     *   summary="Set productreview's 'status' to 0.",
-     *     operationId="deleteProductReviewByUid",
+     *   tags={"StoreReviewControllerService"},
+     *   path="/api/storereview/{uid}",
+     *   summary="Set storereview's 'status' to 0.",
+     *     operationId="deleteStoreReviewByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
-     *     description="ProductReview ID, NOT 'ID'.",
+     *     description="StoreReview ID, NOT 'ID'.",
      *     required=true,
      *     @OA\SChema(type="string")
      *   ),
      *   @OA\Response(
      *     response=200,
-     *     description="ProductReview has been 'deleted' successfully."
+     *     description="StoreReview has been 'deleted' successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to 'delete' the productreview."
+     *     description="Unable to 'delete' the storereview."
      *   )
      * )
      */
@@ -443,21 +402,21 @@ class ProductReviewController extends Controller
     {
         DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
-        // api/productreview/{productreviewid} (DELETE)
-        error_log('Deleting productreview of uid: ' . $uid);
-        $productreview = $this->getProductReview($uid);
-        if ($this->isEmpty($productreview)) {
+        // api/storereview/{storereviewid} (DELETE)
+        error_log('Deleting storereview of uid: ' . $uid);
+        $storereview = $this->getStoreReview($uid);
+        if ($this->isEmpty($storereview)) {
             DB::rollBack();
-            return $this->notFoundResponse('ProductReview');
+            return $this->notFoundResponse('StoreReview');
         }
-        $productreview = $this->deleteProductReview($productreview);
-        if ($this->isEmpty($productreview)) {
+        $storereview = $this->deleteStoreReview($storereview);
+        if ($this->isEmpty($storereview)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
-            $this->createLog($request->user()->id , [$productreview->id], 'delete', 'productreview');
+            $this->createLog($request->user()->id , [$storereview->id], 'delete', 'storereview');
             DB::commit();
-            return $this->successResponse('ProductReview', $productreview, 'delete');
+            return $this->successResponse('StoreReview', $storereview, 'delete');
         }
     }
 

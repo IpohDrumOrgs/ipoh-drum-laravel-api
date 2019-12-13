@@ -7,13 +7,11 @@ use App\ProductPromotion;
 use App\Ticket;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\StoreServices;
+use App\Traits\AllServices;
 
 trait TicketServices {
 
-    use GlobalFunctions, LogServices, StoreServices;
+    use AllServices;
 
     private function getTickets($requester) {
 
@@ -100,7 +98,14 @@ trait TicketServices {
         return $data;
     }
 
+    private function getTicketById($id) {
+        $data = Ticket::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createTicket($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->ticketAllCols());
 
         $data = new Ticket();
         $data->uid = Carbon::now()->timestamp . Ticket::count();
@@ -115,13 +120,13 @@ trait TicketServices {
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
 
-        $store = Store::find($params->storeid);
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
         $data->store()->associate($store);
            
-        $promotion = ProductPromotion::find($params->promotionid);
+        $promotion = $this->getProductPromotionById($params->product_promotion_id);
         if($this->isEmpty($promotion)){
             return null;
         }else{
@@ -133,9 +138,9 @@ trait TicketServices {
         $data->promotion()->associate($promotion);
 
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -144,6 +149,9 @@ trait TicketServices {
 
     //Make Sure Ticket is not empty when calling this function
     private function updateTicket($data,  $params) {
+        
+        $params = $this->checkUndefinedProperty($params , $this->ticketAllCols());
+
         $data->name = $params->name;
         $data->code = $params->code;
         $data->sku = $params->sku;
@@ -155,13 +163,13 @@ trait TicketServices {
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
 
-        $store = Store::find($params->storeid);
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
         $data->store()->associate($store);
            
-        $promotion = ProductPromotion::find($params->promotionid);
+        $promotion = $this->getProductPromotionById($params->product_promotion_id);
         if($this->isEmpty($promotion)){
             return null;
         }else{
@@ -173,20 +181,19 @@ trait TicketServices {
         $data->promotion()->associate($promotion);
 
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
     private function deleteTicket($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -194,9 +201,21 @@ trait TicketServices {
     }
 
 
+    // Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function ticketAllCols() {
+
+        return ['id','store_id', 'product_promotion_id', 'uid', 
+        'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 
+        'price' , 'qty','promoendqty','salesqty','stockthreshold','status','onsale'];
+
+    }
+
     public function ticketDefaultCols() {
 
-        return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate', 'enddate' , 'stock', 'salesqty' , 'warrantyperiod'];
+        return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 
+        'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate', 'enddate' , 
+        'stock', 'salesqty' ];
 
     }
 

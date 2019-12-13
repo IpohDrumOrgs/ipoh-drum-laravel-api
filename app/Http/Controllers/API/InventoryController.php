@@ -53,22 +53,9 @@ class InventoryController extends Controller
         // api/inventory (GET)
         $inventories = $this->getInventories($request->user());
         if ($this->isEmpty($inventories)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Inventories');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Inventories');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($inventories, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Inventories', $inventories, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -148,20 +135,9 @@ class InventoryController extends Controller
         $inventories = $this->filterInventories($inventories, $params);
 
         if ($this->isEmpty($inventories)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Inventories');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Inventories');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($inventories, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($inventories->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Inventories');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Inventories', $inventories, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -684,6 +660,7 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        $proccessingimgids = collect();
         DB::beginTransaction();
         // api/inventory/{inventoryid} (PUT)
         error_log($this->controllerName.'Updating inventory of uid: ' . $uid);

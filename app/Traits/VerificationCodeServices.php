@@ -5,13 +5,11 @@ use App\User;
 use App\VerificationCode;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\TicketServices;
+use App\Traits\AllServices;
 
 trait VerificationCodeServices {
 
-    use GlobalFunctions, LogServices ,TicketServices;
+    use AllServices;
 
     private function getVerificationCodes($requester) {
 
@@ -97,18 +95,29 @@ trait VerificationCodeServices {
         return $data;
     }
 
+    private function getVerificationCodeById($id) {
+        $data = VerificationCode::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
 
     private function createVerificationCode($params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->verificationCodeAllCols());
+
         $data = new VerificationCode();
         $data->uid = Carbon::now()->timestamp . VerificationCode::count();
-        $data->name = $params->name;
-        $data->desc = $params->desc;
+        $data->code = $params->code;
         $data->status = true;
+ 
+        $ticket = $this->getTicketById($params->ticket_id);
+        if($this->isEmpty($ticket)){
+            return null;
+        }
+        $data->ticket()->associate($ticket);
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -118,12 +127,20 @@ trait VerificationCodeServices {
     //Make Sure VerificationCode is not empty when calling this function
     private function updateVerificationCode($data,  $params) {
 
-        $data->name = $params->name;
-        $data->desc = $params->desc;
+        $params = $this->checkUndefinedProperty($params , $this->verificationCodeAllCols());
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        $data->code = $params->code;
+        $data->status = true;
+ 
+        $ticket = $this->getTicketById($params->ticket_id);
+        if($this->isEmpty($ticket)){
+            return null;
+        }
+        $data->ticket()->associate($ticket);
+
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -132,14 +149,21 @@ trait VerificationCodeServices {
 
     private function deleteVerificationCode($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
         return $data->refresh();
     }
 
+    // Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function verificationCodeAllCols() {
+
+        return ['id','uid', 'ticket_id', 'code', 'status'];
+
+    }
 
 }

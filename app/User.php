@@ -45,7 +45,6 @@ class User extends Authenticatable
      * @OA\Property(property="status", type="string"),
      * @OA\Property(property="last_login", type="string"),
      * @OA\Property(property="last_active", type="string"),
-     * @OA\Property(property="lastedit_by", type="string"),
      * @OA\Property(property="remember_token", type="string"),
      * @OA\Property(property="created_at", type="string"),
      * @OA\Property(property="updated_at", type="string")
@@ -103,7 +102,7 @@ class User extends Authenticatable
      */
     public function groups()
     {
-        return $this->belongsToMany('App\Group')->withPivot('desc', 'status', 'lastedit_by', 'created_at', 'updated_at');
+        return $this->belongsToMany('App\Group')->withPivot('desc', 'status', 'created_at', 'updated_at');
     }
 
 
@@ -154,5 +153,13 @@ class User extends Authenticatable
     public function productreviews()
     {
         return $this->hasMany('App\ProductReview');
+    }
+    
+    /**
+     * Get the created purchases of the user.
+     */
+    public function storereviews()
+    {
+        return $this->hasMany('App\StoreReview');
     }
 }

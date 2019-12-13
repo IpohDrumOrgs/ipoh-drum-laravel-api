@@ -7,14 +7,11 @@ use App\ProductPromotion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\StoreServices;
-use App\Traits\ImageHostingServices;
+use App\Traits\AllServices;
 
 trait ProductPromotionServices {
 
-    use GlobalFunctions, LogServices, StoreServices;
+    use AllServices;
 
     private function getProductPromotions($requester) {
 
@@ -93,6 +90,14 @@ trait ProductPromotionServices {
         return $data;
 
     }
+
+    private function getProductPromotionById($id) {
+
+        $data = ProductPromotion::where('id', $id)->where('status', true)->first();
+        return $data;
+
+    }
+
     //Make Sure ProductPromotion is not empty when calling this function
     private function createProductPromotion($params) {
 
@@ -109,7 +114,7 @@ trait ProductPromotionServices {
         $data->promostartdate = $this->toDate($params->promostartdate);
         $data->promoenddate = $this->toDate($params->promoenddate);
 
-        $store = Store::find($params->store_id);
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
@@ -138,8 +143,8 @@ trait ProductPromotionServices {
         $data->discbyprice = $params->discbyprice;
         $data->promostartdate = $this->toDate($params->promostartdate);
         $data->promoenddate = $this->toDate($params->promoenddate);
-
-        $store = Store::find($params->store_id);
+        
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
@@ -186,7 +191,8 @@ trait ProductPromotionServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function productPromotionAllCols() {
 
-        return ['id','uid', 'store_id', 'name' ,'desc', 'qty', 'disc' , 'discpctg' , 'discbyprice' , 'promostartdate', 'promoenddate' , 'status' ];
+        return ['id','uid', 'store_id', 'name' ,'desc', 'qty', 'disc' , 'discpctg' , 
+        'discbyprice' , 'promostartdate', 'promoenddate' , 'status' ];
 
     }
     

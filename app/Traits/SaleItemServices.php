@@ -6,13 +6,11 @@ use App\Store;
 use App\SaleItem;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\SaleServices;
+use App\Traits\AllServices;
 
 trait SaleItemServices {
 
-    use GlobalFunctions, LogServices, SaleServices;
+    use AllServices;
 
     private function getSaleItems($requester) {
 
@@ -91,7 +89,14 @@ trait SaleItemServices {
         return $data;
     }
 
+    private function getSaleItemById($id) {
+        $data = SaleItem::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createSaleItem($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->saleItemAllCols());
 
         $data = new SaleItem();
         $data->uid = Carbon::now()->timestamp . SaleItem::count();
@@ -109,13 +114,13 @@ trait SaleItemServices {
         $data->type = $this->toDate($params->docdate);
 
         if($data->type == 'ticket'){
-            $ticket = Ticket::find($params->ticketid);
+            $ticket = $this->getTicketById($params->ticket_id);
             if($this->isEmpty($ticket)){
                 return null;
             }
             $data->ticket()->associate($ticket);
         }else if($data->type == 'inventory'){
-            $inventory = Inventory::find($params->inventoryid);
+            $inventory = $this->getInventoryById($params->inventory_id);
             if($this->isEmpty($inventory)){
                 return null;
             }
@@ -126,9 +131,9 @@ trait SaleItemServices {
 
 
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -137,6 +142,8 @@ trait SaleItemServices {
 
     //Make Sure SaleItem is not empty when calling this function
     private function updateSaleItem($data,  $params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->saleItemAllCols());
 
         $data->name = $params->name;
         $data->qty = $this->toDouble($params->totalcost);
@@ -152,13 +159,13 @@ trait SaleItemServices {
         $data->type = $this->toDate($params->docdate);
 
         if($data->type == 'ticket'){
-            $ticket = Ticket::find($params->ticketid);
+            $ticket = $this->getTicketById($params->ticket_id);
             if($this->isEmpty($ticket)){
                 return null;
             }
             $data->ticket()->associate($ticket);
         }else if($data->type == 'inventory'){
-            $inventory = Inventory::find($params->inventoryid);
+            $inventory = $this->getInventoryById($params->inventory_id);
             if($this->isEmpty($inventory)){
                 return null;
             }
@@ -168,26 +175,33 @@ trait SaleItemServices {
         }
 
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
-    private function deleteSaleItem($id) {
-        $data = SaleItem::find($id);
+    private function deleteSaleItem($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
         return $data->refresh();
     }
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function saleItemAllCols() {
+
+        return ['id','uid', 'sale_id' ,'inventory_id', 'inventory_family_id' , 
+        'pattern_id' , 'ticket_id' , 'name' , 'qty' , 'desc' , 'cost' , 'price' , 'totaldisc' , 
+        'linetotal' , 'totalcost', 'payment', 'outstanding', 'type', 'docdate', 'status' ];
+
+    }
 
 }

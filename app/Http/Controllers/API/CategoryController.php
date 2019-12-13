@@ -50,23 +50,11 @@ class CategoryController extends Controller
         error_log('Retrieving list of categories.');
         // api/category (GET)
         $categories = $this->getCategories($request->user());
+       
         if ($this->isEmpty($categories)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Categories');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Categories');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($categories, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Categories');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Categories', $categories, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -138,21 +126,11 @@ class CategoryController extends Controller
         $categories = $this->getCategories($request->user());
         $categories = $this->filterCategories($categories, $params);
 
+       
         if ($this->isEmpty($categories)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Categories');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Categories');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($categories, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($categories->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Categories');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Categories', $categories, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -188,16 +166,9 @@ class CategoryController extends Controller
         $category = $this->getCategory($uid);
         if ($this->isEmpty($category)) {
             $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Category');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Category');
         } else {
-            $data['data'] = $category;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Category');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Category', $category, 'retrieve');
         }
     }
 
@@ -257,18 +228,10 @@ class CategoryController extends Controller
 
         if ($this->isEmpty($category)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Category');
-            $data['data'] = $category;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Category', $category, 'create');
         }
     }
 
@@ -338,11 +301,7 @@ class CategoryController extends Controller
 
         if ($this->isEmpty($category)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Category');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Category');
         }
         
         $params = collect([
@@ -356,19 +315,10 @@ class CategoryController extends Controller
         $this->createLog($request->user()->id , [$category->id], 'update', 'category');
         if ($this->isEmpty($category)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Category');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Category');
-            $data['data'] = $category;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Category', $category, 'update');
         }
     }
 
@@ -404,28 +354,16 @@ class CategoryController extends Controller
         $category = $this->getCategory($uid);
         if ($this->isEmpty($category)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Category');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Category');
         }
         $category = $this->deleteCategory($category);
         $this->createLog($request->user()->id , [$category->id], 'delete', 'category');
         if ($this->isEmpty($category)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Category');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Category', $category, 'delete');
         }
     }
 

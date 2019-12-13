@@ -50,23 +50,11 @@ class CompanyController extends Controller
         error_log('Retrieving list of companies.');
         // api/company (GET)
         $companies = $this->getCompanies($request->user());
+        
         if ($this->isEmpty($companies)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Companies');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Companies');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($companies, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Companies');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Companies', $companies, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -138,21 +126,11 @@ class CompanyController extends Controller
         $companies = $this->getCompanies($request->user());
         $companies = $this->filterCompanies($companies, $params);
 
+       
         if ($this->isEmpty($companies)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Companies');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Companies');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($companies, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companies->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Companies');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Companies', $companies, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -187,17 +165,9 @@ class CompanyController extends Controller
         error_log('Retrieving company of uid:' . $uid);
         $company = $this->getCompany($uid);
         if ($this->isEmpty($company)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Company');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Company');
         } else {
-            $data['data'] = $company;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Company');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Company', $company, 'retrieve');
         }
     }
      
@@ -217,7 +187,7 @@ class CompanyController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="companytypeid",
+     * name="company_type_id",
      * in="query",
      * description="Company Type ID",
      * required=true,
@@ -352,7 +322,7 @@ class CompanyController extends Controller
             'fax2' => 'nullable|string|max:191|unique:companies',
             'tel1' => 'nullable|string|max:191|unique:companies',
             'tel2' => 'nullable|string|max:191|unique:companies',
-            'companytypeid' => 'required|string',
+            'company_type_id' => 'required|string',
             'name' => 'required|string',
         ]);
         error_log('Creating company.');
@@ -371,7 +341,7 @@ class CompanyController extends Controller
             'state' => $request->state,
             'city' => $request->city,
             'country' => $request->country,
-            'companytypeid' => $request->companytypeid,
+            'company_type_id' => $request->company_type_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
@@ -379,18 +349,10 @@ class CompanyController extends Controller
 
         if ($this->isEmpty($company)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Company');
-            $data['data'] = $company;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Company', $company, 'create');
         }
     }
 
@@ -418,7 +380,7 @@ class CompanyController extends Controller
      *          )
      * ),
      * @OA\Parameter(
-     * name="companytypeid",
+     * name="company_type_id",
      * in="query",
      * description="Company Type ID",
      * required=true,
@@ -561,11 +523,7 @@ class CompanyController extends Controller
         
         if ($this->isEmpty($company)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Company');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Company');
         }
         $params = collect([
             'regno' => $request->regno,
@@ -582,26 +540,17 @@ class CompanyController extends Controller
             'state' => $request->state,
             'city' => $request->city,
             'country' => $request->country,
-            'companytypeid' => $request->companytypeid,
+            'company_type_id' => $request->company_type_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $company = $this->updateCompany($company, $params);
         if ($this->isEmpty($company)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Company');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Company');
-            $data['data'] = $company;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Company', $company, 'update');
         }
     }
 
@@ -638,28 +587,16 @@ class CompanyController extends Controller
         $company = $this->getCompany($uid);
         if ($this->isEmpty($company)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Company');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Company');
         }
         $company = $this->deleteCompany($company);
         $this->createLog($request->user()->id , [$company->id], 'delete', 'company');
         if ($this->isEmpty($company)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Company');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Company', $company, 'delete');
         }
     }
 

@@ -6,13 +6,11 @@ use App\Store;
 use App\Sale;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\StoreServices;
+use App\Traits\AllServices;
 
 trait SaleServices {
 
-    use GlobalFunctions, LogServices , StoreServices;
+    use AllServices;
 
     private function getSales($requester) {
 
@@ -89,7 +87,14 @@ trait SaleServices {
         return $data;
     }
 
+    private function getSaleById($id) {
+        $data = Sale::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createSale($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->saleAllCols());
 
         $data = new Sale();
         $data->uid = Carbon::now()->timestamp . Sale::count();
@@ -106,9 +111,9 @@ trait SaleServices {
         $data->docdate = $this->toDate($params->docdate);
         $data->remark = $params->remark;
 
-        if(!$this->isEmpty($params->userid)){
+        if(!$this->isEmpty($params->user_id)){
             $data->pos = false;
-            $user = User::find($params->userid);
+            $user = $this->getUserById($params->user_id);
             if($this->isEmpty($user)){
                 return null;
             }
@@ -117,7 +122,7 @@ trait SaleServices {
             $data->pos = true;
         }
 
-        $store = Store::find($params->storeid);
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
@@ -125,9 +130,9 @@ trait SaleServices {
 
 
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -136,6 +141,8 @@ trait SaleServices {
 
     //Make Sure Sale is not empty when calling this function
     private function updateSale($data,  $params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->saleAllCols());
 
         $data->sono = $params->sono;
         $data->totalqty = $this->toInt($params->totalqty);
@@ -150,9 +157,9 @@ trait SaleServices {
         $data->docdate = $this->toDate($params->docdate);
         $data->remark = $params->remark;
 
-        if(!$this->isEmpty($params->userid)){
+        if(!$this->isEmpty($params->user_id)){
             $data->pos = false;
-            $user = User::find($params->userid);
+            $user = $this->getUserById($params->user_id);
             if($this->isEmpty($user)){
                 return null;
             }
@@ -161,32 +168,39 @@ trait SaleServices {
             $data->pos = true;
         }
 
-        $store = Store::find($params->storeid);
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
         $data->store()->associate($store);
 
         $data->status = true;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
     private function deleteSale($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function saleAllCols() {
+
+        return ['id','uid', 'user_id' ,'store_id', 'sono' , 'totalqty' , 'discpctg' , 
+        'totalcost' , 'linetotal' , 'charge' , 'totaldisc' , 'grandtotal' , 'payment' , 
+        'outstanding' , 'remark', 'docdate', 'pos', 'status' ];
+
+    }
 
 }

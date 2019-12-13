@@ -50,23 +50,11 @@ class GroupController extends Controller
         error_log('Retrieving list of groups.');
         // api/group (GET)
         $groups = $this->getGroups($request->user());
+       
         if ($this->isEmpty($groups)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Groups');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Groups');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($groups, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($groups->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Groups');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Groups', $groups, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -139,20 +127,9 @@ class GroupController extends Controller
         $groups = $this->filterGroups($groups, $params);
 
         if ($this->isEmpty($groups)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Groups');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Groups');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($groups, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($groups->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Groups');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Groups', $groups, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -187,17 +164,9 @@ class GroupController extends Controller
         error_log('Retrieving group of uid:' . $uid);
         $group = $this->getGroup($uid);
         if ($this->isEmpty($group)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Group');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Group');
         } else {
-            $data['data'] = $group;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Group');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Group', $group, 'retrieve');
         }
     }
 
@@ -209,7 +178,7 @@ class GroupController extends Controller
      *   summary="Creates a group.",
      *   operationId="createGroup",
      * @OA\Parameter(
-     * name="companyid",
+     * name="company_id",
      * in="query",
      * description="Group belongs to which company",
      * required=true,
@@ -251,7 +220,7 @@ class GroupController extends Controller
         // api/group (POST)
         
         $this->validate($request, [
-            'companyid' => 'required|integer',
+            'company_id' => 'required|integer',
             'name' => 'required|string|max:191',
             'desc' => 'nullable',
         ]);
@@ -259,7 +228,7 @@ class GroupController extends Controller
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
-            'companyid' => $request->companyid,
+            'company_id' => $request->company_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
@@ -267,18 +236,10 @@ class GroupController extends Controller
 
         if ($this->isEmpty($group)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Group');
-            $data['data'] = $group;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Group', $group, 'create');
         }
     }
 
@@ -297,7 +258,7 @@ class GroupController extends Controller
      *     @OA\Schema(type="string")
      *   ),
      * @OA\Parameter(
-     * name="companyid",
+     * name="company_id",
      * in="query",
      * description="Group belongs to which company",
      * required=true,
@@ -341,24 +302,20 @@ class GroupController extends Controller
        
        
         $this->validate($request, [
-            'companyid' => 'required|integer',
+            'company_id' => 'required|integer',
             'name' => 'required|string|max:191',
             'desc' => 'nullable',
         ]);
       
         if ($this->isEmpty($group)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Group');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Group');
         }
         
         $params = collect([
             'name' => $request->name,
             'desc' => $request->desc,
-            'companyid' => $request->companyid,
+            'company_id' => $request->company_id,
         ]);
         
         //Convert To Json Object
@@ -366,19 +323,10 @@ class GroupController extends Controller
         $group = $this->updateGroup($group, $params);
         if ($this->isEmpty($group)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Group');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Group');
-            $data['data'] = $group;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Group', $group, 'update');
         }
     }
 
@@ -415,28 +363,16 @@ class GroupController extends Controller
         $group = $this->getGroup($uid);
         if ($this->isEmpty($group)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Group');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Group');
         }
         $group = $this->deleteGroup($group);
         $this->createLog($request->user()->id , [$group->id], 'delete', 'group');
         if ($this->isEmpty($group)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Group');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Group', $group, 'delete');
         }
     }
 

@@ -53,85 +53,12 @@ class SaleController extends Controller
         // api/sale (GET)
         $sales = $this->getSaleListing($request->user());
         if ($this->isEmpty($sales)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Sales');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Sales');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($sales, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($sales->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Sales');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Sales', $sales, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/sales",
-     *      operationId="pluckSaleList",
-     *      tags={"SaleControllerService"},
-     *      summary="pluck list of sales",
-     *      description="Returns list of plucked sales",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of sales"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of sales")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked sales.');
-        // api/pluck/sales (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $sales = $this->pluckSaleIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($sales)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Sales');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($sales, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($sales->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Sales');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
+    
     /**
      * @OA\Get(
      *      path="/api/filter/sale",
@@ -206,119 +133,9 @@ class SaleController extends Controller
         $sales = $this->filterSaleListing($request->user(), $params);
 
         if ($this->isEmpty($sales)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Sales');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Sales');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($sales, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($sales->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Sales');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/sale",
-     *      operationId="filterPluckedSaleList",
-     *      tags={"SaleControllerService"},
-     *      summary="Filter list of plucked sales",
-     *      description="Returns list of filtered sales",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onsale",
-     *     in="query",
-     *     description="onsale for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered sales"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of sales")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked sales.');
-        // api/pluck/filter/sale (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'onsale' => $request->onsale,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $sales = $this->pluckSaleFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($sales)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Sales');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($sales, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($sales->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Sales');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Sales', $sales, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -352,68 +169,9 @@ class SaleController extends Controller
         error_log('Retrieving sale of uid:' . $uid);
         $sale = $this->getSale($request->user(), $uid);
         if ($this->isEmpty($sale)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Sale');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Sale');
         } else {
-            $data['data'] = $sale;
-            $data['msg'] = $this->getRetrievedSuccessMsg('Sale');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/sale/{uid}",
-     *      operationId="pluckSaleByUid",
-     *      tags={"SaleControllerService"},
-     *      summary="pluck sale",
-     *      description="Returns plucked sales",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Sale_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of sales"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of sales")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked sales.');
-        // api/pluck/sale/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $sale = $this->pluckSale($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($sale)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Sale');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('Sale');
-            $data['data'] = $sale;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Sale', $sale, 'retrieve');
         }
     }
 
@@ -602,18 +360,10 @@ class SaleController extends Controller
 
         if ($this->isEmpty($sale)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('Sale');
-            $data['data'] = $sale;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Sale', $sale, 'create');
         }
     }
 
@@ -805,11 +555,7 @@ class SaleController extends Controller
       
         if ($this->isEmpty($sale)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('Sale');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Sale');
         }
         
         $params = collect([
@@ -835,19 +581,10 @@ class SaleController extends Controller
         $sale = $this->updateSale($request->user(), $sale, $params);
         if ($this->isEmpty($sale)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('Sale');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('Sale');
-            $data['data'] = $sale;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Sale', $sale, 'update');
         }
     }
 
@@ -883,27 +620,15 @@ class SaleController extends Controller
         $sale = $this->getSale($request->user(), $uid);
         if ($this->isEmpty($sale)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('Sale');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Sale');
         }
         $sale = $this->deleteSale($request->user(), $sale->id);
         if ($this->isEmpty($sale)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('Sale');
-            $data['data'] = $sale;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Sale', $sale, 'delete');
         }
     }
 

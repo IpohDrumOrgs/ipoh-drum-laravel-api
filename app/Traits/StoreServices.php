@@ -6,13 +6,11 @@ use App\Company;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\CompanyServices;
+use App\Traits\AllServices;
 
 trait StoreServices {
 
-    use GlobalFunctions, LogServices , CompanyServices;
+    use AllServices;
 
     private function getStores($requester) {
         $data = collect();
@@ -88,7 +86,14 @@ trait StoreServices {
         return $data;
     }
 
+    private function getStoreById($id) {
+        $data = Store::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createStore($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->storeAllCols());
 
         $data = new Store();
         $data->uid = Carbon::now()->timestamp . Store::count();
@@ -103,37 +108,40 @@ trait StoreServices {
         $data->state = $params->state;
         $data->country = $params->country;
         $data->companyBelongings = $params->companyBelongings;
+        $data->status = true;
 
-        //Assign Owner
-        if($data->companyBelongings){
-            $company = Company::find($params->companyid);
+       //Assign Owner
+       if($data->companyBelongings){
+            $company = $this->getCompanyById($params->company_id);
+            error_log($params->company_id);
+            error_log($company);
             if($this->isEmpty($company)){
                 return null;
             }
             $data->company()->associate($company);
             $data->user_id = null;
         }else{
-            $user = User::find($params->userid);
+            $user = $this->getUserById($params->user_id);
+            error_log($user);
             if($this->isEmpty($user)){
                 return null;
             }
             $data->user()->associate($user);
             $data->company_id = null;
         }
-
-        $data->status = true;
-
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        
+        if(!$this->saveModel($data)){
             return null;
         }
+            
 
         return $data->refresh();
     }
 
     //Make Sure Store is not empty when calling this function
     private function updateStore($data,  $params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->storeAllCols());
 
         $data->name = $params->name;
         $data->contact = $params->contact;
@@ -148,24 +156,22 @@ trait StoreServices {
 
         //Assign Owner
         if($data->companyBelongings){
-            $company = Company::find($params->companyid);
+            $company = $this->getCompanyById($params->company_id);
             if($this->isEmpty($company)){
                 return null;
             }
             $data->company()->associate($company);
             $data->user_id = null;
         }else{
-            $user = User::find($params->userid);
+            $user = $this->getUserById($params->user_id);
             if($this->isEmpty($user)){
                 return null;
             }
             $data->user()->associate($user);
             $data->company_id = null;
         }
-
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        
+        if(!$this->saveModel($data)){
             return null;
         }
 
@@ -173,15 +179,74 @@ trait StoreServices {
     }
 
     private function deleteStore($data) {
+
+        $reviews = $data->reviews;
+        foreach($reviews as $review){
+            if(!$this->deleteStoreReview($review)){
+                return null;
+            }
+        }
+        
+        $inventories = $data->inventories;
+        foreach($inventories as $inventory){
+            if(!$this->deleteInventory($inventory)){
+                return null;
+            }
+        }
+
+        $tickets = $data->tickets;
+        foreach($tickets as $ticket){
+            if(!$this->deleteTicket($ticket)){
+                return null;
+            }
+        }
+
+        $promotions = $data->promotions;
+        foreach($promotions as $promotion){
+            if(!$this->deleteProductPromotion($promotion)){
+                return null;
+            }
+        }
+
+        $warranties = $data->warranties;
+        foreach($warranties as $warranty){
+            if(!$this->deleteWarranty($warranty)){
+                return null;
+            }
+        }
+
+        $shippings = $data->shippings;
+        foreach($shippings as $shipping){
+            if(!$this->deleteShipping($shipping)){
+                return null;
+            }
+        }
+
+        $vouchers = $data->vouchers;
+        foreach($vouchers as $voucher){
+            if(!$this->deleteVoucher($voucher)){
+                return null;
+            }
+        }
+
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if(!$this->saveModel($data)){
             return null;
         }
 
         return $data->refresh();
     }
 
+
+    // Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+
+    public function storeAllCols() {
+
+        return ['id','company_id', 'user_id', 'uid' ,'name', 'contact', 'desc' , 
+        'imgpath' , 'imgpublicid'  , 'email', 'rating' , 'freeshippingminpurchase' , 
+        'address' , 'state' , 'postcode' , 'city','country','status','companyBelongings'];
+
+    }
 
 }

@@ -52,82 +52,9 @@ class VerificationCodeController extends Controller
         // api/verificationcode (GET)
         $verificationcodes = $this->getVerificationCodeListing($request->user());
         if ($this->isEmpty($verificationcodes)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('VerificationCodes');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Verification Codes');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($verificationcodes, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($verificationcodes->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('VerificationCodes');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/verificationcodes",
-     *      operationId="pluckVerificationCodeList",
-     *      tags={"VerificationCodeControllerService"},
-     *      summary="pluck list of verificationcodes",
-     *      description="Returns list of plucked verificationcodes",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of verificationcodes"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of verificationcodes")
-     *    )
-     */
-    public function pluckIndex(Request $request)
-    {
-        error_log('Retrieving list of plucked verificationcodes.');
-        // api/pluck/verificationcodes (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $verificationcodes = $this->pluckVerificationCodeIndex($this->splitToArray($request->cols));
-        if ($this->isEmpty($verificationcodes)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('VerificationCodes');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($verificationcodes, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($verificationcodes->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('VerificationCodes');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Verification Codes', $verificationcodes, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 
@@ -205,119 +132,9 @@ class VerificationCodeController extends Controller
         $verificationcodes = $this->filterVerificationCodeListing($request->user(), $params);
 
         if ($this->isEmpty($verificationcodes)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('VerificationCodes');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Verification Codes');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($verificationcodes, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($verificationcodes->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('VerificationCodes');
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-
-    }
-
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/filter/verificationcode",
-     *      operationId="filterPluckedVerificationCodeList",
-     *      tags={"VerificationCodeControllerService"},
-     *      summary="Filter list of plucked verificationcodes",
-     *      description="Returns list of filtered verificationcodes",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="Page size",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To string for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="onverificationcode",
-     *     in="query",
-     *     description="onverificationcode for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered verificationcodes"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of verificationcodes")
-     *    )
-     */
-    public function pluckFilter(Request $request)
-    {
-        error_log('Retrieving list of filtered and plucked verificationcodes.');
-        // api/pluck/filter/verificationcode (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'onverificationcode' => $request->onverificationcode,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $verificationcodes = $this->pluckVerificationCodeFilter($this->splitToArray($request->cols) , $params);
-
-        if ($this->isEmpty($verificationcodes)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('VerificationCodes');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($verificationcodes, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($verificationcodes->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('VerificationCodes');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Verification Codes', $verificationcodes, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -352,71 +169,12 @@ class VerificationCodeController extends Controller
         $verificationcode = $this->getVerificationCode($request->user(), $uid);
         if ($this->isEmpty($verificationcode)) {
             $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('VerificationCode');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Verification Code');
         } else {
-            $data['data'] = $verificationcode;
-            $data['msg'] = $this->getRetrievedSuccessMsg('VerificationCode');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Verification Code', $verificationcode, 'retrieve');
         }
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/pluck/verificationcode/{uid}",
-     *      operationId="pluckVerificationCodeByUid",
-     *      tags={"VerificationCodeControllerService"},
-     *      summary="pluck verificationcode",
-     *      description="Returns plucked verificationcodes",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="VerificationCode_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="cols",
-     *     in="query",
-     *     required=true,
-     *     description="Columns for pluck",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of verificationcodes"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of verificationcodes")
-     *    )
-     */
-    public function pluckShow(Request $request , $uid)
-    {
-        error_log('Retrieving plucked verificationcodes.');
-        // api/pluck/verificationcode/{uid} (GET)
-        error_log("columns = " . collect($this->splitToArray($request->cols)));
-        $verificationcode = $this->pluckVerificationCode($this->splitToArray($request->cols) , $uid);
-        if ($this->isEmpty($verificationcode)) {
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('VerificationCode');
-            $data['code'] = 404;
-            return response()->json($data, 404);
-        } else {
-            $data['status'] = 'success';
-            $data['msg'] = $this->getRetrievedSuccessMsg('VerificationCode');
-            $data['data'] = $verificationcode;
-            $data['code'] = 200;
-            return response()->json($data, 200);
-        }
-    }
-
-    
     /**
      * @OA\Post(
      *   tags={"VerificationCodeControllerService"},
@@ -472,11 +230,7 @@ class VerificationCodeController extends Controller
 
         if ($this->isEmpty($verificationcode)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
             $data['status'] = 'success';
@@ -544,10 +298,7 @@ class VerificationCodeController extends Controller
         if ($this->isEmpty($verificationcode)) {
             DB::rollBack();
             $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('VerificationCode');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Verification Code');
         }
         
         $params = collect([
@@ -560,19 +311,10 @@ class VerificationCodeController extends Controller
         $verificationcode = $this->updateVerificationCode($request->user(), $verificationcode, $params);
         if ($this->isEmpty($verificationcode)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('VerificationCode');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('VerificationCode');
-            $data['data'] = $verificationcode;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Verification Code', $verificationcode, 'update');
         }
     }
 
@@ -608,27 +350,15 @@ class VerificationCodeController extends Controller
         $verificationcode = $this->getVerificationCode($request->user(), $uid);
         if ($this->isEmpty($verificationcode)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('VerificationCode');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Verification Code');
         }
         $verificationcode = $this->deleteVerificationCode($request->user(), $verificationcode->id);
         if ($this->isEmpty($verificationcode)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('VerificationCode');
-            $data['data'] = $verificationcode;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Verification Code', $verificationcode, 'delete');
         }
     }
 

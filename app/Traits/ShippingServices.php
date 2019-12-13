@@ -7,14 +7,11 @@ use App\Shipping;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\StoreServices;
-use App\Traits\ImageHostingServices;
+use App\Traits\AllServices;
 
 trait ShippingServices {
 
-    use GlobalFunctions, LogServices, StoreServices;
+    use AllServices;
 
     private function getShippings($requester) {
 
@@ -93,6 +90,14 @@ trait ShippingServices {
         return $data;
 
     }
+    
+    private function getShippingById($id) {
+
+        $data = Shipping::where('id', $id)->where('status', true)->first();
+        return $data;
+
+    }
+
     //Make Sure Shipping is not empty when calling this function
     private function createShipping($params) {
 
@@ -106,7 +111,7 @@ trait ShippingServices {
         $data->maxweight = $this->toDouble($params->maxweight);
         $data->maxdimension = $this->toDouble($params->maxdimension);
 
-        $store = Store::find($params->store_id);
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
@@ -133,7 +138,7 @@ trait ShippingServices {
         $data->maxweight = $this->toDouble($params->maxweight);
         $data->maxdimension = $this->toDouble($params->maxdimension);
 
-        $store = Store::find($params->store_id);
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }

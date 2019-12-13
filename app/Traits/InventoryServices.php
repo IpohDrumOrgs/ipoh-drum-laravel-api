@@ -12,15 +12,11 @@ use App\Shipping;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\StoreServices;
-use App\Traits\ImageHostingServices;
-use App\Traits\InventoryFamilyServices;
+use App\Traits\AllServices;
 
 trait InventoryServices {
 
-    use GlobalFunctions, LogServices, StoreServices, ImageHostingServices, InventoryFamilyServices;
+    use AllServices;
 
     private function getInventories($requester) {
 
@@ -103,10 +99,18 @@ trait InventoryServices {
 
     private function getInventory($uid) {
 
-        $data = Inventory::where('uid', $uid)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','productreviews','characteristics')->first();
+        $data = Inventory::where('uid', $uid)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','reviews','characteristics')->first();
         return $data;
 
     }
+    
+    private function getInventoryById($id) {
+
+        $data = Inventory::where('id', $id)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','reviews','characteristics')->first();
+        return $data;
+
+    }
+    
     //Make Sure Inventory is not empty when calling this function
     private function createInventory($params) {
 
@@ -124,13 +128,13 @@ trait InventoryServices {
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         // $data->onsale = $params->onsale;
 
-        $store = Store::find($params->store_id);
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
         $data->store()->associate($store);
         
-        $promotion = ProductPromotion::find($params->product_promotion_id);
+        $promotion = $this->getProductPromotionById($params->product_promotion_id);
         if($this->isEmpty($promotion)){
             return null;
         }else{
@@ -141,13 +145,13 @@ trait InventoryServices {
 
         $data->promotion()->associate($promotion);
         
-        $warranty = Warranty::find($params->warranty_id);
+        $warranty = $this->getWarrantyById($params->warranty_id);
         if($this->isEmpty($warranty)){
             return null;
         }
         $data->warranty()->associate($warranty);
 
-        $shipping = Shipping::find($params->shipping_id);
+        $shipping = $this->getShippingById($params->shipping_id);
         if($this->isEmpty($shipping)){
             return null;
         }
@@ -178,13 +182,14 @@ trait InventoryServices {
         $data->stockthreshold = $this->toInt($params->stockthreshold);
         $data->onsale = $params->onsale;
 
-        $store = Store::find($params->store_id);
+       
+        $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
             return null;
         }
         $data->store()->associate($store);
         
-        $promotion = ProductPromotion::find($params->product_promotion_id);
+        $promotion = $this->getProductPromotionById($params->product_promotion_id);
         if($this->isEmpty($promotion)){
             return null;
         }else{
@@ -195,18 +200,18 @@ trait InventoryServices {
 
         $data->promotion()->associate($promotion);
         
-        $warranty = Warranty::find($params->warranty_id);
+        $warranty = $this->getWarrantyById($params->warranty_id);
         if($this->isEmpty($warranty)){
             return null;
         }
         $data->warranty()->associate($warranty);
 
-        $shipping = Shipping::find($params->shipping_id);
+        $shipping = $this->getShippingById($params->shipping_id);
         if($this->isEmpty($shipping)){
             return null;
         }
         $data->shipping()->associate($shipping);
-
+        
         $data->status = true;
 
         if(!$this->saveModel($data)){
@@ -221,7 +226,7 @@ trait InventoryServices {
     private function deleteInventory($data) {
         $data->status = false;
 
-        $reviews = $data->productreviews;   
+        $reviews = $data->reviews;   
         foreach($reviews as $review){
             if(!$this->deleteProductReview($review)){
                 return null;
@@ -300,7 +305,7 @@ trait InventoryServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function inventoryDefaultCols() {
 
-        return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'productreviews','inventoryfamilies'];
+        return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'reviews','inventoryfamilies'];
 
     }
     
@@ -333,9 +338,9 @@ trait InventoryServices {
     }
     
     public function countProductReviews($data) {
-        if(isset($data->productreviews)){
-            if(!$this->isEmpty($data->productreviews)){
-                $data->totalproductreview = collect($data->productreviews)->count();
+        if(isset($data->reviews)){
+            if(!$this->isEmpty($data->reviews)){
+                $data->totalproductreview = collect($data->reviews)->count();
             }else{
                 $data->totalproductreview = 0;
             }

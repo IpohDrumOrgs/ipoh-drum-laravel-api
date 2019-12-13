@@ -5,12 +5,11 @@ use App\User;
 use App\CompanyType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
+use App\Traits\AllServices;
 
 trait CompanyTypeServices {
 
-    use GlobalFunctions, LogServices;
+    use AllServices;
 
     private function getCompanyTypes($requester) {
 
@@ -85,7 +84,14 @@ trait CompanyTypeServices {
         return $data;
     }
 
+    private function getCompanyTypeById($id) {
+        $data = CompanyType::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createCompanyType($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->companyTypeAllCols());
 
         $data = new CompanyType();
         $data->uid = Carbon::now()->timestamp . CompanyType::count();
@@ -93,9 +99,9 @@ trait CompanyTypeServices {
         $data->desc = $params->desc;
         $data->status = true;
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -105,28 +111,35 @@ trait CompanyTypeServices {
     //Make Sure CompanyType is not empty when calling this function
     private function updateCompanyType($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->companyTypeAllCols());
+
         $data->name = $params->name;
         $data->desc = $params->desc;
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
     private function deleteCompanyType($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
         return $data->refresh();
     }
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function companyTypeAllCols() {
+
+        return ['id','uid', 'name', 'desc', 'status'];
+    }
 
 }

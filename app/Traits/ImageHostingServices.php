@@ -22,6 +22,7 @@ trait ImageHostingServices {
             $realpath = $img->getRealPath();;
             error_log($realpath);
             Cloudder::upload($realpath, null, ['folder' => $folder, 'quality' => 'auto']);
+            error_log('uploaded image');
     
             list($width, $height) = getimagesize($realpath);
     
@@ -54,6 +55,7 @@ trait ImageHostingServices {
         if($id){
             try{
                 Cloudder::destroy($id);
+                error_log('deleted image');
                 return true;
             }catch(Exxception $e){
                 $this->createErrorLog('ImageHostingServices' , 'deleteImage', 'error when deleting image '. $id , $e->getMessage());

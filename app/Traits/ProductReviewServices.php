@@ -9,14 +9,11 @@ use App\Ticket;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\InventoryServices;
-use App\Traits\ImageHostingServices;
+use App\Traits\AllServices;
 
 trait ProductReviewServices {
 
-    use GlobalFunctions, LogServices, InventoryServices, ImageHostingServices;
+    use AllServices;
 
     private function getProductReviews($requester) {
 
@@ -93,6 +90,13 @@ trait ProductReviewServices {
         return $data;
 
     }
+
+    private function getProductReviewById($id) {
+
+        $data = ProductReview::where('id', $id)->where('status', true)->first();
+        return $data;
+
+    }
     //Make Sure ProductReview is not empty when calling this function
     private function createProductReview($params) {
         
@@ -108,14 +112,14 @@ trait ProductReviewServices {
         $data->dislike = 0;  
 
         if($data->type == 'inventory'){
-            $inventory = Inventory::where('id', $params->inventory_id)->where('status' , true)->first();;
+            $inventory = $this->getInventoryById($params->inventory_id);
             if($this->isEmpty($inventory)){
                 return null;
             }
             $data->inventory()->associate($inventory);
             $folderpath =   "/Inventory/". $inventory->uid. "/Review/";
         }else if($data->type == 'ticket'){
-            $ticket = Ticket::where('id', $params->ticket_id)->where('status' , true)->first();;
+            $ticket = $this->getTicketById($params->ticket_id);
             if($this->isEmpty($ticket)){
                 return null;
             }
@@ -125,8 +129,7 @@ trait ProductReviewServices {
             return null;
         }
         
-
-        $user = User::where('id', $params->user_id)->where('status' , true)->first();;
+        $user = $this->getUserById($params->user_id);
         if($this->isEmpty($user)){
             return null;
         }
@@ -164,16 +167,15 @@ trait ProductReviewServices {
         $data->type = $params->type;
         $data->rating = $this->toDouble($params->rating);
 
-        
         if($data->type == 'inventory'){
-            $inventory = Inventory::where('id', $params->inventory_id)->where('status' , true)->first();;
+            $inventory = $this->getInventoryById($params->inventory_id);
             if($this->isEmpty($inventory)){
                 return null;
             }
             $data->inventory()->associate($inventory);
             $folderpath =   "/Inventory/". $inventory->uid. "/Review/";
         }else if($data->type == 'ticket'){
-            $ticket = Ticket::where('id', $params->ticket_id)->where('status' , true)->first();;
+            $ticket = $this->getTicketById($params->ticket_id);
             if($this->isEmpty($ticket)){
                 return null;
             }
@@ -182,13 +184,12 @@ trait ProductReviewServices {
         }else{
             return null;
         }
-
-        $user = User::where('id', $params->user_id)->where('status' , true)->first();;
+        
+        $user = $this->getUserById($params->user_id);
         if($this->isEmpty($user)){
             return null;
         }
         $data->user()->associate($user);
-
         
         if($params->img){ 
             $this->deleteImage($data->imgpublicid);
@@ -230,7 +231,8 @@ trait ProductReviewServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function productReviewAllCols() {
 
-        return ['id','uid', 'inventory_id', 'ticket_id' ,'user_id', 'title', 'desc' , 'imgpath' , 'imgpublicid' , 'type', 'rating' , 'like' , 'dislike', 'status'];
+        return ['id','uid', 'inventory_id', 'ticket_id' ,'user_id', 
+        'title', 'desc' , 'imgpath' , 'imgpublicid' , 'type', 'rating' , 'like' , 'dislike', 'status'];
 
     }
     

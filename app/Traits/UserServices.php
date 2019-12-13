@@ -19,12 +19,11 @@ use App\Payment;
 use App\Video;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
+use App\Traits\AllServices;
 
 trait UserServices {
 
-    use GlobalFunctions, LogServices;
+    use AllServices;
 
     private function getUsers($requester) {
 
@@ -135,38 +134,47 @@ trait UserServices {
         return $data;
     }
 
+    private function getUserById($id) {
+        $data = User::with('roles', 'groups.company')->where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createUser($params) {
 
 
-            $data = new User();
-            $data->uid = Carbon::now()->timestamp . User::count();
-            $data->name = $params->name;
-            $data->email = $params->email;
-            $data->icno = $params->icno;
-            $data->tel1 = $params->tel1;
-            $data->tel2 = $params->tel2;
-            $data->address1 = $params->address1;
-            $data->address2 = $params->address2;
-            $data->postcode = $params->postcode;
-            $data->city = $params->city;
-            $data->state = $params->state;
-            $data->country = $params->country;
-            $data->password = Hash::make($params->password);
-            $data->status = true;
-            try {
-                $data->save();
-            } catch (Exception $e) {
-                return null;
-            }
+        $params = $this->checkUndefinedProperty($params , $this->userAllCols());
 
+        $data = new User();
+        $data->uid = Carbon::now()->timestamp . User::count();
+        $data->name = $params->name;
+        $data->email = $params->email;
+        $data->icno = $params->icno;
+        $data->tel1 = $params->tel1;
+        $data->tel2 = $params->tel2;
+        $data->address1 = $params->address1;
+        $data->address2 = $params->address2;
+        $data->postcode = $params->postcode;
+        $data->city = $params->city;
+        $data->state = $params->state;
+        $data->country = $params->country;
+        $data->password = Hash::make($params->password);
+        $data->status = true;
+        if($this->saveModel($data)){
             return $data->refresh();
-        
+        }else{
+            return null;
+        }
+
+        return $data->refresh();
+    
         
     }
 
     //Make Sure User is not empty when calling this function
     private function updateUser($data,  $params) {
         
+        $params = $this->checkUndefinedProperty($params , $this->userAllCols());
+
         $grouparr = [];
         $data->name = $params->name;
         $data->email = $params->email;
@@ -179,25 +187,33 @@ trait UserServices {
         $data->city = $params->city;
         $data->state = $params->state;
         $data->country = $params->country;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
     private function deleteUser($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
         return $data->refresh();
     }
 
+    // Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function userAllCols() {
+
+        return ['id','uid', 'name', 'imgpath', 'imgpublicid','email','icno',
+        'tel1','tel2','address1','address2','postcode','city','state','country',
+        'password','last_login','last_active','status'];
+
+    }
     
 }

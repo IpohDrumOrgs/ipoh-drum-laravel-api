@@ -4,13 +4,11 @@ namespace App\Traits;
 use App\Category;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\AssignDatabaseRelationship;
+use App\Traits\AllServices;
 
 trait CategoryServices {
 
-    use GlobalFunctions, LogServices, AssignDatabaseRelationship;
+    use AllServices;
 
     private function getCategories($requester) {
 
@@ -87,19 +85,25 @@ trait CategoryServices {
         return $data;
     }
 
+    private function getCategoryById($id) {
+        $data = Category::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
 
     private function createCategory($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->categoryAllCols());
 
         $data = new Category();
         $data->uid = Carbon::now()->timestamp . Category::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         // if(!$this->isEmpty($params->ticketids)){
 
         //     $ids = $this->splitToArray($params->ticketids);
@@ -120,11 +124,13 @@ trait CategoryServices {
     //Make Sure Category is not empty when calling this function
     private function updateCategory($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->categoryAllCols());
+        
         $data->name = $params->name;
         $data->desc = $params->desc;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -146,13 +152,22 @@ trait CategoryServices {
 
     private function deleteCategory($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
         return $data->refresh();
     }
 
+    
+
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function categoryAllCols() {
+
+        return ['id','uid', 'name', 'imgpath' ,'imgpublicid', 'desc', 'status'];
+
+    }
 }

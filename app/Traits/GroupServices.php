@@ -6,12 +6,11 @@ use App\Group;
 use App\Company;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
+use App\Traits\AllServices;
 
 trait GroupServices {
 
-    use GlobalFunctions, LogServices;
+    use AllServices;
 
     private function getGroups($requester) {
 
@@ -107,14 +106,21 @@ trait GroupServices {
         return $data;
     }
 
+    private function getGroupById($id) {
+        $data = Group::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createGroup($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->groupAllCols());
 
         $data = new Group();
         $data->uid = Carbon::now()->timestamp . Group::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
 
-        $company = Company::find($params->companyid);
+        $company = $this->getCompanyById($params->company_id);
         if($this->isEmpty($company)){
             return null;
         }
@@ -122,9 +128,9 @@ trait GroupServices {
 
         $data->status = true;
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -134,29 +140,30 @@ trait GroupServices {
     //Make Sure Group is not empty when calling this function
     private function updateGroup($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->groupAllCols());
+
         $data->name = $params->name;
         $data->desc = $params->desc;
 
-        $company = Company::find($params->companyid);
+        $company = $this->getCompanyById($params->company_id);
         if($this->isEmpty($company)){
             return null;
         }
         $data->company()->associate($company);
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
     private function deleteGroup($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -164,4 +171,10 @@ trait GroupServices {
     }
 
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function groupAllCols() {
+
+        return ['id','uid', 'company_id', 'name', 'desc', 'status'];
+    }
 }

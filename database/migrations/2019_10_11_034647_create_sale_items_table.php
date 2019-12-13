@@ -34,7 +34,6 @@ class CreateSaleItemsTable extends Migration
             $table->string('status')->default('open');
             $table->string('type')->default('inventory');
             $table->date('docdate')->nullable();
-            $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('sale_id')

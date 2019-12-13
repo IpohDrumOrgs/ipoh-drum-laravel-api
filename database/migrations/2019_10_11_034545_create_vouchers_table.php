@@ -23,9 +23,12 @@ class CreateVouchersTable extends Migration
             $table->string('code')->unique();
             $table->decimal('disc',8,2)->default(0.00);
             $table->decimal('discpctg',8,2)->default(0.00);
+            $table->boolean('discbyprice')->default(true);
             $table->date('startdate')->nullable();
             $table->date('enddate')->nullable();
             $table->decimal('minpurchase',8,2)->default(0.00);
+            $table->integer('minqty')->default(0);
+            $table->integer('minvariety')->default(0);
             $table->boolean('status')->default(true);
             $table->timestamps();
 

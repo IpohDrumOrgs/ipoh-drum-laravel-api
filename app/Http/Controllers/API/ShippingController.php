@@ -51,22 +51,9 @@ class ShippingController extends Controller
         // api/shipping (GET)
         $shippings = $this->getShippings($request->user());
         if ($this->isEmpty($shippings)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Shippings');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Shippings');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($shippings, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($shippings->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Shippings');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Shippings', $shippings, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -139,20 +126,9 @@ class ShippingController extends Controller
         $shippings = $this->filterShippings($shippings, $params);
 
         if ($this->isEmpty($shippings)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('Shippings');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Shippings');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($shippings, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($shippings->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('Shippings');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Shippings', $shippings, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }

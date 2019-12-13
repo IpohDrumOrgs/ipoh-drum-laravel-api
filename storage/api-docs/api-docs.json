@@ -313,7 +313,7 @@
                         }
                     },
                     {
-                        "name": "companytypeid",
+                        "name": "company_type_id",
                         "in": "query",
                         "description": "Company Type ID",
                         "required": true,
@@ -558,7 +558,7 @@
                         }
                     },
                     {
-                        "name": "companytypeid",
+                        "name": "company_type_id",
                         "in": "query",
                         "description": "Company Type ID",
                         "required": true,
@@ -986,7 +986,7 @@
                 "operationId": "createGroup",
                 "parameters": [
                     {
-                        "name": "companyid",
+                        "name": "company_id",
                         "in": "query",
                         "description": "Group belongs to which company",
                         "required": true,
@@ -1134,7 +1134,7 @@
                         }
                     },
                     {
-                        "name": "companyid",
+                        "name": "company_id",
                         "in": "query",
                         "description": "Group belongs to which company",
                         "required": true,
@@ -2316,21 +2316,21 @@
                 "operationId": "createProductPromotion",
                 "parameters": [
                     {
-                        "name": "name",
-                        "in": "query",
-                        "description": "ProductPromotionname",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "store_id",
                         "in": "query",
                         "description": "Store ID",
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "ProductPromotionname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -3376,51 +3376,6 @@
                 }
             }
         },
-        "/api/pluck/sales": {
-            "get": {
-                "tags": [
-                    "SaleControllerService"
-                ],
-                "summary": "pluck list of sales",
-                "description": "Returns list of plucked sales",
-                "operationId": "pluckSaleList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of sales"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of sales"
-                    }
-                }
-            }
-        },
         "/api/filter/sale": {
             "get": {
                 "tags": [
@@ -3444,91 +3399,6 @@
                         "description": "Page size",
                         "schema": {
                             "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "onsale for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered sales"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of sales"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/sale": {
-            "get": {
-                "tags": [
-                    "SaleControllerService"
-                ],
-                "summary": "Filter list of plucked sales",
-                "description": "Returns list of filtered sales",
-                "operationId": "filterPluckedSaleList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
                         }
                     },
                     {
@@ -3795,44 +3665,6 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the sale."
-                    }
-                }
-            }
-        },
-        "/api/pluck/sale/{uid}": {
-            "get": {
-                "tags": [
-                    "SaleControllerService"
-                ],
-                "summary": "pluck sale",
-                "description": "Returns plucked sales",
-                "operationId": "pluckSaleByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "Sale_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of sales"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of sales"
                     }
                 }
             }
@@ -4196,7 +4028,7 @@
                         }
                     },
                     {
-                        "name": "companyid",
+                        "name": "company_id",
                         "in": "query",
                         "description": "Company ID",
                         "schema": {
@@ -4204,7 +4036,7 @@
                         }
                     },
                     {
-                        "name": "userid",
+                        "name": "user_id",
                         "in": "query",
                         "description": "User ID",
                         "schema": {
@@ -4285,6 +4117,26 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Store has been created successfully."
@@ -4416,7 +4268,7 @@
                         }
                     },
                     {
-                        "name": "companyid",
+                        "name": "company_id",
                         "in": "query",
                         "description": "Company ID",
                         "schema": {
@@ -4424,7 +4276,7 @@
                         }
                     },
                     {
-                        "name": "userid",
+                        "name": "user_id",
                         "in": "query",
                         "description": "User ID",
                         "schema": {
@@ -4505,6 +4357,26 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Store has been updated successfully."
@@ -4717,6 +4589,311 @@
                 }
             }
         },
+        "/api/storereview": {
+            "get": {
+                "tags": [
+                    "StoreReviewControllerService"
+                ],
+                "summary": "Get list of storereviews",
+                "description": "Returns list of storereviews",
+                "operationId": "getStoreReviews",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of storereviews"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of storereviews"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "StoreReviewControllerService"
+                ],
+                "summary": "Creates a storereview.",
+                "operationId": "createStoreReview",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "StoreReview title",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Review description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "Review rating",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "StoreReview has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the storereview."
+                    }
+                }
+            }
+        },
+        "/api/filter/storereview": {
+            "get": {
+                "tags": [
+                    "StoreReviewControllerService"
+                ],
+                "summary": "Filter list of storereviews",
+                "description": "Returns list of filtered storereviews",
+                "operationId": "filterStoreReviews",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered storereviews"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of storereviews"
+                    }
+                }
+            }
+        },
+        "/api/storereview/{uid}": {
+            "get": {
+                "tags": [
+                    "StoreReviewControllerService"
+                ],
+                "summary": "Retrieves storereview by Uid.",
+                "operationId": "getStoreReviewByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "StoreReview_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "StoreReview has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the storereview."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "StoreReviewControllerService"
+                ],
+                "summary": "Update storereview by Uid.",
+                "operationId": "updateStoreReviewByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "StoreReview_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "StoreReview title",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Review description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "Review rating",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "StoreReview has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the storereview."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "StoreReviewControllerService"
+                ],
+                "summary": "Set storereview's 'status' to 0.",
+                "operationId": "deleteStoreReviewByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "StoreReview ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "StoreReview has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the storereview."
+                    }
+                }
+            }
+        },
         "/api/ticket": {
             "get": {
                 "tags": [
@@ -4769,7 +4946,7 @@
                         }
                     },
                     {
-                        "name": "storeid",
+                        "name": "store_id",
                         "in": "query",
                         "description": "Store ID",
                         "required": true,
@@ -4778,7 +4955,7 @@
                         }
                     },
                     {
-                        "name": "promotionid",
+                        "name": "product_promotion_id",
                         "in": "query",
                         "description": "Promotion ID",
                         "required": true,
@@ -5003,7 +5180,7 @@
                         }
                     },
                     {
-                        "name": "storeid",
+                        "name": "store_id",
                         "in": "query",
                         "description": "Store ID",
                         "required": true,
@@ -5012,7 +5189,7 @@
                         }
                     },
                     {
-                        "name": "promotionid",
+                        "name": "product_promotion_id",
                         "in": "query",
                         "description": "Promotion ID",
                         "required": true,
@@ -5486,51 +5663,6 @@
                 }
             }
         },
-        "/api/pluck/users": {
-            "get": {
-                "tags": [
-                    "UserControllerService"
-                ],
-                "summary": "pluck list of users",
-                "description": "Returns list of plucked users",
-                "operationId": "pluckUserList",
-                "parameters": [
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of users"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of users"
-                    }
-                }
-            }
-        },
         "/api/filter/user": {
             "get": {
                 "tags": [
@@ -5554,91 +5686,6 @@
                         "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "company_id",
-                        "in": "query",
-                        "description": "Company id for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered users"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of users"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/user": {
-            "get": {
-                "tags": [
-                    "UserControllerService"
-                ],
-                "summary": "Filter list of plucked users",
-                "description": "Returns list of filtered users",
-                "operationId": "filterPluckedUserList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
                         }
                     },
                     {
@@ -5853,44 +5900,6 @@
                 }
             }
         },
-        "/api/pluck/user/{uid}": {
-            "get": {
-                "tags": [
-                    "UserControllerService"
-                ],
-                "summary": "pluck user",
-                "description": "Returns plucked users",
-                "operationId": "pluckUserByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "User_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of users"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of users"
-                    }
-                }
-            }
-        },
         "/api/authentication": {
             "post": {
                 "tags": [
@@ -6034,51 +6043,6 @@
                 }
             }
         },
-        "/api/pluck/verificationcodes": {
-            "get": {
-                "tags": [
-                    "VerificationCodeControllerService"
-                ],
-                "summary": "pluck list of verificationcodes",
-                "description": "Returns list of plucked verificationcodes",
-                "operationId": "pluckVerificationCodeList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of verificationcodes"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of verificationcodes"
-                    }
-                }
-            }
-        },
         "/api/filter/verificationcode": {
             "get": {
                 "tags": [
@@ -6102,91 +6066,6 @@
                         "description": "Page size",
                         "schema": {
                             "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To string for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onverificationcode",
-                        "in": "query",
-                        "description": "onverificationcode for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered verificationcodes"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of verificationcodes"
-                    }
-                }
-            }
-        },
-        "/api/pluck/filter/verificationcode": {
-            "get": {
-                "tags": [
-                    "VerificationCodeControllerService"
-                ],
-                "summary": "Filter list of plucked verificationcodes",
-                "description": "Returns list of filtered verificationcodes",
-                "operationId": "filterPluckedVerificationCodeList",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page size",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
                         }
                     },
                     {
@@ -6334,44 +6213,6 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the verificationcode."
-                    }
-                }
-            }
-        },
-        "/api/pluck/verificationcode/{uid}": {
-            "get": {
-                "tags": [
-                    "VerificationCodeControllerService"
-                ],
-                "summary": "pluck verificationcode",
-                "description": "Returns plucked verificationcodes",
-                "operationId": "pluckVerificationCodeByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "VerificationCode_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cols",
-                        "in": "query",
-                        "description": "Columns for pluck",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of verificationcodes"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of verificationcodes"
                     }
                 }
             }
@@ -7137,9 +6978,6 @@
                         "type": "string"
                     },
                     "last_active": {
-                        "type": "string"
-                    },
-                    "lastedit_by": {
                         "type": "string"
                     },
                     "remember_token": {

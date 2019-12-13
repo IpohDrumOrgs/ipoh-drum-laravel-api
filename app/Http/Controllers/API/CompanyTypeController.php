@@ -50,23 +50,11 @@ class CompanyTypeController extends Controller
         error_log('Retrieving list of companytypes.');
         // api/companytype (GET)
         $companytypes = $this->getCompanyTypes($request->user());
+       
         if ($this->isEmpty($companytypes)) {
-            $data['status'] = 'error';
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('CompanyTypes');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Company Types');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($companytypes, $request->pageSize, $request->pageNumber);
-            $data['status'] = 'success';
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companytypes->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('CompanyTypes');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Company Types', $companytypes, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
     
@@ -139,20 +127,9 @@ class CompanyTypeController extends Controller
         $companytypes = $this->filterCompanyTypes($companytypes, $params);
 
         if ($this->isEmpty($companytypes)) {
-            $data['data'] = null;
-            $data['maximumPages'] = 0;
-            $data['msg'] = $this->getNotFoundMsg('CompanyTypes');
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorPaginateResponse('Company Types');
         } else {
-            //Page Pagination Result List
-            //Default return 10
-            $paginateddata = $this->paginateResult($companytypes, $request->pageSize, $request->pageNumber);
-            $data['data'] = $paginateddata;
-            $data['maximumPages'] = $this->getMaximumPaginationPage($companytypes->count(), $request->pageSize);
-            $data['msg'] = $this->getRetrievedSuccessMsg('CompanyTypes');
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successPaginateResponse('Company Types', $companytypes, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -187,17 +164,9 @@ class CompanyTypeController extends Controller
         error_log('Retrieving companytype of uid:' . $uid);
         $companytype = $this->getCompanyType($uid);
         if ($this->isEmpty($companytype)) {
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('CompanyType');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Company Type');
         } else {
-            $data['data'] = $companytype;
-            $data['msg'] = $this->getRetrievedSuccessMsg('CompanyType');
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Company Type', $companytype, 'retrieve');
         }
     }
 
@@ -255,18 +224,10 @@ class CompanyTypeController extends Controller
 
         if ($this->isEmpty($companytype)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getCreatedSuccessMsg('CompanyType');
-            $data['data'] = $companytype;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Company Type', $companytype, 'create');
         }
     }
 
@@ -326,11 +287,7 @@ class CompanyTypeController extends Controller
       
         if ($this->isEmpty($companytype)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getNotFoundMsg('CompanyType');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Company Type');
         }
         
         $params = collect([
@@ -343,19 +300,10 @@ class CompanyTypeController extends Controller
         $companytype = $this->updateCompanyType($companytype, $params);
         if ($this->isEmpty($companytype)) {
             DB::rollBack();
-            $data['data'] = null;
-            $data['msg'] = $this->getErrorMsg('CompanyType');
-            $data['status'] = 'error';
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getUpdatedSuccessMsg('CompanyType');
-            $data['data'] = $companytype;
-            $data['status'] = 'success';
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Company Type', $companytype, 'update');
         }
     }
 
@@ -391,28 +339,16 @@ class CompanyTypeController extends Controller
         $companytype = $this->getCompanyType($uid);
         if ($this->isEmpty($companytype)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getNotFoundMsg('CompanyType');
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->notFoundResponse('Company Type');
         }
         $companytype = $this->deleteCompanyType($companytype);
         $this->createLog($request->user()->id , [$companytype->id], 'delete', 'companytype');
         if ($this->isEmpty($companytype)) {
             DB::rollBack();
-            $data['status'] = 'error';
-            $data['msg'] = $this->getErrorMsg();
-            $data['data'] = null;
-            $data['code'] = 404;
-            return response()->json($data, 404);
+            return $this->errorResponse();
         } else {
             DB::commit();
-            $data['status'] = 'success';
-            $data['msg'] = $this->getDeletedSuccessMsg('CompanyType');
-            $data['data'] = null;
-            $data['code'] = 200;
-            return response()->json($data, 200);
+            return $this->successResponse('Company Type', $companytype, 'delete');
         }
     }
 

@@ -5,13 +5,11 @@ use App\User;
 use App\Role;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\LogServices;
-use App\Traits\CompanyServices;
+use App\Traits\AllServices;
 
 trait RoleServices {
 
-    use GlobalFunctions, LogServices , CompanyServices;
+    use AllServices;
 
     private function getRoles($requester) {
 
@@ -99,7 +97,14 @@ trait RoleServices {
         return $data;
     }
 
+    private function getRoleById($id) {
+        $data = Role::where('id', $id)->where('status', 1)->first();
+        return $data;
+    }
+
     private function createRole($params) {
+
+        $params = $this->checkUndefinedProperty($params , $this->roleAllCols());
 
         $data = new Role();
         $data->uid = Carbon::now()->timestamp . Role::count();
@@ -107,24 +112,25 @@ trait RoleServices {
         $data->desc = $params->desc;
         $data->status = true;
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
-
         return $data->refresh();
     }
 
     //Make Sure Role is not empty when calling this function
     private function updateRole($data,  $params) {
 
+        $params = $this->checkUndefinedProperty($params , $this->roleAllCols());
+
         $data->name = $params->name;
         $data->desc = $params->desc;
 
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
@@ -133,14 +139,21 @@ trait RoleServices {
 
     private function deleteRole($data) {
         $data->status = false;
-        try {
-            $data->save();
-        } catch (Exception $e) {
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
             return null;
         }
 
         return $data->refresh();
     }
 
+    //Modifying Display Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+    public function roleAllCols() {
+
+        return ['id','uid', 'name' ,'desc', 'status' ];
+
+    }
 
 }

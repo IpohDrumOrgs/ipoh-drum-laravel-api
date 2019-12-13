@@ -19,6 +19,7 @@ class CreateProductFeaturesTable extends Migration
             $table->string('name');
             $table->string('icon')->nullable();
             $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable();
             $table->text('desc')->nullable();
             $table->boolean('status')->default(1);
             $table->timestamps();

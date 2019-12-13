@@ -6557,6 +6557,75 @@
     },
     "components": {
         "schemas": {
+            "Company": {
+                "title": "Company",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "company_type_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "img": {
+                        "type": "string"
+                    },
+                    "regno": {
+                        "type": "string"
+                    },
+                    "tel1": {
+                        "type": "string"
+                    },
+                    "tel2": {
+                        "type": "string"
+                    },
+                    "fax1": {
+                        "type": "string"
+                    },
+                    "fax2": {
+                        "type": "string"
+                    },
+                    "email1": {
+                        "type": "string"
+                    },
+                    "email2": {
+                        "type": "string"
+                    },
+                    "address1": {
+                        "type": "string"
+                    },
+                    "address2": {
+                        "type": "string"
+                    },
+                    "postcode": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "Inventory": {
                 "title": "Inventory",
                 "properties": {

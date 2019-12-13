@@ -51,7 +51,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::get('/filter/module', 'API\ModuleController@filter');
 
     //Store Related Route =======================================================
-    
+
     Route::resource('/category', 'API\CategoryController');
     Route::get('/filter/category', 'API\CategoryController@filter');
 
@@ -95,7 +95,7 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::resource('payment', 'API\PaymentController');
     Route::get('/filter/payment', 'API\PaymentController@filter');
-    
+
 });
 
 
@@ -112,4 +112,5 @@ Route::get('/inventory/{uid}/onsale', 'API\InventoryController@getOnSaleInventor
 
 
 
-
+// TODO: Test upload image
+Route::post('/thumbnail', 'API\InventoryController@uploadInventoryThumbnail');

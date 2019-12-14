@@ -4157,7 +4157,7 @@
                         }
                     },
                     {
-                        "name": "Country",
+                        "name": "country",
                         "in": "query",
                         "description": "Country",
                         "schema": {
@@ -4166,7 +4166,6 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "multipart/form-data": {
                             "schema": {
@@ -4397,7 +4396,7 @@
                         }
                     },
                     {
-                        "name": "Country",
+                        "name": "country",
                         "in": "query",
                         "description": "Country",
                         "schema": {
@@ -6974,13 +6973,16 @@
                     "imgpath": {
                         "type": "string"
                     },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
                     "email": {
                         "type": "string"
                     },
                     "rating": {
                         "type": "number"
                     },
-                    "fsminpurchase": {
+                    "freeshippingminpurchase": {
                         "type": "number"
                     },
                     "address": {

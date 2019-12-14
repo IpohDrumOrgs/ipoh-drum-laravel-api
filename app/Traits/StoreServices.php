@@ -18,7 +18,7 @@ trait StoreServices {
         //Role Based Retrieved Done in Company Services
         $companies = $this->getCompanies($requester);
         foreach($companies as $company){
-            $data = $data->merge($company->stores()->where('status',true)->get());
+            $data = $data->merge($company->stores()->with('company')->with('user')->where('status',true)->get());
         }
 
         $data = $data->unique('id')->sortBy('id')->flatten(1);
@@ -82,12 +82,12 @@ trait StoreServices {
     }
 
     private function getStore($uid) {
-        $data = Store::where('uid', $uid)->where('status', 1)->first();
+        $data = Store::where('uid', $uid)->with('company')->with('user')->where('status', 1)->first();
         return $data;
     }
 
     private function getStoreById($id) {
-        $data = Store::where('id', $id)->where('status', 1)->first();
+        $data = Store::where('id', $id)->with('company')->with('user')->where('status', 1)->first();
         return $data;
     }
 

@@ -272,7 +272,7 @@ class StoreController extends Controller
      *  )
      * ),
      * @OA\Parameter(
-     * name="Country",
+     * name="country",
      * in="query",
      * description="Country",
      * @OA\Schema(
@@ -280,7 +280,6 @@ class StoreController extends Controller
      *          )
      * ),
      * 	@OA\RequestBody(
-*          required=true,
 *          @OA\MediaType(
 *              mediaType="multipart/form-data",
 *              @OA\Schema(
@@ -328,7 +327,7 @@ class StoreController extends Controller
             'country' => $request->country,
             'companyBelongings' => $request->companyBelongings,
             'company_id' => $request->company_id,
-            'user_id' => $request->user_id,
+            'user_id' => $request->user()->id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
@@ -468,7 +467,7 @@ class StoreController extends Controller
      *  )
      * ),
      * @OA\Parameter(
-     * name="Country",
+     * name="country",
      * in="query",
      * description="Country",
      * @OA\Schema(
@@ -528,7 +527,7 @@ class StoreController extends Controller
             'country' => $request->country,
             'companyBelongings' => $request->companyBelongings,
             'company_id' => $request->company_id,
-            'user_id' => $request->user_id,
+            'user_id' => $request->user()->id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));

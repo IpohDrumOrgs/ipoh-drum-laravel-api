@@ -158,6 +158,13 @@ class User extends Authenticatable
     /**
      * Get the created purchases of the user.
      */
+    public function stores()
+    {
+        return $this->hasMany('App\Store');
+    }
+    /**
+     * Get the created purchases of the user.
+     */
     public function storereviews()
     {
         return $this->hasMany('App\StoreReview');

@@ -21,6 +21,8 @@ trait StoreServices {
             $data = $data->merge($company->stores()->with('company')->with('user')->where('status',true)->get());
         }
 
+        $data = $data->merge($requester->stores()->with('company')->with('user')->where('status',true)->get());
+
         $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;

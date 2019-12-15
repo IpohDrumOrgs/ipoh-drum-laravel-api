@@ -60,7 +60,7 @@ class StoreController extends Controller
             return $this->successPaginateResponse('Stores', $stores, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
-    
+
     /**
      * @OA\Get(
      *      path="/api/filter/store",
@@ -131,13 +131,13 @@ class StoreController extends Controller
 
         if ($this->isEmpty($stores)) {
             return $this->errorPaginateResponse('Stores');
-        } else {            
+        } else {
             return $this->successPaginateResponse('Stores', $stores, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
 
-   
+
     /**
      * @OA\Get(
      *   tags={"StoreControllerService"},
@@ -173,8 +173,8 @@ class StoreController extends Controller
         }
     }
 
-  
-     
+
+
     /**
      * @OA\Post(
      *   tags={"StoreControllerService"},
@@ -308,7 +308,7 @@ class StoreController extends Controller
         DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/store (POST)
-        
+
         $this->validate($request, [
             'name' => 'required|string|max:191',
             'desc' => 'required|string',
@@ -364,7 +364,7 @@ class StoreController extends Controller
 
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *   tags={"StoreControllerService"},
      *   path="/api/store/{uid}",
      *   summary="Update store by Uid.",
@@ -488,6 +488,14 @@ class StoreController extends Controller
 *               ),
 *           ),
 *       ),
+     *   @OA\Parameter(
+     *     name="_method",
+     *     in="query",
+     *     description="For spoofing purposes.",
+     *     required=false,
+     *     example="PUT",
+     *     @OA\Schema(type="string")
+     *    ),
      *   @OA\Response(
      *     response=200,
      *     description="Store has been updated successfully."
@@ -502,7 +510,7 @@ class StoreController extends Controller
     {
         $proccessingimgids = collect();
         DB::beginTransaction();
-        // api/store/{storeid} (PUT) 
+        // api/store/{storeid} (PUT)
         error_log('Updating store of uid: ' . $uid);
         $store = $this->getStore($uid);
         $this->validate($request, [
@@ -510,7 +518,7 @@ class StoreController extends Controller
             'desc' => 'required|string',
             'companyBelongings' => 'required|boolean',
         ]);
-        
+
         if ($this->isEmpty($store)) {
             DB::rollBack();
             return $this->notFoundResponse('Store');
@@ -532,17 +540,17 @@ class StoreController extends Controller
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $store = $this->updateStore($store, $params);
-        
+
         if($this->isEmpty($store)){
             DB::rollBack();
             $this->deleteImages($proccessingimgids);
             return $this->errorResponse();
         }
 
-        
+
         //Associating Image Relationship
         if($request->file('img') != null){
-
+            error_log('got store image');
             $img = $this->uploadImage($request->file('img') , "/Store/". $store->uid);
             if(!$this->isEmpty($img)){
                 //Delete Previous Image
@@ -550,7 +558,7 @@ class StoreController extends Controller
                     DB::rollBack();
                     return $this->errorResponse();
                 }
-                
+
                 $store->imgpath = $img->imgurl;
                 $store->imgpublicid = $img->publicid;
                 $proccessingimgids->push($img->publicid);
@@ -565,9 +573,9 @@ class StoreController extends Controller
                 return $this->errorResponse();
             }
         }
-        
 
-        
+
+
         $this->createLog($request->user()->id , [$store->id], 'update', 'store');
         DB::commit();
 
@@ -669,10 +677,10 @@ class StoreController extends Controller
         $promotions = $promotions->merge(ProductPromotion::where('store_id' , null)->get());
         $promotions = $promotions->unique('id')->sortBy('id')->flatten(1);
 
-        
+
         if ($this->isEmpty($promotions)) {
             return $this->errorPaginateResponse('Promotions');
-        } else {            
+        } else {
             return $this->successPaginateResponse('Promotions', $promotions, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
@@ -726,7 +734,7 @@ class StoreController extends Controller
 
         if ($this->isEmpty($warranties)) {
             return $this->errorPaginateResponse('Warranties');
-        } else {            
+        } else {
             return $this->successPaginateResponse('Warranties', $warranties, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
@@ -781,12 +789,12 @@ class StoreController extends Controller
 
         if ($this->isEmpty($shippings)) {
             return $this->errorPaginateResponse('Shippings');
-        } else {            
+        } else {
             return $this->successPaginateResponse('Shippigs', $shippings, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 
-    
+
     /**
      * @OA\Get(
      *   tags={"StoreControllerService"},
@@ -834,7 +842,7 @@ class StoreController extends Controller
 
         if ($this->isEmpty($inventories)) {
             return $this->errorPaginateResponse('Inventories');
-        } else {            
+        } else {
             return $this->successPaginateResponse('Inventories', $inventories, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }

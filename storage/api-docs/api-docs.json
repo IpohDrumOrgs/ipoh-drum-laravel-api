@@ -4289,7 +4289,7 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
                     "StoreControllerService"
                 ],
@@ -4402,6 +4402,16 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "_method",
+                        "in": "query",
+                        "description": "For spoofing purposes.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PUT"
                     }
                 ],
                 "requestBody": {

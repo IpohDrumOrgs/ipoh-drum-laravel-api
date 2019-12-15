@@ -12,6 +12,7 @@ class Store extends Model
 {
     /** @OA\Property(property="id", type="integer"),
      * @OA\Property(property="company_id", type="integer"),
+     * @OA\Property(property="company", ref="#/components/schemas/Company"),
      * @OA\Property(property="user_id", type="integer"),
      * @OA\Property(property="uid", type="string"),
      * @OA\Property(property="name", type="string"),

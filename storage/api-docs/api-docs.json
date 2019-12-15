@@ -6955,6 +6955,9 @@
                     "company_id": {
                         "type": "integer"
                     },
+                    "company": {
+                        "$ref": "#/components/schemas/Company"
+                    },
                     "user_id": {
                         "type": "integer"
                     },

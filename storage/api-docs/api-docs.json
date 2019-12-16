@@ -1260,7 +1260,6 @@
                         "name": "product_promotion_id",
                         "in": "query",
                         "description": "Promotion ID",
-                        "required": true,
                         "schema": {
                             "type": "integer"
                         }
@@ -1269,7 +1268,6 @@
                         "name": "warranty_id",
                         "in": "query",
                         "description": "Warranty ID",
-                        "required": true,
                         "schema": {
                             "type": "integer"
                         }
@@ -1278,7 +1276,6 @@
                         "name": "shipping_id",
                         "in": "query",
                         "description": "Shipping ID",
-                        "required": true,
                         "schema": {
                             "type": "integer"
                         }
@@ -2523,7 +2520,7 @@
                     "ProductPromotionControllerService"
                 ],
                 "summary": "Retrieves productpromotion by Uid.",
-                "operationId": "getProductPromotionByUid",
+                "operationId": "getProductPromotionByStoreUid",
                 "parameters": [
                     {
                         "name": "uid",

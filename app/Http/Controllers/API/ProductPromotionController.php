@@ -51,14 +51,14 @@ class ProductPromotionController extends Controller
         error_log('Retrieving list of productpromotions.');
         // api/productpromotion (GET)
         $productpromotions = $this->getProductPromotions($request->user());
-        
+
         if ($this->isEmpty($productpromotions)) {
             return $this->errorPaginateResponse('Product Promotions');
         } else {
             return $this->successPaginateResponse('Product Promotions', $productpromotions, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
-    
+
     /**
      * @OA\Get(
      *      path="/api/filter/productpromotion",
@@ -135,13 +135,13 @@ class ProductPromotionController extends Controller
 
     }
 
-   
+
     /**
      * @OA\Get(
      *   tags={"ProductPromotionControllerService"},
      *   path="/api/productpromotion/{uid}",
      *   summary="Retrieves productpromotion by Uid.",
-     *     operationId="getProductPromotionByUid",
+     *     operationId="getProductPromotionByStoreUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -171,8 +171,8 @@ class ProductPromotionController extends Controller
         }
     }
 
-  
-    
+
+
     /**
      * @OA\Post(
      *   tags={"ProductPromotionControllerService"},
@@ -292,7 +292,7 @@ class ProductPromotionController extends Controller
             DB::rollBack();
             return $this->errorResponse();
         }
-    
+
         $this->createLog($request->user()->id , [$productpromotion->id], 'create', 'productpromotion');
         DB::commit();
 

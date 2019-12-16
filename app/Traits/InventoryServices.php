@@ -99,14 +99,14 @@ trait InventoryServices {
 
     private function getInventory($uid) {
 
-        $data = Inventory::where('uid', $uid)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','reviews','characteristics')->first();
+        $data = Inventory::where('uid', $uid)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','reviews.user','characteristics')->first();
         return $data;
 
     }
     
     private function getInventoryById($id) {
 
-        $data = Inventory::where('id', $id)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','reviews','characteristics')->first();
+        $data = Inventory::where('id', $id)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','reviews.user','characteristics')->first();
         return $data;
 
     }
@@ -272,16 +272,20 @@ trait InventoryServices {
     //===============================================================================================================================================================================
     public function associateImageWithInventory($data, $params)
     {
+        
+        $params = $this->checkUndefinedProperty($params , $this->inventoryImageDefaultCols());
+
         $image = new InventoryImage();
         $image->uid = Carbon::now()->timestamp . InventoryImage::count();
         $image->name = $params->name;
+        $image->desc = $params->desc;
         $image->imgpath = $params->imgurl;
         $image->imgpublicid = $params->publicid;
         $image->inventory()->associate($data);
         if($this->saveModel($image)){
-            return true;
+            return $image->refresh();
         }else{
-            return false;
+            return null;
         }
     }
 
@@ -321,6 +325,11 @@ trait InventoryServices {
 
     }
     
+    public function inventoryImageDefaultCols() {
+
+        return ['id','uid', 'inventory_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
+
+    }
 
     public function inventoryAllCols() {
 

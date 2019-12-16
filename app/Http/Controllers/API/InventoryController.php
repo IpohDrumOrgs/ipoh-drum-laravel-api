@@ -208,7 +208,6 @@ class InventoryController extends Controller
      * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -217,7 +216,6 @@ class InventoryController extends Controller
      * name="warranty_id",
      * in="query",
      * description="Warranty ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -226,7 +224,6 @@ class InventoryController extends Controller
      * name="shipping_id",
      * in="query",
      * description="Shipping ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -362,12 +359,14 @@ class InventoryController extends Controller
         //Associating Image Relationship
         if($request->file('img') != null){
             error_log('Image Is Detected');
+            error_log(collect($request->file('img')));
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
                 $inventory->imgpath = $img->imgurl;
                 $inventory->imgpublicid = $img->publicid;
                 $proccessingimgids->push($img->publicid);
                 if(!$this->saveModel($inventory)){
+                    error_log('error here0');
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
@@ -375,6 +374,7 @@ class InventoryController extends Controller
                 //Attach Image to InventoryImage
                 $inventoryimage = $this->associateImageWithInventory($inventory , $img);
                 if($this->isEmpty($inventoryimage)){
+                    error_log('error here');
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
@@ -390,15 +390,19 @@ class InventoryController extends Controller
         if($request->file('sliders') != null){
             error_log('Slider Images Is Detected');
             $sliders = $request->file('sliders');
+            error_log(collect($sliders));
             foreach($sliders as $slider){
+                error_log('Inside slider');
                 $count++;
                 if($count > 6){
                     break;
                 }
                 $img = $this->uploadImage($slider , "/Inventory/". $inventory->uid . "/sliders");
+                error_log(collect($img));
                 if(!$this->isEmpty($img)){
                     $proccessingimgids->push($img->publicid);
                     if(!$this->saveModel($inventory)){
+                        error_log('error here2');
                         DB::rollBack();
                         $this->deleteImages($proccessingimgids);
                         return $this->errorResponse();
@@ -406,11 +410,13 @@ class InventoryController extends Controller
                     //Attach Image to InventoryImage
                     $inventoryimage = $this->associateImageWithInventory($inventory , $img);
                     if($this->isEmpty($inventoryimage)){
+                        error_log('error here1');
                         DB::rollBack();
                         $this->deleteImages($proccessingimgids);
                         return $this->errorResponse();
                     }
                 }else{
+                    error_log('error here3');
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
@@ -421,31 +427,30 @@ class InventoryController extends Controller
         //Associating Inventory Family Relationship
         $inventoryfamilies = json_decode($request->inventoryfamilies);
         $temp = json_decode(json_encode($request->inventoryfamilies));
-        error_log("inventoryfamilies");
-        error_log(collect($inventoryfamilies));
         $inventorytotalqty = 0;
         $inventoryfamilytotalqty = 0;
         $onsale = false;
         if(!$this->isEmpty($inventoryfamilies)){
            foreach($inventoryfamilies as $inventoryfamily){
-            error_log('qty');
-                error_log($inventoryfamily->qty);
-            $inventoryfamilytotalqty += $inventoryfamily->qty;
+                $inventoryfamilyqty = $inventoryfamily->qty;
+                $inventoryfamilytotalqty += $inventoryfamily->qty;
+                $patterns = $inventoryfamily->patterns;
 
-            if($inventoryfamily->onsale && !$onsale){
-                $onsale = true;
-            }
+                if($inventoryfamily->onsale && !$onsale){
+                    $onsale = true;
+                }
 
-            $inventoryfamily->inventory_id = $inventory->refresh()->id;
-            $patterns = $inventoryfamily->patterns;
-            $inventoryfamily = $this->associateInventoryFamilyWithInventory($inventory, $inventoryfamily);
-            $this->createLog($request->user()->id , [$inventoryfamily->id], 'create', 'inventoryfamily');
+                $inventoryfamily->inventory_id = $inventory->refresh()->id;
+                $inventoryfamily = $this->associateInventoryFamilyWithInventory($inventory, $inventoryfamily);
+                $this->createLog($request->user()->id , [$inventoryfamily->id], 'create', 'inventoryfamily');
 
-            if($this->isEmpty($inventoryfamily)){
+                if($this->isEmpty($inventoryfamily)){
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
                 }
+
+                //Patterns
                 $patterntotalqty = 0;
                 foreach($patterns as $pattern){
                     $patterntotalqty += $pattern->qty;
@@ -467,7 +472,7 @@ class InventoryController extends Controller
                 if($patterntotalqty > 0){
                     $inventoryfamily->qty = $this->toInt($patterntotalqty);
                 }else{
-                    $inventoryfamily->qty = $this->toInt($inventoryfamilytotalqty);
+                    $inventoryfamily->qty = $this->toInt($inventoryfamilyqty);
                 }
 
                 if(!$this->saveModel($inventoryfamily)){
@@ -479,6 +484,7 @@ class InventoryController extends Controller
                 $inventorytotalqty += $this->toInt($inventoryfamily->qty);
            }
         }else{
+            error_log('error here4');
             DB::rollBack();
             $this->deleteImages($proccessingimgids);
             return $this->errorResponse();

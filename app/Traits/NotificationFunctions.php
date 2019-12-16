@@ -51,6 +51,14 @@ trait NotificationFunctions {
         return response()->json($response, 404);
     }
     
+    public function notFoundSuccessResponse($provider){
+        $response['data'] = null;
+        $response['status'] = 'success';
+        $response['msg'] = $this->getNotFoundMsg($provider);
+        $response['code'] = 200;
+        return response()->json($response, 200);
+    }
+
     public function notFoundResponse($provider){
         $response['data'] = null;
         $response['status'] = 'error';
@@ -124,8 +132,8 @@ trait NotificationFunctions {
         $response['maximumPages'] = 0;
         $response['totalResult'] = 0;
         $response['msg'] = $this->getNotFoundMsg($provider);
-        $response['code'] = 404;
+        $response['code'] = 200;
 
-        return response()->json($response, 404);
+        return response()->json($response, 200);
     }
 }

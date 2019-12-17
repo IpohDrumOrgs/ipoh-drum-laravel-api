@@ -6271,6 +6271,431 @@
                 }
             }
         },
+        "/api/voucher": {
+            "get": {
+                "tags": [
+                    "VoucherControllerService"
+                ],
+                "summary": "Get list of vouchers",
+                "description": "Returns list of vouchers",
+                "operationId": "getVoucherList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of vouchers"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of vouchers"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "VoucherControllerService"
+                ],
+                "summary": "Creates a voucher.",
+                "operationId": "createVoucher",
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Voucher belongs to which Store",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Voucher Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Voucher Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "unlimited",
+                        "in": "query",
+                        "description": "Is This Voucher Unlimited?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "qty",
+                        "in": "query",
+                        "description": "The limited quantity of voucher",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "discbyprice",
+                        "in": "query",
+                        "description": "Is This Voucher Discount By Price?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Discount price",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discpctg",
+                        "in": "query",
+                        "description": "Discount percentage",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "minpurchase",
+                        "in": "query",
+                        "description": "Minimum Purchase Price To Apply Voucher",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "minqty",
+                        "in": "query",
+                        "description": "Minimum Purchase Qty To Apply Voucher",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "minvariety",
+                        "in": "query",
+                        "description": "Minimum Item Variety To Apply Voucher",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "startdate",
+                        "in": "query",
+                        "description": "Voucher Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "description": "Voucher End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Voucher has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the voucher."
+                    }
+                }
+            }
+        },
+        "/api/filter/voucher": {
+            "get": {
+                "tags": [
+                    "VoucherControllerService"
+                ],
+                "summary": "Filter list of vouchers",
+                "description": "Returns list of filtered vouchers",
+                "operationId": "filterVoucherList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onvoucher",
+                        "in": "query",
+                        "description": "onvoucher for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered vouchers"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of vouchers"
+                    }
+                }
+            }
+        },
+        "/api/voucher/{uid}": {
+            "get": {
+                "tags": [
+                    "VoucherControllerService"
+                ],
+                "summary": "Retrieves voucher by Uid.",
+                "operationId": "getVoucherByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Voucher_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Voucher has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the voucher."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "VoucherControllerService"
+                ],
+                "summary": "Update voucher by Uid.",
+                "operationId": "updateVoucherByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Voucher_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Voucher belongs to which Store",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Voucher Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Voucher Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "unlimited",
+                        "in": "query",
+                        "description": "Is This Voucher Unlimited?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "qty",
+                        "in": "query",
+                        "description": "The limited quantity of voucher",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "discbyprice",
+                        "in": "query",
+                        "description": "Is This Voucher Discount By Price?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Discount price",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discpctg",
+                        "in": "query",
+                        "description": "Discount percentage",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "minpurchase",
+                        "in": "query",
+                        "description": "Minimum Purchase Price To Apply Voucher",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "minqty",
+                        "in": "query",
+                        "description": "Minimum Purchase Qty To Apply Voucher",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "minvariety",
+                        "in": "query",
+                        "description": "Minimum Item Variety To Apply Voucher",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "startdate",
+                        "in": "query",
+                        "description": "Voucher Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "description": "Voucher End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Voucher has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the voucher."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "VoucherControllerService"
+                ],
+                "summary": "Set voucher's 'status' to 0.",
+                "operationId": "deleteVoucherByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Voucher ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Voucher has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the voucher."
+                    }
+                }
+            }
+        },
         "/api/warranty": {
             "get": {
                 "tags": [

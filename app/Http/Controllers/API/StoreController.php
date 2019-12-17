@@ -553,10 +553,14 @@ class StoreController extends Controller
             error_log('got store image');
             $img = $this->uploadImage($request->file('img') , "/Store/". $store->uid);
             if(!$this->isEmpty($img)){
+                error_log('inside edi');
                 //Delete Previous Image
-                if(!$this->deleteImage($store->imgpublicid)){
-                    DB::rollBack();
-                    return $this->errorResponse();
+                if($store->imgpublicid){
+                    if(!$this->deleteImage($store->imgpublicid)){
+                        error_log('wrong 7 edi');
+                        DB::rollBack();
+                        return $this->errorResponse();
+                    }
                 }
 
                 $store->imgpath = $img->imgurl;

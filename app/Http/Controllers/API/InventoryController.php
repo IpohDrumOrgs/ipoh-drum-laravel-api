@@ -719,10 +719,12 @@ class InventoryController extends Controller
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
                 //Delete Previous Image
-                if(!$this->deleteInventoryImage($inventory->imgpublicid)){
-                    DB::rollBack();
-                    $this->deleteImages($proccessingimgids);
-                    return $this->errorResponse();
+                if($inventory->imgpublicid){
+                    if(!$this->deleteInventoryImage($inventory->imgpublicid)){
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
                 }
 
                 $inventory->imgpath = $img->imgurl;

@@ -226,7 +226,7 @@ class VerificationCodeController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $verificationcode = $this->createVerificationCode($request->user(), $params);
+        $verificationcode = $this->createVerificationCode( $params);
 
         if ($this->isEmpty($verificationcode)) {
             DB::rollBack();

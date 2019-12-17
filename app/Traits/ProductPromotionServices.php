@@ -107,12 +107,18 @@ trait ProductPromotionServices {
         $data->uid = Carbon::now()->timestamp . ProductPromotion::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
-        $data->disc = $this->toDouble($params->disc);
-        $data->discpctg = $this->toDouble($params->discpctg / 100);
         $data->qty = $this->toInt($params->qty);
         $data->discbyprice = $params->discbyprice;
         $data->promostartdate = $this->toDate($params->promostartdate);
         $data->promoenddate = $this->toDate($params->promoenddate);
+
+        if($data->discbyprice){
+            $data->disc = $this->toDouble($params->disc);
+            $data->discpctg = 0;
+        }else{
+            $data->discpctg = $this->toDouble($params->discpctg / 100);
+            $data->disc = 0;
+        }
 
         $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){
@@ -135,14 +141,20 @@ trait ProductPromotionServices {
 
         $params = $this->checkUndefinedProperty($params , $this->productPromotionAllCols());
 
-        $data->name = $params->name;
+       $data->name = $params->name;
         $data->desc = $params->desc;
-        $data->disc = $this->toDouble($params->disc);
-        $data->discpctg = $this->toDouble($params->discpctg / 100);
         $data->qty = $this->toInt($params->qty);
         $data->discbyprice = $params->discbyprice;
         $data->promostartdate = $this->toDate($params->promostartdate);
         $data->promoenddate = $this->toDate($params->promoenddate);
+
+        if($data->discbyprice){
+            $data->disc = $this->toDouble($params->disc);
+            $data->discpctg = 0;
+        }else{
+            $data->discpctg = $this->toDouble($params->discpctg / 100);
+            $data->disc = 0;
+        }
         
         $store = $this->getStoreById($params->store_id);
         if($this->isEmpty($store)){

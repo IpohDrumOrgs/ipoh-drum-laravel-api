@@ -50,7 +50,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('module', 'API\ModuleController');
     Route::get('/filter/module', 'API\ModuleController@filter');
 
-    //Store Related Route =======================================================
+    //======================================= Store Related Route =======================================================
 
     Route::resource('/category', 'API\CategoryController');
     Route::get('/filter/category', 'API\CategoryController@filter');
@@ -92,6 +92,9 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::resource('sale', 'API\SaleController');
     Route::get('/filter/sale', 'API\SaleController@filter');
+
+    Route::resource('voucher', 'API\VoucherController');
+    Route::get('/filter/voucher', 'API\VoucherController@filter');
 
     Route::resource('payment', 'API\PaymentController');
     Route::get('/filter/payment', 'API\PaymentController@filter');

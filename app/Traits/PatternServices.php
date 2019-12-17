@@ -17,11 +17,11 @@ trait PatternServices {
 
     use AllServices;
 
-    private function getPatterns($paramser) {
+    private function getPatterns($requester) {
 
         $data = collect();
         //Role Based Retrieve Done in Store Services
-        $inventoryfamilies = $this->getInventoryFamilies($paramser);
+        $inventoryfamilies = $this->getInventoryFamilies($requester);
         foreach($inventoryfamilies as $inventoryfamily){
             $data = $data->merge($inventoryfamily->patterns()->where('status',true)->get());
         }

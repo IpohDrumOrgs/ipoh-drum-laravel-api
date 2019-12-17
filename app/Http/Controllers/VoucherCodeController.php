@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Voucher;
+use App\VoucherCode;
 use Illuminate\Http\Request;
 
-class VoucherController extends Controller
+class VoucherCodeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class VoucherController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Voucher  $voucher
+     * @param  \App\VoucherCode  $voucherCode
      * @return \Illuminate\Http\Response
      */
-    public function show(Voucher $voucher)
+    public function show(VoucherCode $voucherCode)
     {
         //
     }
@@ -52,10 +52,10 @@ class VoucherController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Voucher  $voucher
+     * @param  \App\VoucherCode  $voucherCode
      * @return \Illuminate\Http\Response
      */
-    public function edit(Voucher $voucher)
+    public function edit(VoucherCode $voucherCode)
     {
         //
     }
@@ -64,10 +64,10 @@ class VoucherController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Voucher  $voucher
+     * @param  \App\VoucherCode  $voucherCode
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Voucher $voucher)
+    public function update(Request $request, VoucherCode $voucherCode)
     {
         //
     }
@@ -75,10 +75,10 @@ class VoucherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Voucher  $voucher
+     * @param  \App\VoucherCode  $voucherCode
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Voucher $voucher)
+    public function destroy(VoucherCode $voucherCode)
     {
         //
     }

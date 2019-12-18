@@ -201,6 +201,10 @@ trait VoucherServices {
     }
 
     private function deleteVoucher($data) {
+        $vouchercodes = $data->vouchercodes;
+        foreach($vouchercodes as $vouchercode){
+            $this->deleteVoucherCode($vouchercode);
+        }
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

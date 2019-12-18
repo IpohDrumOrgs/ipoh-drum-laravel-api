@@ -6,25 +6,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
-use App\Voucher;
+use App\VoucherCode;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
-use App\Traits\VoucherServices;
+use App\Traits\VoucherCodeServices;
 use App\Traits\LogServices;
 
-class VoucherController extends Controller
+class VoucherCodeController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, VoucherServices, LogServices;
-    private $controllerName = '[VoucherController]';
+    use GlobalFunctions, NotificationFunctions, VoucherCodeServices, LogServices;
+    private $controllerName = '[VoucherCodeController]';
 
     /**
      * @OA\Get(
-     *      path="/api/voucher",
-     *      operationId="getVoucherList",
-     *      tags={"VoucherControllerService"},
-     *      summary="Get list of vouchers",
-     *      description="Returns list of vouchers",
+     *      path="/api/vouchercode",
+     *      operationId="getVoucherCodeList",
+     *      tags={"VoucherCodeControllerService"},
+     *      summary="Get list of vouchercodes",
+     *      description="Returns list of vouchercodes",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
@@ -39,32 +39,32 @@ class VoucherController extends Controller
      *   ),
      *      @OA\Response(
      *          response=200,
-     *          description="Successfully retrieved list of vouchers"
+     *          description="Successfully retrieved list of vouchercodes"
      *       ),
      *       @OA\Response(
      *          response="default",
-     *          description="Unable to retrieve list of vouchers")
+     *          description="Unable to retrieve list of vouchercodes")
      *    )
      */
     public function index(Request $request)
     {
-        error_log('Retrieving list of vouchers.');
-        // api/voucher (GET)
-        $vouchers = $this->getVouchers($request->user());
-        if ($this->isEmpty($vouchers)) {
+        error_log('Retrieving list of vouchercodes.');
+        // api/vouchercode (GET)
+        $vouchercodes = $this->getVoucherCodes($request->user());
+        if ($this->isEmpty($vouchercodes)) {
             return $this->errorPaginateResponse('Verification Codes');
         } else {
-            return $this->successPaginateResponse('Verification Codes', $vouchers, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+            return $this->successPaginateResponse('Verification Codes', $vouchercodes, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 
     /**
      * @OA\Get(
-     *      path="/api/filter/voucher",
-     *      operationId="filterVoucherList",
-     *      tags={"VoucherControllerService"},
-     *      summary="Filter list of vouchers",
-     *      description="Returns list of filtered vouchers",
+     *      path="/api/filter/vouchercode",
+     *      operationId="filterVoucherCodeList",
+     *      tags={"VoucherCodeControllerService"},
+     *      summary="Filter list of vouchercodes",
+     *      description="Returns list of filtered vouchercodes",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
@@ -103,17 +103,17 @@ class VoucherController extends Controller
      *   ),
      *      @OA\Response(
      *          response=200,
-     *          description="Successfully retrieved list of filtered vouchers"
+     *          description="Successfully retrieved list of filtered vouchercodes"
      *       ),
      *       @OA\Response(
      *          response="default",
-     *          description="Unable to retrieve list of vouchers")
+     *          description="Unable to retrieve list of vouchercodes")
      *    )
      */
     public function filter(Request $request)
     {
-        error_log('Retrieving list of filtered vouchers.');
-        // api/voucher/filter (GET)
+        error_log('Retrieving list of filtered vouchercodes.');
+        // api/vouchercode/filter (GET)
         $params = collect([
             'keyword' => $request->keyword,
             'fromdate' => $request->fromdate,
@@ -122,174 +122,75 @@ class VoucherController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $vouchers = $this->getVouchers($request->user());
-        $vouchers = $this->filterVoucherListing($request->user(), $params);
+        $vouchercodes = $this->getVoucherCodes($request->user());
+        $vouchercodes = $this->filterVoucherCodeListing($request->user(), $params);
 
-        if ($this->isEmpty($vouchers)) {
+        if ($this->isEmpty($vouchercodes)) {
             return $this->errorPaginateResponse('Verification Codes');
         } else {
-            return $this->successPaginateResponse('Verification Codes', $vouchers, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+            return $this->successPaginateResponse('Verification Codes', $vouchercodes, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
 
     /**
      * @OA\Get(
-     *   tags={"VoucherControllerService"},
-     *   path="/api/voucher/{uid}",
-     *   summary="Retrieves voucher by Uid.",
-     *     operationId="getVoucherByUid",
+     *   tags={"VoucherCodeControllerService"},
+     *   path="/api/vouchercode/{uid}",
+     *   summary="Retrieves vouchercode by Uid.",
+     *     operationId="getVoucherCodeByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
-     *     description="Voucher_ID, NOT 'ID'.",
+     *     description="VoucherCode_ID, NOT 'ID'.",
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
      *   @OA\Response(
-     *     response=200,
-     *     description="Voucher has been retrieved successfully."
+     *     response=200,    
+     *     description="VoucherCode has been retrieved successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to retrieve the voucher."
+     *     description="Unable to retrieve the vouchercode."
      *   )
      * )
      */
     public function show(Request $request, $uid)
     {
-        // api/voucher/{voucherid} (GET)
-        error_log('Retrieving voucher of uid:' . $uid);
-        $voucher = $this->getVoucher($uid);
-        if ($this->isEmpty($voucher)) {
+        // api/vouchercode/{vouchercodeid} (GET)
+        error_log('Retrieving vouchercode of uid:' . $uid);
+        $vouchercode = $this->getVoucherCode($uid);
+        if ($this->isEmpty($vouchercode)) {
             $data['data'] = null;
             return $this->notFoundResponse('Verification Code');
         } else {
-            return $this->successResponse('Verification Code', $voucher, 'retrieve');
+            return $this->successResponse('Verification Code', $vouchercode, 'retrieve');
         }
     }
 
     /**
      * @OA\Post(
-     *   tags={"VoucherControllerService"},
-     *   path="/api/voucher",
-     *   summary="Creates a voucher.",
-     *   operationId="createVoucher",
+     *   tags={"VoucherCodeControllerService"},
+     *   path="/api/vouchercode",
+     *   summary="Creates a vouchercode.",
+     *   operationId="createVoucherCode",
      * @OA\Parameter(
-     * name="store_id",
+     * name="voucher_id",
      * in="query",
-     * description="Voucher belongs to which Store",
+     * description="VoucherCode belongs to which Voucher",
      * required=true,
      * @OA\Schema(
      *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="name",
-     * in="query",
-     * description="Voucher Name",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="desc",
-     * in="query",
-     * description="Voucher Description",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="unlimited",
-     * in="query",
-     * description="Is This Voucher Unlimited?",
-     * required=true,
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="qty",
-     * in="query",
-     * description="The limited quantity of voucher",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="discbyprice",
-     * in="query",
-     * description="Is This Voucher Discount By Price?",
-     * required=true,
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="disc",
-     * in="query",
-     * description="Discount price",
-     * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="discpctg",
-     * in="query",
-     * description="Discount percentage",
-     * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="minpurchase",
-     * in="query",
-     * description="Minimum Purchase Price To Apply Voucher",
-     * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="minqty",
-     * in="query",
-     * description="Minimum Purchase Qty To Apply Voucher",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="minvariety",
-     * in="query",
-     * description="Minimum Item Variety To Apply Voucher",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="startdate",
-     * in="query",
-     * description="Voucher Start Date",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="enddate",
-     * in="query",
-     * description="Voucher End Date",
-     * @OA\Schema(
-     *              type="string"
      *          )
      * ),
      *   @OA\Response(
      *     response=200,
-     *     description="Voucher has been created successfully."
+     *     description="VoucherCode has been created successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to create the voucher."
+     *     description="Unable to create the vouchercode."
      *   )
      * )
      */
@@ -297,61 +198,46 @@ class VoucherController extends Controller
     {
         DB::beginTransaction();
         // Can only be used by Authorized personnel
-        // api/voucher (POST)
+        // api/vouchercode (POST)
         
         $this->validate($request, [
-            'store_id' => 'required|integer',
-            'name' => 'required|string|max:191',
-            'discbyprice' => 'required|boolean',
-            'unlimited' => 'required|boolean',
+            'voucher_id' => 'required|integer',
         ]);
-        error_log('Creating voucher.');
+        error_log('Creating vouchercode.');
         $params = collect([
-            'store_id' => $request->store_id,
-            'name' => $request->name,
-            'desc' => $request->desc,
-            'unlimited' => $request->unlimited,
-            'qty' => $request->qty,
-            'discbyprice' => $request->discbyprice,
-            'disc' => $request->disc,
-            'discpctg' => $request->discpctg,
-            'minpurchase' => $request->minpurchase,
-            'minqty' => $request->minqty,
-            'minvariety' => $request->minvariety,
-            'startdate' => $request->startdate,
-            'enddate' => $request->enddate,
+            'voucher_id' => $request->voucher_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $voucher = $this->createVoucher($params);
+        $vouchercode = $this->createVoucherCode($params);
 
-        if ($this->isEmpty($voucher)) {
+        if ($this->isEmpty($vouchercode)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Voucher', $voucher, 'create');
+            return $this->successResponse('VoucherCode', $vouchercode, 'create');
         }
     }
 
 
     /**
      * @OA\Put(
-     *   tags={"VoucherControllerService"},
-     *   path="/api/voucher/{uid}",
-     *   summary="Update voucher by Uid.",
-     *     operationId="updateVoucherByUid",
+     *   tags={"VoucherCodeControllerService"},
+     *   path="/api/vouchercode/{uid}",
+     *   summary="Update vouchercode by Uid.",
+     *     operationId="updateVoucherCodeByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
-     *     description="Voucher_ID, NOT 'ID'.",
+     *     description="VoucherCode_ID, NOT 'ID'.",
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
      * @OA\Parameter(
      * name="store_id",
      * in="query",
-     * description="Voucher belongs to which Store",
+     * description="VoucherCode belongs to which Store",
      * required=true,
      * @OA\Schema(
      *              type="integer"
@@ -360,7 +246,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="name",
      * in="query",
-     * description="Voucher Name",
+     * description="VoucherCode Name",
      * required=true,
      * @OA\Schema(
      *              type="string"
@@ -369,7 +255,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="desc",
      * in="query",
-     * description="Voucher Description",
+     * description="VoucherCode Description",
      * @OA\Schema(
      *              type="string"
      *          )
@@ -377,7 +263,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="unlimited",
      * in="query",
-     * description="Is This Voucher Unlimited?",
+     * description="Is This VoucherCode Unlimited?",
      * required=true,
      * @OA\Schema(
      *              type="integer"
@@ -386,7 +272,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="qty",
      * in="query",
-     * description="The limited quantity of voucher",
+     * description="The limited quantity of vouchercode",
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -394,7 +280,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="discbyprice",
      * in="query",
-     * description="Is This Voucher Discount By Price?",
+     * description="Is This VoucherCode Discount By Price?",
      * required=true,
      * @OA\Schema(
      *              type="integer"
@@ -419,7 +305,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="minpurchase",
      * in="query",
-     * description="Minimum Purchase Price To Apply Voucher",
+     * description="Minimum Purchase Price To Apply VoucherCode",
      * @OA\Schema(
      *              type="number"
      *          )
@@ -427,7 +313,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="minqty",
      * in="query",
-     * description="Minimum Purchase Qty To Apply Voucher",
+     * description="Minimum Purchase Qty To Apply VoucherCode",
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -435,7 +321,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="minvariety",
      * in="query",
-     * description="Minimum Item Variety To Apply Voucher",
+     * description="Minimum Item Variety To Apply VoucherCode",
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -443,7 +329,7 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="startdate",
      * in="query",
-     * description="Voucher Start Date",
+     * description="VoucherCode Start Date",
      * @OA\Schema(
      *              type="string"
      *          )
@@ -451,26 +337,26 @@ class VoucherController extends Controller
      * @OA\Parameter(
      * name="enddate",
      * in="query",
-     * description="Voucher End Date",
+     * description="VoucherCode End Date",
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      *   @OA\Response(
      *     response=200,
-     *     description="Voucher has been updated successfully."
+     *     description="VoucherCode has been updated successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to update the voucher."
+     *     description="Unable to update the vouchercode."
      *   )
      * )
      */
     public function update(Request $request, $uid)
     {
         DB::beginTransaction();
-        // api/voucher/{voucherid} (PUT) 
-        error_log('Updating voucher of uid: ' . $uid);
+        // api/vouchercode/{vouchercodeid} (PUT) 
+        error_log('Updating vouchercode of uid: ' . $uid);
         
         $this->validate($request, [
             'store_id' => 'required|integer',
@@ -479,8 +365,8 @@ class VoucherController extends Controller
             'unlimited' => 'required|boolean',
         ]);
 
-        $voucher = $this->getVoucher($uid);
-        if ($this->isEmpty($voucher)) {
+        $vouchercode = $this->getVoucherCode($uid);
+        if ($this->isEmpty($vouchercode)) {
             DB::rollBack();
             $data['data'] = null;
             return $this->notFoundResponse('Verification Code');
@@ -503,36 +389,36 @@ class VoucherController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $voucher = $this->updateVoucher($voucher, $params);
-        if ($this->isEmpty($voucher)) {
+        $vouchercode = $this->updateVoucherCode($vouchercode, $params);
+        if ($this->isEmpty($vouchercode)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Verification Code', $voucher, 'update');
+            return $this->successResponse('Verification Code', $vouchercode, 'update');
         }
     }
 
     /**
      * @OA\Delete(
-     *   tags={"VoucherControllerService"},
-     *   path="/api/voucher/{uid}",
-     *   summary="Set voucher's 'status' to 0.",
-     *     operationId="deleteVoucherByUid",
+     *   tags={"VoucherCodeControllerService"},
+     *   path="/api/vouchercode/{uid}",
+     *   summary="Set vouchercode's 'status' to 0.",
+     *     operationId="deleteVoucherCodeByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
-     *     description="Voucher ID, NOT 'ID'.",
+     *     description="VoucherCode ID, NOT 'ID'.",
      *     required=true,
      *     @OA\SChema(type="string")
      *   ),
      *   @OA\Response(
      *     response=200,
-     *     description="Voucher has been 'deleted' successfully."
+     *     description="VoucherCode has been 'deleted' successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to 'delete' the voucher."
+     *     description="Unable to 'delete' the vouchercode."
      *   )
      * )
      */
@@ -540,20 +426,20 @@ class VoucherController extends Controller
     {
         DB::beginTransaction();
         // TODO ONLY TOGGLES THE status = 1/0
-        // api/voucher/{voucherid} (DELETE)
-        error_log('Deleting voucher of uid: ' . $uid);
-        $voucher = $this->getVoucher($uid);
-        if ($this->isEmpty($voucher)) {
+        // api/vouchercode/{vouchercodeid} (DELETE)
+        error_log('Deleting vouchercode of uid: ' . $uid);
+        $vouchercode = $this->getVoucherCode($uid);
+        if ($this->isEmpty($vouchercode)) {
             DB::rollBack();
             return $this->notFoundResponse('Verification Code');
         }
-        $voucher = $this->deleteVoucher($request->user(), $voucher->id);
-        if ($this->isEmpty($voucher)) {
+        $vouchercode = $this->deleteVoucherCode($request->user(), $vouchercode->id);
+        if ($this->isEmpty($vouchercode)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Verification Code', $voucher, 'delete');
+            return $this->successResponse('Verification Code', $vouchercode, 'delete');
         }
     }
 

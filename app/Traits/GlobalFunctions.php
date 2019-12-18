@@ -11,6 +11,7 @@ use App\PurchaseItem;
 use App\SaleItem;
 use App\Sale;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use DB;
 
 trait GlobalFunctions {
@@ -240,7 +241,6 @@ trait GlobalFunctions {
 
     }
     
-    //saveModel
     public function checkUndefinedProperty($data , $properties){
         $data = (object) $data;
         foreach($properties as $property){
@@ -251,5 +251,8 @@ trait GlobalFunctions {
         return $data;
     }
 
+    public function generateRandomString($length){
+        return Str::random($length);
+    }
 
 }

@@ -6271,6 +6271,324 @@
                 }
             }
         },
+        "/api/vouchercode": {
+            "get": {
+                "tags": [
+                    "VoucherCodeControllerService"
+                ],
+                "summary": "Get list of vouchercodes",
+                "description": "Returns list of vouchercodes",
+                "operationId": "getVoucherCodeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of vouchercodes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of vouchercodes"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "VoucherCodeControllerService"
+                ],
+                "summary": "Creates a vouchercode.",
+                "operationId": "createVoucherCode",
+                "parameters": [
+                    {
+                        "name": "voucher_id",
+                        "in": "query",
+                        "description": "VoucherCode belongs to which Voucher",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VoucherCode has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the vouchercode."
+                    }
+                }
+            }
+        },
+        "/api/filter/vouchercode": {
+            "get": {
+                "tags": [
+                    "VoucherCodeControllerService"
+                ],
+                "summary": "Filter list of vouchercodes",
+                "description": "Returns list of filtered vouchercodes",
+                "operationId": "filterVoucherCodeList",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered vouchercodes"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of vouchercodes"
+                    }
+                }
+            }
+        },
+        "/api/vouchercode/{uid}": {
+            "get": {
+                "tags": [
+                    "VoucherCodeControllerService"
+                ],
+                "summary": "Retrieves vouchercode by Uid.",
+                "operationId": "getVoucherCodeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "VoucherCode_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VoucherCode has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the vouchercode."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "VoucherCodeControllerService"
+                ],
+                "summary": "Update vouchercode by Uid.",
+                "operationId": "updateVoucherCodeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "VoucherCode_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "VoucherCode belongs to which Store",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "VoucherCode Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "VoucherCode Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "unlimited",
+                        "in": "query",
+                        "description": "Is This VoucherCode Unlimited?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "qty",
+                        "in": "query",
+                        "description": "The limited quantity of vouchercode",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "discbyprice",
+                        "in": "query",
+                        "description": "Is This VoucherCode Discount By Price?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Discount price",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discpctg",
+                        "in": "query",
+                        "description": "Discount percentage",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "minpurchase",
+                        "in": "query",
+                        "description": "Minimum Purchase Price To Apply VoucherCode",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "minqty",
+                        "in": "query",
+                        "description": "Minimum Purchase Qty To Apply VoucherCode",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "minvariety",
+                        "in": "query",
+                        "description": "Minimum Item Variety To Apply VoucherCode",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "startdate",
+                        "in": "query",
+                        "description": "VoucherCode Start Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "description": "VoucherCode End Date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VoucherCode has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the vouchercode."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "VoucherCodeControllerService"
+                ],
+                "summary": "Set vouchercode's 'status' to 0.",
+                "operationId": "deleteVoucherCodeByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "VoucherCode ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "VoucherCode has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the vouchercode."
+                    }
+                }
+            }
+        },
         "/api/voucher": {
             "get": {
                 "tags": [
@@ -6485,14 +6803,6 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onvoucher",
-                        "in": "query",
-                        "description": "onvoucher for filter",
                         "schema": {
                             "type": "string"
                         }

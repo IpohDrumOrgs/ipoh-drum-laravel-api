@@ -12,11 +12,11 @@ trait InventoryFamilyServices {
 
     use AllServices;
 
-    private function getInventoryFamilies($paramser) {
+    private function getInventoryFamilies($requester) {
 
         $data = collect();
         //Role Based Retrieve Done in Store Services
-        $inventories = $this->getInventories($paramser);
+        $inventories = $this->getInventories($requester);
         foreach($inventories as $inventory){
             $data = $data->merge($inventory->inventoryfamilies()->where('status',true)->get());
         }

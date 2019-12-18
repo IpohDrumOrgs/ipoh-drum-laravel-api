@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVerificationCodesTable extends Migration
+class CreateVoucherCodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,21 @@ class CreateVerificationCodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('verification_codes', function (Blueprint $table) {
+        Schema::create('voucher_codes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('ticket_id')->unsigned();
+            $table->unsignedInteger('voucher_id')->unsigned();
             $table->unsignedInteger('user_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('code');
             $table->boolean('status')->default(true);
             $table->timestamps();
 
-            $table->foreign('ticket_id')
+            $table->foreign('voucher_id')
             ->references('id')
-            ->on('tickets')
+            ->on('vouchers')
             ->onUpdate('cascade')
             ->onDelete('restrict');
-
+            
             $table->foreign('user_id')
             ->references('id')
             ->on('users')
@@ -44,6 +44,6 @@ class CreateVerificationCodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('verification_codes');
+        Schema::dropIfExists('voucher_codes');
     }
 }

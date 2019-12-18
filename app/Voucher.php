@@ -10,4 +10,9 @@ class Voucher extends Model
     {
         return $this->belongsTo('App\Store');
     }
+    
+    public function vouchercodes()
+    {
+        return $this->hasMany('App\VoucherCode');
+    }
 }

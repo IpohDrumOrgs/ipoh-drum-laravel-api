@@ -2519,13 +2519,13 @@
                 "tags": [
                     "ProductPromotionControllerService"
                 ],
-                "summary": "Retrieves productpromotion by Uid.",
-                "operationId": "getProductPromotionByStoreUid",
+                "summary": "Retrieves productpromotion by ProductPromotion's uid.",
+                "operationId": "getProductPromotionByUid",
                 "parameters": [
                     {
                         "name": "uid",
                         "in": "path",
-                        "description": "ProductPromotion_ID, NOT 'ID'.",
+                        "description": "ProductPromotion's uid, NOT 'id'.",
                         "required": true,
                         "schema": {
                             "type": "string"

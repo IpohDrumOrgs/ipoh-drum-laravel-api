@@ -140,12 +140,12 @@ class ProductPromotionController extends Controller
      * @OA\Get(
      *   tags={"ProductPromotionControllerService"},
      *   path="/api/productpromotion/{uid}",
-     *   summary="Retrieves productpromotion by Uid.",
-     *     operationId="getProductPromotionByStoreUid",
+     *   summary="Retrieves productpromotion by ProductPromotion's uid.",
+     *     operationId="getProductPromotionByUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
-     *     description="ProductPromotion_ID, NOT 'ID'.",
+     *     description="ProductPromotion's uid, NOT 'id'.",
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),

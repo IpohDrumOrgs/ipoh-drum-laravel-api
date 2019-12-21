@@ -111,11 +111,14 @@ trait ShippingServices {
         $data->maxweight = $this->toDouble($params->maxweight);
         $data->maxdimension = $this->toDouble($params->maxdimension);
 
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
+        if($params->store_id){
+            $store = $this->getStoreById($params->store_id);
+            if($this->isEmpty($store)){
+                return null;
+            }
+            $data->store()->associate($store);
+
         }
-        $data->store()->associate($store);
         
         $data->status = true;
 
@@ -138,11 +141,13 @@ trait ShippingServices {
         $data->maxweight = $this->toDouble($params->maxweight);
         $data->maxdimension = $this->toDouble($params->maxdimension);
 
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
+        if($params->store_id){
+            $store = $this->getStoreById($params->store_id);
+            if($this->isEmpty($store)){
+                return null;
+            }
+            $data->store()->associate($store);
         }
-        $data->store()->associate($store);
         
         $data->status = true;
 

@@ -21,7 +21,8 @@ trait ImageHostingServices {
     
             $realpath = $img->getRealPath();;
             error_log($realpath);
-            Cloudder::upload($realpath, null, ['folder' => $folder, 'quality' => 'auto']);
+            Cloudder::upload($realpath, null, ['folder' => $folder, 'quality' => 100, 
+            "width" => 500,"height"=>300, "crop"=>"pad"]);
             error_log('uploaded image');
     
             list($width, $height) = getimagesize($realpath);

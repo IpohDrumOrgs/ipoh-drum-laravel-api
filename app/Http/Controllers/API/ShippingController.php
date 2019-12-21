@@ -190,7 +190,6 @@ class ShippingController extends Controller
      * name="store_id",
      * in="query",
      * description="Store ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -301,7 +300,6 @@ class ShippingController extends Controller
      * name="store_id",
      * in="query",
      * description="Store ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )

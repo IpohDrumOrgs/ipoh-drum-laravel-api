@@ -183,7 +183,6 @@ class ProductPromotionController extends Controller
      * name="store_id",
      * in="query",
      * description="Store ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -226,7 +225,7 @@ class ProductPromotionController extends Controller
      * in="query",
      * description="Promotion Discount Percentage",
      * @OA\Schema(
-     *              type="number"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -326,7 +325,6 @@ class ProductPromotionController extends Controller
      * name="store_id",
      * in="query",
      * description="Store ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -360,7 +358,7 @@ class ProductPromotionController extends Controller
      * in="query",
      * description="Promotion Discount Percentage",
      * @OA\Schema(
-     *              type="number"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(

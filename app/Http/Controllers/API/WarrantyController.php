@@ -191,7 +191,6 @@ class WarrantyController extends Controller
      * name="store_id",
      * in="query",
      * description="Store ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -291,7 +290,6 @@ class WarrantyController extends Controller
      * name="store_id",
      * in="query",
      * description="Store ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )

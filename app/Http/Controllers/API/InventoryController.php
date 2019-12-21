@@ -359,6 +359,7 @@ class InventoryController extends Controller
         //Associating Image Relationship
         if($request->file('img') != null){
             error_log('Image Is Detected');
+            error_log($request->img);
             error_log(collect($request->file('img')));
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
@@ -389,6 +390,7 @@ class InventoryController extends Controller
         $count = 0;
         if($request->file('sliders') != null){
             error_log('Slider Images Is Detected');
+            error_log($request->sliders);
             $sliders = $request->file('sliders');
             error_log(collect($sliders));
             foreach($sliders as $slider){
@@ -714,8 +716,11 @@ class InventoryController extends Controller
             return $this->errorResponse();
         }
 
+        
         //Associating Image Relationship
         if($request->file('img') != null){
+            error_log($request->img);
+            error_log($request->file('img'));
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
                 //Delete Previous Image
@@ -752,7 +757,8 @@ class InventoryController extends Controller
         //Updating sliders
         $count = $inventory->inventoryimage()->count();
         if($request->file('sliders') != null){
-            $sliders = $request->file('sliders');
+            error_log($request->sliders);
+            error_log($request->file('sliders'));
             foreach($sliders as $slider){
                 $count++;
                 if($count > 6){

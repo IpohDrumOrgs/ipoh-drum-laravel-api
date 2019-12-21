@@ -52,9 +52,9 @@ class VoucherController extends Controller
         // api/voucher (GET)
         $vouchers = $this->getVouchers($request->user());
         if ($this->isEmpty($vouchers)) {
-            return $this->errorPaginateResponse('Verification Codes');
+            return $this->errorPaginateResponse('Voucher Codes');
         } else {
-            return $this->successPaginateResponse('Verification Codes', $vouchers, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+            return $this->successPaginateResponse('Voucher Codes', $vouchers, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 
@@ -126,9 +126,9 @@ class VoucherController extends Controller
         $vouchers = $this->filterVoucherListing($request->user(), $params);
 
         if ($this->isEmpty($vouchers)) {
-            return $this->errorPaginateResponse('Verification Codes');
+            return $this->errorPaginateResponse('Voucher Codes');
         } else {
-            return $this->successPaginateResponse('Verification Codes', $vouchers, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+            return $this->successPaginateResponse('Voucher Codes', $vouchers, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
 
     }
@@ -163,9 +163,9 @@ class VoucherController extends Controller
         $voucher = $this->getVoucher($uid);
         if ($this->isEmpty($voucher)) {
             $data['data'] = null;
-            return $this->notFoundResponse('Verification Code');
+            return $this->notFoundResponse('Voucher Code');
         } else {
-            return $this->successResponse('Verification Code', $voucher, 'retrieve');
+            return $this->successResponse('Voucher Code', $voucher, 'retrieve');
         }
     }
 
@@ -240,7 +240,7 @@ class VoucherController extends Controller
      * in="query",
      * description="Discount percentage",
      * @OA\Schema(
-     *              type="number"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -413,7 +413,7 @@ class VoucherController extends Controller
      * in="query",
      * description="Discount percentage",
      * @OA\Schema(
-     *              type="number"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(
@@ -483,7 +483,7 @@ class VoucherController extends Controller
         if ($this->isEmpty($voucher)) {
             DB::rollBack();
             $data['data'] = null;
-            return $this->notFoundResponse('Verification Code');
+            return $this->notFoundResponse('Voucher Code');
         }
         
         $params = collect([
@@ -509,7 +509,7 @@ class VoucherController extends Controller
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Verification Code', $voucher, 'update');
+            return $this->successResponse('Voucher Code', $voucher, 'update');
         }
     }
 
@@ -545,7 +545,7 @@ class VoucherController extends Controller
         $voucher = $this->getVoucher($uid);
         if ($this->isEmpty($voucher)) {
             DB::rollBack();
-            return $this->notFoundResponse('Verification Code');
+            return $this->notFoundResponse('Voucher Code');
         }
         $voucher = $this->deleteVoucher($request->user(), $voucher->id);
         if ($this->isEmpty($voucher)) {
@@ -553,7 +553,7 @@ class VoucherController extends Controller
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Verification Code', $voucher, 'delete');
+            return $this->successResponse('Voucher Code', $voucher, 'delete');
         }
     }
 

@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::get('/store/{uid}/warranties', 'API\StoreController@getWarranties');
     Route::get('/store/{uid}/shippings', 'API\StoreController@getShippings');
     Route::get('/store/{uid}/inventories', 'API\StoreController@getInventories');
+    Route::get('/store/{uid}/vouchers', 'API\StoreController@getVouchers');
 
     Route::resource('storereview', 'API\StoreReviewController');
     Route::get('/filter/storereview', 'API\StoreReviewController@filter');
@@ -102,6 +103,11 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('payment', 'API\PaymentController');
     Route::get('/filter/payment', 'API\PaymentController@filter');
 
+    // ========================== Blogger Related Route =========================================================
+
+    Route::resource('blogger', 'API\BloggerController');
+    Route::get('/filter/blogger', 'API\BloggerController@filter');
+    
 });
 
 

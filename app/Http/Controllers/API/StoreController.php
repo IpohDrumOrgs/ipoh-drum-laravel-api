@@ -850,5 +850,57 @@ class StoreController extends Controller
             return $this->successPaginateResponse('Inventories', $inventories, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
+    
+    /**
+     * @OA\Get(
+     *   tags={"StoreControllerService"},
+     *   path="/api/store/{uid}/vouchers",
+     *   summary="Retrieves store vouchers by Uid.",
+     *     operationId="getVouchersByStoreUid",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Store ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Vouchers has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the vouchers."
+     *   )
+     * )
+     */
+    public function getVouchers(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving store vouchers by uid:' . $uid);
+        $store = $this->getStore($uid);
+        if ($this->isEmpty($store)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Store');
+        }
+        $vouchers = $store->vouchers()->where('status' , true)->get();
+
+        if ($this->isEmpty($vouchers)) {
+            return $this->errorPaginateResponse('Vouchers');
+        } else {
+            return $this->successPaginateResponse('Vouchers', $vouchers, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
 
 }

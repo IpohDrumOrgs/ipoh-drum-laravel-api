@@ -120,11 +120,14 @@ trait ProductPromotionServices {
             $data->disc = 0;
         }
 
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
+        
+        if($params->store_id){
+            $store = $this->getStoreById($params->store_id);
+            if($this->isEmpty($store)){
+                return null;
+            }
+            $data->store()->associate($store);
         }
-        $data->store()->associate($store);
         
         $data->status = true;
 
@@ -156,11 +159,15 @@ trait ProductPromotionServices {
             $data->disc = 0;
         }
         
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
+        
+        if($params->store_id){
+            $store = $this->getStoreById($params->store_id);
+            if($this->isEmpty($store)){
+                return null;
+            }
+            $data->store()->associate($store);
+
         }
-        $data->store()->associate($store);
         
         $data->status = true;
 

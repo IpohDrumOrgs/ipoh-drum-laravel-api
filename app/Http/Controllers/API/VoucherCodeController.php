@@ -299,7 +299,7 @@ class VoucherCodeController extends Controller
      * in="query",
      * description="Discount percentage",
      * @OA\Schema(
-     *              type="number"
+     *              type="integer"
      *          )
      * ),
      * @OA\Parameter(

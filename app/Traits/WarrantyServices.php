@@ -110,11 +110,14 @@ trait WarrantyServices {
         $data->period = $this->toInt($params->period);
         $data->policy =  $params->policy;
 
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
+        if($params->store_id){
+            $store = $this->getStoreById($params->store_id);
+            if($this->isEmpty($store)){
+                return null;
+            }
+            $data->store()->associate($store);
+
         }
-        $data->store()->associate($store);
         
         $data->status = true;
 
@@ -136,11 +139,14 @@ trait WarrantyServices {
         $data->period = $this->toInt($params->period);
         $data->policy =  $params->policy;
 
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
+        if($params->store_id){
+            $store = $this->getStoreById($params->store_id);
+            if($this->isEmpty($store)){
+                return null;
+            }
+            $data->store()->associate($store);
+
         }
-        $data->store()->associate($store);
         
         $data->status = true;
 

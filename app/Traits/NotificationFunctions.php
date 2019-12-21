@@ -127,7 +127,7 @@ trait NotificationFunctions {
     
     public function errorPaginateResponse($provider){
 
-        $response['status'] = 'error';
+        $response['status'] = 'success';
         $response['data'] = null;
         $response['maximumPages'] = 0;
         $response['totalResult'] = 0;

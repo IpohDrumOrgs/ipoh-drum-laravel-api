@@ -169,4 +169,14 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\StoreReview');
     }
+
+    public function bloggers()
+    {
+        return $this->hasMany('App\Blogger');
+    }
+
+    public function channels()
+    {
+        return $this->hasMany('App\Channel');
+    }
 }

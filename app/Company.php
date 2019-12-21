@@ -91,4 +91,21 @@ class Company extends Model
     {
         return $this->hasMany('App\Store');
     }
+
+    
+    /**
+     * Get the bloggers of the company.
+     */
+    public function bloggers()
+    {
+        return $this->hasMany('App\Blogger');
+    }
+    
+    /**
+     * Get the channels of the company.
+     */
+    public function channels()
+    {
+        return $this->hasMany('App\Blogger');
+    }
 }

@@ -716,7 +716,7 @@ class InventoryController extends Controller
             return $this->errorResponse();
         }
 
-        
+
         //Associating Image Relationship
         if($request->file('img') != null){
             error_log($request->img);
@@ -915,56 +915,6 @@ class InventoryController extends Controller
             return $this->notFoundResponse('Inventory');
         } else {
             return $this->successResponse('Inventory', $inventory, 'retrieve');
-        }
-    }
-
-
-    // TODO: TEst upload image
-    /** @OA\Post(
-     *  tags={"InventoryControllerService"},
-     *   path="/api/thumbnail",
-     *   summary="Upload inventory thumbnail.",
-     *   operationId="uploadInventoryThumbnail",
-     *     @OA\Parameter(
-     * name="uid",
-     * in="query",
-     * description="InventoryUID",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\RequestBody(
-     *          required=true,
-     *          @OA\MediaType(
-     *              mediaType="multipart/form-data",
-     *              @OA\Schema(
-     *                  @OA\Property(
-     *                      property="img",
-     *                      description="Image",
-     *                      type="file",
-     *                      @OA\Items(type="string", format="binary")
-     *                   )
-     *               )
-     *           )
-     *       ),
-     *   @OA\Response(
-     *     response=200,
-     *     description="Thumbnail uploaded"
-     *   ),
-     *   @OA\Response(
-     *     response="default",
-     *     description="Unable to upload thumbnail."
-     *   )
-     * )
-     */
-    public function uploadInventoryThumbnail(Request $request) {
-        error_log('Uploading inventory thumbnail');
-        //Associating Image Relationship
-        if($request->file('img') != null){
-            error_log('Image Is Detected');
-        } else {
-            error_log('no image');
         }
     }
 }

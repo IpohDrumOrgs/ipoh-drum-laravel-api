@@ -273,7 +273,7 @@ class InventoryController extends Controller
 *                      @OA\Items(type="string", format="binary")
 *                   ),
 *                  @OA\Property(
-*                      property="sliders",
+*                      property="sliders[]",
 *                      description="Sliders Image",
 *                      type="file",
 *                      @OA\Items(type="string", format="binary")
@@ -390,8 +390,13 @@ class InventoryController extends Controller
         $count = 0;
         if($request->file('sliders') != null){
             error_log('Slider Images Is Detected');
-            error_log($request->sliders);
+
+            error_log(collect($request->sliders));
+
             $sliders = $request->file('sliders');
+
+            error_log(collect($sliders));
+
             error_log(collect($sliders));
             foreach($sliders as $slider){
                 error_log('Inside slider');

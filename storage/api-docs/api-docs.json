@@ -2264,7 +2264,7 @@
                                             "format": "binary"
                                         }
                                     },
-                                    "sliders": {
+                                    "sliders[]": {
                                         "description": "Sliders Image",
                                         "type": "file",
                                         "items": {

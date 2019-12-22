@@ -21,7 +21,7 @@
     </div>
     <div class="row">
         <div id="formWrapper" class="col-md-4 col-md-offset-4">
-            <form class="form-vertical" role="form" enctype="multipart/form-data" method="post" action="{{ route('uploadVideo')  }}">
+            <form class="form-vertical" role="form" enctype="multipart/form-data" method="post" action="http://localhost:8000/upload/images">
                 {{csrf_field()}}
                 @if(session()->has('status'))
                     <div class="alert alert-info" role="alert">
@@ -29,9 +29,15 @@
                     </div>
                 @endif
                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                    <input type="file" name="image_name" class="form-control" id="name" value="">
-                    @if($errors->has('image_name'))
-                        <span class="help-block">{{ $errors->first('image_name') }}</span>
+                    <input type="text" name="name" class="form-control" id="name" value="">
+                    @if($errors->has('name'))
+                        <span class="help-block">{{ $errors->first('name') }}</span>
+                    @endif
+                </div>
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                    <input type="file" name="sliders[]" class="form-control" id="sliders" value="" multiple="true">
+                    @if($errors->has('sliders'))
+                        <span class="help-block">{{ $errors->first('sliders') }}</span>
                     @endif
                 </div>
 

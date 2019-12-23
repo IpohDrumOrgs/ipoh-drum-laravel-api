@@ -32,7 +32,39 @@ class Inventory extends Model
      * @OA\Property(property="status", type="integer"),
      * @OA\Property(property="onsale", type="integer"),
      * @OA\Property(property="created_at", type="string"),
-     * @OA\Property(property="updated_at", type="string")
+     * @OA\Property(property="updated_at", type="string"),
+     * @OA\Property(property="store", ref="#/components/schemas/Store"),
+     * @OA\Property(property="promotion", ref="#/components/schemas/ProductPromotion"),
+     * @OA\Property(property="warranty", ref="#/components/schemas/Warranty"),
+     * @OA\Property(property="shipping", ref="#/components/schemas/Shipping"),
+     * @OA\Property(
+     *     property="inventoryfamilies",
+     *      type="array",
+     *      @OA\Items(
+     *          ref="#/components/schemas/InventoryFamily"
+     *      )
+     * ),
+     * @OA\Property(
+     *     property="images",
+     *      type="array",
+     *      @OA\Items(
+     *          ref="#/components/schemas/InventoryImage"
+     *      )
+     * ),
+     * @OA\Property(
+     *     property="reviews",
+     *      type="array",
+     *      @OA\Items(
+     *          ref="#/components/schemas/ProductReview"
+     *      )
+     * ),
+     * @OA\Property(
+     *     property="characteristics",
+     *      type="array",
+     *      @OA\Items(
+     *          ref="#/components/schemas/ProductCharacteristic"
+     *      )
+     * )
      */
 
     /**

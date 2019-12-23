@@ -8338,6 +8338,42 @@
                     },
                     "updated_at": {
                         "type": "string"
+                    },
+                    "store": {
+                        "$ref": "#/components/schemas/Store"
+                    },
+                    "promotion": {
+                        "$ref": "#/components/schemas/ProductPromotion"
+                    },
+                    "warranty": {
+                        "$ref": "#/components/schemas/Warranty"
+                    },
+                    "shipping": {
+                        "$ref": "#/components/schemas/Shipping"
+                    },
+                    "inventoryfamilies": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InventoryFamily"
+                        }
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InventoryImage"
+                        }
+                    },
+                    "reviews": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductReview"
+                        }
+                    },
+                    "characteristics": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductCharacteristic"
+                        }
                     }
                 },
                 "type": "object"
@@ -8386,6 +8422,72 @@
                     },
                     "onsale": {
                         "type": "integer"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "InventoryImage": {
+                "title": "InventoryImage",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "inventory_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductCharacteristic": {
+                "title": "ProductCharacteristic",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "icon": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
                     },
                     "status": {
                         "type": "integer"
@@ -8464,6 +8566,60 @@
                     },
                     "promoenddate": {
                         "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductReview": {
+                "title": "ProductReview",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "inventory_id": {
+                        "type": "integer"
+                    },
+                    "ticket_id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "rating": {
+                        "type": "number"
+                    },
+                    "like": {
+                        "type": "integer"
+                    },
+                    "dislike": {
+                        "type": "integer"
                     },
                     "status": {
                         "type": "integer"

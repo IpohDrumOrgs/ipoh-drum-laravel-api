@@ -543,7 +543,6 @@ class InventoryController extends Controller
      * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -552,7 +551,6 @@ class InventoryController extends Controller
      * name="warranty_id",
      * in="query",
      * description="Warranty ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -561,7 +559,6 @@ class InventoryController extends Controller
      * name="shipping_id",
      * in="query",
      * description="Shipping ID",
-     * required=true,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -570,6 +567,7 @@ class InventoryController extends Controller
      * name="inventoryfamilies",
      * in="query",
      * description="Inventory Families",
+     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
@@ -755,37 +753,37 @@ class InventoryController extends Controller
         }
 
         //Updating sliders
-        $count = $inventory->inventoryimage()->count();
-        if($request->file('sliders') != null){
-            error_log($request->sliders);
-            error_log($request->file('sliders'));
-            foreach($sliders as $slider){
-                $count++;
-                if($count > 6){
-                    break;
-                }
-                $img = $this->uploadImage($slider , "/Inventory/". $inventory->uid . "/sliders");
-                if(!$this->isEmpty($img)){
-                    $proccessingimgids->push($img->publicid);
-                    if(!$this->saveModel($inventory)){
-                        DB::rollBack();
-                        $this->deleteImages($proccessingimgids);
-                        return $this->errorResponse();
-                    }
-                    //Attach Image to InventoryImage
-                    $inventoryimage = $this->associateImageWithInventory($inventory , $img);
-                    if($this->isEmpty($inventoryimage)){
-                        DB::rollBack();
-                        $this->deleteImages($proccessingimgids);
-                        return $this->errorResponse();
-                    }
-                }else{
-                    DB::rollBack();
-                    $this->deleteImages($proccessingimgids);
-                    return $this->errorResponse();
-                }
-            }
-        }
+        // $count = $inventory->inventoryimage()->count();
+        // if($request->file('sliders') != null){
+        //     error_log($request->sliders);
+        //     error_log($request->file('sliders'));
+        //     foreach($sliders as $slider){
+        //         $count++;
+        //         if($count > 6){
+        //             break;
+        //         }
+        //         $img = $this->uploadImage($slider , "/Inventory/". $inventory->uid . "/sliders");
+        //         if(!$this->isEmpty($img)){
+        //             $proccessingimgids->push($img->publicid);
+        //             if(!$this->saveModel($inventory)){
+        //                 DB::rollBack();
+        //                 $this->deleteImages($proccessingimgids);
+        //                 return $this->errorResponse();
+        //             }
+        //             //Attach Image to InventoryImage
+        //             $inventoryimage = $this->associateImageWithInventory($inventory , $img);
+        //             if($this->isEmpty($inventoryimage)){
+        //                 DB::rollBack();
+        //                 $this->deleteImages($proccessingimgids);
+        //                 return $this->errorResponse();
+        //             }
+        //         }else{
+        //             DB::rollBack();
+        //             $this->deleteImages($proccessingimgids);
+        //             return $this->errorResponse();
+        //         }
+        //     }
+        // }
 
         //Associating Inventory Family Relationship
 

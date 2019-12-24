@@ -548,7 +548,7 @@ class InventoryController extends Controller
      * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
-     * required=true,
+     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -557,7 +557,7 @@ class InventoryController extends Controller
      * name="warranty_id",
      * in="query",
      * description="Warranty ID",
-     * required=true,
+     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -566,7 +566,7 @@ class InventoryController extends Controller
      * name="shipping_id",
      * in="query",
      * description="Shipping ID",
-     * required=true,
+     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )

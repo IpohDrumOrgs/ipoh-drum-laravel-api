@@ -187,40 +187,20 @@ class InventoryImageController extends Controller
      *              type="integer"
      *          )
      * ),
-     * @OA\Parameter(
-     * name="name",
-     * in="query",
-     * description="InventoryImage Name",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="desc",
-     * in="query",
-     * description="InventoryImage Description",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="imgpath",
-     * in="query",
-     * description="Inventory Image Path",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="imgpublicid",
-     * in="query",
-     * description="Inventory Image Public Id",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
+     * 	@OA\RequestBody(
+*          required=true,
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="img",
+*                      description="Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
      *   @OA\Response(
      *     response=200,
      *     description="InventoryImage has been created successfully."
@@ -233,23 +213,35 @@ class InventoryImageController extends Controller
      */
     public function store(Request $request)
     {
+        $proccessingimgids = collect();
         DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/inventoryimage (POST)
         
         $this->validate($request, [
-            'imgpath' => 'required|string',
-            'imgpublicid' => 'required|string|max:191',
+            'img' => 'required',
             'inventory_id' => 'required',
         ]);
         error_log('Creating inventoryimage.');
-        $params = collect([
-            'name' => $request->name,
-            'desc' => $request->desc,
-            'imgpath' => $request->imgpath,
-            'imgpublicid' => $request->imgpublicid,
-            'inventory_id' => $request->inventory_id,
-        ]);
+        
+        if($request->file('img') != null){
+            $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
+            if(!$this->isEmpty($img)){
+                $params = collect([
+                    'name' => $request->name,
+                    'desc' => $request->desc,
+                    'imgpath' => $img->imgurl,
+                    'imgpublicid' => $img->publicid,
+                    'inventory_id' => $request->inventory_id,
+                ]);
+                $proccessingimgids->push($img->publicid);
+            }else{
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+        
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $inventoryimage = $this->createInventoryImage($params);

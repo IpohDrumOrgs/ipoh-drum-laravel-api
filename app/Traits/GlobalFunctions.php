@@ -240,6 +240,17 @@ trait GlobalFunctions {
         }
 
     }
+
+    //saveModel
+    public function forceDeleteModel($data){
+        try {
+            $data->delete();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+
+    }
     
     public function checkUndefinedProperty($data , $properties){
         $data = (object) $data;

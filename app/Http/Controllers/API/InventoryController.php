@@ -359,8 +359,6 @@ class InventoryController extends Controller
         //Associating Image Relationship
         if($request->file('img') != null){
             error_log('Image Is Detected');
-            error_log($request->img);
-            error_log(collect($request->file('img')));
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
                 $inventory->imgpath = $img->imgurl;
@@ -368,14 +366,6 @@ class InventoryController extends Controller
                 $proccessingimgids->push($img->publicid);
                 if(!$this->saveModel($inventory)){
                     error_log('error here0');
-                    DB::rollBack();
-                    $this->deleteImages($proccessingimgids);
-                    return $this->errorResponse();
-                }
-                //Attach Image to InventoryImage
-                $inventoryimage = $this->associateImageWithInventory($inventory , $img);
-                if($this->isEmpty($inventoryimage)){
-                    error_log('error here');
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
@@ -390,14 +380,6 @@ class InventoryController extends Controller
         $count = 0;
         if($request->file('sliders') != null){
             error_log('Slider Images Is Detected');
-
-            error_log(collect($request->sliders));
-
-            $sliders = $request->file('sliders');
-
-            error_log(collect($sliders));
-
-            error_log(collect($sliders));
             foreach($sliders as $slider){
                 error_log('Inside slider');
                 $count++;
@@ -414,6 +396,7 @@ class InventoryController extends Controller
                         $this->deleteImages($proccessingimgids);
                         return $this->errorResponse();
                     }
+
                     //Attach Image to InventoryImage
                     $inventoryimage = $this->associateImageWithInventory($inventory , $img);
                     if($this->isEmpty($inventoryimage)){
@@ -514,7 +497,7 @@ class InventoryController extends Controller
 
 
     /**
-     * @OA\Post(
+     * @OA\Put(
      *   tags={"InventoryControllerService"},
      *   path="/api/inventory/{uid}",
      *   summary="Update inventory by Uid.",
@@ -548,7 +531,6 @@ class InventoryController extends Controller
      * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
-     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -557,7 +539,6 @@ class InventoryController extends Controller
      * name="warranty_id",
      * in="query",
      * description="Warranty ID",
-     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -566,7 +547,6 @@ class InventoryController extends Controller
      * name="shipping_id",
      * in="query",
      * description="Shipping ID",
-     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -604,20 +584,6 @@ class InventoryController extends Controller
      *              type="string"
      *          )
      * ),
-     * 	@OA\RequestBody(
-*          required=true,
-*          @OA\MediaType(
-*              mediaType="multipart/form-data",
-*              @OA\Schema(
-*                  @OA\Property(
-*                      property="img",
-*                      description="Image",
-*                      type="file",
-*                      @OA\Items(type="string", format="binary")
-*                   ),
-*               ),
-*           ),
-*       ),
      * @OA\Parameter(
      * name="cost",
      * in="query",
@@ -662,14 +628,6 @@ class InventoryController extends Controller
      *              type="integer"
      *          )
      * ),
-     * @OA\Parameter(
-     *     name="_method",
-     *     in="query",
-     *     description="For spoofing purposes.",
-     *     required=false,
-     *     example="PUT",
-     *     @OA\Schema(type="string")
-     *    ),
      *   @OA\Response(
      *     response=200,
      *     description="Inventory has been created successfully."
@@ -714,7 +672,6 @@ class InventoryController extends Controller
             'code' => $request->code,
             'sku' => $request->sku,
             'desc' => $request->desc,
-            'imgpath' => $request->imgpath,
             'cost' => $request->cost,
             'price' => $request->price,
             'qty' => $request->qty,
@@ -731,79 +688,7 @@ class InventoryController extends Controller
             return $this->errorResponse();
         }
 
-
-        //Associating Image Relationship
-        if($request->file('img') != null){
-            error_log($request->img);
-            error_log($request->file('img'));
-            $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
-            if(!$this->isEmpty($img)){
-                //Delete Previous Image
-                if($inventory->imgpublicid){
-                    if(!$this->deleteInventoryImage($inventory->imgpublicid)){
-                        DB::rollBack();
-                        $this->deleteImages($proccessingimgids);
-                        return $this->errorResponse();
-                    }
-                }
-
-                $inventory->imgpath = $img->imgurl;
-                $inventory->imgpublicid = $img->publicid;
-                $proccessingimgids->push($img->publicid);
-                if(!$this->saveModel($inventory)){
-                    DB::rollBack();
-                    $this->deleteImages($proccessingimgids);
-                    return $this->errorResponse();
-                }
-                //Attach Image to InventoryImage
-                $inventoryimage = $this->associateImageWithInventory($inventory , $img);
-                if($this->isEmpty($inventoryimage)){
-                    DB::rollBack();
-                    $this->deleteImages($proccessingimgids);
-                    return $this->errorResponse();
-                }
-            }else{
-                DB::rollBack();
-                $this->deleteImages($proccessingimgids);
-                return $this->errorResponse();
-            }
-        }
-
-        //Updating sliders
-        // $count = $inventory->inventoryimage()->count();
-        // if($request->file('sliders') != null){
-        //     error_log($request->sliders);
-        //     error_log($request->file('sliders'));
-        //     foreach($sliders as $slider){
-        //         $count++;
-        //         if($count > 6){
-        //             break;
-        //         }
-        //         $img = $this->uploadImage($slider , "/Inventory/". $inventory->uid . "/sliders");
-        //         if(!$this->isEmpty($img)){
-        //             $proccessingimgids->push($img->publicid);
-        //             if(!$this->saveModel($inventory)){
-        //                 DB::rollBack();
-        //                 $this->deleteImages($proccessingimgids);
-        //                 return $this->errorResponse();
-        //             }
-        //             //Attach Image to InventoryImage
-        //             $inventoryimage = $this->associateImageWithInventory($inventory , $img);
-        //             if($this->isEmpty($inventoryimage)){
-        //                 DB::rollBack();
-        //                 $this->deleteImages($proccessingimgids);
-        //                 return $this->errorResponse();
-        //             }
-        //         }else{
-        //             DB::rollBack();
-        //             $this->deleteImages($proccessingimgids);
-        //             return $this->errorResponse();
-        //         }
-        //     }
-        // }
-
         //Associating Inventory Family Relationship
-
         $inventoryfamilies = collect(json_decode($request->inventoryfamilies));
         $originvfamiliesids = $inventory->inventoryfamilies()->pluck('id');
         $inventoryfamiliesids = $inventoryfamilies->pluck('id');
@@ -931,5 +816,85 @@ class InventoryController extends Controller
         } else {
             return $this->successResponse('Inventory', $inventory, 'retrieve');
         }
+    }
+
+    
+
+    /**
+     * @OA\Post(
+     *   tags={"InventoryControllerService"},
+     *   path="/api/thumbnailupload/inventory",
+     *   summary="Change inventory Thumbnail by Uid.",
+     *     operationId="uploadInventoryThumbnail",
+     * @OA\Parameter(
+     * name="inventory_id",
+     * in="query",
+     * description="Inventory Id",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * 	@OA\RequestBody(
+*          required=true,
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="img",
+*                      description="Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Inventory has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieve the inventory."
+     *   )
+     * )
+     */
+    public function uploadThumbnail(Request $request)
+    {
+        $proccessingimgids = collect();
+        DB::beginTransaction();
+        // api/inventory/{inventoryid} (GET)
+        error_log($this->controllerName.' uploding thumbnail');
+        $this->validate($request, [
+            'inventory_id' => 'required',
+            'img' => 'required',
+        ]);
+        //Associating Image Relationship
+        $inventory = $this->getInventoryById($request->inventory_id);
+        if ($this->isEmpty($inventory)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Inventory');
+        }
+
+        if($request->file('img') != null){
+            $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
+            if(!$this->isEmpty($img)){
+                $inventory->imgpath = $img->imgurl;
+                $inventory->imgpublicid = $img->publicid;
+                $proccessingimgids->push($img->publicid);
+                if(!$this->saveModel($inventory)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }else{
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+        
+        DB::commit();
+        return $this->successResponse('Inventory', $inventory, 'update');
     }
 }

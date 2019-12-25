@@ -514,7 +514,7 @@ class InventoryController extends Controller
 
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *   tags={"InventoryControllerService"},
      *   path="/api/inventory/{uid}",
      *   summary="Update inventory by Uid.",
@@ -548,6 +548,7 @@ class InventoryController extends Controller
      * name="product_promotion_id",
      * in="query",
      * description="Promotion ID",
+     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -556,6 +557,7 @@ class InventoryController extends Controller
      * name="warranty_id",
      * in="query",
      * description="Warranty ID",
+     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -564,6 +566,7 @@ class InventoryController extends Controller
      * name="shipping_id",
      * in="query",
      * description="Shipping ID",
+     * required=false,
      * @OA\Schema(
      *              type="integer"
      *          )
@@ -659,6 +662,14 @@ class InventoryController extends Controller
      *              type="integer"
      *          )
      * ),
+     * @OA\Parameter(
+     *     name="_method",
+     *     in="query",
+     *     description="For spoofing purposes.",
+     *     required=false,
+     *     example="PUT",
+     *     @OA\Schema(type="string")
+     *    ),
      *   @OA\Response(
      *     response=200,
      *     description="Inventory has been created successfully."
@@ -671,6 +682,7 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $uid)
     {
+        error_log("test");
         $proccessingimgids = collect();
         DB::beginTransaction();
         // api/inventory/{inventoryid} (PUT)

@@ -87,10 +87,10 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::resource('inventory', 'API\InventoryController');
     Route::get('/filter/inventory', 'API\InventoryController@filter');
-    Route::post('/filter/inventory', 'API\InventoryController@filter');
+    Route::post('/thumbnailupload/inventory', 'API\InventoryController@uploadThumbnail');
 
     Route::resource('inventoryimage', 'API\InventoryImageController');
-    Route::get('/thumbnailupload/inventory', 'API\InventoryImageController@uploadThumbnail');
+    Route::get('/filter/inventory', 'API\InventoryImageController@filter');
 
     Route::resource('ticket', 'API\TicketController');
     Route::get('/filter/ticket', 'API\TicketController@filter');

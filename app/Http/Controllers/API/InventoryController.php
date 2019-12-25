@@ -879,6 +879,14 @@ class InventoryController extends Controller
         if($request->file('img') != null){
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
+                //Delete Previous Image
+                if($inventory->imgpublicid){
+                    if(!$this->deleteImage($inventory->imgpublicid)){
+                        error_log('wrong 7 edi');
+                        DB::rollBack();
+                        return $this->errorResponse();
+                    }
+                }
                 $inventory->imgpath = $img->imgurl;
                 $inventory->imgpublicid = $img->publicid;
                 $proccessingimgids->push($img->publicid);

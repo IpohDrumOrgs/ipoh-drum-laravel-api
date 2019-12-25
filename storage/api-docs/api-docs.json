@@ -2391,7 +2391,7 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
                     "InventoryControllerService"
                 ],
@@ -2456,6 +2456,7 @@
                         "name": "inventoryfamilies",
                         "in": "query",
                         "description": "Inventory Families",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -2527,6 +2528,16 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "_method",
+                        "in": "query",
+                        "description": "For spoofing purposes.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PUT"
                     }
                 ],
                 "requestBody": {

@@ -378,7 +378,7 @@ class InventoryImageController extends Controller
             return $this->notFoundResponse('InventoryImage');
         }
 
-        if ($this->forceDeleteModel($inventoryimage)) {
+        if (!$this->deleteInventoryImage($inventoryimage)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {

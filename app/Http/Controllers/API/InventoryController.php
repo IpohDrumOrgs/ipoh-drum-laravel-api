@@ -381,6 +381,7 @@ class InventoryController extends Controller
         $count = 0;
         if($request->file('sliders') != null){
             error_log('Slider Images Is Detected');
+            $sliders = $request->file('sliders');
             foreach($sliders as $slider){
                 error_log('Inside slider');
                 $count++;

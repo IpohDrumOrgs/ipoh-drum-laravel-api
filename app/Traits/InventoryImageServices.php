@@ -124,7 +124,7 @@ trait InventoryImageServices {
         if($inventory->images()->count() >= 6){
             return null;
         }
-        
+
         $data = new InventoryImage();
         $data->uid = Carbon::now()->timestamp . InventoryImage::count();
         $data->name = $params->name;
@@ -203,16 +203,16 @@ trait InventoryImageServices {
 
     }
 
-    private function deleteInventoryImage($data) {
-        $data->status = false;
-
-        if($this->saveModel($data)){
-            return $data->refresh();
+    public function deleteInventoryImage($data)
+    {
+        error_log($data->imgpublicid);
+        if($this->deleteImage($data->imgpublicid)){
+            $data->delete();
+            return true;
         }else{
-            return null;
+            return false;
         }
     }
-
 
 
     //Relationship Associating
@@ -251,17 +251,7 @@ trait InventoryImageServices {
     
     //Relationship Deassociating
     //===============================================================================================================================================================================
-    public function deleteInventoryImageImage($publicid)
-    {
-        $image =  InventoryImageImage::where('imgpublicid' , $publicid)->first();
-        $this->deleteImage($publicid);
-        if(!$this->isEmpty($image)){
-            $image->delete();
-            return true;
-        }else{
-            return false;
-        }
-    }
+    
     
 
     //Modifying Display Data

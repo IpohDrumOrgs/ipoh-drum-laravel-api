@@ -301,21 +301,7 @@ trait InventoryServices {
         }
     }
 
-    
-    //Relationship Deassociating
-    //===============================================================================================================================================================================
-    public function deleteInventoryImage($publicid)
-    {
-        $image =  InventoryImage::where('imgpublicid' , $publicid)->first();
-        $this->deleteImage($publicid);
-        if(!$this->isEmpty($image)){
-            $image->delete();
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
+
 
     //Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------

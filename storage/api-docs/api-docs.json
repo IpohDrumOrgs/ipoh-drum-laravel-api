@@ -2391,7 +2391,7 @@
                     }
                 }
             },
-            "post": {
+            "put": {
                 "tags": [
                     "InventoryControllerService"
                 ],
@@ -2429,7 +2429,6 @@
                         "name": "product_promotion_id",
                         "in": "query",
                         "description": "Promotion ID",
-                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -2438,7 +2437,6 @@
                         "name": "warranty_id",
                         "in": "query",
                         "description": "Warranty ID",
-                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -2447,7 +2445,6 @@
                         "name": "shipping_id",
                         "in": "query",
                         "description": "Shipping ID",
-                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -2528,38 +2525,8 @@
                         "schema": {
                             "type": "integer"
                         }
-                    },
-                    {
-                        "name": "_method",
-                        "in": "query",
-                        "description": "For spoofing purposes.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PUT"
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "img": {
-                                        "description": "Image",
-                                        "type": "file",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Inventory has been created successfully."
@@ -2620,6 +2587,310 @@
                     },
                     "default": {
                         "description": "Unable to retrieve the inventory."
+                    }
+                }
+            }
+        },
+        "/api/thumbnailupload/inventory": {
+            "post": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Change inventory Thumbnail by Uid.",
+                "operationId": "uploadInventoryThumbnail",
+                "parameters": [
+                    {
+                        "name": "inventory_id",
+                        "in": "query",
+                        "description": "Inventory Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Inventory has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the inventory."
+                    }
+                }
+            }
+        },
+        "/api/inventoryimage": {
+            "get": {
+                "tags": [
+                    "InventoryImageControllerService"
+                ],
+                "summary": "Get list of inventoryimages",
+                "description": "Returns list of inventoryimages",
+                "operationId": "getInventoryImages",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of inventoryimages"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of inventoryimages"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "InventoryImageControllerService"
+                ],
+                "summary": "Creates a inventoryimage.",
+                "operationId": "createInventoryImage",
+                "parameters": [
+                    {
+                        "name": "inventory_id",
+                        "in": "query",
+                        "description": "Inventory Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "InventoryImage has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the inventoryimage."
+                    }
+                }
+            }
+        },
+        "/api/filter/inventoryimage": {
+            "get": {
+                "tags": [
+                    "InventoryImageControllerService"
+                ],
+                "summary": "Filter list of inventoryimages",
+                "description": "Returns list of filtered inventoryimages",
+                "operationId": "filterInventoryImages",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered inventoryimages"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of inventoryimages"
+                    }
+                }
+            }
+        },
+        "/api/inventoryimage/{uid}": {
+            "get": {
+                "tags": [
+                    "InventoryImageControllerService"
+                ],
+                "summary": "Retrieves inventoryimage by Uid.",
+                "operationId": "getInventoryImageByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "InventoryImage_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "InventoryImage has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the inventoryimage."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "InventoryImageControllerService"
+                ],
+                "summary": "Update inventoryimage by Uid.",
+                "operationId": "updateInventoryImageByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "InventoryImage_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "InventoryImagename",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "InventoryImage Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "provider",
+                        "in": "query",
+                        "description": "Provider of Model",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "InventoryImage has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the inventoryimage."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "InventoryImageControllerService"
+                ],
+                "summary": "Set inventoryimage's 'status' to 0.",
+                "operationId": "deleteInventoryImageByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "InventoryImage ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "InventoryImage has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the inventoryimage."
                     }
                 }
             }
@@ -2873,6 +3144,524 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the module."
+                    }
+                }
+            }
+        },
+        "/api/payment": {
+            "get": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Get list of payments",
+                "description": "Returns list of payments",
+                "operationId": "getPayments",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of payments"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of payments"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Creates a payment.",
+                "operationId": "createPayment",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Paymentname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "product_promotion_id",
+                        "in": "query",
+                        "description": "Promotion ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warranty_id",
+                        "in": "query",
+                        "description": "Warranty ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "shipping_id",
+                        "in": "query",
+                        "description": "Shipping ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "paymentfamilies",
+                        "in": "query",
+                        "description": "Payment Families",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "description": "Sku",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Product Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cost",
+                        "in": "query",
+                        "description": "Product Cost",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Product Base Price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "stockthreshold",
+                        "in": "query",
+                        "description": "Stock Threshold",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "sliders[]": {
+                                        "description": "Sliders Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the payment."
+                    }
+                }
+            }
+        },
+        "/api/filter/payment": {
+            "get": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Filter list of payments",
+                "description": "Returns list of filtered payments",
+                "operationId": "filterPayments",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On sale for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered payments"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of payments"
+                    }
+                }
+            }
+        },
+        "/api/payment/{uid}": {
+            "get": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Retrieves payment by Uid.",
+                "operationId": "getPaymentByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Payment_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the payment."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Update payment by Uid.",
+                "operationId": "updatePaymentByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Payment_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Paymentname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "Store ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "product_promotion_id",
+                        "in": "query",
+                        "description": "Promotion ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "warranty_id",
+                        "in": "query",
+                        "description": "Warranty ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "shipping_id",
+                        "in": "query",
+                        "description": "Shipping ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "paymentfamilies",
+                        "in": "query",
+                        "description": "Payment Families",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "description": "Sku",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Product Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cost",
+                        "in": "query",
+                        "description": "Product Cost",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Product Selling Price",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "qty",
+                        "in": "query",
+                        "description": "Stock Qty",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stockthreshold",
+                        "in": "query",
+                        "description": "Stock Threshold",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "onsale",
+                        "in": "query",
+                        "description": "On Sale",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_method",
+                        "in": "query",
+                        "description": "For spoofing purposes.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PUT"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the payment."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Set payment's 'status' to 0.",
+                "operationId": "deletePaymentByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Payment ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the payment."
+                    }
+                }
+            }
+        },
+        "/api/payment/{uid}/onsale": {
+            "get": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Retrieves onsale payment by Uid.",
+                "operationId": "getOnSalePaymentByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Payment_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the payment."
                     }
                 }
             }
@@ -8442,6 +9231,12 @@
                     },
                     "updated_at": {
                         "type": "string"
+                    },
+                    "patterns": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Pattern"
+                        }
                     }
                 },
                 "type": "object"
@@ -8469,6 +9264,57 @@
                     },
                     "imgpath": {
                         "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Pattern": {
+                "title": "Pattern",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "inventory_family_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "cost": {
+                        "type": "number"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "qty": {
+                        "type": "integer"
+                    },
+                    "salesqty": {
+                        "type": "integer"
+                    },
+                    "onsale": {
+                        "type": "integer"
                     },
                     "status": {
                         "type": "integer"

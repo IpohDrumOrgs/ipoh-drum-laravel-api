@@ -26,7 +26,14 @@ class InventoryFamily extends Model
      * @OA\Property(property="onsale", type="integer"),
      * @OA\Property(property="status", type="integer"),
      * @OA\Property(property="created_at", type="string"),
-     * @OA\Property(property="updated_at", type="string")
+     * @OA\Property(property="updated_at", type="string"),
+     * @OA\Property(
+     *     property="patterns",
+     *      type="array",
+     *      @OA\Items(
+     *          ref="#/components/schemas/Pattern"
+     *      )
+     * )
      */
     /**
      *

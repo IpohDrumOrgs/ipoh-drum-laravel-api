@@ -14,6 +14,7 @@ use App\Traits\PaymentServices;
 use App\Traits\PaymentFamilyServices;
 use App\Traits\PatternServices;
 use App\Traits\LogServices;
+use Stripe;
 
 class PaymentController extends Controller
 {
@@ -320,6 +321,22 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
+        try{
+            $charge = Stripe::charges()->create([
+                'amount' => $request->amount,
+                'currency' => 'MYR',
+                'source' => $request->token,
+                'description' => 'Order',
+                'receipt_email' => 'siansion5@gmail.com',
+                'metadata' => [
+                    // 'contents' => $contents,
+                    // 'quantity' => 1,
+                    // 'discount' => collect(session()->get('coupon'))->toJson(),
+                ],
+            ]);
+        }catch(Exception $e){
+
+        }
        
         return $this->successResponse('Payment', $request, 'create');
     }

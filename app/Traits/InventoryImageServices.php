@@ -116,6 +116,15 @@ trait InventoryImageServices {
 
         $params = $this->checkUndefinedProperty($params , $this->inventoryImageDefaultCols());
 
+        $inventory = $this->getInventoryById($data->inventory_id);
+        if($this->isEmpty($inventory)){
+            return null;
+        }
+
+        if($inventory->images()->count() >= 6){
+            return null;
+        }
+        
         $data = new InventoryImage();
         $data->uid = Carbon::now()->timestamp . InventoryImage::count();
         $data->name = $params->name;
@@ -123,10 +132,6 @@ trait InventoryImageServices {
         $data->imgpath = $params->imgurl;
         $data->imgpublicid = $params->publicid;
 
-        $inventory = $this->getInventoryById($data->inventory_id);
-        if($this->isEmpty($warranty)){
-            return null;
-        }
         $data->inventory()->associate($inventory);
 
         if(!$this->saveModel($data)){

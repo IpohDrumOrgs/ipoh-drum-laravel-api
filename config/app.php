@@ -164,6 +164,7 @@ return [
         \L5Swagger\L5SwaggerServiceProvider::class,
         JD\Cloudder\CloudderServiceProvider::class ,
         Vimeo\Laravel\VimeoServiceProvider::class,
+        Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -229,6 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
         'Vimeo' => Vimeo\Laravel\Facades\Vimeo::class,
+        'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
 
     ],
 

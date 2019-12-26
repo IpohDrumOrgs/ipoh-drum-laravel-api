@@ -104,8 +104,6 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('vouchercode', 'API\VoucherCodeController');
     Route::get('/filter/vouchercode', 'API\VoucherCodeController@filter');
 
-    Route::resource('payment', 'API\PaymentController');
-    Route::get('/filter/payment', 'API\PaymentController@filter');
 
     // ========================== Blogger Related Route =========================================================
 
@@ -123,6 +121,8 @@ Route::post('/register', 'API\UserController@register');
 
 Route::get('/productfeature/{uid}/products', 'API\ProductFeatureController@getFeaturedProducts');
 
+Route::resource('payment', 'API\PaymentController');
+Route::get('/filter/payment', 'API\PaymentController@filter');
 
 Route::get('/inventory/{uid}/onsale', 'API\InventoryController@getOnSaleInventory');
 

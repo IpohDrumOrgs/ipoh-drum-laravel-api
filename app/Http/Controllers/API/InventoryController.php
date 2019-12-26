@@ -14,10 +14,11 @@ use App\Traits\InventoryServices;
 use App\Traits\InventoryFamilyServices;
 use App\Traits\PatternServices;
 use App\Traits\LogServices;
+use App\Traits\ImageHostingServices;
 
 class InventoryController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices, InventoryFamilyServices;
+    use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices, InventoryFamilyServices, ImageHostingServices;
     private $controllerName = '[InventoryController]';
      /**
      * @OA\Get(

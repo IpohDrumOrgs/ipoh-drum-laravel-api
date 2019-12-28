@@ -4,23 +4,26 @@ namespace App\Traits;
 use App\User;
 use App\Store;
 use App\ProductPromotion;
-use App\Video;
+use App\Channel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\AllServices;
 
-trait VideoServices {
+trait ChannelServices {
 
     use AllServices;
 
-    private function getVideos($requester) {
+    private function getChannels($requester) {
 
         $data = collect();
         //Role Based Retrieve Done in Store
-        $channels = $this->getChannels($requester);
-        foreach($channels as $channel){
-            $data = $data->merge($channel->videos()->where('status',true)->get());
+        $companies = $this->getCompanies($requester);
+        foreach($companies as $company){
+            $data = $data->merge($company->channels()->where('status',true)->get());
         }
+
+        $data = $data->merge($requester->channels()->where('status',true)->get());
+
 
         $data = $data->unique('id')->sortBy('id')->flatten(1);
 
@@ -29,13 +32,12 @@ trait VideoServices {
     }
 
 
-    private function filterVideos($data , $params) {
+    private function filterChannels($data , $params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->videoFilterCols());
-        error_log('Filtering videos....');
+        error_log('Filtering channels....');
 
         if($params->keyword){
-            error_log('Filtering videos with keyword....');
+            error_log('Filtering channels with keyword....');
             $keyword = $params->keyword;
             $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
@@ -50,7 +52,7 @@ trait VideoServices {
 
 
         if($params->fromdate){
-            error_log('Filtering videos with fromdate....');
+            error_log('Filtering channels with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
@@ -58,7 +60,7 @@ trait VideoServices {
         }
 
         if($params->todate){
-            error_log('Filtering videos with todate....');
+            error_log('Filtering channels with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
@@ -67,7 +69,7 @@ trait VideoServices {
         }
 
         if($params->status){
-            error_log('Filtering videos with status....');
+            error_log('Filtering channels with status....');
             if($params->status == 'true'){
                 $data = $data->where('status', true);
             }else if($params->status == 'false'){
@@ -77,9 +79,15 @@ trait VideoServices {
             }
         }
 
-        if($params->scope){
-            error_log('Filtering videos with scope....');
-            $data = $data->where('scope', $params->scope);
+        if($params->onsale){
+            error_log('Filtering channels with on sale status....');
+            if($params->onsale == 'true'){
+                $data = $data->where('onsale', true);
+            }else if($params->onsale == 'false'){
+                $data = $data->where('onsale', false);
+            }else{
+                $data = $data->where('onsale', '!=', null);
+            }
         }
 
 
@@ -88,22 +96,22 @@ trait VideoServices {
         return $data;
     }
 
-    private function getVideo($uid) {
-        $data = Video::where('uid', $uid)->where('status', 1)->first();
+    private function getChannel($uid) {
+        $data = Channel::where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function getVideoById($id) {
-        $data = Video::where('id', $id)->where('status', 1)->first();
+    private function getChannelById($id) {
+        $data = Channel::where('id', $id)->where('status', 1)->first();
         return $data;
     }
 
-    private function createVideo($params) {
+    private function createChannel($params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->videoAllCols());
+        $params = $this->checkUndefinedProperty($params , $this->channelAllCols());
 
-        $data = new Video();
-        $data->uid = Carbon::now()->timestamp . Video::count();
+        $data = new Channel();
+        $data->uid = Carbon::now()->timestamp . Channel::count();
         $data->name = $params->name;
         $data->code = $params->code;
         $data->sku = $params->sku;
@@ -142,10 +150,10 @@ trait VideoServices {
         return $data->refresh();
     }
 
-    //Make Sure Video is not empty when calling this function
-    private function updateVideo($data,  $params) {
+    //Make Sure Channel is not empty when calling this function
+    private function updateChannel($data,  $params) {
         
-        $params = $this->checkUndefinedProperty($params , $this->videoAllCols());
+        $params = $this->checkUndefinedProperty($params , $this->channelAllCols());
 
         $data->name = $params->name;
         $data->code = $params->code;
@@ -184,7 +192,7 @@ trait VideoServices {
         return $data->refresh();
     }
 
-    private function deleteVideo($data) {
+    private function deleteChannel($data) {
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();
@@ -195,16 +203,10 @@ trait VideoServices {
         return $data->refresh();
     }
 
-    private function getAllVideos() {
-        
-        $data = Video::where('status', true)->get();
-
-        return $data;
-    }
 
     // Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
-    public function videoAllCols() {
+    public function channelAllCols() {
 
         return ['id','store_id', 'product_promotion_id', 'uid', 
         'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 
@@ -212,16 +214,11 @@ trait VideoServices {
 
     }
 
-    public function videoDefaultCols() {
+    public function channelDefaultCols() {
 
         return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 
         'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate', 'enddate' , 
         'stock', 'salesqty' ];
-
-    }
-    public function videoFilterCols() {
-
-        return ['keyword','fromdate' ,'todate', 'status', 'scope'];
 
     }
 

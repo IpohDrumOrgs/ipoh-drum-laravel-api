@@ -9767,7 +9767,13 @@
                     "name": {
                         "type": "string"
                     },
-                    "img": {
+                    "icon": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
                         "type": "string"
                     },
                     "desc": {
@@ -10156,6 +10162,87 @@
                     },
                     "remember_token": {
                         "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Video": {
+                "title": "Video",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "channel_id": {
+                        "type": "integer"
+                    },
+                    "playlist_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "videopath": {
+                        "type": "string"
+                    },
+                    "videopublicid": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
+                    "totallength": {
+                        "type": "string"
+                    },
+                    "view": {
+                        "type": "integer"
+                    },
+                    "like": {
+                        "type": "integer"
+                    },
+                    "dislike": {
+                        "type": "integer"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "discpctg": {
+                        "type": "number"
+                    },
+                    "disc": {
+                        "type": "number"
+                    },
+                    "discbyprice": {
+                        "type": "integer"
+                    },
+                    "free": {
+                        "type": "integer"
+                    },
+                    "salesqty": {
+                        "type": "integer"
+                    },
+                    "scope": {
+                        "type": "string"
+                    },
+                    "agerestrict": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "integer"
                     },
                     "created_at": {
                         "type": "string"

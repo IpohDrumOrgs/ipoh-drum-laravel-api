@@ -9767,7 +9767,13 @@
                     "name": {
                         "type": "string"
                     },
-                    "img": {
+                    "icon": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
                         "type": "string"
                     },
                     "desc": {

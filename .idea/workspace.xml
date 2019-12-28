@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35cfe8ca-25ce-4ad0-bdff-0fc4734b6903" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/ipoh-drum-laravel-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ipoh-drum-laravel-api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Video.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Video.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/api-docs/api-docs.json" beforeDir="false" afterPath="$PROJECT_DIR$/storage/api-docs/api-docs.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ProductFeature.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/ProductFeature.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -212,7 +209,7 @@
       <workItem from="1577119500677" duration="4245000" />
       <workItem from="1577372380539" duration="275000" />
       <workItem from="1577373657100" duration="2808000" />
-      <workItem from="1577404182326" duration="4064000" />
+      <workItem from="1577404182326" duration="6813000" />
     </task>
     <servers />
   </component>

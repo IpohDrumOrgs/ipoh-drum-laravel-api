@@ -109,6 +109,9 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::resource('blogger', 'API\BloggerController');
     Route::get('/filter/blogger', 'API\BloggerController@filter');
+
+    Route::resource('article', 'API\ArticleController');
+    Route::get('/filter/article', 'API\ArticleController@filter');
     
     // ========================== Channel Related Route =========================================================
 
@@ -137,6 +140,11 @@ Route::get('/inventory/{uid}/onsale', 'API\InventoryController@getOnSaleInventor
 
 Route::get('/public/videos', 'API\VideoController@getPublicVideos');
 Route::get('/public/video/{uid}', 'API\VideoController@getPublicVideo');
+
+
+Route::get('/public/articles', 'API\ArticleController@getPublicArticles');
+Route::get('/public/article/{uid}', 'API\ArticleController@getPublicArticle');
+
 
 // TODO: Test upload image
 Route::post('/thumbnail', 'API\InventoryController@uploadInventoryThumbnail');

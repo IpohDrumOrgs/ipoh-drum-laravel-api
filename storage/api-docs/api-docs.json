@@ -22,7 +22,7 @@
                 ],
                 "summary": "Get list of articles",
                 "description": "Returns list of articles",
-                "operationId": "getArticles",
+                "operationId": "getArticleList",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -60,133 +60,48 @@
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "Article name",
+                        "description": "Articlename",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "store_id",
+                        "name": "email",
                         "in": "query",
-                        "description": "Store ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "product_promotion_id",
-                        "in": "query",
-                        "description": "Promotion ID",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "warranty_id",
-                        "in": "query",
-                        "description": "Warranty ID",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "shipping_id",
-                        "in": "query",
-                        "description": "Shipping ID",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "articlefamilies",
-                        "in": "query",
-                        "description": "Article Families",
+                        "description": "Email",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "code",
+                        "name": "password",
                         "in": "query",
-                        "description": "Code",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "sku",
-                        "in": "query",
-                        "description": "Sku",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "desc",
-                        "in": "query",
-                        "description": "Product Description",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cost",
-                        "in": "query",
-                        "description": "Product Cost",
+                        "description": "Password",
                         "required": true,
                         "schema": {
-                            "type": "number"
+                            "type": "string"
                         }
                     },
                     {
-                        "name": "price",
+                        "name": "password_confirmation",
                         "in": "query",
-                        "description": "Product Base Price",
+                        "description": "Password Confirmation",
                         "required": true,
                         "schema": {
-                            "type": "number"
+                            "type": "string"
                         }
                     },
                     {
-                        "name": "stockthreshold",
+                        "name": "country",
                         "in": "query",
-                        "description": "Stock Threshold",
+                        "description": "Country",
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "img": {
-                                        "description": "Image",
-                                        "type": "file",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    },
-                                    "sliders": {
-                                        "description": "Sliders Image",
-                                        "type": "file",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Article has been created successfully."
@@ -204,7 +119,7 @@
                 ],
                 "summary": "Filter list of articles",
                 "description": "Returns list of filtered articles",
-                "operationId": "filterArticles",
+                "operationId": "filterArticleList",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -241,15 +156,7 @@
                     {
                         "name": "todate",
                         "in": "query",
-                        "description": "To date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "On sale for filter",
+                        "description": "To string for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -258,6 +165,14 @@
                         "name": "status",
                         "in": "query",
                         "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Company id for filter",
                         "schema": {
                             "type": "string"
                         }
@@ -319,151 +234,91 @@
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "Articlename",
+                        "description": "Articlename.",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "store_id",
+                        "name": "email",
                         "in": "query",
-                        "description": "Store ID",
+                        "description": "Email.",
                         "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "product_promotion_id",
-                        "in": "query",
-                        "description": "Promotion ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "warranty_id",
-                        "in": "query",
-                        "description": "Warranty ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "shipping_id",
-                        "in": "query",
-                        "description": "Shipping ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "articlefamilies",
-                        "in": "query",
-                        "description": "Article Families",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "code",
+                        "name": "tel1",
                         "in": "query",
-                        "description": "Code",
+                        "description": "Telephone Number #1.",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "sku",
+                        "name": "address1",
                         "in": "query",
-                        "description": "Sku",
+                        "description": "Address #1.",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "desc",
+                        "name": "city",
                         "in": "query",
-                        "description": "Product Description",
+                        "description": "City.",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "cost",
+                        "name": "postcode",
                         "in": "query",
-                        "description": "Product Cost",
-                        "required": true,
+                        "description": "PostCode.",
+                        "required": false,
                         "schema": {
-                            "type": "number"
+                            "type": "string"
                         }
                     },
                     {
-                        "name": "price",
+                        "name": "state",
                         "in": "query",
-                        "description": "Product Selling Price",
-                        "required": true,
+                        "description": "State.",
+                        "required": false,
                         "schema": {
-                            "type": "number"
+                            "type": "string"
                         }
                     },
                     {
-                        "name": "qty",
+                        "name": "country",
                         "in": "query",
-                        "description": "Stock Qty",
+                        "description": "Country.",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     },
                     {
-                        "name": "stockthreshold",
+                        "name": "icno",
                         "in": "query",
-                        "description": "Stock Threshold",
+                        "description": "IC Number.",
+                        "required": false,
                         "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "onsale",
-                        "in": "query",
-                        "description": "On Sale",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "img": {
-                                        "description": "Image",
-                                        "type": "file",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
-                        "description": "Article has been created successfully."
+                        "description": "Article has been updated successfully."
                     },
                     "default": {
-                        "description": "Unable to create the article."
+                        "description": "Unable to update the article."
                     }
                 }
             },
@@ -494,18 +349,18 @@
                 }
             }
         },
-        "/api/article/{uid}/onsale": {
+        "/api/public/article/{uid}": {
             "get": {
                 "tags": [
                     "ArticleControllerService"
                 ],
-                "summary": "Retrieves onsale article by Uid.",
-                "operationId": "getOnSaleArticleByUid",
+                "summary": "Retrieves public article by Uid.",
+                "operationId": "getPublicArticleByUid",
                 "parameters": [
                     {
                         "name": "uid",
                         "in": "path",
-                        "description": "Article_ID, NOT 'ID'.",
+                        "description": "Article ID, NOT 'ID'.",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -514,58 +369,45 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Article has been retrieved successfully."
+                        "description": "Articles has been retrieved successfully."
                     },
                     "default": {
-                        "description": "Unable to retrieve the article."
+                        "description": "Unable to retrieved the articles."
                     }
                 }
             }
         },
-        "/api/thumbnail": {
-            "post": {
+        "/api/public/articles": {
+            "get": {
                 "tags": [
                     "ArticleControllerService"
                 ],
-                "summary": "Upload article thumbnail.",
-                "operationId": "uploadArticleThumbnail",
+                "summary": "Retrieves all public articles.",
+                "operationId": "getPublicArticlesListing",
                 "parameters": [
                     {
-                        "name": "uid",
+                        "name": "pageNumber",
                         "in": "query",
-                        "description": "ArticleUID",
-                        "required": true,
+                        "description": "Page number",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "img": {
-                                        "description": "Image",
-                                        "type": "file",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
-                        "description": "Thumbnail uploaded"
+                        "description": "Articles has been retrieved successfully."
                     },
                     "default": {
-                        "description": "Unable to upload thumbnail."
+                        "description": "Unable to retrieved the articles."
                     }
                 }
             }

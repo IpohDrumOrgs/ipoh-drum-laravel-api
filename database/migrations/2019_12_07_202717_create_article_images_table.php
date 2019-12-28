@@ -17,9 +17,12 @@ class CreateArticleImagesTable extends Migration
             $table->increments('id');
             $table->string('uid')->unique();
             $table->unsignedInteger('article_id')->unsigned();
-            $table->string('name');
-            $table->string('imgpublicid')->nullable()->unique();
-            $table->string('imgpath')->unique();
+            $table->string('title')->nullable();
+            $table->string('desc')->nullable();
+            $table->integer('like')->default(0);
+            $table->integer('dislike')->default(0);
+            $table->string('imgpublicid');
+            $table->string('imgpath');
             $table->boolean('status')->default(true);
             $table->timestamps();
 

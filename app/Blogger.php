@@ -19,6 +19,6 @@ class Blogger extends Model
     
     public function articles()
     {
-        return $this->belongsTo('App\Article');
+        return $this->hasMany('App\Article');
     }
 }

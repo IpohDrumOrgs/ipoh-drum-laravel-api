@@ -6,5 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    //
+    
+    public function articleimages()
+    {
+        return $this->hasMany('App\ArticleImage');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
+    public function blogger()
+    {
+        return $this->belongsTo('App\Blogger');
+    }
 }

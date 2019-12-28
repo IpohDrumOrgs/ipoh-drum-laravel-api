@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35cfe8ca-25ce-4ad0-bdff-0fc4734b6903" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/ipoh-drum-laravel-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ipoh-drum-laravel-api.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/InventoryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/InventoryController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/InventoryImageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/InventoryImageController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/InventoryFamily.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/InventoryFamily.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Pattern.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pattern.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Video.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Video.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage/api-docs/api-docs.json" beforeDir="false" afterPath="$PROJECT_DIR$/storage/api-docs/api-docs.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -144,6 +143,17 @@
       <path value="$PROJECT_DIR$/vendor/graham-campbell/manager" />
       <path value="$PROJECT_DIR$/vendor/vimeo/laravel" />
       <path value="$PROJECT_DIR$/vendor/vimeo/vimeo-api" />
+      <path value="$PROJECT_DIR$/vendor/moneyphp/money" />
+      <path value="$PROJECT_DIR$/vendor/dompdf/dompdf" />
+      <path value="$PROJECT_DIR$/vendor/stripe/stripe-php" />
+      <path value="$PROJECT_DIR$/vendor/laravel/cashier" />
+      <path value="$PROJECT_DIR$/vendor/sabberworm/php-css-parser" />
+      <path value="$PROJECT_DIR$/vendor/phenx/php-svg-lib" />
+      <path value="$PROJECT_DIR$/vendor/phenx/php-font-lib" />
+      <path value="$PROJECT_DIR$/vendor/symfony/intl" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/vendor/cartalyst/stripe-laravel" />
+      <path value="$PROJECT_DIR$/vendor/cartalyst/stripe" />
     </include_path>
   </component>
   <component name="ProjectId" id="1TkEqhKqE3A9B98MfEpj6M3ojff" />
@@ -200,6 +210,9 @@
       <workItem from="1577015146988" duration="4088000" />
       <workItem from="1577103649645" duration="4369000" />
       <workItem from="1577119500677" duration="4245000" />
+      <workItem from="1577372380539" duration="275000" />
+      <workItem from="1577373657100" duration="2808000" />
+      <workItem from="1577404182326" duration="4064000" />
     </task>
     <servers />
   </component>

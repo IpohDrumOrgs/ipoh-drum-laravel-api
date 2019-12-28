@@ -18,11 +18,11 @@ class Video extends Model
 
     public function comments()
     {
-        return $this->belongsTo('App\Comment');
+        return $this->hasMany('App\Comment');
     }
 
     public function images()
     {
-        return $this->belongsTo('App\VideoImage');
+        return $this->hasMany('App\VideoImage');
     }
 }

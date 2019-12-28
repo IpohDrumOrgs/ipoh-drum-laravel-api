@@ -89,12 +89,12 @@ trait VideoServices {
     }
 
     private function getVideo($uid) {
-        $data = Video::where('uid', $uid)->where('status', 1)->first();
+        $data = Video::where('uid', $uid)->with('channel', 'comments.secondcomments')->where('status', 1)->first();
         return $data;
     }
 
     private function getVideoById($id) {
-        $data = Video::where('id', $id)->where('status', 1)->first();
+        $data = Video::where('id', $id)->with('channel', 'comments.secondcomments')->where('status', 1)->first();
         return $data;
     }
 

@@ -4,9 +4,26 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/** @OA\Schema(
+ *     title="Article"
+ * )
+ */
 class Article extends Model
 {
-    
+    /** @OA\Property(property="id", type="integer"),
+     * @OA\Property(property="blogger_id", type="integer"),
+     * @OA\Property(property="uid", type="string"),
+     * @OA\Property(property="title", type="string"),
+     * @OA\Property(property="desc", type="string"),
+     * @OA\Property(property="view", type="integer"),
+     * @OA\Property(property="like", type="integer"),
+     * @OA\Property(property="dislike", type="integer"),
+     * @OA\Property(property="scope", type="string"),
+     * @OA\Property(property="agerestrict", type="integer"),
+     * @OA\Property(property="status", type="integer"),
+     * @OA\Property(property="created_at", type="string"),
+     * @OA\Property(property="updated_at", type="string"),
+     */
     public function articleimages()
     {
         return $this->hasMany('App\ArticleImage');

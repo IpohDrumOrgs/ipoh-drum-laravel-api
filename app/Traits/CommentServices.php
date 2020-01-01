@@ -197,7 +197,7 @@ trait CommentServices {
     private function getCommentsByArticle($article) {
 
         $data = collect();
-        $data = $data->merge($article->comments()->where('status',true)->get());
+        $data = $data->merge($article->comments()->with('secondcomments')->where('status',true)->get());
         $data = $data->unique('id')->sortBy('id')->flatten(1);
 
         return $data;

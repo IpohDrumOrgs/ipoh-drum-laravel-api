@@ -89,12 +89,12 @@ trait ArticleServices {
     }
 
     private function getArticle($uid) {
-        $data = Article::where('uid', $uid)->with('blogger', 'comments.secondcomments', 'articleimages')->where('status', 1)->first();
+        $data = Article::where('uid', $uid)->with('blogger', 'articleimages')->where('status', 1)->first();
         return $data;
     }
 
     private function getArticleById($id) {
-        $data = Article::where('id', $id)->with('blogger', 'comments.secondcomments', 'articleimages')->where('status', 1)->first();
+        $data = Article::where('id', $id)->with('blogger', 'articleimages')->where('status', 1)->first();
         return $data;
     }
 

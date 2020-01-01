@@ -24,6 +24,7 @@ class CreateArticleImagesTable extends Migration
             $table->string('imgpublicid');
             $table->string('imgpath');
             $table->boolean('status')->default(true);
+            $table->boolean('coverimage')->default(false);
             $table->timestamps();
 
             $table->foreign('article_id')

@@ -179,4 +179,14 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Channel');
     }
+    
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+    
+    public function secondcomments()
+    {
+        return $this->hasMany('App\SecondComment');
+    }
 }

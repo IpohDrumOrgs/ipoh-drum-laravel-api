@@ -15,6 +15,7 @@ class CreateSecondCommentsTable extends Migration
     {
         Schema::create('second_comments', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('user_id')->unsigned()->nullable();
             $table->unsignedInteger('comment_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('text');
@@ -31,6 +32,11 @@ class CreateSecondCommentsTable extends Migration
             ->onUpdate('cascade')
             ->onDelete('restrict');
 
+            $table->foreign('user_id')
+            ->references('id')
+            ->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
         });
     }
 

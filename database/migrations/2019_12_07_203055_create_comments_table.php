@@ -16,6 +16,7 @@ class CreateCommentsTable extends Migration
         Schema::create('comments', function (Blueprint $table) {
             
             $table->increments('id');
+            $table->unsignedInteger('user_id')->unsigned()->nullable();
             $table->unsignedInteger('video_id')->unsigned()->nullable();
             $table->unsignedInteger('article_id')->unsigned()->nullable();
             $table->unsignedInteger('article_image_id')->unsigned()->nullable();
@@ -44,6 +45,12 @@ class CreateCommentsTable extends Migration
             $table->foreign('article_image_id')
             ->references('id')
             ->on('article_images')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+
+            $table->foreign('user_id')
+            ->references('id')
+            ->on('users')
             ->onUpdate('cascade')
             ->onDelete('restrict');
         });

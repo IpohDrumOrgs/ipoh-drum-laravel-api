@@ -11,11 +11,12 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\ArticleServices;
+use App\Traits\CommentServices;
 use App\Traits\LogServices;
 
 class ArticleController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, ArticleServices, LogServices;
+    use GlobalFunctions, NotificationFunctions, ArticleServices, LogServices , CommentServices;
 
     private $controllerName = '[ArticleController]';
     /**
@@ -528,6 +529,59 @@ class ArticleController extends Controller
             return $this->errorPaginateResponse('Articles');
         } else {
             return $this->successPaginateResponse('Articles', $articles, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+      
+    /**
+     * @OA\Get(
+     *   tags={"ArticleControllerService"},
+     *   path="/api/public/article/{uid}/comments",
+     *   summary="Retrieves all public comments.",
+     *     operationId="getPublicCommentsListing",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Article ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Comments has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the comments."
+     *   )
+     * )
+     */
+    public function getArticleComments(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving article comments listing');
+        $article = $this->getArticle($uid);
+        if ($this->isEmpty($article)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Article');
+        }
+
+        $comments = $this->getCommentsByArticle($article);
+
+        if ($this->isEmpty($comments)) {
+            return $this->errorPaginateResponse('Comments');
+        } else {
+            return $this->successPaginateResponse('Comments', $comments, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 }

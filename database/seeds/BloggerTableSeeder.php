@@ -129,6 +129,7 @@ class BloggerTableSeeder extends Seeder
             $comment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
 
             $comment->article()->associate(Article::find(3));
+            $comment->user()->associate(User::find($faker->numberBetween($min = 1, $max = 20)));
             $comment->save();
             
         }
@@ -141,6 +142,7 @@ class BloggerTableSeeder extends Seeder
             $scomment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
 
             $scomment->comment()->associate(Comment::find($faker->randomElement([1,2,3,4,5])));
+            $scomment->user()->associate(User::find($faker->numberBetween($min = 1, $max = 20)));
             $scomment->save();
         }
     }

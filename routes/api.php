@@ -115,6 +115,9 @@ Route::group(['middleware' => ['auth:api']], function (){
     
     // ========================== Channel Related Route =========================================================
 
+    Route::resource('comment', 'API\CommentController');
+    Route::get('/filter/comment', 'API\CommentController@filter');
+
     Route::resource('channel', 'API\ChannelController');
     Route::get('/filter/channel', 'API\ChannelController@filter');
 
@@ -144,6 +147,7 @@ Route::get('/public/video/{uid}', 'API\VideoController@getPublicVideo');
 
 Route::get('/public/articles', 'API\ArticleController@getPublicArticles');
 Route::get('/public/article/{uid}', 'API\ArticleController@getPublicArticle');
+Route::get('/public/article/{uid}/comments', 'API\ArticleController@getArticleComments');
 
 
 // TODO: Test upload image

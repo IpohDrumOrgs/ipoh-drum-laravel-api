@@ -197,7 +197,15 @@ trait ArticleServices {
 
     private function getAllArticles() {
         
-        $data = Article::where('status', true)->get();
+        $data = Article::where('status', true)->with('articleimages','blogger')->get();
+
+        return $data;
+    }
+
+    
+    private function setCommentCount($data) {
+        
+        $data->commentcount = $data->comments()->count();
 
         return $data;
     }

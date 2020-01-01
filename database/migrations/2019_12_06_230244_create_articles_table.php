@@ -16,6 +16,7 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('blogger_id')->unsigned();
+            $table->unsignedInteger('cover_image_id')->unsigned();
             $table->string('uid')->unique();
             $table->string('title');
             $table->string('desc')->nullable();
@@ -31,6 +32,12 @@ class CreateArticlesTable extends Migration
             $table->foreign('blogger_id')
             ->references('id')
             ->on('bloggers')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+            
+            $table->foreign('cover_image_id')
+            ->references('id')
+            ->on('article_images')
             ->onUpdate('cascade')
             ->onDelete('restrict');
         });

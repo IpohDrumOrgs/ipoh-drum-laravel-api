@@ -519,6 +519,9 @@ class ArticleController extends Controller
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $articles = $this->filterArticles($articles , $params);
+        $articles->map(function($item){
+            return $this->setCommentCount($item);
+        });
 
         if ($this->isEmpty($articles)) {
             return $this->errorPaginateResponse('Articles');

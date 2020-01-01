@@ -9278,6 +9278,162 @@
                     },
                     "updated_at": {
                         "type": "string"
+                    },
+                    "commentcount": {
+                        "type": "integer"
+                    },
+                    "articleimages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ArticleImage"
+                        }
+                    },
+                    "store": {
+                        "$ref": "#/components/schemas/Blogger"
+                    },
+                    "comments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Comment"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ArticleImage": {
+                "title": "ArticleImage",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "article_id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "like": {
+                        "type": "integer"
+                    },
+                    "dislike": {
+                        "type": "integer"
+                    },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Blogger": {
+                "title": "Blogger",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "company_id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
+                    "tel1": {
+                        "type": "string"
+                    },
+                    "companyBelongings": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Comment": {
+                "title": "Comment",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "video_id": {
+                        "type": "integer"
+                    },
+                    "article_id": {
+                        "type": "integer"
+                    },
+                    "article_image_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
+                    "like": {
+                        "type": "integer"
+                    },
+                    "dislike": {
+                        "type": "integer"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
                     }
                 },
                 "type": "object"

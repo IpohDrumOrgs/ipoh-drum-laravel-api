@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Article extends Model
 {
-    
+
     /** @OA\Property(property="id", type="integer"),
      * @OA\Property(property="blogger_id", type="integer"),
      * @OA\Property(property="uid", type="string"),
@@ -24,6 +24,22 @@ class Article extends Model
      * @OA\Property(property="status", type="integer"),
      * @OA\Property(property="created_at", type="string"),
      * @OA\Property(property="updated_at", type="string"),
+     * @OA\Property(property="commentcount", type="integer"),
+     * @OA\Property(
+     *     property="articleimages",
+     *      type="array",
+     *      @OA\Items(
+     *          ref="#/components/schemas/ArticleImage"
+     *      )
+     * ),
+     * @OA\Property(property="store", ref="#/components/schemas/Blogger"),
+     *      * @OA\Property(
+     *     property="comments",
+     *      type="array",
+     *      @OA\Items(
+     *          ref="#/components/schemas/Comment"
+     *      )
+     * ),
      */
     public function articleimages()
     {
@@ -39,7 +55,7 @@ class Article extends Model
     {
         return $this->belongsTo('App\Blogger');
     }
-    
+
     public function coverimage()
     {
         return $this->hasOne('App\ArticleImage', 'cover_image_id');

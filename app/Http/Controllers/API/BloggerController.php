@@ -21,7 +21,7 @@ class BloggerController extends Controller
     /**
      * @OA\Get(
      *      path="/api/blogger",
-     *      operationId="getBloggerList",
+     *      operationId="getBloggers",
      *      tags={"BloggerControllerService"},
      *      summary="Get list of bloggers",
      *      description="Returns list of bloggers",
@@ -61,7 +61,7 @@ class BloggerController extends Controller
     /**
      * @OA\Get(
      *      path="/api/filter/blogger",
-     *      operationId="filterBloggerList",
+     *      operationId="filterBloggers",
      *      tags={"BloggerControllerService"},
      *      summary="Filter list of bloggers",
      *      description="Returns list of filtered bloggers",
@@ -176,14 +176,6 @@ class BloggerController extends Controller
      *   summary="Creates a blogger.",
      *   operationId="createBlogger",
      * @OA\Parameter(
-     * name="user_id",
-     * in="query",
-     * description="Blogger belongs to which user",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
      * name="company_id",
      * in="query",
      * description="Blogger belongs to which company",
@@ -212,14 +204,6 @@ class BloggerController extends Controller
      * name="email",
      * in="query",
      * description="Blogger Email",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="tel1",
-     * in="query",
-     * description="Blogger telephone",
      * @OA\Schema(
      *              type="string"
      *          )
@@ -256,7 +240,7 @@ class BloggerController extends Controller
      *   )
      * )
      */
-    public function blogger(Request $request)
+    public function store(Request $request)
     {
         $proccessingimgids = collect();
         DB::beginTransaction();
@@ -269,7 +253,7 @@ class BloggerController extends Controller
         ]);
         error_log('Creating blogger.');
         $params = collect([
-            'user_id' => $request->user_id,
+            'user_id' => $request->user()->id,
             'company_id' => $request->company_id,
             'name' => $request->name,
             'desc' => $request->desc,

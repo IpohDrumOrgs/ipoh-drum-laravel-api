@@ -51,7 +51,7 @@ class ArticleController extends Controller
     {
         error_log($this->controllerName.'Retrieving list of articles.');
         // api/article (GET)
-        $articles = $this->getArticleListing($request->article());
+        $articles = $this->getArticles($request->user());
         if ($this->isEmpty($articles)) {
             return $this->errorPaginateResponse('Articles');
         } else {
@@ -130,7 +130,7 @@ class ArticleController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $articles = $this->filterArticleListing($request->article(), $params);
+        $articles = $this->filterArticleListing($request->user(), $params);
 
         if ($this->isEmpty($articles)) {
             return $this->errorPaginateResponse('Articles');
@@ -261,7 +261,7 @@ class ArticleController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $article = $this->createArticle($request->article(), $params);
+        $article = $this->createArticle($request->user(), $params);
 
         if ($this->isEmpty($article)) {
             DB::rollBack();
@@ -363,7 +363,7 @@ class ArticleController extends Controller
         DB::beginTransaction();
         // api/article/{articleid} (PUT)
         error_log($this->controllerName.'Updating article of uid: ' . $uid);
-        $article = $this->getArticle($request->article(), $uid);
+        $article = $this->getArticle($request->user(), $uid);
         $this->validate($request, [
             'email' => 'required|string|max:191|unique:articles,email,' . $article->id,
             'name' => 'required|string|max:191',
@@ -387,7 +387,7 @@ class ArticleController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $article = $this->updateArticle($request->article(), $article, $params);
+        $article = $this->updateArticle($request->user(), $article, $params);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->errorResponse();
@@ -426,12 +426,12 @@ class ArticleController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/article/{articleid} (DELETE)
         error_log($this->controllerName.'Deleting article of uid: ' . $uid);
-        $article = $this->getArticle($request->article(), $uid);
+        $article = $this->getArticle($request->user(), $uid);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->notFoundResponse('Article');
         }
-        $article = $this->deleteArticle($request->article(), $article->id);
+        $article = $this->deleteArticle($request->user(), $article->id);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->errorResponse();

@@ -499,14 +499,6 @@
                 "operationId": "createBlogger",
                 "parameters": [
                     {
-                        "name": "user_id",
-                        "in": "query",
-                        "description": "Blogger belongs to which user",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
                         "name": "company_id",
                         "in": "query",
                         "description": "Blogger belongs to which company",
@@ -535,14 +527,6 @@
                         "name": "email",
                         "in": "query",
                         "description": "Blogger Email",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tel1",
-                        "in": "query",
-                        "description": "Blogger telephone",
                         "schema": {
                             "type": "string"
                         }

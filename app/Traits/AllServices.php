@@ -11,9 +11,13 @@ use App\Traits\ImageHostingServices;
 use App\Traits\VideoHostingServices;
 
 //Model Services
+use App\Traits\ArticleServices;
+use App\Traits\BloggerServices;
 use App\Traits\CategoryServices;
+use App\Traits\CommentServices;
 use App\Traits\CompanyServices;
 use App\Traits\CompanyTypeServices;
+use App\Traits\ChannelServices;
 use App\Traits\GroupServices;
 use App\Traits\InventoryFamilyServices;
 use App\Traits\InventoryServices;
@@ -45,9 +49,13 @@ trait AllServices {
     ImageHostingServices, 
     NotificationFunctions, 
 
+    ArticleServices,
+    BloggerServices,
     CategoryServices, 
+    CommentServices,
     CompanyServices, 
     CompanyTypeServices, 
+    ChannelServices,
     GroupServices, 
     InventoryFamilyServices, 
     InventoryServices, 

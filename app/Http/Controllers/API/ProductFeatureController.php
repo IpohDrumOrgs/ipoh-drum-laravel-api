@@ -446,7 +446,8 @@ class ProductFeatureController extends Controller
             return $this->calculatePromotionPrice($item);
         });
         $tickets = $this->itemsPluckCols($tickets , $this->ticketDefaultCols());
-
+        $tickets = json_decode(json_encode($tickets));
+        
         $mergeddata = collect();
         $mergeddata = $mergeddata->merge($inventories);
         $mergeddata = $mergeddata->merge($tickets);

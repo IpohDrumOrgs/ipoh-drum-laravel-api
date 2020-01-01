@@ -101,7 +101,6 @@ trait BloggerServices {
         $data->uid = Carbon::now()->timestamp . Blogger::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
-        $data->tel1 = $params->tel1;
         $data->email = $params->email;
         $data->companyBelongings = $params->companyBelongings;
         $data->status = true;

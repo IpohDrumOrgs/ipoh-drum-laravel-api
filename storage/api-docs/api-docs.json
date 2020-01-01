@@ -22,7 +22,7 @@
                 ],
                 "summary": "Get list of articles",
                 "description": "Returns list of articles",
-                "operationId": "getArticleList",
+                "operationId": "getArticles",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -119,7 +119,7 @@
                 ],
                 "summary": "Filter list of articles",
                 "description": "Returns list of filtered articles",
-                "operationId": "filterArticleList",
+                "operationId": "filterArticles",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -383,7 +383,7 @@
                     "ArticleControllerService"
                 ],
                 "summary": "Retrieves all public articles.",
-                "operationId": "getPublicArticlesListing",
+                "operationId": "getPublicArticles",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -418,7 +418,7 @@
                     "ArticleControllerService"
                 ],
                 "summary": "Retrieves all public comments.",
-                "operationId": "getPublicCommentsListing",
+                "operationId": "getPublicComments",
                 "parameters": [
                     {
                         "name": "uid",
@@ -463,7 +463,7 @@
                 ],
                 "summary": "Get list of bloggers",
                 "description": "Returns list of bloggers",
-                "operationId": "getBloggerList",
+                "operationId": "getBloggers",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -577,7 +577,7 @@
                 ],
                 "summary": "Filter list of bloggers",
                 "description": "Returns list of filtered bloggers",
-                "operationId": "filterBloggerList",
+                "operationId": "filterBloggers",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -1048,7 +1048,7 @@
                 ],
                 "summary": "Get list of comments",
                 "description": "Returns list of comments",
-                "operationId": "getCommentList",
+                "operationId": "getComments",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -1145,7 +1145,7 @@
                 ],
                 "summary": "Filter list of comments",
                 "description": "Returns list of filtered comments",
-                "operationId": "filterCommentList",
+                "operationId": "filterComments",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -3020,7 +3020,7 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
                     "InventoryImageControllerService"
                 ],
@@ -7533,7 +7533,7 @@
                 ],
                 "summary": "Get list of users",
                 "description": "Returns list of users",
-                "operationId": "getUserList",
+                "operationId": "getUsers",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -7630,7 +7630,7 @@
                 ],
                 "summary": "Filter list of users",
                 "description": "Returns list of filtered users",
-                "operationId": "filterUserList",
+                "operationId": "filterUsers",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -9748,6 +9748,9 @@
                     },
                     "updated_at": {
                         "type": "string"
+                    },
+                    "company": {
+                        "$ref": "#/components/schemas/Company"
                     }
                 },
                 "type": "object"

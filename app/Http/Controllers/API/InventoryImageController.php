@@ -257,7 +257,7 @@ class InventoryImageController extends Controller
 
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *   tags={"InventoryImageControllerService"},
      *   path="/api/inventoryimage/{uid}",
      *   summary="Update inventoryimage by Uid.",

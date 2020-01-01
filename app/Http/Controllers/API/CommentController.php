@@ -22,7 +22,7 @@ class CommentController extends Controller
     /**
      * @OA\Get(
      *      path="/api/comment",
-     *      operationId="getCommentList",
+     *      operationId="getComments",
      *      tags={"CommentControllerService"},
      *      summary="Get list of comments",
      *      description="Returns list of comments",
@@ -51,7 +51,7 @@ class CommentController extends Controller
     {
         error_log($this->controllerName.'Retrieving list of comments.');
         // api/comment (GET)
-        $comments = $this->getCommentListing($request->comment());
+        $comments = $this->getComments($request->comment());
         if ($this->isEmpty($comments)) {
             return $this->errorPaginateResponse('Comments');
         } else {
@@ -62,7 +62,7 @@ class CommentController extends Controller
     /**
      * @OA\Get(
      *      path="/api/filter/comment",
-     *      operationId="filterCommentList",
+     *      operationId="filterComments",
      *      tags={"CommentControllerService"},
      *      summary="Filter list of comments",
      *      description="Returns list of filtered comments",
@@ -130,7 +130,7 @@ class CommentController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $comments = $this->filterCommentListing($request->comment(), $params);
+        $comments = $this->filterComments($request->comment(), $params);
 
         if ($this->isEmpty($comments)) {
             return $this->errorPaginateResponse('Comments');

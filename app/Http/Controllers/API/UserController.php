@@ -21,7 +21,7 @@ class UserController extends Controller
     /**
      * @OA\Get(
      *      path="/api/user",
-     *      operationId="getUserList",
+     *      operationId="getUsers",
      *      tags={"UserControllerService"},
      *      summary="Get list of users",
      *      description="Returns list of users",
@@ -50,7 +50,7 @@ class UserController extends Controller
     {
         error_log($this->controllerName.'Retrieving list of users.');
         // api/user (GET)
-        $users = $this->getUserListing($request->user());
+        $users = $this->getUsers($request->user());
         if ($this->isEmpty($users)) {
             return $this->errorPaginateResponse('Users');
         } else {
@@ -61,7 +61,7 @@ class UserController extends Controller
     /**
      * @OA\Get(
      *      path="/api/filter/user",
-     *      operationId="filterUserList",
+     *      operationId="filterUsers",
      *      tags={"UserControllerService"},
      *      summary="Filter list of users",
      *      description="Returns list of filtered users",
@@ -129,7 +129,7 @@ class UserController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $users = $this->filterUserListing($request->user(), $params);
+        $users = $this->filterUsers($request->user(), $params);
 
         if ($this->isEmpty($users)) {
             return $this->errorPaginateResponse('Users');

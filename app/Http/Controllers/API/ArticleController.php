@@ -22,7 +22,7 @@ class ArticleController extends Controller
     /**
      * @OA\Get(
      *      path="/api/article",
-     *      operationId="getArticleList",
+     *      operationId="getArticles",
      *      tags={"ArticleControllerService"},
      *      summary="Get list of articles",
      *      description="Returns list of articles",
@@ -62,7 +62,7 @@ class ArticleController extends Controller
     /**
      * @OA\Get(
      *      path="/api/filter/article",
-     *      operationId="filterArticleList",
+     *      operationId="filterArticles",
      *      tags={"ArticleControllerService"},
      *      summary="Filter list of articles",
      *      description="Returns list of filtered articles",
@@ -130,7 +130,7 @@ class ArticleController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $articles = $this->filterArticleListing($request->user(), $params);
+        $articles = $this->filterArticles($request->user(), $params);
 
         if ($this->isEmpty($articles)) {
             return $this->errorPaginateResponse('Articles');
@@ -487,7 +487,7 @@ class ArticleController extends Controller
      *   tags={"ArticleControllerService"},
      *   path="/api/public/articles",
      *   summary="Retrieves all public articles.",
-     *     operationId="getPublicArticlesListing",
+     *     operationId="getPublicArticles",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
@@ -537,7 +537,7 @@ class ArticleController extends Controller
      *   tags={"ArticleControllerService"},
      *   path="/api/public/article/{uid}/comments",
      *   summary="Retrieves all public comments.",
-     *     operationId="getPublicCommentsListing",
+     *     operationId="getPublicComments",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

@@ -123,7 +123,7 @@ class BloggerController extends Controller
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $bloggers = $this->getBloggers($request->user());
-        $bloggers = $this->filterBloggerListing($request->user(), $params);
+        $bloggers = $this->filterBloggers($request->user(), $params);
 
         if ($this->isEmpty($bloggers)) {
             return $this->errorPaginateResponse('Bloggers');
@@ -408,12 +408,11 @@ class BloggerController extends Controller
         }
         
         $params = collect([
-            'user_id' => $request->user_id,
+            'user_id' => $request->user()->id,
             'company_id' => $request->company_id,
             'name' => $request->name,
             'desc' => $request->desc,
             'email' => $request->email,
-            'tel1' => $request->tel1,
             'companyBelongings' => $request->companyBelongings,
         ]);
 

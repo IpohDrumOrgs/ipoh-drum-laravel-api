@@ -105,6 +105,18 @@ class BloggerTableSeeder extends Seeder
             $comment->article()->associate(Article::find(1));
             $comment->save();
             
+            for($a = 0 ; $a < 2 ; $a++){
+                $scomment = new SecondComment();
+                $scomment->uid = Carbon::now()->timestamp . SecondComment::count();
+                $scomment->text = $faker->sentence;
+                $scomment->like =  $faker->numberBetween($min = 1000, $max = 100000);
+                $scomment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
+
+                $scomment->comment()->associate($comment);
+                $scomment->user()->associate(User::find($faker->numberBetween($min = 1, $max = 20)));
+                $scomment->save();
+            }
+            
         }
 
         for($z = 0 ; $z < 10 ; $z++){
@@ -117,6 +129,17 @@ class BloggerTableSeeder extends Seeder
 
             $comment->article()->associate(Article::find(2));
             $comment->save();
+            for($a = 0 ; $a < 2 ; $a++){
+                $scomment = new SecondComment();
+                $scomment->uid = Carbon::now()->timestamp . SecondComment::count();
+                $scomment->text = $faker->sentence;
+                $scomment->like =  $faker->numberBetween($min = 1000, $max = 100000);
+                $scomment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
+
+                $scomment->comment()->associate($comment);
+                $scomment->user()->associate(User::find($faker->numberBetween($min = 1, $max = 20)));
+                $scomment->save();
+            }
             
         }
         
@@ -132,18 +155,19 @@ class BloggerTableSeeder extends Seeder
             $comment->user()->associate(User::find($faker->numberBetween($min = 1, $max = 20)));
             $comment->save();
             
+            for($a = 0 ; $a < 2 ; $a++){
+                $scomment = new SecondComment();
+                $scomment->uid = Carbon::now()->timestamp . SecondComment::count();
+                $scomment->text = $faker->sentence;
+                $scomment->like =  $faker->numberBetween($min = 1000, $max = 100000);
+                $scomment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
+
+                $scomment->comment()->associate($comment);
+                $scomment->user()->associate(User::find($faker->numberBetween($min = 1, $max = 20)));
+                $scomment->save();
+            }
+            
         }
 
-        for($a = 0 ; $a < 50 ; $a++){
-            $scomment = new SecondComment();
-            $scomment->uid = Carbon::now()->timestamp . SecondComment::count();
-            $scomment->text = $faker->sentence;
-            $scomment->like =  $faker->numberBetween($min = 1000, $max = 100000);
-            $scomment->dislike =  $faker->numberBetween($min = 1000, $max = 100000);
-
-            $scomment->comment()->associate(Comment::find($faker->randomElement([1,2,3,4,5])));
-            $scomment->user()->associate(User::find($faker->numberBetween($min = 1, $max = 20)));
-            $scomment->save();
-        }
     }
 }

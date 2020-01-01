@@ -470,6 +470,7 @@ class ArticleController extends Controller
     {
         error_log($this->controllerName.'Retrieving public articles listing');
         $article = $this->getArticle($uid);
+        $article = $this->setCommentCount($article);
        
         if ($this->isEmpty($article) && $article->scope != "public") {
             $data['data'] = null;

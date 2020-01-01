@@ -9237,6 +9237,51 @@
     },
     "components": {
         "schemas": {
+            "Article": {
+                "title": "Article",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "blogger_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "view": {
+                        "type": "integer"
+                    },
+                    "like": {
+                        "type": "integer"
+                    },
+                    "dislike": {
+                        "type": "integer"
+                    },
+                    "scope": {
+                        "type": "string"
+                    },
+                    "agerestrict": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "Company": {
                 "title": "Company",
                 "properties": {

@@ -215,40 +215,7 @@ trait InventoryImageServices {
     }
 
 
-    //Relationship Associating
-    //===============================================================================================================================================================================
-    public function associateImageWithInventoryImage($data, $params)
-    {
-        
-        $params = $this->checkUndefinedProperty($params , $this->inventoryimageImageDefaultCols());
-
-        $image = new InventoryImageImage();
-        $image->uid = Carbon::now()->timestamp . InventoryImageImage::count();
-        $image->name = $params->name;
-        $image->desc = $params->desc;
-        $image->imgpath = $params->imgurl;
-        $image->imgpublicid = $params->publicid;
-        $image->inventoryimage()->associate($data);
-        if($this->saveModel($image)){
-            return $image->refresh();
-        }else{
-            return null;
-        }
-    }
-
-    public function associateInventoryImageFamilyWithInventoryImage($data, $params)
-    {
-        
-        $inventoryimagefamily = $this->createInventoryImageFamily($params);
-        $inventoryimagefamily->inventoryimage()->associate($data);
-        if($this->saveModel($inventoryimagefamily)){
-            return $inventoryimagefamily;
-        }else{
-            return null;
-        }
-    }
-
-    
+  
     //Relationship Deassociating
     //===============================================================================================================================================================================
     
@@ -270,39 +237,6 @@ trait InventoryImageServices {
 
     }
     
-    public function calculatePromotionPrice($data) {
-        if(isset($data->promotion)){
-            if(!$this->isEmpty($data->promotion)){
-                if($data->promotion->discbyprice){
-                    $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
-                }else{
-                    $data->promoprice =  $this->toDouble($data->price - ($data->price * $data->promotion->discpctg));
-                }
-                
-                if($data->price != 0){
-                    $data->promopctg = $this->toDouble($data->promoprice / $data->price ) * 100;
-                }else{
-                    $data->promopctg = 0;
-                }
-            }
-    
-        }
-
-        return $data;
-    }
-    
-    public function countProductReviews($data) {
-        if(isset($data->reviews)){
-            if(!$this->isEmpty($data->reviews)){
-                $data->totalproductreview = collect($data->reviews)->count();
-            }else{
-                $data->totalproductreview = 0;
-            }
-
-        }
-
-        return $data;
-    }
 
     
 

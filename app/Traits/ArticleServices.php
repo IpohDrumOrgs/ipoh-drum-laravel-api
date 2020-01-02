@@ -136,13 +136,12 @@ trait ArticleServices {
     private function updateArticle($data,  $params) {
         
         $params = $this->checkUndefinedProperty($params , $this->articleAllCols());
-        $data->uid = Carbon::now()->timestamp . Article::count();
         $data->title = $params->title;
         $data->desc = $params->desc;
         if($params->scope == 'private'){
             $data->scope = $params->scope;
         }else{
-            $data->scope = 'publric';
+            $data->scope = 'public';
         }
         $data->agerestrict = false;
 

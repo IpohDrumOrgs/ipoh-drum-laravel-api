@@ -256,19 +256,15 @@ trait InventoryImageServices {
 
     //Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
-    public function inventoryimageDefaultCols() {
-
-        return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'reviews','inventoryimagefamilies'];
-
-    }
     
-    public function inventoryimageImageDefaultCols() {
+    
+    public function inventoryImageDefaultCols() {
 
         return ['id','uid', 'inventoryimage_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
 
     }
 
-    public function inventoryimageAllCols() {
+    public function inventoryImageAllCols() {
 
         return ['id','store_id', 'product_promotion_id', 'shipping_id' ,'warranty_id', 'uid', 'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 'cost' , 'price' , 'qty','promoendqty','salesqty','stockthreshold','status','onsale'];
 

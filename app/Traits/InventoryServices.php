@@ -310,12 +310,6 @@ trait InventoryServices {
         return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'reviews','inventoryfamilies'];
 
     }
-    
-    public function inventoryImageDefaultCols() {
-
-        return ['id','uid', 'inventory_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
-
-    }
 
     public function inventoryAllCols() {
 

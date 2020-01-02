@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\ArticleServices;
+use App\Traits\ArticleImageServices;
 use App\Traits\CommentServices;
 use App\Traits\LogServices;
 
 class ArticleController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, ArticleServices, LogServices , CommentServices;
+    use GlobalFunctions, NotificationFunctions, ArticleServices, ArticleImageServices, LogServices , CommentServices;
 
     private $controllerName = '[ArticleController]';
     /**
@@ -130,7 +131,7 @@ class ArticleController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $articles = $this->filterArticles($request->user(), $params);
+        $articles = $this->filterArticles($articles, $params);
 
         if ($this->isEmpty($articles)) {
             return $this->errorPaginateResponse('Articles');
@@ -182,49 +183,52 @@ class ArticleController extends Controller
      *   summary="Creates a article.",
      *   operationId="createArticle",
      * @OA\Parameter(
-     * name="name",
+     * name="blogger_id",
      * in="query",
-     * description="Articlename",
+     * description="Article belongs To which Blogger",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="title",
+     * in="query",
+     * description="Article title",
      * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="email",
+     * name="desc",
      * in="query",
-     * description="Email",
-     * required=true,
+     * description="Article description",
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="password",
+     * name="scope",
      * in="query",
-     * description="Password",
-     * required=true,
+     * description="Is this article public?",
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
-     * @OA\Parameter(
-     * name="password_confirmation",
-     * in="query",
-     * description="Password Confirmation",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="country",
-     * in="query",
-     * description="Country",
-     * @OA\Schema(
-     *  type="string"
-     *  )
-     * ),
+     * 	@OA\RequestBody(
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="imgs[]",
+*                      description="Article Images",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
      *   @OA\Response(
      *     response=200,
      *     description="Article has been created successfully."
@@ -237,39 +241,69 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        $proccessingimgids = collect();
         DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/article (POST)
         $this->validate($request, [
-            'email' => 'nullable|string|email|max:191|unique:articles',
-            'password' => 'required|string|min:6|confirmed',
+            'title' => 'required|string',
+            'blogger_id' => 'required|numeric',
         ]);
         error_log($this->controllerName.'Creating article.');
         $params = collect([
-            'icno' => $request->icno,
-            'name' => $request->name,
-            'email' => $request->email,
-            'tel1' => $request->tel1,
-            'tel2' => $request->tel2,
-            'address1' => $request->address1,
-            'address2' => $request->address2,
-            'postcode' => $request->postcode,
-            'state' => $request->state,
-            'city' => $request->city,
-            'country' => $request->country,
-            'password' => $request->password,
+            'blogger_id' => $request->blogger_id,
+            'title' => $request->title,
+            'desc' => $request->desc,
+            'scope' => $request->scope,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $article = $this->createArticle($request->user(), $params);
-
+        $article = $this->createArticle($params);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->errorResponse();
-        } else {
-            DB::commit();
-            return $this->successResponse('Article', $article, 'create');
         }
+
+        $count = 0;
+        if($request->file('imgs') != null){
+            error_log('Article Images Is Detected');
+            $imgs = $request->file('imgs');
+            foreach($imgs as $img){
+                error_log('Inside img');
+                $count++;
+                if($count > 6){
+                    break;
+                }
+                $img = $this->uploadImage($img , "/Article/". $article->uid . "/imgs");
+                error_log(collect($img));
+                if(!$this->isEmpty($img)){
+                    $proccessingimgids->push($img->publicid);
+
+                    //Attach Image to ArticleImage
+                    $params = collect([
+                        'imgpath' => $img->imgurl,
+                        'imgpublicid' => $img->publicid,
+                        'article_id' => $article->id,
+                    ]);
+                    $params = json_decode(json_encode($params));
+                    $articleimage = $this->createArticleImage($params);
+                    if($this->isEmpty($articleimage)){
+                        error_log('error here1');
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                }else{
+                    error_log('error here3');
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }
+        }
+
+        DB::commit();
+        return $this->successResponse('Article', $article, 'create');
     }
 
     /**
@@ -285,69 +319,40 @@ class ArticleController extends Controller
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
-     *   @OA\Parameter(
-     *     name="name",
-     *     in="query",
-     *     description="Articlename.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="email",
-     *     in="query",
-     *     description="Email.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="tel1",
-     *     in="query",
-     *     description="Telephone Number #1.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="address1",
-     *     in="query",
-     *     description="Address #1.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="city",
-     *     in="query",
-     *     description="City.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="postcode",
-     *     in="query",
-     *     description="PostCode.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="state",
-     *     in="query",
-     *     description="State.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="country",
-     *     in="query",
-     *     description="Country.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="icno",
-     *     in="query",
-     *     description="IC Number.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *     ),
+     * @OA\Parameter(
+     * name="blogger_id",
+     * in="query",
+     * description="Article belongs To which Blogger",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="title",
+     * in="query",
+     * description="Article title",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="desc",
+     * in="query",
+     * description="Article description",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="scope",
+     * in="query",
+     * description="Is this article public?",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Article has been updated successfully."
@@ -363,31 +368,24 @@ class ArticleController extends Controller
         DB::beginTransaction();
         // api/article/{articleid} (PUT)
         error_log($this->controllerName.'Updating article of uid: ' . $uid);
-        $article = $this->getArticle($request->user(), $uid);
         $this->validate($request, [
-            'email' => 'required|string|max:191|unique:articles,email,' . $article->id,
-            'name' => 'required|string|max:191',
+            'title' => 'required|string',
+            'blogger_id' => 'required|numeric',
         ]);
+        $article = $this->getArticle($uid);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->notFoundResponse('Article');
         }
         $params = collect([
-            'icno' => $request->icno,
-            'name' => $request->name,
-            'email' => $request->email,
-            'tel1' => $request->tel1,
-            'tel2' => $request->tel2,
-            'address1' => $request->address1,
-            'address2' => $request->address2,
-            'postcode' => $request->postcode,
-            'state' => $request->state,
-            'city' => $request->city,
-            'country' => $request->country,
+            'blogger_id' => $request->blogger_id,
+            'title' => $request->title,
+            'desc' => $request->desc,
+            'scope' => $request->scope,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $article = $this->updateArticle($request->user(), $article, $params);
+        $article = $this->updateArticle($article, $params);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->errorResponse();
@@ -426,12 +424,12 @@ class ArticleController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/article/{articleid} (DELETE)
         error_log($this->controllerName.'Deleting article of uid: ' . $uid);
-        $article = $this->getArticle($request->user(), $uid);
+        $article = $this->getArticle( $uid);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->notFoundResponse('Article');
         }
-        $article = $this->deleteArticle($request->user(), $article->id);
+        $article = $this->deleteArticle($article->id);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->errorResponse();

@@ -22,7 +22,7 @@
                 ],
                 "summary": "Get list of articles",
                 "description": "Returns list of articles",
-                "operationId": "getArticleList",
+                "operationId": "getArticles",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -58,50 +58,59 @@
                 "operationId": "createArticle",
                 "parameters": [
                     {
-                        "name": "name",
+                        "name": "blogger_id",
                         "in": "query",
-                        "description": "Articlename",
+                        "description": "Article belongs To which Blogger",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Article title",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "email",
+                        "name": "desc",
                         "in": "query",
-                        "description": "Email",
-                        "required": true,
+                        "description": "Article description",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "password",
+                        "name": "scope",
                         "in": "query",
-                        "description": "Password",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "password_confirmation",
-                        "in": "query",
-                        "description": "Password Confirmation",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "country",
-                        "in": "query",
-                        "description": "Country",
+                        "description": "Is this article public?",
                         "schema": {
                             "type": "string"
                         }
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "imgs[]": {
+                                        "description": "Article Images",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Article has been created successfully."
@@ -119,7 +128,7 @@
                 ],
                 "summary": "Filter list of articles",
                 "description": "Returns list of filtered articles",
-                "operationId": "filterArticleList",
+                "operationId": "filterArticles",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -232,82 +241,35 @@
                         }
                     },
                     {
-                        "name": "name",
+                        "name": "blogger_id",
                         "in": "query",
-                        "description": "Articlename.",
+                        "description": "Article belongs To which Blogger",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Article title",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "email",
+                        "name": "desc",
                         "in": "query",
-                        "description": "Email.",
-                        "required": true,
+                        "description": "Article description",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "tel1",
+                        "name": "scope",
                         "in": "query",
-                        "description": "Telephone Number #1.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "address1",
-                        "in": "query",
-                        "description": "Address #1.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "city",
-                        "in": "query",
-                        "description": "City.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "postcode",
-                        "in": "query",
-                        "description": "PostCode.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "state",
-                        "in": "query",
-                        "description": "State.",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "country",
-                        "in": "query",
-                        "description": "Country.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "icno",
-                        "in": "query",
-                        "description": "IC Number.",
-                        "required": false,
+                        "description": "Is this article public?",
                         "schema": {
                             "type": "string"
                         }
@@ -383,7 +345,7 @@
                     "ArticleControllerService"
                 ],
                 "summary": "Retrieves all public articles.",
-                "operationId": "getPublicArticlesListing",
+                "operationId": "getPublicArticles",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -418,7 +380,7 @@
                     "ArticleControllerService"
                 ],
                 "summary": "Retrieves all public comments.",
-                "operationId": "getPublicCommentsListing",
+                "operationId": "getPublicComments",
                 "parameters": [
                     {
                         "name": "uid",
@@ -463,7 +425,7 @@
                 ],
                 "summary": "Get list of bloggers",
                 "description": "Returns list of bloggers",
-                "operationId": "getBloggerList",
+                "operationId": "getBloggers",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -577,7 +539,7 @@
                 ],
                 "summary": "Filter list of bloggers",
                 "description": "Returns list of filtered bloggers",
-                "operationId": "filterBloggerList",
+                "operationId": "filterBloggers",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -1048,7 +1010,7 @@
                 ],
                 "summary": "Get list of comments",
                 "description": "Returns list of comments",
-                "operationId": "getCommentList",
+                "operationId": "getComments",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -1145,7 +1107,7 @@
                 ],
                 "summary": "Filter list of comments",
                 "description": "Returns list of filtered comments",
-                "operationId": "filterCommentList",
+                "operationId": "filterComments",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -3020,7 +2982,7 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
                     "InventoryImageControllerService"
                 ],
@@ -7533,7 +7495,7 @@
                 ],
                 "summary": "Get list of users",
                 "description": "Returns list of users",
-                "operationId": "getUserList",
+                "operationId": "getUsers",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -7630,7 +7592,7 @@
                 ],
                 "summary": "Filter list of users",
                 "description": "Returns list of filtered users",
-                "operationId": "filterUserList",
+                "operationId": "filterUsers",
                 "parameters": [
                     {
                         "name": "pageNumber",

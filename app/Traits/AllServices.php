@@ -50,6 +50,7 @@ trait AllServices {
     NotificationFunctions, 
 
     ArticleServices,
+    ArticleImageServices,
     BloggerServices,
     CategoryServices, 
     CommentServices,

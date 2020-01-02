@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\InventoryServices;
+use App\Traits\InventoryImageServices;
 use App\Traits\InventoryFamilyServices;
 use App\Traits\PatternServices;
 use App\Traits\LogServices;
@@ -18,7 +19,7 @@ use App\Traits\ImageHostingServices;
 
 class InventoryController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices, InventoryFamilyServices, ImageHostingServices;
+    use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices, InventoryImageServices, InventoryFamilyServices, ImageHostingServices;
     private $controllerName = '[InventoryController]';
      /**
      * @OA\Get(
@@ -392,15 +393,14 @@ class InventoryController extends Controller
                 error_log(collect($img));
                 if(!$this->isEmpty($img)){
                     $proccessingimgids->push($img->publicid);
-                    if(!$this->saveModel($inventory)){
-                        error_log('error here2');
-                        DB::rollBack();
-                        $this->deleteImages($proccessingimgids);
-                        return $this->errorResponse();
-                    }
 
+                    $params = collect([
+                        'imgpath' => $img->imgurl,
+                        'imgpublicid' => $img->publicid,
+                        'inventory_id' => $inventory->refresh()->id,
+                    ]);
                     //Attach Image to InventoryImage
-                    $inventoryimage = $this->associateImageWithInventory($inventory , $img);
+                    $inventoryimage = $this->createInventoryImage($params);
                     if($this->isEmpty($inventoryimage)){
                         error_log('error here1');
                         DB::rollBack();

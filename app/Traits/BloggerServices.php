@@ -190,9 +190,8 @@ trait BloggerServices {
 
     public function bloggerAllCols() {
 
-        return ['id','company_id', 'user_id', 'uid' ,'name', 'contact', 'desc' , 
-        'imgpath' , 'imgpublicid'  , 'email', 'rating' , 'freeshippingminpurchase' , 
-        'address' , 'state' , 'postcode' , 'city','country','status','companyBelongings'];
+        return ['id','company_id', 'user_id', 'uid' ,'name', 'tel1', 'desc' , 
+        'imgpath' , 'imgpublicid'  , 'email' ,'status','companyBelongings'];
 
     }
 

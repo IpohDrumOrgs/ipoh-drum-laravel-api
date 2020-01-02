@@ -104,33 +104,23 @@ trait ArticleServices {
 
         $data = new Article();
         $data->uid = Carbon::now()->timestamp . Article::count();
-        $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
+        $data->title = $params->title;
         $data->desc = $params->desc;
-        $data->price = $this->toDouble($params->price);
-        $data->enddate = $this->toDate($params->enddate);
-        $data->qty = $this->toInt($params->qty);
-        $data->salesqty = 0;
-        $data->stockthreshold = $this->toInt($params->stockthreshold);
-        $data->onsale = $params->onsale;
-
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
-        }
-        $data->store()->associate($store);
-           
-        $promotion = $this->getProductPromotionById($params->product_promotion_id);
-        if($this->isEmpty($promotion)){
-            return null;
+        $data->view = 0;
+        $data->like = 0;
+        $data->dislike = 0;
+        if($params->scope == 'private'){
+            $data->scope = $params->scope;
         }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
-            }
+            $data->scope = 'public';
         }
+        $data->agerestrict = false;
 
-        $data->promotion()->associate($promotion);
+        $blogger = $this->getBloggerById($params->blogger_id);
+        if($this->isEmpty($blogger)){
+            return null;
+        }
+        $data->blogger()->associate($blogger);
 
         $data->status = true;
         if($this->saveModel($data)){
@@ -146,34 +136,21 @@ trait ArticleServices {
     private function updateArticle($data,  $params) {
         
         $params = $this->checkUndefinedProperty($params , $this->articleAllCols());
-
-        $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
+        $data->uid = Carbon::now()->timestamp . Article::count();
+        $data->title = $params->title;
         $data->desc = $params->desc;
-        $data->price = $this->toDouble($params->price);
-        $data->enddate = $this->toDate($params->enddate);
-        $data->qty = $this->toInt($params->qty);
-        $data->salesqty = 0;
-        $data->stockthreshold = $this->toInt($params->stockthreshold);
-        $data->onsale = $params->onsale;
-
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
-        }
-        $data->store()->associate($store);
-           
-        $promotion = $this->getProductPromotionById($params->product_promotion_id);
-        if($this->isEmpty($promotion)){
-            return null;
+        if($params->scope == 'private'){
+            $data->scope = $params->scope;
         }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
-            }
+            $data->scope = 'public';
         }
+        $data->agerestict = false;
 
-        $data->promotion()->associate($promotion);
+        $blogger = $this->getBloggerById($params->blogger_id);
+        if($this->isEmpty($blogger)){
+            return null;
+        }
+        $data->blogger()->associate($blogger);
 
         $data->status = true;
         if($this->saveModel($data)){
@@ -181,6 +158,7 @@ trait ArticleServices {
         }else{
             return null;
         }
+
         return $data->refresh();
     }
 
@@ -214,9 +192,8 @@ trait ArticleServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function articleAllCols() {
 
-        return ['id','store_id', 'product_promotion_id', 'uid', 
-        'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 
-        'price' , 'qty','promoendqty','salesqty','stockthreshold','status','onsale'];
+        return ['id','blogger_id', 'title', 'desc', 
+        'view' , 'like' , 'dislike'  , 'scope', 'agerestrict' , 'status'];
 
     }
 

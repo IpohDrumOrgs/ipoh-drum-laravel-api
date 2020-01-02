@@ -116,7 +116,7 @@ trait InventoryImageServices {
 
         $params = $this->checkUndefinedProperty($params , $this->inventoryImageDefaultCols());
 
-        $inventory = $this->getInventoryById($data->inventory_id);
+        $inventory = $this->getInventoryById($params->inventory_id);
         if($this->isEmpty($inventory)){
             return null;
         }

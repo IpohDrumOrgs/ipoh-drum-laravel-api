@@ -56,8 +56,4 @@ class Article extends Model
         return $this->belongsTo('App\Blogger');
     }
 
-    public function coverimage()
-    {
-        return $this->hasOne('App\ArticleImage', 'cover_image_id');
-    }
 }

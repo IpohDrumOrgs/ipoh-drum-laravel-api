@@ -500,5 +500,57 @@ class BloggerController extends Controller
             return $this->successResponse('Blogger ', $blogger, 'delete');
         }
     }
+    
+    /**
+     * @OA\Get(
+     *   tags={"BloggerControllerService"},
+     *   path="/api/blogger/{uid}/articles",
+     *   summary="Retrieves blog articles by Uid.",
+     *     operationId="getArticlesByBloggerUid",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Blogger ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Articles has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the articles."
+     *   )
+     * )
+     */
+    public function getArticles(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving blogger articles by uid:' . $uid);
+        $blogger = $this->getBlogger($uid);
+        if ($this->isEmpty($blogger)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Blogger');
+        }
+        $articles = $blogger->articles()->with('blogger', 'articleimages')->where('status' , true)->get();
+
+        if ($this->isEmpty($articles)) {
+            return $this->errorPaginateResponse('Articles');
+        } else {
+            return $this->successPaginateResponse('Articles', $articles, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
 
 }

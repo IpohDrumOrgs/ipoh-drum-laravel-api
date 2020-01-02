@@ -757,6 +757,50 @@
                 }
             }
         },
+        "/api/blogger/{uid}/articles": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Retrieves blog articles by Uid.",
+                "operationId": "getArticlesByBloggerUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Blogger ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Articles has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the articles."
+                    }
+                }
+            }
+        },
         "/api/category": {
             "get": {
                 "tags": [

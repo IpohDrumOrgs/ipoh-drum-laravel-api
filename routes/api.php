@@ -109,6 +109,7 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::resource('blogger', 'API\BloggerController');
     Route::get('/filter/blogger', 'API\BloggerController@filter');
+    Route::get('/blogger/{uid}/articles', 'API\BloggerController@getArticles');
 
     Route::resource('article', 'API\ArticleController');
     Route::get('/filter/article', 'API\ArticleController@filter');

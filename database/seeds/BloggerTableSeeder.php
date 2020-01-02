@@ -49,7 +49,7 @@ class BloggerTableSeeder extends Seeder
             $blogger->email = $faker->unique()->safeEmail;
             $blogger->tel1 =  $faker->ean8;
             $blogger->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
-            $blogger->companyBelongings = $faker->boolean();
+            $blogger->companyBelongings = true;
 
             if($blogger->companyBelongings){
                 $company = Company::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10,11]));

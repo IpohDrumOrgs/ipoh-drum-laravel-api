@@ -142,9 +142,9 @@ trait ArticleServices {
         if($params->scope == 'private'){
             $data->scope = $params->scope;
         }else{
-            $data->scope = 'public';
+            $data->scope = 'publric';
         }
-        $data->agerestict = false;
+        $data->agerestrict = false;
 
         $blogger = $this->getBloggerById($params->blogger_id);
         if($this->isEmpty($blogger)){

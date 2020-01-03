@@ -210,6 +210,14 @@ class ChannelController extends Controller
      *          )
      * ),
      * @OA\Parameter(
+     * name="tel1",
+     * in="query",
+     * description="Channel contact",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
      * name="companyBelongings",
      * in="query",
      * description="Is This Channel Belongs To Company?",

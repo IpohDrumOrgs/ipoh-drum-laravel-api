@@ -3,9 +3,14 @@
 namespace App\Traits;
 use App\User;
 use App\Store;
-use App\ProductPromotion;
 use App\ArticleImage;
+use App\ArticleImageFamily;
+use App\ArticleImageImage;
+use App\ProductPromotion;
+use App\Warranty;
+use App\Shipping;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\AllServices;
 
@@ -16,10 +21,11 @@ trait ArticleImageServices {
     private function getArticleImages($requester) {
 
         $data = collect();
-        //Role Based Retrieve Done in Store
-        $articles = $this->getArticles($requester);
-        foreach($articles as $article){
-            $data = $data->merge($article->articleimages()->where('status',true)->get());
+
+        //Role Based Retrieve Done in Store Services
+        $inventories = $this->getArticleImages($requester);
+        foreach($inventories as $article){
+            $data = $data->merge($article->images()->where('status',true)->get());
         }
 
         $data = $data->unique('id')->sortBy('id')->flatten(1);
@@ -28,11 +34,8 @@ trait ArticleImageServices {
 
     }
 
-
     private function filterArticleImages($data , $params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->articleimageFilterCols());
-        error_log('Filtering articleimages....');
 
         if($params->keyword){
             error_log('Filtering articleimages with keyword....');
@@ -77,9 +80,15 @@ trait ArticleImageServices {
             }
         }
 
-        if($params->scope){
-            error_log('Filtering articleimages with scope....');
-            $data = $data->where('scope', $params->scope);
+        if($params->onsale){
+            error_log('Filtering articleimages with on sale status....');
+            if($params->onsale == 'true'){
+                $data = $data->where('onsale', true);
+            }else if($params->onsale == 'false'){
+                $data = $data->where('onsale', false);
+            }else{
+                $data = $data->where('onsale', '!=', null);
+            }
         }
 
 
@@ -89,42 +98,39 @@ trait ArticleImageServices {
     }
 
     private function getArticleImage($uid) {
-        $data = ArticleImage::where('uid', $uid)->where('status', 1)->first();
-        return $data;
-    }
 
+        $data = ArticleImage::where('uid', $uid)->where('status', true)->first();
+        return $data;
+
+    }
+    
     private function getArticleImageById($id) {
-        $data = ArticleImage::where('id', $id)->where('status', 1)->first();
-        return $data;
-    }
 
+        $data = ArticleImage::where('id', $id)->where('status', true)->first();
+        return $data;
+
+    }
+    
+    //Make Sure ArticleImage is not empty when calling this function
     private function createArticleImage($params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->articleimageAllCols());
+        $params = $this->checkUndefinedProperty($params , $this->articleImageAllCols());
 
         $article = $this->getArticleById($params->article_id);
-        error_log( $params->article_id);
-        error_log( $article);
         if($this->isEmpty($article)){
-            error_log('hi');
             return null;
         }
 
-        if($article->articleimages()->count() >= 6){
-            error_log($article->articleimages()->count());
-            error_log('hi1');
+        if($article->images()->count() >= 6){
             return null;
         }
 
         $data = new ArticleImage();
         $data->uid = Carbon::now()->timestamp . ArticleImage::count();
-        $data->title = $params->title;
+        $data->name = $params->name;
         $data->desc = $params->desc;
-        $data->like = 0;
-        $data->dislike = 0;
-        $data->coverimage = false;
-        $data->imgpath = $params->imgpath;
-        $data->imgpublicid = $params->imgpublicid;
+        $data->imgpath = $params->imgurl;
+        $data->imgpublicid = $params->publicid;
 
         $data->article()->associate($article);
 
@@ -137,47 +143,46 @@ trait ArticleImageServices {
 
     //Make Sure ArticleImage is not empty when calling this function
     private function updateArticleImage($data,  $params) {
-   
-      
+
+
     }
 
-    private function deleteArticleImage($data) {
-        $data->status = false;
-        if($this->saveModel($data)){
-            return $data->refresh();
+    public function deleteArticleImage($data)
+    {
+        error_log($data->imgpublicid);
+        if($this->deleteImage($data->imgpublicid)){
+            $data->delete();
+            return true;
         }else{
-            return null;
+            return false;
         }
-
-        return $data->refresh();
     }
 
-    private function getAllArticleImages() {
-        
-        $data = ArticleImage::where('status', true)->with('articleimageimages','blogger')->get();
 
-        return $data;
-    }
+  
+    //Relationship Deassociating
+    //===============================================================================================================================================================================
+    
+    
 
-    // Modifying Display Data
+    //Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
-    public function articleimageAllCols() {
+    
+    
+    public function articleImageDefaultCols() {
 
-        return ['id','article_id', 'uid', 
-        'title' , 'desc' , 'like'  , 'dislike', 'imgpath' , 'imgpublicpath' , 'coverimage'];
-    }
-
-    public function articleimageDefaultCols() {
-
-        return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 
-        'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate', 'enddate' , 
-        'stock', 'salesqty' ];
+        return ['id','uid', 'article_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
 
     }
-    public function articleimageFilterCols() {
 
-        return ['keyword','fromdate' ,'todate', 'status', 'scope'];
+    public function articleImageAllCols() {
+
+        return ['id','uid', 'article_id', 'name' ,'desc', 'imgpublicid', 'imgpath', 'like', 'dislike', 'coverimage' , 'status'];
 
     }
+    
+
+    
+
 
 }

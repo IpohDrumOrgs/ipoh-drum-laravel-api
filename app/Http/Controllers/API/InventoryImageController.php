@@ -11,163 +11,29 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\InventoryImageServices;
+use App\Traits\InventoryServices;
 use App\Traits\LogServices;
 
 class InventoryImageController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, InventoryImageServices, LogServices;
+    use GlobalFunctions, NotificationFunctions, InventoryImageServices, InventoryServices, LogServices;
     private $controllerName = '[InventoryImageController]';
-/**
-     * @OA\Get(
-     *      path="/api/inventoryimage",
-     *      operationId="getInventoryImages",
-     *      tags={"InventoryImageControllerService"},
-     *      summary="Get list of inventoryimages",
-     *      description="Returns list of inventoryimages",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of inventoryimages"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of inventoryimages")
-     *    )
-     */
+
+
     public function index(Request $request)
     {
-        error_log('Retrieving list of inventoryimages.');
-        // api/inventoryimage (GET)
-        $inventoryimages = $this->getInventoryImages($request->user());
-       
-        if ($this->isEmpty($inventoryimages)) {
-            return $this->errorPaginateResponse('InventoryImages');
-        } else {
-            return $this->successPaginateResponse('InventoryImages', $inventoryimages, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
-        }
+
     }
     
-    /**
-     * @OA\Get(
-     *      path="/api/filter/inventoryimage",
-     *      operationId="filterInventoryImages",
-     *      tags={"InventoryImageControllerService"},
-     *      summary="Filter list of inventoryimages",
-     *      description="Returns list of filtered inventoryimages",
-     *   @OA\Parameter(
-     *     name="pageNumber",
-     *     in="query",
-     *     description="Page number",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="pageSize",
-     *     in="query",
-     *     description="number of pageSize",
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Parameter(
-     *     name="keyword",
-     *     in="query",
-     *     description="Keyword for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="fromdate",
-     *     in="query",
-     *     description="From Date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="todate",
-     *     in="query",
-     *     description="To date for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="status",
-     *     in="query",
-     *     description="status for filter",
-     *     @OA\Schema(type="string")
-     *   ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successfully retrieved list of filtered inventoryimages"
-     *       ),
-     *       @OA\Response(
-     *          response="default",
-     *          description="Unable to retrieve list of inventoryimages")
-     *    )
-     */
     public function filter(Request $request)
     {
-        error_log('Retrieving list of filtered inventoryimages.');
-        // api/inventoryimage/filter (GET)
-        $params = collect([
-            'keyword' => $request->keyword,
-            'fromdate' => $request->fromdate,
-            'todate' => $request->todate,
-            'status' => $request->status,
-            'inventoryimage_id' => $request->inventoryimage_id,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $inventoryimages = $this->getInventoryImages($request->user());
-        $inventoryimages = $this->filterInventoryImages($inventoryimages, $params);
-
-        if ($this->isEmpty($inventoryimages)) {
-            return $this->errorPaginateResponse('InventoryImages');
-        } else {
-            return $this->successPaginateResponse('InventoryImages', $inventoryimages, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
-        }
 
     }
 
    
-    /**
-     * @OA\Get(
-     *   tags={"InventoryImageControllerService"},
-     *   path="/api/inventoryimage/{uid}",
-     *   summary="Retrieves inventoryimage by Uid.",
-     *     operationId="getInventoryImageByUid",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="InventoryImage_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Response(
-     *     response=200,
-     *     description="InventoryImage has been retrieved successfully."
-     *   ),
-     *   @OA\Response(
-     *     response="default",
-     *     description="Unable to retrieve the inventoryimage."
-     *   )
-     * )
-     */
     public function show(Request $request, $uid)
     {
-        // api/inventoryimage/{inventoryimageid} (GET)
-        error_log('Retrieving inventoryimage of uid:' . $uid);
-        $inventoryimage = $this->getInventoryImage($uid);
-        if ($this->isEmpty($inventoryimage)) {
-            return $this->notFoundResponse('InventoryImage');
-        } else {
-            return $this->successResponse('InventoryImage', $inventoryimage, 'retrieve');
-        }
+        
     }
 
   
@@ -224,6 +90,12 @@ class InventoryImageController extends Controller
         ]);
         error_log('Creating inventoryimage.');
         
+        $inventory = $this->getInventoryById($request->inventory_id);
+        if ($this->isEmpty($inventory)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Inventory');
+        }
+
         if($request->file('img') != null){
             $img = $this->uploadImage($request->file('img') , "/Inventory/". $inventory->uid);
             if(!$this->isEmpty($img)){
@@ -256,90 +128,9 @@ class InventoryImageController extends Controller
     }
 
 
-    /**
-     * @OA\Post(
-     *   tags={"InventoryImageControllerService"},
-     *   path="/api/inventoryimage/{uid}",
-     *   summary="Update inventoryimage by Uid.",
-     *     operationId="updateInventoryImageByUid",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="InventoryImage_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     * @OA\Parameter(
-     * name="name",
-     * in="query",
-     * description="InventoryImagename",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="desc",
-     * in="query",
-     * description="InventoryImage Description",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="provider",
-     * in="query",
-     * description="Provider of Model",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     *   @OA\Response(
-     *     response=200,
-     *     description="InventoryImage has been updated successfully."
-     *   ),
-     *   @OA\Response(
-     *     response="default",
-     *     description="Unable to update the inventoryimage."
-     *   )
-     * )
-     */
     public function update(Request $request, $uid)
     {
-        DB::beginTransaction();
-        // api/inventoryimage/{inventoryimageid} (PUT) 
-        error_log('Updating inventoryimage of uid: ' . $uid);
-        $inventoryimage = $this->getInventoryImage($uid);
        
-       
-        $this->validate($request, [
-            'name' => 'required|string|max:191',
-            'desc' => 'nullable',
-            'provider' => 'required|string|max:191',
-        ]);
-      
-        if ($this->isEmpty($inventoryimage)) {
-            DB::rollBack();
-            return $this->notFoundResponse('InventoryImage');
-        }
-        
-        $params = collect([
-            'name' => $request->name,
-            'desc' => $request->desc,
-            'provider' => $request->provider,
-        ]);
-        
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $inventoryimage = $this->updateInventoryImage($inventoryimage, $params);
-        if ($this->isEmpty($inventoryimage)) {
-            DB::rollBack();
-            return $this->errorResponse();
-        } else {
-            DB::commit();
-            return $this->successResponse('InventoryImage', $inventoryimage, 'update');
-        }
     }
 
 

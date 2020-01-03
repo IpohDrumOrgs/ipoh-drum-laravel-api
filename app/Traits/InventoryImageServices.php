@@ -114,7 +114,7 @@ trait InventoryImageServices {
     //Make Sure InventoryImage is not empty when calling this function
     private function createInventoryImage($params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->inventoryImageDefaultCols());
+        $params = $this->checkUndefinedProperty($params , $this->inventoryImageAllCols());
 
         $inventory = $this->getInventoryById($params->inventory_id);
         if($this->isEmpty($inventory)){
@@ -144,62 +144,6 @@ trait InventoryImageServices {
     //Make Sure InventoryImage is not empty when calling this function
     private function updateInventoryImage($data,  $params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->inventoryimageAllCols());
-
-        $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
-        $data->desc = $params->desc;
-        $data->cost = $this->toDouble($params->cost);
-        $data->price = $this->toDouble($params->price);
-        $data->qty = $this->toInt($params->qty);
-        $data->stockthreshold = $this->toInt($params->stockthreshold);
-        $data->onsale = $params->onsale;
-
-       
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
-        }
-        $data->store()->associate($store);
-       
-        if($params->product_promotion_id){
-            $promotion = $this->getProductPromotionById($params->product_promotion_id);
-            if($this->isEmpty($promotion)){
-                return null;
-            }else{
-                if($promotion->qty > 0){
-                    $data->promoendqty = $data->salesqty + $promotion->qty;
-                }
-            }
-            $data->promotion()->associate($promotion);
-        }
-
-        
-        if($params->warranty_id){
-            $warranty = $this->getWarrantyById($params->warranty_id);
-            if($this->isEmpty($warranty)){
-                return null;
-            }
-            $data->warranty()->associate($warranty);
-        }
-
-        if($params->shipping_id){
-            $shipping = $this->getShippingById($params->shipping_id);
-            if($this->isEmpty($shipping)){
-                return null;
-            }
-            $data->shipping()->associate($shipping);
-        }
-
-        $data->status = true;
-
-        if(!$this->saveModel($data)){
-            return null;
-        }
-        
-      
-        return $data->refresh();
 
     }
 
@@ -233,7 +177,7 @@ trait InventoryImageServices {
 
     public function inventoryImageAllCols() {
 
-        return ['id','store_id', 'product_promotion_id', 'shipping_id' ,'warranty_id', 'uid', 'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 'cost' , 'price' , 'qty','promoendqty','salesqty','stockthreshold','status','onsale'];
+        return ['id','uid', 'inventoryimage_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
 
     }
     

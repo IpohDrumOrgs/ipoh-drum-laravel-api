@@ -10040,6 +10040,54 @@
                 },
                 "type": "object"
             },
+            "Channel": {
+                "title": "Channel",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "company_id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "imgpath": {
+                        "type": "string"
+                    },
+                    "imgpublicid": {
+                        "type": "string"
+                    },
+                    "tel1": {
+                        "type": "string"
+                    },
+                    "company_belongings": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "Comment": {
                 "title": "Comment",
                 "properties": {

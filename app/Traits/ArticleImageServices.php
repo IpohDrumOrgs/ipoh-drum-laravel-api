@@ -127,7 +127,7 @@ trait ArticleImageServices {
 
         $data = new ArticleImage();
         $data->uid = Carbon::now()->timestamp . ArticleImage::count();
-        $data->name = $params->name;
+        $data->title = $params->title;
         $data->desc = $params->desc;
         $data->imgpath = $params->imgpath;
         $data->imgpublicid = $params->imgpublicid;
@@ -171,13 +171,13 @@ trait ArticleImageServices {
     
     public function articleImageDefaultCols() {
 
-        return ['id','uid', 'article_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
+        return ['id','uid', 'article_id', 'title' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
 
     }
 
     public function articleImageAllCols() {
 
-        return ['id','uid', 'article_id', 'name' ,'desc', 'imgpublicid', 'imgpath', 'like', 'dislike', 'coverimage' , 'status'];
+        return ['id','uid', 'article_id', 'title' ,'desc', 'imgpublicid', 'imgpath', 'like', 'dislike', 'coverimage' , 'status'];
 
     }
     

@@ -92,12 +92,12 @@ class ArticleImageController extends Controller
             return $this->notFoundResponse('Article');
         }
 
+        $params = collect();
+
         if($request->file('img') != null){
             $img = $this->uploadImage($request->file('img') , "/Article/". $article->uid);
             if(!$this->isEmpty($img)){
                 $params = collect([
-                    'name' => $request->name,
-                    'desc' => $request->desc,
                     'imgpath' => $img->imgurl,
                     'imgpublicid' => $img->publicid,
                     'article_id' => $request->article_id,

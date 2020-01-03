@@ -129,8 +129,8 @@ trait InventoryImageServices {
         $data->uid = Carbon::now()->timestamp . InventoryImage::count();
         $data->name = $params->name;
         $data->desc = $params->desc;
-        $data->imgpath = $params->imgurl;
-        $data->imgpublicid = $params->publicid;
+        $data->imgpath = $params->imgpath;
+        $data->imgpublicid = $params->imgpublicid;
 
         $data->inventory()->associate($inventory);
 

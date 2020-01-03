@@ -25,7 +25,7 @@ trait ArticleImageServices {
         //Role Based Retrieve Done in Store Services
         $inventories = $this->getArticleImages($requester);
         foreach($inventories as $article){
-            $data = $data->merge($article->images()->where('status',true)->get());
+            $data = $data->merge($article->articleimages()->where('status',true)->get());
         }
 
         $data = $data->unique('id')->sortBy('id')->flatten(1);
@@ -121,7 +121,7 @@ trait ArticleImageServices {
             return null;
         }
 
-        if($article->images()->count() >= 6){
+        if($article->articleimages()->count() >= 6){
             return null;
         }
 

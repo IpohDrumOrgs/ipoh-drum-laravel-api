@@ -113,6 +113,9 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::resource('article', 'API\ArticleController');
     Route::get('/filter/article', 'API\ArticleController@filter');
+
+    Route::resource('articleimage', 'API\ArticleImageController');
+    Route::get('/filter/articleimage', 'API\ArticleImageController@filter');
     
     // ========================== Channel Related Route =========================================================
 

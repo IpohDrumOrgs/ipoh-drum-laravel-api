@@ -139,8 +139,13 @@ trait BloggerServices {
         $data->desc = $params->desc;
         $data->tel1 = $params->tel1;
         $data->email = $params->email;
-        $data->companyBelongings = $params->companyBelongings;
         $data->status = true;
+
+        if($this->isEmpty($params->companyBelongings)){
+            return null;
+        }else{
+            $data->companyBelongings = $params->companyBelongings;
+        }
 
        //Assign Owner
        if($data->companyBelongings){

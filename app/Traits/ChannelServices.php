@@ -113,39 +113,39 @@ trait ChannelServices {
         $data = new Channel();
         $data->uid = Carbon::now()->timestamp . Channel::count();
         $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
         $data->desc = $params->desc;
-        $data->price = $this->toDouble($params->price);
-        $data->enddate = $this->toDate($params->enddate);
-        $data->qty = $this->toInt($params->qty);
-        $data->salesqty = 0;
-        $data->stockthreshold = $this->toInt($params->stockthreshold);
-        $data->onsale = $params->onsale;
+        $data->email = $params->email;
+        $data->imgpath = $params->imgpath;
+        $data->imgpublicid = $params->imgpublicid;
+        $data->tel1 = $params->tel1;
 
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
-        }
-        $data->store()->associate($store);
-           
-        $promotion = $this->getProductPromotionById($params->product_promotion_id);
-        if($this->isEmpty($promotion)){
+        if($this->isEmpty( $params->companyBelongings)){
             return null;
         }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
+            $data->companyBelongings = $params->companyBelongings;
+        }
+        
+        //Assign Owner
+        if($data->companyBelongings){
+            $company = $this->getCompanyById($params->company_id);
+            if($this->isEmpty($company)){
+                return null;
             }
+            $data->company()->associate($company);
+            $data->user_id = null;
+        }else{
+            $user = $this->getUserById($params->user_id);
+            if($this->isEmpty($user)){
+                return null;
+            }
+            $data->user()->associate($user);
+            $data->company_id = null;
         }
 
-        $data->promotion()->associate($promotion);
-
-        $data->status = true;
-        if($this->saveModel($data)){
-            return $data->refresh();
-        }else{
+        if(!$this->saveModel($data)){
             return null;
         }
+            
 
         return $data->refresh();
     }
@@ -156,39 +156,40 @@ trait ChannelServices {
         $params = $this->checkUndefinedProperty($params , $this->channelAllCols());
 
         $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
         $data->desc = $params->desc;
-        $data->price = $this->toDouble($params->price);
-        $data->enddate = $this->toDate($params->enddate);
-        $data->qty = $this->toInt($params->qty);
-        $data->salesqty = 0;
-        $data->stockthreshold = $this->toInt($params->stockthreshold);
-        $data->onsale = $params->onsale;
+        $data->email = $params->email;
+        $data->imgpath = $params->imgpath;
+        $data->imgpublicid = $params->imgpublicid;
+        $data->tel1 = $params->tel1;
 
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
-        }
-        $data->store()->associate($store);
-           
-        $promotion = $this->getProductPromotionById($params->product_promotion_id);
-        if($this->isEmpty($promotion)){
+        if($this->isEmpty( $params->companyBelongings)){
             return null;
         }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
+            $data->companyBelongings = $params->companyBelongings;
+        }
+        
+        //Assign Owner
+        if($data->companyBelongings){
+            $company = $this->getCompanyById($params->company_id);
+            if($this->isEmpty($company)){
+                return null;
             }
+            $data->company()->associate($company);
+            $data->user_id = null;
+        }else{
+            $user = $this->getUserById($params->user_id);
+            if($this->isEmpty($user)){
+                return null;
+            }
+            $data->user()->associate($user);
+            $data->company_id = null;
         }
 
-        $data->promotion()->associate($promotion);
-
-        $data->status = true;
-        if($this->saveModel($data)){
-            return $data->refresh();
-        }else{
+        if(!$this->saveModel($data)){
             return null;
         }
+            
+
         return $data->refresh();
     }
 
@@ -208,17 +209,17 @@ trait ChannelServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function channelAllCols() {
 
-        return ['id','store_id', 'product_promotion_id', 'uid', 
-        'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 
-        'price' , 'qty','promoendqty','salesqty','stockthreshold','status','onsale'];
+        return ['id','company_id', 'user_id', 'uid', 
+        'name' , 'desc' , 'email'  , 'imgpublicid', 'imgpath' , 'tel1' , 'companyBelongings' , 
+        'status'];
 
     }
 
     public function channelDefaultCols() {
 
-        return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 
-        'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate', 'enddate' , 
-        'stock', 'salesqty' ];
+        return ['id','company_id', 'user_id', 'uid', 
+        'name' , 'desc' , 'email'  , 'imgpublicid', 'imgpath' , 'tel1' , 'companyBelongings' , 
+        'status'];
 
     }
 

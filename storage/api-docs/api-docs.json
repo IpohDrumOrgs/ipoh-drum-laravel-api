@@ -418,6 +418,82 @@
                 }
             }
         },
+        "/api/articleimage": {
+            "post": {
+                "tags": [
+                    "ArticleImageControllerService"
+                ],
+                "summary": "Creates a articleimage.",
+                "operationId": "createArticleImage",
+                "parameters": [
+                    {
+                        "name": "article_id",
+                        "in": "query",
+                        "description": "Article Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ArticleImage has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the articleimage."
+                    }
+                }
+            }
+        },
+        "/api/articleimage/{uid}": {
+            "delete": {
+                "tags": [
+                    "ArticleImageControllerService"
+                ],
+                "summary": "Set articleimage's 'status' to 0.",
+                "operationId": "deleteArticleImageByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "ArticleImage ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ArticleImage has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the articleimage."
+                    }
+                }
+            }
+        },
         "/api/blogger": {
             "get": {
                 "tags": [
@@ -760,7 +836,7 @@
         "/api/blogger/{uid}/articles": {
             "get": {
                 "tags": [
-                    "StoreControllerService"
+                    "BloggerControllerService"
                 ],
                 "summary": "Retrieves blog articles by Uid.",
                 "operationId": "getArticlesByBloggerUid",
@@ -1043,6 +1119,389 @@
                     },
                     "default": {
                         "description": "Unable to 'delete' the category."
+                    }
+                }
+            }
+        },
+        "/api/channel": {
+            "get": {
+                "tags": [
+                    "ChannelControllerService"
+                ],
+                "summary": "Get list of channels",
+                "description": "Returns list of channels",
+                "operationId": "getChannels",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of channels"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of channels"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ChannelControllerService"
+                ],
+                "summary": "Creates a channel.",
+                "operationId": "createChannel",
+                "parameters": [
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Channel belongs to which company",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Channel Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Channel Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Channel Email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "companyBelongings",
+                        "in": "query",
+                        "description": "Is This Channel Belongs To Company?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Channel has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the channel."
+                    }
+                }
+            }
+        },
+        "/api/filter/channel": {
+            "get": {
+                "tags": [
+                    "ChannelControllerService"
+                ],
+                "summary": "Filter list of channels",
+                "description": "Returns list of filtered channels",
+                "operationId": "filterChannels",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page size",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered channels"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of channels"
+                    }
+                }
+            }
+        },
+        "/api/channel/{uid}": {
+            "get": {
+                "tags": [
+                    "ChannelControllerService"
+                ],
+                "summary": "Retrieves channel by Uid.",
+                "operationId": "getChannelByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Channel_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Channel has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the channel."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ChannelControllerService"
+                ],
+                "summary": "Update channel by Uid.",
+                "operationId": "updateChannelByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Channel_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "Channel belongs to which user",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Channel belongs to which company",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Channel Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Channel Description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Channel Email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tel1",
+                        "in": "query",
+                        "description": "Channel telephone",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "companyBelongings",
+                        "in": "query",
+                        "description": "Is This Channel Belongs To Company?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Channel has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the channel."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ChannelControllerService"
+                ],
+                "summary": "Set channel's 'status' to 0.",
+                "operationId": "deleteChannelByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Channel ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Channel has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the channel."
+                    }
+                }
+            }
+        },
+        "/api/channel/{uid}/articles": {
+            "get": {
+                "tags": [
+                    "ChannelControllerService"
+                ],
+                "summary": "Retrieves blog articles by Uid.",
+                "operationId": "getArticlesByChannelUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Channel ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Articles has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the articles."
                     }
                 }
             }
@@ -2850,40 +3309,6 @@
             }
         },
         "/api/inventoryimage": {
-            "get": {
-                "tags": [
-                    "InventoryImageControllerService"
-                ],
-                "summary": "Get list of inventoryimages",
-                "description": "Returns list of inventoryimages",
-                "operationId": "getInventoryImages",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of inventoryimages"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of inventoryimages"
-                    }
-                }
-            },
             "post": {
                 "tags": [
                     "InventoryImageControllerService"
@@ -2931,153 +3356,7 @@
                 }
             }
         },
-        "/api/filter/inventoryimage": {
-            "get": {
-                "tags": [
-                    "InventoryImageControllerService"
-                ],
-                "summary": "Filter list of inventoryimages",
-                "description": "Returns list of filtered inventoryimages",
-                "operationId": "filterInventoryImages",
-                "parameters": [
-                    {
-                        "name": "pageNumber",
-                        "in": "query",
-                        "description": "Page number",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "number of pageSize",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "description": "Keyword for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "fromdate",
-                        "in": "query",
-                        "description": "From Date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "todate",
-                        "in": "query",
-                        "description": "To date for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "status for filter",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved list of filtered inventoryimages"
-                    },
-                    "default": {
-                        "description": "Unable to retrieve list of inventoryimages"
-                    }
-                }
-            }
-        },
         "/api/inventoryimage/{uid}": {
-            "get": {
-                "tags": [
-                    "InventoryImageControllerService"
-                ],
-                "summary": "Retrieves inventoryimage by Uid.",
-                "operationId": "getInventoryImageByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "InventoryImage_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "InventoryImage has been retrieved successfully."
-                    },
-                    "default": {
-                        "description": "Unable to retrieve the inventoryimage."
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "InventoryImageControllerService"
-                ],
-                "summary": "Update inventoryimage by Uid.",
-                "operationId": "updateInventoryImageByUid",
-                "parameters": [
-                    {
-                        "name": "uid",
-                        "in": "path",
-                        "description": "InventoryImage_ID, NOT 'ID'.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "InventoryImagename",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "desc",
-                        "in": "query",
-                        "description": "InventoryImage Description",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "provider",
-                        "in": "query",
-                        "description": "Provider of Model",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "InventoryImage has been updated successfully."
-                    },
-                    "default": {
-                        "description": "Unable to update the inventoryimage."
-                    }
-                }
-            },
             "delete": {
                 "tags": [
                     "InventoryImageControllerService"

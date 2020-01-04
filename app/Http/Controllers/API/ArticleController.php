@@ -439,7 +439,7 @@ class ArticleController extends Controller
         }
     }
 
-    
+
 
 
     /**
@@ -470,7 +470,7 @@ class ArticleController extends Controller
         error_log($this->controllerName.'Retrieving public articles listing');
         $article = $this->getArticle($uid);
         $article = $this->setCommentCount($article);
-       
+
         if ($this->isEmpty($article) && $article->scope != "public") {
             $data['data'] = null;
             return $this->notFoundResponse('Article');
@@ -479,7 +479,7 @@ class ArticleController extends Controller
         }
     }
 
-    
+
     /**
      * @OA\Get(
      *   tags={"ArticleControllerService"},
@@ -529,7 +529,7 @@ class ArticleController extends Controller
             return $this->successPaginateResponse('Articles', $articles, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
-      
+
     /**
      * @OA\Get(
      *   tags={"ArticleControllerService"},

@@ -504,7 +504,7 @@ class VideoController extends Controller
         }
     }
 
-    
+
 
 
     /**
@@ -535,7 +535,7 @@ class VideoController extends Controller
         error_log($this->controllerName.'Retrieving public videos listing');
         $video = $this->getVideo($uid);
         $video = $this->setCommentCount($video);
-       
+
         if ($this->isEmpty($video) && $video->scope != "public") {
             $data['data'] = null;
             return $this->notFoundResponse('Video');
@@ -544,7 +544,7 @@ class VideoController extends Controller
         }
     }
 
-    
+
     /**
      * @OA\Get(
      *   tags={"VideoControllerService"},
@@ -594,7 +594,7 @@ class VideoController extends Controller
             return $this->successPaginateResponse('Videos', $videos, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
-      
+
     /**
      * @OA\Get(
      *   tags={"VideoControllerService"},

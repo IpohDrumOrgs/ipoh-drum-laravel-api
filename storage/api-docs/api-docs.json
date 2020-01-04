@@ -10169,6 +10169,9 @@
                     },
                     "updated_at": {
                         "type": "string"
+                    },
+                    "company": {
+                        "$ref": "#/components/schemas/Company"
                     }
                 },
                 "type": "object"

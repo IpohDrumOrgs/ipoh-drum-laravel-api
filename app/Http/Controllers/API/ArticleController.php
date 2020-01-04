@@ -535,7 +535,7 @@ class ArticleController extends Controller
      *   tags={"ArticleControllerService"},
      *   path="/api/public/article/{uid}/comments",
      *   summary="Retrieves all public comments.",
-     *     operationId="getArticlePublicComments",
+     *     operationId="getPublicArticleComments",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

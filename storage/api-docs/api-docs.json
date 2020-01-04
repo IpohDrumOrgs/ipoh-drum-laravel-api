@@ -8542,6 +8542,7 @@
                         "name": "scope",
                         "in": "query",
                         "description": "Is this video public?",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -8549,7 +8550,8 @@
                     {
                         "name": "videopath",
                         "in": "query",
-                        "description": "Is this video public?",
+                        "description": "Video Link",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -8557,7 +8559,8 @@
                     {
                         "name": "videopublicid",
                         "in": "query",
-                        "description": "Is this video public?",
+                        "description": "Video Link",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -8565,7 +8568,8 @@
                     {
                         "name": "totallength",
                         "in": "query",
-                        "description": "Is this video public?",
+                        "description": "Length Of Video",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -8574,8 +8578,42 @@
                         "name": "free",
                         "in": "query",
                         "description": "Is this video free?",
+                        "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Video Price",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discbyprice",
+                        "in": "query",
+                        "description": "Is this video discount by price?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Discount Price",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discpctg",
+                        "in": "query",
+                        "description": "Discount Percentage",
+                        "schema": {
+                            "type": "number"
                         }
                     }
                 ],
@@ -8585,7 +8623,7 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
-                                    "imgs": {
+                                    "img": {
                                         "description": "Video Cover Image",
                                         "type": "file",
                                         "items": {

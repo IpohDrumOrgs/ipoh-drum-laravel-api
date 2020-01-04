@@ -104,40 +104,51 @@ trait VideoServices {
 
         $data = new Video();
         $data->uid = Carbon::now()->timestamp . Video::count();
-        $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
+        $data->title  = $params->title ;
         $data->desc = $params->desc;
-        $data->price = $this->toDouble($params->price);
-        $data->enddate = $this->toDate($params->enddate);
-        $data->qty = $this->toInt($params->qty);
-        $data->salesqty = 0;
-        $data->stockthreshold = $this->toInt($params->stockthreshold);
-        $data->onsale = $params->onsale;
-
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
+        $data->videopath = $params->videopath;
+        $data->videopublicid = $params->videopublicid;
+        $data->totallength = $params->totallength;
+        $data->agerestrict = false;
+        $data->like = 0;
+        $data->dislike = 0;
+        $data->view = 0;
+        
+        if($params->scope == 'private'){
+            $data->scope = $params->scope;
+        }else{
+            $data->scope = 'public';
         }
-        $data->store()->associate($store);
-           
-        $promotion = $this->getProductPromotionById($params->product_promotion_id);
-        if($this->isEmpty($promotion)){
+        
+        if($this->isEmpty( $params->free)){
             return null;
         }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
+            $data->free = $params->free;
+            if($data->free){
+                $data->price = 0;
+                $data->disc = 0;
+                $data->discpctg = 0;
+            }else{
+                if($this->isEmpty( $params->discbyprice)){
+                    return null;
+                }else{
+                    if($data->discbyprice){
+                        $data->disc = $this->toDouble($params->disc);
+                        $data->discpctg = $this->toDouble($params->disc / $data->price);
+                    }else{
+                        $data->discpctg = $this->toDouble($params->discpctg);
+                        $data->disc = $this->toDouble($data->price * $data->discpctg * 100);
+                    }
+                }
             }
         }
 
-        $data->promotion()->associate($promotion);
-
-        $data->status = true;
-        if($this->saveModel($data)){
-            return $data->refresh();
-        }else{
+        $channel = $this->getChannelById($params->channel_id);
+        if($this->isEmpty($channel)){
+            error_log('here');
             return null;
         }
+        $data->channel()->associate($channel);
 
         return $data->refresh();
     }
@@ -206,17 +217,19 @@ trait VideoServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function videoAllCols() {
 
-        return ['id','store_id', 'product_promotion_id', 'uid', 
-        'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 
-        'price' , 'qty','promoendqty','salesqty','stockthreshold','status','onsale'];
+        return ['id','channel_id', 'playlist_id', 'uid', 
+        'title' , 'desc' , 'videopath', 'videopublicid'  , 'imgpublicid', 'imgpath' , 'totallength' , 'view' , 
+        'like' , 'dislike','price','discpctg','disc','discbyprice','free','salesqty','scope',
+        'agerestrict','status'];
 
     }
 
     public function videoDefaultCols() {
 
-        return ['id','uid' ,'onsale', 'onpromo', 'name' , 'desc' , 'price' , 'disc' , 
-        'discpctg' , 'promoprice' , 'promostartdate' , 'promoenddate', 'enddate' , 
-        'stock', 'salesqty' ];
+        return ['id','channel_id', 'playlist_id', 'uid', 
+        'title' , 'desc' , 'videopath', 'videopublicid'  , 'imgpublicid', 'imgpath' , 'totallength' , 'view' , 
+        'like' , 'dislike','price','discpctg','disc','discbyprice','free','salesqty','scope',
+        'agerestrict','status'];
 
     }
     public function videoFilterCols() {

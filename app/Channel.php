@@ -23,7 +23,8 @@ class Channel extends Model
      * @OA\Property(property="company_belongings", type="integer"),
      * @OA\Property(property="status", type="integer"),
      * @OA\Property(property="created_at", type="string"),
-     * @OA\Property(property="updated_at", type="string")
+     * @OA\Property(property="updated_at", type="string"),
+     * @OA\Property(property="company", ref="#/components/schemas/Company")
      */
     public function company()
     {

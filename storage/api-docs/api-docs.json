@@ -1199,6 +1199,14 @@
                         }
                     },
                     {
+                        "name": "tel1",
+                        "in": "query",
+                        "description": "Channel contact",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "companyBelongings",
                         "in": "query",
                         "description": "Is This Channel Belongs To Company?",

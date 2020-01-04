@@ -115,8 +115,6 @@ trait ChannelServices {
         $data->name = $params->name;
         $data->desc = $params->desc;
         $data->email = $params->email;
-        $data->imgpath = $params->imgpath;
-        $data->imgpublicid = $params->imgpublicid;
         $data->tel1 = $params->tel1;
 
         if($this->isEmpty( $params->companyBelongings)){
@@ -158,8 +156,6 @@ trait ChannelServices {
         $data->name = $params->name;
         $data->desc = $params->desc;
         $data->email = $params->email;
-        $data->imgpath = $params->imgpath;
-        $data->imgpublicid = $params->imgpublicid;
         $data->tel1 = $params->tel1;
 
         if($this->isEmpty( $params->companyBelongings)){

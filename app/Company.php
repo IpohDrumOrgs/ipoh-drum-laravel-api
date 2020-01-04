@@ -106,6 +106,6 @@ class Company extends Model
      */
     public function channels()
     {
-        return $this->hasMany('App\Blogger');
+        return $this->hasMany('App\Channel');
     }
 }

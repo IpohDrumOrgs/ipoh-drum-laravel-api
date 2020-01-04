@@ -124,6 +124,7 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::resource('channel', 'API\ChannelController');
     Route::get('/filter/channel', 'API\ChannelController@filter');
+    Route::get('/channel/{uid}/videos', 'API\ChannelController@getVideos');
 
     Route::resource('video', 'API\VideoController');
     Route::get('/filter/video', 'API\VideoController@filter');

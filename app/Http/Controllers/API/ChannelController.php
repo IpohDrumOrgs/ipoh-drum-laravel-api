@@ -513,9 +513,9 @@ class ChannelController extends Controller
     /**
      * @OA\Get(
      *   tags={"ChannelControllerService"},
-     *   path="/api/channel/{uid}/articles",
-     *   summary="Retrieves blog articles by Uid.",
-     *     operationId="getArticlesByChannelUid",
+     *   path="/api/channel/{uid}/videos",
+     *   summary="Retrieves blog videos by Uid.",
+     *     operationId="getVideosByChannelUid",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",
@@ -537,28 +537,28 @@ class ChannelController extends Controller
      *   ),
      *   @OA\Response(
      *     response=200,
-     *     description="Articles has been retrieved successfully."
+     *     description="Videos has been retrieved successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to retrieved the articles."
+     *     description="Unable to retrieved the videos."
      *   )
      * )
      */
-    public function getArticles(Request $request, $uid)
+    public function getVideos(Request $request, $uid)
     {
-        error_log($this->controllerName.'Retrieving channel articles by uid:' . $uid);
+        error_log($this->controllerName.'Retrieving channel videos by uid:' . $uid);
         $channel = $this->getChannel($uid);
         if ($this->isEmpty($channel)) {
             DB::rollBack();
             return $this->notFoundResponse('Channel');
         }
-        $articles = $channel->articles()->with('channel', 'articleimages')->where('status' , true)->get();
+        $videos = $channel->videos()->where('status' , true)->get();
 
-        if ($this->isEmpty($articles)) {
-            return $this->errorPaginateResponse('Articles');
+        if ($this->isEmpty($videos)) {
+            return $this->errorPaginateResponse('Videos');
         } else {
-            return $this->successPaginateResponse('Articles', $articles, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+            return $this->successPaginateResponse('Videos', $videos, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 

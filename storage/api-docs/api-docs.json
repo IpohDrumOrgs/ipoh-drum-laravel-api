@@ -1470,13 +1470,13 @@
                 }
             }
         },
-        "/api/channel/{uid}/articles": {
+        "/api/channel/{uid}/videos": {
             "get": {
                 "tags": [
                     "ChannelControllerService"
                 ],
-                "summary": "Retrieves blog articles by Uid.",
-                "operationId": "getArticlesByChannelUid",
+                "summary": "Retrieves blog videos by Uid.",
+                "operationId": "getVideosByChannelUid",
                 "parameters": [
                     {
                         "name": "uid",
@@ -1506,10 +1506,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Articles has been retrieved successfully."
+                        "description": "Videos has been retrieved successfully."
                     },
                     "default": {
-                        "description": "Unable to retrieved the articles."
+                        "description": "Unable to retrieved the videos."
                     }
                 }
             }

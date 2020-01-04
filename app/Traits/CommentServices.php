@@ -203,6 +203,15 @@ trait CommentServices {
         return $data;
     }
     
+    private function getCommentsByVideo($video) {
+
+        $data = collect();
+        $data = $data->merge($video->comments()->with('secondcomments')->where('status',true)->get());
+        $data = $data->unique('id')->sortBy('id')->flatten(1);
+
+        return $data;
+    }
+
     private function getCommentsByVideos($requester) {
 
         $data = collect();
@@ -216,6 +225,8 @@ trait CommentServices {
 
         return $data;
     }
+
+    
     
     // private function getArticleImageComments($requester) {
 

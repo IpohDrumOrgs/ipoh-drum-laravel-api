@@ -634,12 +634,80 @@ class VideoController extends Controller
     {
         error_log($this->controllerName.'Retrieving video comments listing');
         $video = $this->getVideo($uid);
+        $params = collect([
+            'scope' => 'public',
+            'status' => true,
+        ]);
+        if ($this->isEmpty($video)) {
+            return $this->notFoundResponse('Video');
+        }
+
+        $comments = $this->getCommentsByVideo($video);
+
+        if ($this->isEmpty($comments)) {
+            return $this->errorPaginateResponse('Comments');
+        } else {
+            return $this->successPaginateResponse('Comments', $comments, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *   tags={"VideoControllerService"},
+     *   path="/api/public/video/like/edit",
+     *   summary="Set like for video",
+     *     operationId="setVideoLikeById",
+     *   @OA\Parameter(
+     *     name="video_id",
+     *     in="query",
+     *     description="Video id",
+     *     required=true,
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="type",
+     *     in="query",
+     *     description="Like or dislike",
+     *     required=true,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Like was set"
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to set like"
+     *   )
+     * )
+     */
+    public function setVideoLike(Request $request)
+    {
+        DB::beginTransaction();
+        error_log($this->controllerName.'setting video like');
+        $this->validate($request, [
+            'type' => 'required|in:like,dislike',
+            'video_id' => 'required|numeric',
+        ]);
+        $video = $this->getVideoById($request->video_id);
         if ($this->isEmpty($video)) {
             DB::rollBack();
             return $this->notFoundResponse('Video');
         }
 
-        $comments = $this->getCommentsByVideo($video);
+        
+        if($request->type == 'like'){
+            if(!$this->likeVideo($video)){
+                DB::rollBack();
+                return $this->errorResponse();
+            }
+        }else{
+            if(!$this->dislikeVideo($video)){
+                DB::rollBack();
+                return $this->errorResponse();
+            }
+        }
+        
 
         if ($this->isEmpty($comments)) {
             return $this->errorPaginateResponse('Comments');

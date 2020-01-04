@@ -380,7 +380,7 @@
                     "ArticleControllerService"
                 ],
                 "summary": "Retrieves all public comments.",
-                "operationId": "getPublicComments",
+                "operationId": "getPublicArticleComments",
                 "parameters": [
                     {
                         "name": "uid",
@@ -8906,7 +8906,7 @@
                     "VideoControllerService"
                 ],
                 "summary": "Retrieves all public comments.",
-                "operationId": "getPublicComments",
+                "operationId": "getPublicVideoComments",
                 "parameters": [
                     {
                         "name": "uid",

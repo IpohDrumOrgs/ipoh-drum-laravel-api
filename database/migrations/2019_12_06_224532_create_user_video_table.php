@@ -17,9 +17,10 @@ class CreateUserVideoTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('video_id')->unsigned();
             $table->unsignedInteger('user_id')->unsigned();
-            $table->string('review')->nullable();
             $table->boolean('saved')->default(false);
+            $table->boolean('purchased')->default(false);
             $table->string('watchedlength')->default('0:00');
+            $table->string('likestatus')->nullable();
             $table->string('status')->default('clicked');
             $table->timestamps();
 

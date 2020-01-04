@@ -19,10 +19,10 @@ trait ChannelServices {
         //Role Based Retrieve Done in Store
         $companies = $this->getCompanies($requester);
         foreach($companies as $company){
-            $data = $data->merge($company->channels()->where('status',true)->get());
+            $data = $data->merge($company->channels()->with('company','user')->where('status',true)->get());
         }
 
-        $data = $data->merge($requester->channels()->where('status',true)->get());
+        $data = $data->merge($requester->channels()->with('company','user')->where('status',true)->get());
 
 
         $data = $data->unique('id')->sortBy('id')->flatten(1);
@@ -97,12 +97,12 @@ trait ChannelServices {
     }
 
     private function getChannel($uid) {
-        $data = Channel::where('uid', $uid)->where('status', 1)->first();
+        $data = Channel::where('uid', $uid)->with('company','user')->where('status', 1)->first();
         return $data;
     }
 
     private function getChannelById($id) {
-        $data = Channel::where('id', $id)->where('status', 1)->first();
+        $data = Channel::where('id', $id)->with('company','user')->where('status', 1)->first();
         return $data;
     }
 

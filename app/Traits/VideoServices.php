@@ -213,6 +213,19 @@ trait VideoServices {
         return $data;
     }
 
+    private function likeVideo($video) {
+        
+        $video->like += 1;
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
+            return null;
+        }
+        
+
+        return true;
+    }
+
     // Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function videoAllCols() {

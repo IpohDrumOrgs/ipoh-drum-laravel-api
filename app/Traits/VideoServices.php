@@ -129,6 +129,7 @@ trait VideoServices {
                 $data->disc = 0;
                 $data->discpctg = 0;
             }else{
+                $data->price = $this->toDouble($params->price);
                 if($this->isEmpty( $params->discbyprice)){
                     return null;
                 }else{

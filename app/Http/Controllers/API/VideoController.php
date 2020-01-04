@@ -11,13 +11,12 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\VideoServices;
-use App\Traits\VideoImageServices;
 use App\Traits\CommentServices;
 use App\Traits\LogServices;
 
 class VideoController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, VideoServices, VideoImageServices, LogServices , CommentServices;
+    use GlobalFunctions, NotificationFunctions, VideoServices, LogServices , CommentServices;
 
     private $controllerName = '[VideoController]';
     /**
@@ -212,6 +211,7 @@ class VideoController extends Controller
      * name="scope",
      * in="query",
      * description="Is this video public?",
+     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
@@ -219,7 +219,8 @@ class VideoController extends Controller
      * @OA\Parameter(
      * name="videopath",
      * in="query",
-     * description="Is this video public?",
+     * description="Video Link",
+     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
@@ -227,7 +228,8 @@ class VideoController extends Controller
      * @OA\Parameter(
      * name="videopublicid",
      * in="query",
-     * description="Is this video public?",
+     * description="Video Link",
+     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
@@ -235,7 +237,8 @@ class VideoController extends Controller
      * @OA\Parameter(
      * name="totallength",
      * in="query",
-     * description="Is this video public?",
+     * description="Length Of Video",
+     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
@@ -244,8 +247,42 @@ class VideoController extends Controller
      * name="free",
      * in="query",
      * description="Is this video free?",
+     * required=true,
      * @OA\Schema(
      *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="price",
+     * in="query",
+     * description="Video Price",
+     * @OA\Schema(
+     *              type="number"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="discbyprice",
+     * in="query",
+     * description="Is this video discount by price?",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="disc",
+     * in="query",
+     * description="Discount Price",
+     * @OA\Schema(
+     *              type="number"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="discpctg",
+     * in="query",
+     * description="Discount Percentage",
+     * @OA\Schema(
+     *              type="number"
      *          )
      * ),
      * 	@OA\RequestBody(
@@ -254,7 +291,7 @@ class VideoController extends Controller
 *              mediaType="multipart/form-data",
 *              @OA\Schema(
 *                  @OA\Property(
-*                      property="imgs",
+*                      property="img",
 *                      description="Video Cover Image",
 *                      type="file",
 *                      @OA\Items(type="string", format="binary")
@@ -280,14 +317,28 @@ class VideoController extends Controller
         // api/video (POST)
         $this->validate($request, [
             'title' => 'required|string',
-            'blogger_id' => 'required|numeric',
+            'channel_id' => 'required|numeric',
+            'videopath' => 'required|string',
+            'videopublicid' => 'required|string',
+            'img' => 'required',
+            'free' => 'required|boolean',
+            'discbyprice' => 'required|boolean',
+            'scope' => 'required|string',
         ]);
         error_log($this->controllerName.'Creating video.');
         $params = collect([
-            'blogger_id' => $request->blogger_id,
+            'channel_id' => $request->channel_id,
             'title' => $request->title,
             'desc' => $request->desc,
             'scope' => $request->scope,
+            'videopath' => $request->videopath,
+            'videopublicid' => $request->videopublicid,
+            'totallength' => $request->totallength,
+            'free' => $request->free,
+            'price' => $request->price,
+            'discbyprice' => $request->discbyprice,
+            'disc' => $request->disc,
+            'discpctg' => $request->discpctg,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
@@ -296,42 +347,23 @@ class VideoController extends Controller
             DB::rollBack();
             return $this->errorResponse();
         }
-
-        $count = 0;
-        if($request->file('imgs') != null){
-            error_log('Video Images Is Detected');
-            $imgs = $request->file('imgs');
-            foreach($imgs as $img){
-                error_log('Inside img');
-                $count++;
-                if($count > 6){
-                    break;
-                }
-                $img = $this->uploadImage($img , "/Video/". $video->uid . "/imgs");
-                error_log(collect($img));
-                if(!$this->isEmpty($img)){
-                    $proccessingimgids->push($img->publicid);
-
-                    //Attach Image to VideoImage
-                    $params = collect([
-                        'imgpath' => $img->imgurl,
-                        'imgpublicid' => $img->publicid,
-                        'video_id' => $video->id,
-                    ]);
-                    $params = json_decode(json_encode($params));
-                    $videoimage = $this->createVideoImage($params);
-                    if($this->isEmpty($videoimage)){
-                        error_log('error here1');
-                        DB::rollBack();
-                        $this->deleteImages($proccessingimgids);
-                        return $this->errorResponse();
-                    }
-                }else{
-                    error_log('error here3');
+        if($request->file('img') != null){
+            error_log('Image Is Detected');
+            $img = $this->uploadImage($request->file('img') , "/Video/". $video->uid);
+            if(!$this->isEmpty($img)){
+                $video->imgpath = $img->imgurl;
+                $video->imgpublicid = $img->publicid;
+                $proccessingimgids->push($img->publicid);
+                if(!$this->saveModel($video)){
+                    error_log('error here0');
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
                 }
+            }else{
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
             }
         }
 
@@ -568,7 +600,7 @@ class VideoController extends Controller
      *   tags={"VideoControllerService"},
      *   path="/api/public/video/{uid}/comments",
      *   summary="Retrieves all public comments.",
-     *     operationId="getPublicComments",
+     *     operationId="getPublicVideoComments",
      *   @OA\Parameter(
      *     name="uid",
      *     in="path",

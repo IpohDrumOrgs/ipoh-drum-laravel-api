@@ -11,17 +11,19 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\GlobalFunctions;
 use App\Traits\NotificationFunctions;
 use App\Traits\VideoServices;
+use App\Traits\VideoImageServices;
+use App\Traits\CommentServices;
 use App\Traits\LogServices;
 
 class VideoController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, VideoServices, LogServices;
+    use GlobalFunctions, NotificationFunctions, VideoServices, VideoImageServices, LogServices , CommentServices;
 
     private $controllerName = '[VideoController]';
     /**
      * @OA\Get(
      *      path="/api/video",
-     *      operationId="getVideoList",
+     *      operationId="getVideos",
      *      tags={"VideoControllerService"},
      *      summary="Get list of videos",
      *      description="Returns list of videos",
@@ -50,7 +52,7 @@ class VideoController extends Controller
     {
         error_log($this->controllerName.'Retrieving list of videos.');
         // api/video (GET)
-        $videos = $this->getVideoListing($request->video());
+        $videos = $this->getVideos($request->user());
         if ($this->isEmpty($videos)) {
             return $this->errorPaginateResponse('Videos');
         } else {
@@ -61,7 +63,7 @@ class VideoController extends Controller
     /**
      * @OA\Get(
      *      path="/api/filter/video",
-     *      operationId="filterVideoList",
+     *      operationId="filterVideos",
      *      tags={"VideoControllerService"},
      *      summary="Filter list of videos",
      *      description="Returns list of filtered videos",
@@ -129,7 +131,7 @@ class VideoController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $videos = $this->filterVideoListing($request->video(), $params);
+        $videos = $this->filterVideos($videos, $params);
 
         if ($this->isEmpty($videos)) {
             return $this->errorPaginateResponse('Videos');
@@ -181,49 +183,85 @@ class VideoController extends Controller
      *   summary="Creates a video.",
      *   operationId="createVideo",
      * @OA\Parameter(
-     * name="name",
+     * name="channel_id",
      * in="query",
-     * description="Videoname",
+     * description="Video belongs To which Channel",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="title",
+     * in="query",
+     * description="Video title",
      * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="email",
+     * name="desc",
      * in="query",
-     * description="Email",
-     * required=true,
+     * description="Video description",
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="password",
+     * name="scope",
      * in="query",
-     * description="Password",
-     * required=true,
+     * description="Is this video public?",
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="password_confirmation",
+     * name="videopath",
      * in="query",
-     * description="Password Confirmation",
-     * required=true,
+     * description="Is this video public?",
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="country",
+     * name="videopublicid",
      * in="query",
-     * description="Country",
+     * description="Is this video public?",
      * @OA\Schema(
-     *  type="string"
-     *  )
+     *              type="string"
+     *          )
      * ),
+     * @OA\Parameter(
+     * name="totallength",
+     * in="query",
+     * description="Is this video public?",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="free",
+     * in="query",
+     * description="Is this video free?",
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * 	@OA\RequestBody(
+*          required=true,
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="imgs",
+*                      description="Video Cover Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
      *   @OA\Response(
      *     response=200,
      *     description="Video has been created successfully."
@@ -236,39 +274,69 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
+        $proccessingimgids = collect();
         DB::beginTransaction();
         // Can only be used by Authorized personnel
         // api/video (POST)
         $this->validate($request, [
-            'email' => 'nullable|string|email|max:191|unique:videos',
-            'password' => 'required|string|min:6|confirmed',
+            'title' => 'required|string',
+            'blogger_id' => 'required|numeric',
         ]);
         error_log($this->controllerName.'Creating video.');
         $params = collect([
-            'icno' => $request->icno,
-            'name' => $request->name,
-            'email' => $request->email,
-            'tel1' => $request->tel1,
-            'tel2' => $request->tel2,
-            'address1' => $request->address1,
-            'address2' => $request->address2,
-            'postcode' => $request->postcode,
-            'state' => $request->state,
-            'city' => $request->city,
-            'country' => $request->country,
-            'password' => $request->password,
+            'blogger_id' => $request->blogger_id,
+            'title' => $request->title,
+            'desc' => $request->desc,
+            'scope' => $request->scope,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $video = $this->createVideo($request->video(), $params);
-
+        $video = $this->createVideo($params);
         if ($this->isEmpty($video)) {
             DB::rollBack();
             return $this->errorResponse();
-        } else {
-            DB::commit();
-            return $this->successResponse('Video', $video, 'create');
         }
+
+        $count = 0;
+        if($request->file('imgs') != null){
+            error_log('Video Images Is Detected');
+            $imgs = $request->file('imgs');
+            foreach($imgs as $img){
+                error_log('Inside img');
+                $count++;
+                if($count > 6){
+                    break;
+                }
+                $img = $this->uploadImage($img , "/Video/". $video->uid . "/imgs");
+                error_log(collect($img));
+                if(!$this->isEmpty($img)){
+                    $proccessingimgids->push($img->publicid);
+
+                    //Attach Image to VideoImage
+                    $params = collect([
+                        'imgpath' => $img->imgurl,
+                        'imgpublicid' => $img->publicid,
+                        'video_id' => $video->id,
+                    ]);
+                    $params = json_decode(json_encode($params));
+                    $videoimage = $this->createVideoImage($params);
+                    if($this->isEmpty($videoimage)){
+                        error_log('error here1');
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                }else{
+                    error_log('error here3');
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }
+        }
+
+        DB::commit();
+        return $this->successResponse('Video', $video, 'create');
     }
 
     /**
@@ -284,69 +352,40 @@ class VideoController extends Controller
      *     required=true,
      *     @OA\Schema(type="string")
      *   ),
-     *   @OA\Parameter(
-     *     name="name",
-     *     in="query",
-     *     description="Videoname.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="email",
-     *     in="query",
-     *     description="Email.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="tel1",
-     *     in="query",
-     *     description="Telephone Number #1.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="address1",
-     *     in="query",
-     *     description="Address #1.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="city",
-     *     in="query",
-     *     description="City.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="postcode",
-     *     in="query",
-     *     description="PostCode.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="state",
-     *     in="query",
-     *     description="State.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *   ),
-     *  @OA\Parameter(
-     *     name="country",
-     *     in="query",
-     *     description="Country.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(
-     *     name="icno",
-     *     in="query",
-     *     description="IC Number.",
-     *     required=false,
-     *     @OA\Schema(type="string")
-     *     ),
+     * @OA\Parameter(
+     * name="blogger_id",
+     * in="query",
+     * description="Video belongs To which Blogger",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="title",
+     * in="query",
+     * description="Video title",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="desc",
+     * in="query",
+     * description="Video description",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="scope",
+     * in="query",
+     * description="Is this video public?",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Video has been updated successfully."
@@ -362,31 +401,24 @@ class VideoController extends Controller
         DB::beginTransaction();
         // api/video/{videoid} (PUT)
         error_log($this->controllerName.'Updating video of uid: ' . $uid);
-        $video = $this->getVideo($request->video(), $uid);
         $this->validate($request, [
-            'email' => 'required|string|max:191|unique:videos,email,' . $video->id,
-            'name' => 'required|string|max:191',
+            'title' => 'required|string',
+            'blogger_id' => 'required|numeric',
         ]);
+        $video = $this->getVideo($uid);
         if ($this->isEmpty($video)) {
             DB::rollBack();
             return $this->notFoundResponse('Video');
         }
         $params = collect([
-            'icno' => $request->icno,
-            'name' => $request->name,
-            'email' => $request->email,
-            'tel1' => $request->tel1,
-            'tel2' => $request->tel2,
-            'address1' => $request->address1,
-            'address2' => $request->address2,
-            'postcode' => $request->postcode,
-            'state' => $request->state,
-            'city' => $request->city,
-            'country' => $request->country,
+            'blogger_id' => $request->blogger_id,
+            'title' => $request->title,
+            'desc' => $request->desc,
+            'scope' => $request->scope,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $video = $this->updateVideo($request->video(), $video, $params);
+        $video = $this->updateVideo($video, $params);
         if ($this->isEmpty($video)) {
             DB::rollBack();
             return $this->errorResponse();
@@ -425,12 +457,12 @@ class VideoController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/video/{videoid} (DELETE)
         error_log($this->controllerName.'Deleting video of uid: ' . $uid);
-        $video = $this->getVideo($request->video(), $uid);
+        $video = $this->getVideo( $uid);
         if ($this->isEmpty($video)) {
             DB::rollBack();
             return $this->notFoundResponse('Video');
         }
-        $video = $this->deleteVideo($request->video(), $video->id);
+        $video = $this->deleteVideo($video->id);
         if ($this->isEmpty($video)) {
             DB::rollBack();
             return $this->errorResponse();
@@ -470,6 +502,7 @@ class VideoController extends Controller
     {
         error_log($this->controllerName.'Retrieving public videos listing');
         $video = $this->getVideo($uid);
+        $video = $this->setCommentCount($video);
        
         if ($this->isEmpty($video) && $video->scope != "public") {
             $data['data'] = null;
@@ -485,7 +518,7 @@ class VideoController extends Controller
      *   tags={"VideoControllerService"},
      *   path="/api/public/videos",
      *   summary="Retrieves all public videos.",
-     *     operationId="getPublicVideosListing",
+     *     operationId="getPublicVideos",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
@@ -519,11 +552,67 @@ class VideoController extends Controller
         //Convert To Json Object
         $params = json_decode(json_encode($params));
         $videos = $this->filterVideos($videos , $params);
+        $videos->map(function($item){
+            return $this->setCommentCount($item);
+        });
 
         if ($this->isEmpty($videos)) {
             return $this->errorPaginateResponse('Videos');
         } else {
             return $this->successPaginateResponse('Videos', $videos, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+      
+    /**
+     * @OA\Get(
+     *   tags={"VideoControllerService"},
+     *   path="/api/public/video/{uid}/comments",
+     *   summary="Retrieves all public comments.",
+     *     operationId="getPublicComments",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Video ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Comments has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the comments."
+     *   )
+     * )
+     */
+    public function getVideoComments(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving video comments listing');
+        $video = $this->getVideo($uid);
+        if ($this->isEmpty($video)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Video');
+        }
+
+        $comments = $this->getCommentsByVideo($video);
+
+        if ($this->isEmpty($comments)) {
+            return $this->errorPaginateResponse('Comments');
+        } else {
+            return $this->successPaginateResponse('Comments', $comments, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
 }

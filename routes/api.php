@@ -148,6 +148,7 @@ Route::get('/inventory/{uid}/onsale', 'API\InventoryController@getOnSaleInventor
 
 Route::get('/public/videos', 'API\VideoController@getPublicVideos');
 Route::get('/public/video/{uid}', 'API\VideoController@getPublicVideo');
+Route::get('/public/video/{uid}/comments', 'API\VideoController@getVideoComments');
 
 
 Route::get('/public/articles', 'API\ArticleController@getPublicArticles');

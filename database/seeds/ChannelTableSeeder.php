@@ -65,7 +65,7 @@ class ChannelTableSeeder extends Seeder
             "https://res.cloudinary.com/dmtxkcmay/image/upload/v1577546796/doggie-school-bus_oduanr.jpg",
         ];
 
-        for($x=0 ; $x<20 ; $x++){
+        for($x=0 ; $x<10 ; $x++){
             $channel = new Channel();
 
             $channel->uid = Carbon::now()->timestamp. Channel::count();
@@ -111,7 +111,7 @@ class ChannelTableSeeder extends Seeder
                 $video->disc = $faker->numberBetween($min = 1, $max = 100);
                 $video->discpctg = $faker->boolean($min = 0, $max = 1);
             }
-            $video->channel()->associate(Channel::find(1));
+            $video->channel()->associate(Channel::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10])));
             $video->save();
 
         }

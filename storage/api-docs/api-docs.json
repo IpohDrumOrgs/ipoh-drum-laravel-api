@@ -8944,6 +8944,43 @@
                 }
             }
         },
+        "/api/public/video/like/edit": {
+            "post": {
+                "tags": [
+                    "VideoControllerService"
+                ],
+                "summary": "Set like for video",
+                "operationId": "setVideoLikeById",
+                "parameters": [
+                    {
+                        "name": "video_id",
+                        "in": "query",
+                        "description": "Video id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Like or dislike",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Like was set"
+                    },
+                    "default": {
+                        "description": "Unable to set like"
+                    }
+                }
+            }
+        },
         "/api/vouchercode": {
             "get": {
                 "tags": [

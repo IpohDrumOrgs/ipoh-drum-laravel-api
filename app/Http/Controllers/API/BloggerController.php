@@ -365,6 +365,14 @@ class BloggerController extends Controller
      *              type="integer"
      *          )
      * ),
+     *   @OA\Parameter(
+     *     name="_method",
+     *     in="query",
+     *     description="For spoofing purposes.",
+     *     required=false,
+     *     example="PUT",
+     *     @OA\Schema(type="string")
+     *    ),
      * 	@OA\RequestBody(
 *          @OA\MediaType(
 *              mediaType="multipart/form-data",

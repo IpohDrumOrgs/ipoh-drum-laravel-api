@@ -36,6 +36,7 @@ use App\Traits\TicketServices;
 use App\Traits\TypeServices;
 use App\Traits\UserServices;
 use App\Traits\VerificationCodeServices;
+use App\Traits\VideoServices;
 use App\Traits\VoucherServices;
 use App\Traits\WarrantyServices;
 
@@ -75,6 +76,7 @@ trait AllServices {
     TypeServices, 
     UserServices, 
     VerificationCodeServices, 
+    VideoServices,
     VoucherServices, 
     WarrantyServices;
 

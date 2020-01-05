@@ -172,7 +172,7 @@ trait VideoServices {
             $data->scope = 'public';
         }
         
-        if($this->isEmpty( $params->free)){
+        if($this->isEmpty($params->free)){
             return null;
         }else{
             $data->free = $params->free;

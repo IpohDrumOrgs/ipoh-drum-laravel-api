@@ -8,15 +8,11 @@ use DB;
 use Carbon\Carbon;
 use App\Video;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\NotificationFunctions;
-use App\Traits\VideoServices;
-use App\Traits\CommentServices;
-use App\Traits\LogServices;
+use App\Traits\AllServices;
 
 class VideoController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, VideoServices, LogServices , CommentServices;
+    use AllServices;
 
     private $controllerName = '[VideoController]';
     /**
@@ -560,6 +556,7 @@ class VideoController extends Controller
             DB::rollBack();
             return $this->errorResponse();
         }
+        error_log($params->free);
           //Associating Image Relationship
           if($request->file('img') != null){
             $img = $this->uploadImage($request->file('img') , "/Video/". $video->uid);

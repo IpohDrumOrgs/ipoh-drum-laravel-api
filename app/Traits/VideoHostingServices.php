@@ -38,27 +38,6 @@ trait VideoHostingServices {
 
     }
 
-    public function deleteVideos($ids)
-    {
-            foreach($ids as $id){
-                $this->deleteVideo($id);
-            }
-    } 
-
-    
-    public function deleteVideo($id)
-    {
-        
-        if($id){
-            try{
-                Cloudder::destroy($id);
-                return true;
-            }catch(Exxception $e){
-                $this->createErrorLog('VideoHostingServices' , 'deleteVideo', 'error when deleting video '. $id , $e->getMessage());
-                return false;
-            }
-        }
-    } 
 
 
 }

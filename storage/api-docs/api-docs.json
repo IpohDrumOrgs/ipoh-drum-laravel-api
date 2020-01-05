@@ -703,7 +703,7 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
                     "BloggerControllerService"
                 ],
@@ -8767,9 +8767,9 @@
                         }
                     },
                     {
-                        "name": "blogger_id",
+                        "name": "channel_id",
                         "in": "query",
-                        "description": "Video belongs To which Blogger",
+                        "description": "Video belongs To which Channel",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -8796,11 +8796,101 @@
                         "name": "scope",
                         "in": "query",
                         "description": "Is this video public?",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "videopath",
+                        "in": "query",
+                        "description": "Video Link",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "videopublicid",
+                        "in": "query",
+                        "description": "Video ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "totallength",
+                        "in": "query",
+                        "description": "Length Of Video",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "free",
+                        "in": "query",
+                        "description": "Is this video free?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Video Price",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discbyprice",
+                        "in": "query",
+                        "description": "Is this video discount by price?",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "disc",
+                        "in": "query",
+                        "description": "Discount Price",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "discpctg",
+                        "in": "query",
+                        "description": "Discount Percentage",
+                        "schema": {
+                            "type": "number"
+                        }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "img": {
+                                        "description": "Video Cover Image",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Video has been updated successfully."
@@ -8940,6 +9030,43 @@
                     },
                     "default": {
                         "description": "Unable to retrieved the comments."
+                    }
+                }
+            }
+        },
+        "/api/public/video/like/edit": {
+            "post": {
+                "tags": [
+                    "VideoControllerService"
+                ],
+                "summary": "Set like for video",
+                "operationId": "setVideoLikeById",
+                "parameters": [
+                    {
+                        "name": "video_id",
+                        "in": "query",
+                        "description": "Video id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Like or dislike",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Like was set"
+                    },
+                    "default": {
+                        "description": "Unable to set like"
                     }
                 }
             }

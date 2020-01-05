@@ -385,9 +385,9 @@ class VideoController extends Controller
      *     @OA\Schema(type="string")
      *   ),
      * @OA\Parameter(
-     * name="blogger_id",
+     * name="channel_id",
      * in="query",
-     * description="Video belongs To which Blogger",
+     * description="Video belongs To which Channel",
      * required=true,
      * @OA\Schema(
      *              type="integer"
@@ -414,10 +414,93 @@ class VideoController extends Controller
      * name="scope",
      * in="query",
      * description="Is this video public?",
+     * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
+     * @OA\Parameter(
+     * name="videopath",
+     * in="query",
+     * description="Video Link",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="videopublicid",
+     * in="query",
+     * description="Video ID",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="totallength",
+     * in="query",
+     * description="Length Of Video",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="free",
+     * in="query",
+     * description="Is this video free?",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="price",
+     * in="query",
+     * description="Video Price",
+     * @OA\Schema(
+     *              type="number"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="discbyprice",
+     * in="query",
+     * description="Is this video discount by price?",
+     * required=true,
+     * @OA\Schema(
+     *              type="integer"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="disc",
+     * in="query",
+     * description="Discount Price",
+     * @OA\Schema(
+     *              type="number"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="discpctg",
+     * in="query",
+     * description="Discount Percentage",
+     * @OA\Schema(
+     *              type="number"
+     *          )
+     * ),
+     * 	@OA\RequestBody(
+*          @OA\MediaType(
+*              mediaType="multipart/form-data",
+*              @OA\Schema(
+*                  @OA\Property(
+*                      property="img",
+*                      description="Video Cover Image",
+*                      type="file",
+*                      @OA\Items(type="string", format="binary")
+*                   ),
+*               ),
+*           ),
+*       ),
      *   @OA\Response(
      *     response=200,
      *     description="Video has been updated successfully."
@@ -431,11 +514,17 @@ class VideoController extends Controller
     public function update(Request $request, $uid)
     {
         DB::beginTransaction();
+        $proccessingimgids = collect();
         // api/video/{videoid} (PUT)
         error_log($this->controllerName.'Updating video of uid: ' . $uid);
         $this->validate($request, [
             'title' => 'required|string',
-            'blogger_id' => 'required|numeric',
+            'channel_id' => 'required|numeric',
+            'videopath' => 'required|string',
+            'videopublicid' => 'required|string',
+            'free' => 'required|boolean',
+            'discbyprice' => 'required|boolean',
+            'scope' => 'required|string',
         ]);
         $video = $this->getVideo($uid);
         if ($this->isEmpty($video)) {
@@ -443,10 +532,18 @@ class VideoController extends Controller
             return $this->notFoundResponse('Video');
         }
         $params = collect([
-            'blogger_id' => $request->blogger_id,
+            'channel_id' => $request->channel_id,
             'title' => $request->title,
             'desc' => $request->desc,
             'scope' => $request->scope,
+            'videopath' => $request->videopath,
+            'videopublicid' => $request->videopublicid,
+            'totallength' => $request->totallength,
+            'free' => $request->free,
+            'price' => $request->price,
+            'discbyprice' => $request->discbyprice,
+            'disc' => $request->disc,
+            'discpctg' => $request->discpctg,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
@@ -454,10 +551,38 @@ class VideoController extends Controller
         if ($this->isEmpty($video)) {
             DB::rollBack();
             return $this->errorResponse();
-        } else {
-            DB::commit();
-            return $this->successResponse('Video', $video, 'update');
         }
+          //Associating Image Relationship
+          if($request->file('img') != null){
+            $img = $this->uploadImage($request->file('img') , "/Video/". $video->uid);
+            if(!$this->isEmpty($img)){
+                error_log('inside edi');
+                //Delete Previous Image
+                if($video->imgpublicid){
+                    if(!$this->deleteImage($video->imgpublicid)){
+                        error_log('wrong 7 edi');
+                        DB::rollBack();
+                        return $this->errorResponse();
+                    }
+                }
+
+                $video->imgpath = $img->imgurl;
+                $video->imgpublicid = $img->publicid;
+                $proccessingimgids->push($img->publicid);
+                if(!$this->saveModel($video)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }else{
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+
+        DB::commit();
+        return $this->successResponse('Video', $video, 'update');
     }
 
     /**

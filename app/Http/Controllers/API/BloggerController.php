@@ -295,7 +295,7 @@ class BloggerController extends Controller
 
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *   tags={"BloggerControllerService"},
      *   path="/api/blogger/{uid}",
      *   summary="Update blogger by Uid.",

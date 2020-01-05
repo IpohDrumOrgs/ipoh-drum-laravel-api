@@ -159,40 +159,50 @@ trait VideoServices {
         
         $params = $this->checkUndefinedProperty($params , $this->videoAllCols());
 
-        $data->name = $params->name;
-        $data->code = $params->code;
-        $data->sku = $params->sku;
+        $data->title  = $params->title ;
         $data->desc = $params->desc;
-        $data->price = $this->toDouble($params->price);
-        $data->enddate = $this->toDate($params->enddate);
-        $data->qty = $this->toInt($params->qty);
-        $data->salesqty = 0;
-        $data->stockthreshold = $this->toInt($params->stockthreshold);
-        $data->onsale = $params->onsale;
-
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
+        $data->videopath = $params->videopath;
+        $data->videopublicid = $params->videopublicid;
+        $data->totallength = $params->totallength;
+        $data->agerestrict = false;
+        
+        if($params->scope == 'private'){
+            $data->scope = $params->scope;
+        }else{
+            $data->scope = 'public';
         }
-        $data->store()->associate($store);
-           
-        $promotion = $this->getProductPromotionById($params->product_promotion_id);
-        if($this->isEmpty($promotion)){
+        
+        if($this->isEmpty( $params->free)){
             return null;
         }else{
-            if($promotion->qty > 0){
-                $data->promoendqty = $data->salesqty + $promotion->qty;
+            $data->free = $params->free;
+            if($data->free){
+                $data->price = 0;
+                $data->disc = 0;
+                $data->discpctg = 0;
+            }else{
+                $data->price = $this->toDouble($params->price);
+                if($this->isEmpty( $params->discbyprice)){
+                    return null;
+                }else{
+                    if($data->discbyprice){
+                        $data->disc = $this->toDouble($params->disc);
+                        $data->discpctg = $this->toDouble($params->disc / $data->price);
+                    }else{
+                        $data->discpctg = $this->toDouble($params->discpctg);
+                        $data->disc = $this->toDouble($data->price * $data->discpctg * 100);
+                    }
+                }
             }
         }
 
-        $data->promotion()->associate($promotion);
-
-        $data->status = true;
-        if($this->saveModel($data)){
-            return $data->refresh();
-        }else{
+        $channel = $this->getChannelById($params->channel_id);
+        if($this->isEmpty($channel)){
+            error_log('here');
             return null;
         }
+        $data->channel()->associate($channel);
+
         return $data->refresh();
     }
 

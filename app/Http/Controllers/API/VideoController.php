@@ -372,7 +372,7 @@ class VideoController extends Controller
     }
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *   tags={"VideoControllerService"},
      *   path="/api/video/{uid}",
      *   summary="Update video by Uid.",

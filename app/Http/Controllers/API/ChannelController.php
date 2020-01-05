@@ -304,7 +304,7 @@ class ChannelController extends Controller
 
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *   tags={"ChannelControllerService"},
      *   path="/api/channel/{uid}",
      *   summary="Update channel by Uid.",

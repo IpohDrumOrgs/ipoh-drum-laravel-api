@@ -35,7 +35,9 @@ class Video extends Model
      * @OA\Property(property="agerestrict", type="integer"),
      * @OA\Property(property="status", type="integer"),
      * @OA\Property(property="created_at", type="string"),
-     * @OA\Property(property="updated_at", type="string")
+     * @OA\Property(property="updated_at", type="string"),
+     * @OA\Property(property="commentcount", type="integer"),
+     * @OA\Property(property="channel", ref="#/components/schemas/Channel")
      *
      */
     public function channel()

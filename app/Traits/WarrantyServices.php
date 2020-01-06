@@ -33,51 +33,16 @@ trait WarrantyServices {
 
     private function filterWarranties($data , $params) {
 
+        $data = $this->globalFilter($data, $params);
+        $params = $this->checkUndefinedProperty($params , $this->warrantyFilterCols());
 
-        if($params->keyword){
-            error_log('Filtering warranties with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
-                    return true;
-                }else{
-                    return false;
-                }
-
+        if($params->store_id){
+            error_log('Filtering warranties with store_id....');
+            $store_id = $params->store_id;
+            $data = $data->filter(function ($item) use ($store_id) {
+                return $item->store_id == $store_id;
             });
         }
-
-
-        if($params->fromdate){
-            error_log('Filtering warranties with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering warranties with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-
-        }
-
-        if($params->status){
-            error_log('Filtering warranties with status....');
-            if($params->status == 'true'){
-                $data = $data->where('status', true);
-            }else if($params->status == 'false'){
-                $data = $data->where('status', false);
-            }else{
-                $data = $data->where('status', '!=', null);
-            }
-        }
-
-
 
         $data = $data->unique('id');
 
@@ -176,6 +141,12 @@ trait WarrantyServices {
 
     }
     
+    
+    public function warrantyFilterCols() {
+
+        return ['store_id'];
+
+    }
     
 
 

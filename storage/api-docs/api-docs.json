@@ -776,6 +776,16 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "_method",
+                        "in": "query",
+                        "description": "For spoofing purposes.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PUT"
                     }
                 ],
                 "requestBody": {
@@ -1340,7 +1350,7 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
                     "ChannelControllerService"
                 ],
@@ -1413,6 +1423,16 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "_method",
+                        "in": "query",
+                        "description": "For spoofing purposes.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PUT"
                     }
                 ],
                 "requestBody": {
@@ -4660,6 +4680,14 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "store id for filter",
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
                 ],
                 "responses": {
@@ -6031,6 +6059,14 @@
                         "description": "status for filter",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "store id for filter",
+                        "schema": {
+                            "type": "integer"
                         }
                     }
                 ],
@@ -8750,7 +8786,7 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
                     "VideoControllerService"
                 ],
@@ -8869,10 +8905,19 @@
                         "schema": {
                             "type": "number"
                         }
+                    },
+                    {
+                        "name": "_method",
+                        "in": "query",
+                        "description": "For spoofing purposes.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PUT"
                     }
                 ],
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "multipart/form-data": {
                             "schema": {
@@ -9957,6 +10002,14 @@
                         "description": "status for filter",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "store_id",
+                        "in": "query",
+                        "description": "store id for filter",
+                        "schema": {
+                            "type": "integer"
                         }
                     }
                 ],
@@ -11205,6 +11258,12 @@
                     },
                     "updated_at": {
                         "type": "string"
+                    },
+                    "commentcount": {
+                        "type": "integer"
+                    },
+                    "channel": {
+                        "$ref": "#/components/schemas/Channel"
                     }
                 },
                 "type": "object"

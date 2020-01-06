@@ -241,7 +241,7 @@ trait GlobalFunctions {
 
     }
 
-    //saveModel
+    //deleteModel
     public function forceDeleteModel($data){
         try {
             $data->delete();
@@ -266,4 +266,63 @@ trait GlobalFunctions {
         return Str::random($length);
     }
 
+    public function globalFilter($data , $params){
+
+        $data = collect($data);
+        $params = $this->checkUndefinedProperty($params , $this->globalFilterCols());
+
+        if($params->keyword){
+            error_log('Filtering channels with keyword....');
+            $keyword = $params->keyword;
+            $data = $data->filter(function($item)use($keyword){
+                //check string exist inside or not
+                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
+                    return true;
+                }else{
+                    return false;
+                }
+
+            });
+        }
+
+
+        if($params->fromdate){
+            error_log('Filtering channels with fromdate....');
+            $date = Carbon::parse($params->fromdate)->startOfDay();
+            $data = $data->filter(function ($item) use ($date) {
+                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
+            });
+        }
+
+        if($params->todate){
+            error_log('Filtering channels with todate....');
+            $date = Carbon::parse($request->todate)->endOfDay();
+            $data = $data->filter(function ($item) use ($date) {
+                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
+            });
+
+        }
+
+        if($params->status){
+            error_log('Filtering channels with status....');
+            if($params->status == 'true'){
+                $data = $data->where('status', true);
+            }else if($params->status == 'false'){
+                $data = $data->where('status', false);
+            }else{
+                $data = $data->where('status', '!=', null);
+            }
+        }
+
+
+        $data = $data->unique('id');
+
+        return $data;
+    }
+    
+    public function globalFilterCols() {
+
+        return ['keyword','fromdate' ,'todate', 'status'];
+
+    }
 }

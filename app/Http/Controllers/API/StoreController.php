@@ -788,6 +788,9 @@ class StoreController extends Controller
         }
         $shippings = collect();
         $shippings = $shippings->merge($store->shippings()->where('status',true)->get());
+        error_log($shippings->count());
+        error_log($store->shippings);
+        error_log($store->shippings()->where('status',true)->get());
         $shippings = $shippings->merge(Shipping::where('store_id' , null)->get());
         $shippings = $shippings->unique('id')->sortBy('id')->flatten(1);
 

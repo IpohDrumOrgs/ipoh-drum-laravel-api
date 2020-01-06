@@ -100,6 +100,12 @@ class ShippingController extends Controller
      *     description="status for filter",
      *     @OA\Schema(type="string")
      *   ),
+     *   @OA\Parameter(
+     *     name="store_id",
+     *     in="query",
+     *     description="store id for filter",
+     *     @OA\Schema(type="integer")
+     *   ),
      *      @OA\Response(
      *          response=200,
      *          description="Successfully retrieved list of filtered shippings"
@@ -118,7 +124,7 @@ class ShippingController extends Controller
             'fromdate' => $request->fromdate,
             'todate' => $request->todate,
             'status' => $request->status,
-            'shipping_id' => $request->shipping_id,
+            'store_id' => $request->store_id,
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));

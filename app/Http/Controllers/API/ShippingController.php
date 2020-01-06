@@ -130,6 +130,8 @@ class ShippingController extends Controller
         $params = json_decode(json_encode($params));
         $shippings = $this->getShippings($request->user());
         $shippings = $this->filterShippings($shippings, $params);
+        $shippings = $shippings->merge(Shipping::where('store_id' , null)->get());
+        $shippings = $shippings->unique('id')->sortBy('id')->flatten(1);
 
         if ($this->isEmpty($shippings)) {
             return $this->errorPaginateResponse('Shippings');

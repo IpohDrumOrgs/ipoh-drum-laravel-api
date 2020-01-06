@@ -131,6 +131,8 @@ class WarrantyController extends Controller
         $params = json_decode(json_encode($params));
         $warranties = $this->getWarranties($request->user());
         $warranties = $this->filterWarranties($warranties, $params);
+        $warranties = $warranties->merge(Warranty::where('store_id' , null)->get());
+        $warranties = $warranties->unique('id')->sortBy('id')->flatten(1);
 
         if ($this->isEmpty($warranties)) {
             return $this->errorPaginateResponse('Warranties');

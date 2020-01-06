@@ -29,7 +29,7 @@ class CreateVideosTable extends Migration
             $table->integer('like')->default(0);
             $table->integer('dislike')->default(0);
             $table->decimal('price',8,2)->default(0.00);
-            $table->decimal('discpctg',8,2)->default(0.00);
+            $table->integer('discpctg')->default(0);
             $table->decimal('disc',8,2)->default(0.00);
             $table->boolean('discbyprice')->default(true);
             $table->boolean('free')->default(true);

@@ -22,7 +22,7 @@ class CreateProductPromotionsTable extends Migration
             $table->text('desc')->nullable();
             $table->integer('qty')->default(0);
             $table->decimal('disc',8,2)->default(0.00);
-            $table->decimal('discpctg',8,2)->default(0.00);
+            $table->integer('discpctg')->default(0);
             $table->boolean('discbyprice')->default(true);
             $table->date('promostartdate')->nullable();
             $table->date('promoenddate')->nullable();

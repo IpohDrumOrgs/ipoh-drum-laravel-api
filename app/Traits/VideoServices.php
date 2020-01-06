@@ -135,10 +135,10 @@ trait VideoServices {
                 }else{
                     if($data->discbyprice){
                         $data->disc = $this->toDouble($params->disc);
-                        $data->discpctg = $this->toDouble($params->disc / $data->price);
+                        $data->discpctg = $this->toInt($this->toDouble($data->disc / $data->price) * 100 );
                     }else{
-                        $data->discpctg = $this->toDouble($params->discpctg);
-                        $data->disc = $this->toDouble($data->price * $data->discpctg * 100);
+                        $data->discpctg = $this->toInt($params->discpctg);
+                        $data->disc = $this->toDouble($data->price * ($data->discpctg / 100));
                     }
                 }
             }
@@ -187,10 +187,10 @@ trait VideoServices {
                 }else{
                     if($data->discbyprice){
                         $data->disc = $this->toDouble($params->disc);
-                        $data->discpctg = $this->toDouble($params->disc / $data->price);
+                        $data->discpctg = $this->toInt($this->toDouble($data->disc / $data->price) * 100 );
                     }else{
-                        $data->discpctg = $this->toDouble($params->discpctg);
-                        $data->disc = $this->toDouble($data->price * $data->discpctg * 100);
+                        $data->discpctg = $this->toInt($params->discpctg);
+                        $data->disc = $this->toDouble($data->price * ($data->discpctg / 100));
                     }
                 }
             }

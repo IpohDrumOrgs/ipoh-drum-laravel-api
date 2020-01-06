@@ -103,7 +103,7 @@ trait SaleServices {
         $data->totalcost = $this->toDouble($params->totalcost);
         $data->linetotal = $this->toDouble($params->linetotal);
         $data->totaldisc = $this->toDouble($params->totaldisc);
-        $data->discpctg = $this->toDouble($data->totaldisc / $data->linetotal);
+        $data->discpctg = $this->toInt($this->toDouble($data->totaldisc / $data->linetotal) * 100 );
         // $data->charge = $this->toDouble($params->price);
         $data->grandtotal = $this->toDouble($data->linetotal - $data->totaldisc);
         $data->payment = $this->toDouble($params->payment);
@@ -149,7 +149,7 @@ trait SaleServices {
         $data->totalcost = $this->toDouble($params->totalcost);
         $data->linetotal = $this->toDouble($params->linetotal);
         $data->totaldisc = $this->toDouble($params->totaldisc);
-        $data->discpctg = $this->toDouble($data->totaldisc / $data->linetotal);
+        $data->discpctg = $this->toInt($this->toDouble($data->totaldisc / $data->linetotal) * 100 );
         // $data->charge = $this->toDouble($params->price);
         $data->grandtotal = $this->toDouble($data->linetotal - $data->totaldisc);
         $data->payment = $this->toDouble($params->payment);

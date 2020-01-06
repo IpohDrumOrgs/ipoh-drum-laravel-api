@@ -323,11 +323,11 @@ trait InventoryServices {
                 if($data->promotion->discbyprice){
                     $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
                 }else{
-                    $data->promoprice =  $this->toDouble($data->price - ($data->price * $data->promotion->discpctg));
+                    $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promotion->discpctg / 100)));
                 }
                 
                 if($data->price != 0){
-                    $data->promopctg = $this->toDouble($data->promoprice / $data->price ) * 100;
+                    $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
                 }else{
                     $data->promopctg = 0;
                 }

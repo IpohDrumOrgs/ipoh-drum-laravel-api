@@ -20,7 +20,7 @@ class CreateSalesTable extends Migration
             $table->string('uid')->unique();
             $table->string('sono')->nullable();
             $table->integer('totalqty')->default(0);
-            $table->decimal('discpctg',9,6)->default(0.00);
+            $table->integer('discpctg')->default(0);
             $table->decimal('totalcost',8,2)->default(0.00);
             $table->decimal('linetotal',8,2)->default(0.00);
             $table->decimal('charge',8,2)->default(0.00);

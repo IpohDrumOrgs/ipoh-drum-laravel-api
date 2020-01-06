@@ -24,7 +24,7 @@ class CreateVouchersTable extends Migration
             $table->integer('redeemqty')->default(0);
             $table->integer('releaseqty')->default(0);
             $table->decimal('disc',8,2)->default(0.00);
-            $table->decimal('discpctg',8,2)->default(0.00);
+            $table->integer('discpctg')->default(0);
             $table->boolean('discbyprice')->default(true);
             $table->date('startdate')->nullable();
             $table->date('enddate')->nullable();

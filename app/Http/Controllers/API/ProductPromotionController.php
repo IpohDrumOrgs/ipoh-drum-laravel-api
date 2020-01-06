@@ -132,6 +132,8 @@ class ProductPromotionController extends Controller
         $params = json_decode(json_encode($params));
         $productpromotions = $this->getProductPromotions($request->user());
         $productpromotions = $this->filterProductPromotions($productpromotions, $params);
+        $productpromotions = $productpromotions->merge(ProductPromotion::where('store_id' , null)->get());
+        $productpromotions = $productpromotions->unique('id')->sortBy('id')->flatten(1);
 
         if ($this->isEmpty($productpromotions)) {
             return $this->errorPaginateResponse('Product Promotions');

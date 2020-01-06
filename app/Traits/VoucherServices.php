@@ -181,7 +181,7 @@ trait VoucherServices {
             $data->disc = $this->toDouble($params->disc);
             $data->discpctg = 0;
         }else{
-            $data->discpctg = $this->toDouble($params->discpctg / 100);
+            $data->discpctg = $this->toInt($params->discpctg);
             $data->disc = 0;
         }
 

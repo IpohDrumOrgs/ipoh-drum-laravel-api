@@ -183,6 +183,13 @@ trait CommentServices {
     }
 
     private function deleteComment($data) {
+        
+        $secondcomments = $data->secondcomments;
+        foreach($secondcomments as $secondcomment){
+            if(!$this->deleteSecondComment($secondcomment)){
+                return null;
+            }
+        }
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

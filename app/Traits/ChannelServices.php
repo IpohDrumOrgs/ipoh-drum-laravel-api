@@ -190,6 +190,13 @@ trait ChannelServices {
     }
 
     private function deleteChannel($data) {
+
+        $videos = $data->videos;
+        foreach($videos as $video){
+            if(!$this->deleteVideo($video)){
+                return null;
+            }
+        }
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

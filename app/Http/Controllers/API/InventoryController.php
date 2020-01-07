@@ -8,18 +8,11 @@ use DB;
 use Carbon\Carbon;
 use App\Inventory;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\NotificationFunctions;
-use App\Traits\InventoryServices;
-use App\Traits\InventoryImageServices;
-use App\Traits\InventoryFamilyServices;
-use App\Traits\PatternServices;
-use App\Traits\LogServices;
-use App\Traits\ImageHostingServices;
+use App\Traits\AllServices;
 
 class InventoryController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, InventoryServices, LogServices, InventoryImageServices, InventoryFamilyServices, ImageHostingServices;
+    use AllServices;
     private $controllerName = '[InventoryController]';
      /**
      * @OA\Get(
@@ -418,7 +411,6 @@ class InventoryController extends Controller
 
         //Associating Inventory Family Relationship
         $inventoryfamilies = json_decode($request->inventoryfamilies);
-        $temp = json_decode(json_encode($request->inventoryfamilies));
         $inventorytotalqty = 0;
         $inventoryfamilytotalqty = 0;
         $onsale = false;
@@ -692,23 +684,104 @@ class InventoryController extends Controller
 
         //Associating Inventory Family Relationship
         $inventoryfamilies = collect(json_decode($request->inventoryfamilies));
-        $originvfamiliesids = $inventory->inventoryfamilies()->pluck('id');
+        $originvfamiliesids = $inventory->inventoryfamilies()->where('status',true)->pluck('id');
         $inventoryfamiliesids = $inventoryfamilies->pluck('id');
-        //get ids not in list previously
-        $forinsertids = $inventoryfamiliesids->diff($originvfamiliesids);
-        //get ids that not longer in inventory families
         $fordeleteids = $originvfamiliesids->diff($inventoryfamiliesids);
 
-        foreach($forinsertids as $id){
-            $inventoryfamily = $this->getInventoryFamilyById($id);
-            if($this->isEmpty($inventoryfamily)){
-                 DB::rollBack();
-                 $this->deleteImages($proccessingimgids);
-                 return $this->notFoundResponse('InventoryFamily');
-             }
-            $inventoryfamily->inventory()->associate($inventory);
-        }
 
+        foreach($inventoryfamilies as $inventoryfamily){
+            //Insert New Inventory Family
+            if($inventoryfamily->id == null){
+                $patterns = $inventoryfamily->patterns;
+
+                $inventoryfamily->inventory_id = $inventory->refresh()->id;
+                $inventoryfamily = $this->createInventoryFamily($inventoryfamily);
+                if($this->isEmpty($inventoryfamily)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+
+                $inventoryfamily->inventory()->associate($inventory);
+                if(!$this->saveModel($inventory)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+                $this->createLog($request->user()->id , [$inventoryfamily->id], 'create', 'inventoryfamily');
+
+
+                //Patterns
+                foreach($patterns as $pattern){
+                    $pattern->inventory_family_id = $inventoryfamily->refresh()->id;
+                    $pattern = $this->createPattern($pattern);
+                    if($this->isEmpty($pattern)){
+                        error_log("here");
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                    $pattern->inventoryfamily()->associate($inventoryfamily);
+                    if(!$this->saveModel($inventoryfamily)){
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                    
+                    $this->createLog($request->user()->id , [$pattern->id], 'create', 'pattern');
+                }
+
+                
+                
+            }else{
+                //Update Existing Inventory Family
+                $oriinventoryfamily = $this->getInventoryFamilyById($inventoryfamily->id);
+                if($this->isEmpty($oriinventoryfamily)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->notFoundResponse('InventoryFamily');
+                }
+                $oriinventoryfamily = $this->updateInventoryFamily($oriinventoryfamily , $inventoryfamily);
+                if($this->isEmpty($oriinventoryfamily)){
+                     DB::rollBack();
+                     $this->deleteImages($proccessingimgids);
+                     return $this->notFoundResponse('InventoryFamily');
+                }
+                
+                $patterns = $inventoryfamily->patterns;
+                foreach($patterns as $pattern){
+                    if($pattern->id == null){
+                        $pattern->inventory_family_id = $oriinventoryfamily->refresh()->id;
+                        $pattern = $this->createPattern($pattern);
+                        if($this->isEmpty($pattern)){
+                            error_log("here");
+                            DB::rollBack();
+                            $this->deleteImages($proccessingimgids);
+                            return $this->errorResponse();
+                        }
+                        $pattern->inventoryfamily()->associate($oriinventoryfamily);
+                        if(!$this->saveModel($pattern)){
+                            DB::rollBack();
+                            $this->deleteImages($proccessingimgids);
+                            return $this->errorResponse();
+                        }
+                        
+                        $this->createLog($request->user()->id , [$pattern->id], 'create', 'pattern');
+                    }else{
+                        $oripattern = $this->getPatternById($pattern->id);
+                        if($this->isEmpty($oripattern)){
+                            DB::rollBack();
+                            $this->deleteImages($proccessingimgids);
+                            return $this->notFoundResponse('Pattern');
+                        }
+                        $oripattern = $this->updatePattern($oripattern , $pattern);
+                    }
+                }
+
+            }
+       }
+       error_log($fordeleteids);
+       //Delete InventoryFamily
         foreach($fordeleteids as $id){
             $inventoryfamily = $this->getInventoryFamilyById($id);
             if($this->isEmpty($inventoryfamily)){
@@ -723,6 +796,12 @@ class InventoryController extends Controller
             }
         }
 
+
+        if(!$this->syncInventoryById($inventory->id)){
+            DB::rollBack();
+            $this->deleteImages($proccessingimgids);
+            return $this->errorResponse();
+        }
 
         $this->createLog($request->user()->id , [$inventory->id], 'update', 'inventory');
         DB::commit();

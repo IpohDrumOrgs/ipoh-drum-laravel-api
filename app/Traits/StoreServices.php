@@ -182,6 +182,13 @@ trait StoreServices {
 
     private function deleteStore($data) {
 
+        $vouchers = $data->vouchers;
+        foreach($vouchers as $voucher){
+            if(!$this->deleteVoucher($voucher)){
+                return null;
+            }
+        }
+        
         $reviews = $data->reviews;
         foreach($reviews as $review){
             if(!$this->deleteStoreReview($review)){
@@ -224,12 +231,6 @@ trait StoreServices {
             }
         }
 
-        $vouchers = $data->vouchers;
-        foreach($vouchers as $voucher){
-            if(!$this->deleteVoucher($voucher)){
-                return null;
-            }
-        }
 
         $data->status = false;
         if(!$this->saveModel($data)){

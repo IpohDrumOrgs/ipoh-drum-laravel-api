@@ -41,9 +41,5 @@ class Channel extends Model
     {
         return $this->hasMany('App\Video');
     }
-
-    public function playlists()
-    {
-        return $this->hasMany('App\PlayList');
-    }
+    
 }

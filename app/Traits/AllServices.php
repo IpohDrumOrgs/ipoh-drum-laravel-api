@@ -60,6 +60,7 @@ trait AllServices {
     ChannelServices,
     GroupServices, 
     InventoryFamilyServices, 
+    InventoryImageServices, 
     InventoryServices, 
     ModuleServices, 
     PatternServices, 

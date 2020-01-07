@@ -99,7 +99,14 @@ trait InventoryServices {
 
     private function getInventory($uid) {
 
-        $data = Inventory::where('uid', $uid)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','reviews.user','characteristics')->first();
+        $data = Inventory::where('uid', $uid)->where('status', true)->with(['inventoryfamilies' => function($q){
+            // Query the name field in status table
+            $q->where('status', true); 
+            $q->with(['patterns' => function($q){
+                // Query the name field in status table
+                $q->where('status', true);
+            }]); 
+        }])->with('store','promotion','warranty','shipping','images','reviews.user','characteristics')->first();
         return $data;
 
     }
@@ -255,7 +262,7 @@ trait InventoryServices {
         //Cancel Inventory Image
         $images = $data->images;
         foreach($images as $image){
-            if(!$this->deleteInventoryImage($image->imgpublicid)){
+            if(!$this->deleteInventoryImage($image)){
                 error_log('deleting image');
                 return null;
             }
@@ -266,6 +273,56 @@ trait InventoryServices {
         }else{
             return null;
         }
+    }
+    
+    //Synchronize the data of inventory, inventory family, pattern
+    private function syncInventoryById($id) {
+
+        $inventory = $this->getInventoryById($id);
+        if($this->isEmpty($inventory)){
+            return false;
+        }
+
+        $inventorytotalqty = 0;
+        $inventoryfamilies = $inventory->inventoryfamilies;
+        foreach($inventoryfamilies as $inventoryfamily){
+
+            $inventoryfamilytotalqty = 0;
+
+            $patterns = $inventoryfamily->patterns;
+            if(!$this->isEmpty($patterns)){
+                foreach($patterns as $pattern){
+                    $inventoryfamilytotalqty += $pattern->qty;
+
+                    if($pattern->onsale){
+                        $inventoryfamily->onsale = true;
+                    }
+                }
+            }else{
+                $inventoryfamilytotalqty = $inventoryfamily->qty;
+            }
+
+            $inventoryfamily->qty = $inventoryfamilytotalqty;
+            $inventorytotalqty += $inventoryfamily->qty;
+
+            if($inventoryfamily->onsale){
+                $inventory->onsale = true;
+            }
+
+            if(!$this->saveModel($inventoryfamily)){
+                return false;
+            }
+
+        }
+
+        error_log("inventorytotalqty");
+        error_log($inventorytotalqty);
+        $inventory->qty = $inventorytotalqty;
+        if(!$this->saveModel($inventory)){
+            return false;
+        }
+
+        return true;
     }
 
     //Relationship Associating

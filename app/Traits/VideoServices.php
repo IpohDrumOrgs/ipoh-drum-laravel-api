@@ -207,6 +207,14 @@ trait VideoServices {
     }
 
     private function deleteVideo($data) {
+        
+        $comments = $data->comments;
+        foreach($comments as $comment){
+            if(!$this->deleteComment($comment)){
+                return null;
+            }
+        }
+        
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

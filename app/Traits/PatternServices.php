@@ -104,7 +104,7 @@ trait PatternServices {
 
     private function getPatternById($id) {
 
-        $data = Pattern::where('id', $id)->where('status', true)->with('inventory')->first();
+        $data = Pattern::where('id', $id)->where('status', true)->first();
         return $data;
 
     }
@@ -129,7 +129,11 @@ trait PatternServices {
         }
         $data->inventoryfamily()->associate($inventoryfamily);
         
-        return $data->refresh();
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
+            return null;
+        }
     }
 
     //Make Sure Pattern is not empty when calling this function
@@ -149,7 +153,11 @@ trait PatternServices {
         }
         $data->inventoryfamily()->associate($inventoryfamily);
         
-        return $data->refresh();
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
+            return null;
+        }
 
     }
 

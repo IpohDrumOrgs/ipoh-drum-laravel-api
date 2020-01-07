@@ -126,7 +126,11 @@ trait InventoryFamilyServices {
         }
         $data->inventory()->associate($inventory);
         
-        return $data->refresh();
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
+            return null;
+        }
     }
 
     //Make Sure InventoryFamily is not empty when calling this function
@@ -149,8 +153,11 @@ trait InventoryFamilyServices {
         }
         $data->inventory()->associate($inventory);
         
-        return $data->refresh();
-
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
+            return null;
+        }
     }
 
     private function deleteInventoryFamily($data) {

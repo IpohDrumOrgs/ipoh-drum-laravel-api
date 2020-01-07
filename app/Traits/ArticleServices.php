@@ -162,6 +162,19 @@ trait ArticleServices {
     }
 
     private function deleteArticle($data) {
+        $articleimages = $data->articleimages;
+        foreach($articleimages as $articleimage){
+            if(!$this->deleteArticleImage($articleimage)){
+                return null;
+            }
+        }
+        
+        $comments = $data->comments;
+        foreach($comments as $comment){
+            if(!$this->deleteComment($comment)){
+                return null;
+            }
+        }
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

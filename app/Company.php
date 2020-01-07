@@ -60,14 +60,6 @@ class Company extends Model
         return $this->hasMany('App\Group');
     }
 
-    /**
-     * Get the inventories of the company.
-     */
-    public function inventories()
-    {
-        return $this->hasMany('App\Inventory');
-    }
-
      /**
      * company roles
      */

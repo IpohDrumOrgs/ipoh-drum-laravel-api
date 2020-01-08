@@ -10527,6 +10527,15 @@
                     "promoendqty": {
                         "type": "integer"
                     },
+                    "promopctg": {
+                        "type": "integer"
+                    },
+                    "promoprice": {
+                        "type": "string"
+                    },
+                    "totalproductreview": {
+                        "type": "integer"
+                    },
                     "salesqty": {
                         "type": "integer"
                     },

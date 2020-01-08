@@ -499,13 +499,13 @@ class BloggerController extends Controller
             DB::rollBack();
             return $this->notFoundResponse('Blogger ');
         }
-        $blogger = $this->deleteBlogger($request->user(), $blogger->id);
+        $blogger = $this->deleteBlogger($blogger);
         if ($this->isEmpty($blogger)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Blogger ', $blogger, 'delete');
+            return $this->successResponse('Blogger ', null, 'delete');
         }
     }
     

@@ -624,13 +624,13 @@ class VideoController extends Controller
             DB::rollBack();
             return $this->notFoundResponse('Video');
         }
-        $video = $this->deleteVideo($video->id);
+        $video = $this->deleteVideo($video);
         if ($this->isEmpty($video)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Video', $video, 'delete');
+            return $this->successResponse('Video', null, 'delete');
         }
     }
 

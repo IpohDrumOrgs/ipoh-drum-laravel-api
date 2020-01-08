@@ -125,6 +125,13 @@ trait WarrantyServices {
     }
 
     private function deleteWarranty($data) {
+        $inventories = $data->inventories;
+        foreach($inventories as $inventory){
+            $inventory->warranty()->dissociate();
+            if(!$this->saveModel($inventory)){
+                return null;
+            }
+        }
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

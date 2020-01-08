@@ -22,19 +22,12 @@ class Shipping extends Model
      * @OA\Property(property="created_at", type="string"),
      * @OA\Property(property="updated_at", type="string")
      */
-    /**
+     /**
     *
     */
-    public function inventory()
+    public function inventories()
     {
-        return $this->belongsTo('App\Inventory');
-    }
-    /**
-    *
-    */
-    public function ticket()
-    {
-        return $this->belongsTo('App\Ticket');
+        return $this->hasMany('App\Inventory');
     }
     /**
     *

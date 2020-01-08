@@ -171,13 +171,13 @@ trait InventoryImageServices {
     
     public function inventoryImageDefaultCols() {
 
-        return ['id','uid', 'inventoryimage_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
+        return ['id','uid', 'inventory_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
 
     }
 
     public function inventoryImageAllCols() {
 
-        return ['id','uid', 'inventoryimage_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
+        return ['id','uid', 'inventory_id', 'name' ,'desc', 'imgpublicid', 'imgpath' , 'status'];
 
     }
     

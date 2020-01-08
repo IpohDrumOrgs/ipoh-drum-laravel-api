@@ -436,7 +436,7 @@ class ShippingController extends Controller
         } else {
             $this->createLog($request->user()->id , [$shipping->id], 'delete', 'shipping');
             DB::commit();
-            return $this->successResponse('Shipping', $shipping, 'delete');
+            return $this->successResponse('Shipping', null, 'delete');
         }
     }
 

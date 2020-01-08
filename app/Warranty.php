@@ -24,9 +24,9 @@ class Warranty extends Model
      /**
     *
     */
-    public function inventory()
+    public function inventories()
     {
-        return $this->belongsTo('App\Inventory');
+        return $this->hasMany('App\Inventory');
     }
     /**
     *

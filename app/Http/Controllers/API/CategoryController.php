@@ -363,7 +363,7 @@ class CategoryController extends Controller
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Category', $category, 'delete');
+            return $this->successResponse('Category', null, 'delete');
         }
     }
 

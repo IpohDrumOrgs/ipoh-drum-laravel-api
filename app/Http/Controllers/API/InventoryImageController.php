@@ -119,6 +119,7 @@ class InventoryImageController extends Controller
         $inventoryimage = $this->createInventoryImage($params);
 
         if ($this->isEmpty($inventoryimage)) {
+            error_log("here");
             DB::rollBack();
             return $this->errorResponse();
         } else {

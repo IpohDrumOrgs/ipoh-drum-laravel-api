@@ -51,7 +51,7 @@ class CommentController extends Controller
     {
         error_log($this->controllerName.'Retrieving list of comments.');
         // api/comment (GET)
-        $comments = $this->getComments($request->comment());
+        $comments = $this->getComments($request->user());
         if ($this->isEmpty($comments)) {
             return $this->errorPaginateResponse('Comments');
         } else {
@@ -130,7 +130,7 @@ class CommentController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $comments = $this->filterComments($request->comment(), $params);
+        $comments = $this->filterComments($request->user(), $params);
 
         if ($this->isEmpty($comments)) {
             return $this->errorPaginateResponse('Comments');
@@ -261,7 +261,7 @@ class CommentController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $comment = $this->createComment($request->comment(), $params);
+        $comment = $this->createComment($request->user(), $params);
 
         if ($this->isEmpty($comment)) {
             DB::rollBack();
@@ -363,7 +363,7 @@ class CommentController extends Controller
         DB::beginTransaction();
         // api/comment/{commentid} (PUT)
         error_log($this->controllerName.'Updating comment of uid: ' . $uid);
-        $comment = $this->getComment($request->comment(), $uid);
+        $comment = $this->getComment($request->user(), $uid);
         $this->validate($request, [
             'email' => 'required|string|max:191|unique:comments,email,' . $comment->id,
             'name' => 'required|string|max:191',
@@ -387,7 +387,7 @@ class CommentController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $comment = $this->updateComment($request->comment(), $comment, $params);
+        $comment = $this->updateComment($request->user(), $comment, $params);
         if ($this->isEmpty($comment)) {
             DB::rollBack();
             return $this->errorResponse();
@@ -426,18 +426,18 @@ class CommentController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/comment/{commentid} (DELETE)
         error_log($this->controllerName.'Deleting comment of uid: ' . $uid);
-        $comment = $this->getComment($request->comment(), $uid);
+        $comment = $this->getComment($request->user(), $uid);
         if ($this->isEmpty($comment)) {
             DB::rollBack();
             return $this->notFoundResponse('Comment');
         }
-        $comment = $this->deleteComment($request->comment(), $comment->id);
+        $comment = $this->deleteComment($comment);
         if ($this->isEmpty($comment)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Comment', $comment, 'delete');
+            return $this->successResponse('Comment', null, 'delete');
         }
     }
 

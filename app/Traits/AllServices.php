@@ -29,6 +29,7 @@ use App\Traits\ProductReviewServices;
 use App\Traits\RoleServices;
 use App\Traits\SaleItemServices;
 use App\Traits\SaleServices;
+use App\Traits\SecondCommentServices;
 use App\Traits\ShippingServices;
 use App\Traits\StoreReviewServices;
 use App\Traits\StoreServices;
@@ -70,6 +71,7 @@ trait AllServices {
     RoleServices, 
     SaleItemServices, 
     SaleServices, 
+    SecondCommentServices,
     ShippingServices, 
     StoreReviewServices, 
     StoreServices, 

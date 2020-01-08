@@ -429,13 +429,13 @@ class ArticleController extends Controller
             DB::rollBack();
             return $this->notFoundResponse('Article');
         }
-        $article = $this->deleteArticle($article->id);
+        $article = $this->deleteArticle($article);
         if ($this->isEmpty($article)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Article', $article, 'delete');
+            return $this->successResponse('Article', null, 'delete');
         }
     }
 

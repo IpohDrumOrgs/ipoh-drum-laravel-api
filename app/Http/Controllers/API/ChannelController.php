@@ -508,13 +508,13 @@ class ChannelController extends Controller
             DB::rollBack();
             return $this->notFoundResponse('Channel ');
         }
-        $channel = $this->deleteChannel($request->user(), $channel->id);
+        $channel = $this->deleteChannel($channel);
         if ($this->isEmpty($channel)) {
             DB::rollBack();
             return $this->errorResponse();
         } else {
             DB::commit();
-            return $this->successResponse('Channel ', $channel, 'delete');
+            return $this->successResponse('Channel ', null, 'delete');
         }
     }
     

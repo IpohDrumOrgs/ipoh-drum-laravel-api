@@ -128,6 +128,13 @@ trait ShippingServices {
     }
 
     private function deleteShipping($data) {
+        $inventories = $data->inventories;
+        foreach($inventories as $inventory){
+            $inventory->shipping()->dissociate();
+            if(!$this->saveModel($inventory)){
+                return null;
+            }
+        }
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();

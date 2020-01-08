@@ -628,7 +628,7 @@ class StoreController extends Controller
         } else {
             $this->createLog($request->user()->id , [$store->id], 'delete', 'store');
             DB::commit();
-            return $this->successResponse('Store', $store, 'delete');
+            return $this->successResponse('Store', null, 'delete');
         }
     }
 

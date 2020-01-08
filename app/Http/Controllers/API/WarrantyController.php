@@ -416,7 +416,7 @@ class WarrantyController extends Controller
         } else {
             $this->createLog($request->user()->id , [$warranty->id], 'delete', 'warranty');
             DB::commit();
-            return $this->successResponse('Warranty', $warranty, 'delete');
+            return $this->successResponse('Warranty', null, 'delete');
         }
     }
 

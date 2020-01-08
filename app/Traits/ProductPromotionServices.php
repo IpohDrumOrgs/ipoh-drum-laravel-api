@@ -151,14 +151,14 @@ trait ProductPromotionServices {
         $inventories = $data->inventories;
         foreach($inventories as $inventory){
             $inventory->promotion()->dissociate();
-            if($this->saveModel($inventory)){
+            if(!$this->saveModel($inventory)){
                 return null;
             }
         }
         $tickets = $data->tickets;
         foreach($tickets as $ticket){
             $ticket->promotion()->dissociate();
-            if($this->saveModel($ticket)){
+            if(!$this->saveModel($ticket)){
                 return null;
             }
         }

@@ -850,7 +850,7 @@ class InventoryController extends Controller
         } else {
             $this->createLog($request->user()->id , [$inventory->id], 'delete', 'inventory');
             DB::commit();
-            return $this->successResponse('Inventory', $inventory, 'delete');
+            return $this->successResponse('Inventory', null, 'delete');
         }
     }
 

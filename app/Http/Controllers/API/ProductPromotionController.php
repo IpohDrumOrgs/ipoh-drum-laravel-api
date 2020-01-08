@@ -485,7 +485,7 @@ class ProductPromotionController extends Controller
         } else {
             $this->createLog($request->user()->id , [$productpromotion->id], 'delete', 'productpromotion');
             DB::commit();
-            return $this->successResponse('ProductPromotion', $productpromotion, 'delete');
+            return $this->successResponse('ProductPromotion', null, 'delete');
         }
     }
 

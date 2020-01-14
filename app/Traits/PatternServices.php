@@ -170,6 +170,34 @@ trait PatternServices {
         }
     }
 
+    //Inventory Pattern Item Have been sold
+    private function soldPattern($pattern) {
+
+        $inventoryfamily = $pattern->inventoryfamily;
+        if($this->isEmpty($inventoryfamily)){
+            return null;
+        }
+
+        $inventoryfamily = $this->soldInventoryFamily($inventoryfamily);
+        if($this->isEmpty($inventoryfamily)){
+            return null;
+        }
+
+        if($pattern->qty <=0 || !$pattern->onsale){
+            return null;
+        }else{
+            
+            $pattern->qty -= 1;
+            $pattern->salesqty += 1;
+            
+            if(!$this->saveModel($pattern)){
+                return null;
+            }
+
+        }
+
+        return $pattern->refresh();
+    }
     //Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function patternAllCols() {

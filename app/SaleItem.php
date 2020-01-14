@@ -31,14 +31,29 @@ class SaleItem extends Model
     }
 
     
+    
+     /**
+     * Get the sale of the sale item.
+     */
+    public function inventory()
+    {
+        return $this->belongsTo('App\Inventory');
+    }
+    
     /**
      * Get the inventory of the purchase item.
      */
     public function inventoryfamily()
     {
-        return $this->belongsTo('App\InventoryFamily');
+        return $this->belongsTo('App\InventoryFamily', 'inventory_family_id');
     }
-    
+    /**
+     * Get the inventory of the purchase item.
+     */
+    public function pattern()
+    {
+        return $this->belongsTo('App\Pattern');
+    }
     
     /**
      * Get the inventory of the purchase item.
@@ -47,18 +62,6 @@ class SaleItem extends Model
     {
         return $this->belongsTo('App\TicketFamily');
     }
-    /**
-     * Get the inventory of the purchase item.
-     */
-    public function inventorybatch()
-    {
-        return $this->belongsTo('App\InventoryBatch','inventory_batch_id');
-    }
-     /**
-     * Get the sale of the sale item.
-     */
-    public function batches()
-    {
-        return $this->belongsToMany('App\Batch','batch_sale_item')->withPivot( 'stock','status','created_at','updated_at');
-    }
+    
+
 }

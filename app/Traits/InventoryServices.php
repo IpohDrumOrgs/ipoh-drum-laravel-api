@@ -325,38 +325,65 @@ trait InventoryServices {
         return true;
     }
 
+     
+    //Inventory Item Have been sold
+    private function soldInventory($inventory) {
+
+        if($inventory->qty <=0 || !$inventory->onsale){
+            return null;
+        }else{
+
+            //Check Limited Promotion Qty
+            if($inventory->promotion){
+                if($inventory->promotion->qty > 0 && $inventory->promoendqty >= $inventory->salesqty){
+                    $inventory->promotion()->dissociate();
+                }
+            }
+            
+            $inventory->qty -= 1;
+            $inventory->salesqty += 1;
+            
+            if(!$this->saveModel($inventory)){
+                return null;
+            }
+
+        }
+
+        return $inventory->refresh();
+    }
+
     //Relationship Associating
     //===============================================================================================================================================================================
-    public function associateImageWithInventory($data, $params)
-    {
+    // public function associateImageWithInventory($data, $params)
+    // {
         
-        $params = $this->checkUndefinedProperty($params , $this->inventoryImageDefaultCols());
+    //     $params = $this->checkUndefinedProperty($params , $this->inventoryImageDefaultCols());
 
-        $image = new InventoryImage();
-        $image->uid = Carbon::now()->timestamp . InventoryImage::count();
-        $image->name = $params->name;
-        $image->desc = $params->desc;
-        $image->imgpath = $params->imgurl;
-        $image->imgpublicid = $params->publicid;
-        $image->inventory()->associate($data);
-        if($this->saveModel($image)){
-            return $image->refresh();
-        }else{
-            return null;
-        }
-    }
+    //     $image = new InventoryImage();
+    //     $image->uid = Carbon::now()->timestamp . InventoryImage::count();
+    //     $image->name = $params->name;
+    //     $image->desc = $params->desc;
+    //     $image->imgpath = $params->imgurl;
+    //     $image->imgpublicid = $params->publicid;
+    //     $image->inventory()->associate($data);
+    //     if($this->saveModel($image)){
+    //         return $image->refresh();
+    //     }else{
+    //         return null;
+    //     }
+    // }
 
-    public function associateInventoryFamilyWithInventory($data, $params)
-    {
+    // public function associateInventoryFamilyWithInventory($data, $params)
+    // {
         
-        $inventoryfamily = $this->createInventoryFamily($params);
-        $inventoryfamily->inventory()->associate($data);
-        if($this->saveModel($inventoryfamily)){
-            return $inventoryfamily;
-        }else{
-            return null;
-        }
-    }
+    //     $inventoryfamily = $this->createInventoryFamily($params);
+    //     $inventoryfamily->inventory()->associate($data);
+    //     if($this->saveModel($inventoryfamily)){
+    //         return $inventoryfamily;
+    //     }else{
+    //         return null;
+    //     }
+    // }
 
 
 
@@ -377,16 +404,18 @@ trait InventoryServices {
     public function calculatePromotionPrice($data) {
         if(isset($data->promotion)){
             if(!$this->isEmpty($data->promotion)){
-                if($data->promotion->discbyprice){
-                    $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
-                }else{
-                    $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promotion->discpctg / 100)));
-                }
-                
-                if($data->price != 0){
-                    $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
-                }else{
-                    $data->promopctg = 0;
+                if($this->withinTimeRange($data->promotion->promostartdate , $data->promotion->promoenddate)){
+                    if($data->promotion->discbyprice){
+                        $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
+                    }else{
+                        $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promotion->discpctg / 100)));
+                    }
+                    
+                    if($data->price != 0){
+                        $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
+                    }else{
+                        $data->promopctg = 0;
+                    }
                 }
             }
     

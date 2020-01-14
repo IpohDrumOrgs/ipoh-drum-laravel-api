@@ -251,4 +251,33 @@ trait PaymentServices {
 
     }
 
+    // Data
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+
+    
+    public function getStripeChargePercentage() {
+
+        return 0.034;
+    }
+
+    public function getStripeChargePrice() {
+
+        return 2;
+    }
+
+    public function getAppChargePrice() {
+
+        return 0;
+    }
+
+    public function getAppChargePercentage() {
+
+        return 0;
+    }
+
+    public function getChargedPrice($price) {
+
+        return $this->toDouble(($price * $this->getStripeChargePercentage()) + ($price * $this->getAppChargePercentage()) + $this->getAppChargePrice() + $this->getStripeChargePrice());
+    }
+
 }

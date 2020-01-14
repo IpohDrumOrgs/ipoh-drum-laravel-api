@@ -23,6 +23,7 @@ use App\Traits\InventoryFamilyServices;
 use App\Traits\InventoryServices;
 use App\Traits\ModuleServices;
 use App\Traits\PatternServices;
+use App\Traits\PaymentServices;
 use App\Traits\ProductFeatureServices;
 use App\Traits\ProductPromotionServices;
 use App\Traits\ProductReviewServices;
@@ -65,6 +66,7 @@ trait AllServices {
     InventoryServices, 
     ModuleServices, 
     PatternServices, 
+    PaymentServices, 
     ProductFeatureServices, 
     ProductPromotionServices, 
     ProductReviewServices, 

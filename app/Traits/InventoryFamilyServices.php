@@ -174,6 +174,36 @@ trait InventoryFamilyServices {
             return null;
         }
     }
+    
+    //Inventory Family Item Have been sold
+    private function soldInventoryFamily($inventoryfamily) {
+
+        $inventory = $inventoryfamily->inventory;
+        
+        if($this->isEmpty($inventory)){
+            return null;
+        }
+        
+        $inventory = $this->soldInventory($inventory);
+        if($this->isEmpty($inventory)){
+            return null;
+        }
+
+        if($inventoryfamily->qty <=0 || !$inventoryfamily->onsale){
+            return null;
+        }else{
+            
+            $inventoryfamily->qty -= 1;
+            $inventoryfamily->salesqty += 1;
+            
+            if(!$this->saveModel($inventoryfamily)){
+                return null;
+            }
+
+        }
+
+        return $inventoryfamily->refresh();
+    }
 
     
     //Modifying Display Data

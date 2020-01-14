@@ -266,6 +266,23 @@ trait GlobalFunctions {
         return Str::random($length);
     }
 
+    public function withinTimeRange($startdate , $enddate){
+        
+
+        $startdate = $this->toDate($startdate);
+        $enddate = $this->toDate($enddate);
+        if($this->isEmpty($startdate) ||$this->isEmpty($startdate) ){
+            return false;
+        }else{
+            $currenttime = Carbon::now();
+            if($currenttime <= $enddate && $currenttime >= $startdate ){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
     public function globalFilter($data , $params){
 
         $data = collect($data);

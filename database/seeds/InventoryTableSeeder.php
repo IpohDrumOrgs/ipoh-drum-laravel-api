@@ -70,7 +70,7 @@ class InventoryTableSeeder extends Seeder
             $inventory->price = $faker->numberBetween($min = 1, $max = 1000);
             $inventory->rating = $faker->randomElement([0,1,2,3,4,5]);
             $inventory->desc = $faker->sentence;
-            $inventory->qty = $faker->numberBetween($min = 1, $max = 1000);
+            $inventory->qty = $faker->numberBetween($min = 100, $max = 1000);
             $inventory->stockthreshold = $faker->numberBetween($min = 1, $max = 1000);
             $inventory->salesqty = 0;
 
@@ -113,7 +113,7 @@ class InventoryTableSeeder extends Seeder
                 $inventoryfamily->desc = $faker->sentence;
                 $inventoryfamily->cost = $faker->numberBetween($min = 1, $max = 1000);
                 $inventoryfamily->price = $faker->numberBetween($min = 1, $max = 1000);
-                $inventoryfamily->qty = 0;
+                $inventoryfamily->qty = $faker->numberBetween($min = 100, $max = 1000);
                 $inventoryfamily->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
                 $inventoryfamily->imgpublicid = Carbon::now()->timestamp . '-' . (InventoryFamily::count() + 1);
                 $inventoryfamily->inventory()->associate($inventory);
@@ -126,7 +126,7 @@ class InventoryTableSeeder extends Seeder
                     $pattern->desc = $faker->sentence;
                     $pattern->cost = $faker->numberBetween($min = 1, $max = 1000);
                     $pattern->price = $faker->numberBetween($min = 1, $max = 1000);
-                    $pattern->qty = 0;
+                    $pattern->qty = $faker->numberBetween($min = 100, $max = 1000);
                     $pattern->imgpath = $imgs[$faker->randomElement([0,1,2,3,4,5,6,7,8,9,10,11,12])];
                     $pattern->inventoryfamily()->associate($inventoryfamily);
                     $pattern->save();

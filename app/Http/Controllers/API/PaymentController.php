@@ -8,17 +8,12 @@ use DB;
 use Carbon\Carbon;
 use App\Payment;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\GlobalFunctions;
-use App\Traits\NotificationFunctions;
-use App\Traits\PaymentServices;
-use App\Traits\PaymentFamilyServices;
-use App\Traits\PatternServices;
-use App\Traits\LogServices;
+use App\Traits\AllServices;
 use Stripe;
 
 class PaymentController extends Controller
 {
-    use GlobalFunctions, NotificationFunctions, PaymentServices, LogServices, PaymentFamilyServices;
+    use AllServices;
     private $controllerName = '[PaymentController]';
      /**
      * @OA\Get(
@@ -188,124 +183,39 @@ class PaymentController extends Controller
      *   summary="Creates a payment.",
      *   operationId="createPayment",
      * @OA\Parameter(
-     * name="name",
+     * name="token",
      * in="query",
-     * description="Paymentname",
+     * description="Stripe token",
      * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="store_id",
+     * name="email",
      * in="query",
-     * description="Store ID",
-     * required=true,
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="product_promotion_id",
-     * in="query",
-     * description="Promotion ID",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="warranty_id",
-     * in="query",
-     * description="Warranty ID",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="shipping_id",
-     * in="query",
-     * description="Shipping ID",
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="paymentfamilies",
-     * in="query",
-     * description="Payment Families",
+     * description="Email",
      * required=true,
      * @OA\Schema(
      *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="code",
+     * name="contact",
      * in="query",
-     * description="Code",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="sku",
-     * in="query",
-     * description="Sku",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="desc",
-     * in="query",
-     * description="Product Description",
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * 	@OA\RequestBody(
-*          required=true,
-*          @OA\MediaType(
-*              mediaType="multipart/form-data",
-*              @OA\Schema(
-*                  @OA\Property(
-*                      property="img",
-*                      description="Image",
-*                      type="file",
-*                      @OA\Items(type="string", format="binary")
-*                   ),
-*                  @OA\Property(
-*                      property="sliders[]",
-*                      description="Sliders Image",
-*                      type="file",
-*                      @OA\Items(type="string", format="binary")
-*                   ),
-*               ),
-*           ),
-*       ),
-     * @OA\Parameter(
-     * name="cost",
-     * in="query",
-     * description="Product Cost",
+     * description="Contact Person",
      * required=true,
      * @OA\Schema(
-     *              type="number"
+     *              type="string"
      *          )
      * ),
      * @OA\Parameter(
-     * name="price",
+     * name="selectedstores",
      * in="query",
-     * description="Product Base Price",
+     * description="Involved Store",
      * required=true,
      * @OA\Schema(
-     *              type="number"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="stockthreshold",
-     * in="query",
-     * description="Stock Threshold",
-     * @OA\Schema(
-     *              type="integer"
+     *              type="string"
      *          )
      * ),
      *   @OA\Response(
@@ -321,23 +231,56 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-        try{
-            $charge = Stripe::charges()->create([
-                'amount' => $request->amount,
-                'currency' => 'MYR',
-                'source' => $request->token,
-                'description' => 'Order',
-                'receipt_email' => 'siansion5@gmail.com',
-                'metadata' => [
-                    // 'contents' => $contents,
-                    // 'quantity' => 1,
-                    // 'discount' => collect(session()->get('coupon'))->toJson(),
-                ],
+        $this->validate($request, [
+            'token' => 'required|string|max:500',
+            'email' => 'required|email|max:255',
+            'contact' => 'required|string|max:20',
+            'selectedstores' =>'required|string',
+        ]);
+
+        
+        $selectedstores = collect(json_decode($request->selectedstores));
+        $totalpayment = 0;
+        foreach($selectedstores as $selectedstore){
+            
+            $params = collect([
+                'store_id' => $selectedstore->store_id,
+                'saleitems' => $selectedstore->saleitems,
             ]);
-        }catch(Exception $e){
+            $params = json_decode(json_encode($params));
+            //Creating Sale
+            $sale = $this->createSale($params);
+            if($this->isEmpty($sale)){
+                DB::rollBack();
+                return $this->errorResponse();
+            }
+            
+            try{
+                error_log($sale);
+                $charge = Stripe::charges()->create([
+                    'amount' => $sale->grandtotal,
+                    'currency' => 'MYR',
+                    'source' => $request->token,
+                    'description' => 'Sale '. $sale->uid. ' Payment',
+                    'receipt_email' => $request->email,
+                    'metadata' => [
+                        // 'contents' => $contents,
+                        // 'quantity' => 1,
+                        // 'discount' => collect(session()->get('coupon'))->toJson(),
+                    ],
+                ]);
+            }catch(Exception $e){
+                
+                DB::rollBack();
+                return $this->errorResponse();
+            }
 
         }
+
+        
+        
        
+        DB::commit();
         return $this->successResponse('Payment', $request, 'create');
     }
 

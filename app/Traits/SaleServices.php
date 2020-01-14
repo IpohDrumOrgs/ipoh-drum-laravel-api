@@ -98,17 +98,47 @@ trait SaleServices {
 
         $data = new Sale();
         $data->uid = Carbon::now()->timestamp . Sale::count();
-        $data->sono = $params->sono;
-        $data->totalqty = $this->toInt($params->totalqty);
-        $data->totalcost = $this->toDouble($params->totalcost);
-        $data->linetotal = $this->toDouble($params->linetotal);
-        $data->totaldisc = $this->toDouble($params->totaldisc);
-        $data->discpctg = $this->toInt($this->toDouble($data->totaldisc / $data->linetotal) * 100 );
-        // $data->charge = $this->toDouble($params->price);
-        $data->grandtotal = $this->toDouble($data->linetotal - $data->totaldisc);
-        $data->payment = $this->toDouble($params->payment);
-        $data->outstanding = $this->toDouble($params->outstanding);
-        $data->docdate = $this->toDate($params->docdate);
+        $params = $this->checkUndefinedProperty($params , $this->saleAllCols());
+        if(!$this->saveModel($data)){
+            return null;
+        }
+
+        $totalqty = 0;
+        $totalprice = 0;
+        $totaldisc = 0;
+        $totalcost = 0;
+        foreach($params->saleitems as $saleitem){
+            $saleitem->sale_id = $data->refresh()->id;
+            $saleitem = $this->createSaleItem($saleitem);
+            if($this->isEmpty($saleitem)){
+                return null;
+            }
+            $totalqty += $this->toInt($saleitem->qty);
+            $totalprice += $this->toDouble($saleitem->totalprice);
+            $totaldisc += $this->toDouble($saleitem->disc);
+            $totalcost += $this->toDouble($saleitem->totalcost);
+        }
+
+        // $data->sono = $params->sono;
+        $data->qty = $this->toInt($totalqty);
+        $data->totalcost = $this->toDouble($totalcost);
+        $data->totalprice = $this->toDouble($totalprice);
+        
+        $voucher = $this->getVoucherById($params->voucher_id);
+        if($this->isEmpty($voucher)){
+            $data->disc = $this->toDouble($totaldisc);
+        }else{
+            
+            if($voucher->discbyprice){
+                $data->disc = $this->toDouble($totaldisc + $voucher->disc);
+            }else{
+                $data->disc = $this->toDouble($totaldisc + (($voucher->discpctg /100) *  $data->totalprice));
+            }
+        }
+
+        $data->charge =  $this->getChargedPrice(($totalprice - $data->disc));
+        $data->net = $this->toDouble($data->totalprice - $data->disc - $data->charge - $data->totalcost);
+        $data->grandtotal = $this->toDouble($data->totalprice - $data->totaldisc);
         $data->remark = $params->remark;
 
         if(!$this->isEmpty($params->user_id)){
@@ -142,16 +172,15 @@ trait SaleServices {
     //Make Sure Sale is not empty when calling this function
     private function updateSale($data,  $params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->saleAllCols());
-
-        $data->sono = $params->sono;
+        
+        // $data->sono = $params->sono;
         $data->totalqty = $this->toInt($params->totalqty);
         $data->totalcost = $this->toDouble($params->totalcost);
-        $data->linetotal = $this->toDouble($params->linetotal);
+        $data->totalprice = $this->toDouble($params->totalprice);
         $data->totaldisc = $this->toDouble($params->totaldisc);
-        $data->discpctg = $this->toInt($this->toDouble($data->totaldisc / $data->linetotal) * 100 );
+        $data->discpctg = $this->toInt($this->toDouble($data->totaldisc / $data->totalprice) * 100 );
         // $data->charge = $this->toDouble($params->price);
-        $data->grandtotal = $this->toDouble($data->linetotal - $data->totaldisc);
+        $data->grandtotal = $this->toDouble($data->totalprice - $data->totaldisc);
         $data->payment = $this->toDouble($params->payment);
         $data->outstanding = $this->toDouble($params->outstanding);
         $data->docdate = $this->toDate($params->docdate);
@@ -197,9 +226,9 @@ trait SaleServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function saleAllCols() {
 
-        return ['id','uid', 'user_id' ,'store_id', 'sono' , 'totalqty' , 'discpctg' , 
-        'totalcost' , 'linetotal' , 'charge' , 'totaldisc' , 'grandtotal' , 'payment' , 
-        'outstanding' , 'remark', 'docdate', 'pos', 'status' ];
+        return ['id','uid', 'user_id' ,'store_id','voucher_id', 'sono' , 'qty' , 
+        'totalcost' , 'totalprice' , 'charge' , 'disc' , 'net' , 'grandtotal' , 
+        'remark', 'pos', 'status' ];
 
     }
 

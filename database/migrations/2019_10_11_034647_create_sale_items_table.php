@@ -26,14 +26,12 @@ class CreateSaleItemsTable extends Migration
             $table->text('desc')->nullable();
             $table->decimal('cost',8,2)->default(0.00);
             $table->decimal('price',8,2)->default(0.00);
-            $table->decimal('totaldisc',8,2)->default(0.00);
-            $table->decimal('linetotal',8,2)->default(0.00);
+            $table->decimal('disc',8,2)->default(0.00);
+            $table->decimal('totalprice',8,2)->default(0.00);
             $table->decimal('totalcost',8,2)->default(0.00);
-            $table->decimal('payment',8,2)->default(0.00);
-            $table->decimal('outstanding',8,2)->default(0.00);
-            $table->string('status')->default('open');
+            $table->decimal('grandtotal',8,2)->default(0.00);
+            $table->string('status')->default(true);
             $table->string('type')->default('inventory');
-            $table->date('docdate')->nullable();
             $table->timestamps();
 
             $table->foreign('sale_id')

@@ -135,6 +135,7 @@ Route::group(['middleware' => ['auth:api']], function (){
 Route::get('/category', 'API\CategoryController@index');
 Route::get('/type', 'API\TypeController@index');
 Route::get('/productfeature', 'API\ProductFeatureController@index');
+Route::get('/productfeature/{uid}', 'API\ProductFeatureController@show');
 
 Route::post('/register', 'API\UserController@register');
 

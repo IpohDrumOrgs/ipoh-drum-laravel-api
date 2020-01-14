@@ -17,22 +17,19 @@ class CreateSalesTable extends Migration
             $table->increments('id')->unique();
             $table->unsignedInteger('user_id')->unsigned()->nullable();
             $table->unsignedInteger('store_id')->unsigned()->nullable();
+            $table->unsignedInteger('voucher_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('sono')->nullable();
-            $table->integer('totalqty')->default(0);
-            $table->integer('discpctg')->default(0);
+            $table->integer('qty')->default(0);
+            $table->decimal('disc',8,2)->default(0.00);
             $table->decimal('totalcost',8,2)->default(0.00);
-            $table->decimal('linetotal',8,2)->default(0.00);
+            $table->decimal('totalprice',8,2)->default(0.00);
             $table->decimal('charge',8,2)->default(0.00);
-            $table->decimal('totaldisc',8,2)->default(0.00);
+            $table->decimal('net',8,2)->default(0.00);
             $table->decimal('grandtotal',8,2)->default(0.00);
-            $table->decimal('payment',8,2)->default(0.00);
-            $table->decimal('outstanding',8,2)->default(0.00);
-            $table->string('status')->default('open');
+            $table->boolean('status')->default(true);
             $table->text('remark')->nullable();
-            $table->dateTime('docdate')->nullable();
             $table->boolean('pos')->default(true);
-            $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('user_id')
@@ -44,6 +41,12 @@ class CreateSalesTable extends Migration
             $table->foreign('store_id')
             ->references('id')
             ->on('stores')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+
+            $table->foreign('voucher_id')
+            ->references('id')
+            ->on('vouchers')
             ->onUpdate('cascade')
             ->onDelete('restrict');
         });

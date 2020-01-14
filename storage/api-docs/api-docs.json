@@ -3708,135 +3708,42 @@
                 "operationId": "createPayment",
                 "parameters": [
                     {
-                        "name": "name",
+                        "name": "token",
                         "in": "query",
-                        "description": "Paymentname",
+                        "description": "Stripe token",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "store_id",
+                        "name": "email",
                         "in": "query",
-                        "description": "Store ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "product_promotion_id",
-                        "in": "query",
-                        "description": "Promotion ID",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "warranty_id",
-                        "in": "query",
-                        "description": "Warranty ID",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "shipping_id",
-                        "in": "query",
-                        "description": "Shipping ID",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "paymentfamilies",
-                        "in": "query",
-                        "description": "Payment Families",
+                        "description": "Email",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "code",
+                        "name": "contact",
                         "in": "query",
-                        "description": "Code",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "sku",
-                        "in": "query",
-                        "description": "Sku",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "desc",
-                        "in": "query",
-                        "description": "Product Description",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cost",
-                        "in": "query",
-                        "description": "Product Cost",
+                        "description": "Contact Person",
                         "required": true,
                         "schema": {
-                            "type": "number"
+                            "type": "string"
                         }
                     },
                     {
-                        "name": "price",
+                        "name": "selectedstores",
                         "in": "query",
-                        "description": "Product Base Price",
+                        "description": "Involved Store",
                         "required": true,
                         "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "stockthreshold",
-                        "in": "query",
-                        "description": "Stock Threshold",
-                        "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "img": {
-                                        "description": "Image",
-                                        "type": "file",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    },
-                                    "sliders[]": {
-                                        "description": "Sliders Image",
-                                        "type": "file",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Payment has been created successfully."

@@ -260,7 +260,7 @@ class UserController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $user = $this->createUser($request->user(), $params);
+        $user = $this->createUser($params);
 
         if ($this->isEmpty($user)) {
             DB::rollBack();
@@ -362,7 +362,7 @@ class UserController extends Controller
         DB::beginTransaction();
         // api/user/{userid} (PUT)
         error_log($this->controllerName.'Updating user of uid: ' . $uid);
-        $user = $this->getUser($request->user(), $uid);
+        $user = $this->getUser($uid);
         $this->validate($request, [
             'email' => 'required|string|max:191|unique:users,email,' . $user->id,
             'name' => 'required|string|max:191',
@@ -386,7 +386,7 @@ class UserController extends Controller
         ]);
         //Convert To Json Object
         $params = json_decode(json_encode($params));
-        $user = $this->updateUser($request->user(), $user, $params);
+        $user = $this->updateUser($user, $params);
         if ($this->isEmpty($user)) {
             DB::rollBack();
             return $this->errorResponse();
@@ -425,12 +425,12 @@ class UserController extends Controller
         // TODO ONLY TOGGLES THE status = 1/0
         // api/user/{userid} (DELETE)
         error_log($this->controllerName.'Deleting user of uid: ' . $uid);
-        $user = $this->getUser($request->user(), $uid);
+        $user = $this->getUser($uid);
         if ($this->isEmpty($user)) {
             DB::rollBack();
             return $this->notFoundResponse('User');
         }
-        $user = $this->deleteUser($request->user(), $user->id);
+        $user = $this->deleteUser($user);
         if ($this->isEmpty($user)) {
             DB::rollBack();
             return $this->errorResponse();

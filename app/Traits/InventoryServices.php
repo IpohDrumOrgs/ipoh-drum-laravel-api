@@ -405,16 +405,16 @@ trait InventoryServices {
         if(isset($data->promotion)){
             if(!$this->isEmpty($data->promotion)){
                 if($this->withinTimeRange($data->promotion->promostartdate , $data->promotion->promoenddate)){
-                    if($data->promotion->discbyprice){
+                    if($data->promotion->discbyprice  &&  $data->promotion->disc > 0){
                         $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
-                    }else{
-                        $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promotion->discpctg / 100)));
-                    }
-                    
-                    if($data->price != 0 && $data->price >= $data->promoprice){
                         $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
+                    }else if( $data->promotion->discpctg > 0){
+                        $data->promopctg =  $this->toInt($data->promotion->discpctg);
+                        $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
                     }else{
+                        $data->promoprice = 0;
                         $data->promopctg = 0;
+
                     }
                 }
             }

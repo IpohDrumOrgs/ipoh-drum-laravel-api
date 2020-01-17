@@ -227,15 +227,14 @@ trait VideoServices {
 
     public function calculateVideoPromotionPrice($data) {
         if(!$data->free){
-            if($data->discbyprice){
+            if($data->discbyprice &&  $data->disc > 0){
                 $data->promoprice =  $this->toDouble($data->price - $data->disc);
-            }else{
-                $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->discpctg / 100)));
-            }
-            
-            if($data->price != 0 && $data->price >= $data->promoprice){
                 $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
+            }else if( $data->discpctg > 0){
+                $data->promopctg =  $this->toInt($data->discpctg);
+                $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
             }else{
+                $data->promoprice = 0;
                 $data->promopctg = 0;
             }
         }

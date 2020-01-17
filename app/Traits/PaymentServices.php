@@ -98,47 +98,7 @@ trait PaymentServices {
 
         $params = $this->checkUndefinedProperty($params , $this->paymentAllCols());
 
-    //     $data = new Payment();
-    //     $data->uid = Carbon::now()->timestamp . Payment::count();
-    //     $data->name = $params->name;
-    //     $data->desc = $params->desc;
-    //     $data->contact = $params->contact;
-    //     $data->email = $params->email;
-    //     $data->address = $params->address;
-    //     $data->postcode = $params->postcode;
-    //     $data->rating = 0;
-    //     $data->city = $params->city;
-    //     $data->state = $params->state;
-    //     $data->country = $params->country;
-    //     $data->companyBelongings = $params->companyBelongings;
-    //     $data->status = true;
-
-    //    //Assign Owner
-    //    if($data->companyBelongings){
-    //         $company = $this->getCompanyById($params->company_id);
-    //         error_log($params->company_id);
-    //         error_log($company);
-    //         if($this->isEmpty($company)){
-    //             return null;
-    //         }
-    //         $data->company()->associate($company);
-    //         $data->user_id = null;
-    //     }else{
-    //         $user = $this->getUserById($params->user_id);
-    //         error_log($user);
-    //         if($this->isEmpty($user)){
-    //             return null;
-    //         }
-    //         $data->user()->associate($user);
-    //         $data->company_id = null;
-    //     }
-        
-    //     if(!$this->saveModel($data)){
-    //         return null;
-    //     }
-            
-
-    //     return $data->refresh();
+   
     }
 
     //Make Sure Payment is not empty when calling this function
@@ -300,4 +260,19 @@ trait PaymentServices {
         }
     }
 
+    public function createStripeCard($params) {
+
+        try{
+            $card = Stripe::cards()->create([
+                'email' => $params->email,
+                'name' => $params->name,
+                'phone' => $params->phone,
+                'address' => $params->address,
+                'description' => $params->description,
+            ]);
+            return $card->id;
+        }catch(Exception $e){
+            return null;
+        }
+    }
 }

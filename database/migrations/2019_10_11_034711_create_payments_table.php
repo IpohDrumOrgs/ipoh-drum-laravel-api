@@ -16,22 +16,30 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('uid')->unique();
+            $table->unsignedInteger('sale_id')->nullable();
             $table->unsignedInteger('user_id')->nullable();
             $table->text('desc')->nullable();
-            //Denote if user pay for installment or sales
             $table->string('type')->nullable();
             $table->string('method')->nullable();
             $table->string('reference')->nullable();
+            $table->string('email');
+            $table->string('contact');
             $table->decimal('amt', 8, 2)->default(0.00);
             $table->decimal('discount', 8, 2)->default(0.00);
+            $table->decimal('charge', 8, 2)->default(0.00);
             $table->text('remark')->nullable();
-            $table->string('creator')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();
             
             $table->foreign('user_id')
             ->references('id')
             ->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+
+            $table->foreign('sale_id')
+            ->references('id')
+            ->on('sales')
             ->onUpdate('cascade')
             ->onDelete('restrict');
             

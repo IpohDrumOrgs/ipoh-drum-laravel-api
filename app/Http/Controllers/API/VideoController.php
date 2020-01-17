@@ -716,6 +716,7 @@ class VideoController extends Controller
         $params = json_decode(json_encode($params));
         $videos = $this->filterVideos($videos , $params);
         $videos->map(function($item){
+            $item = $this->calculateVideoPromotionPrice($item);
             return $this->setCommentCount($item);
         });
 

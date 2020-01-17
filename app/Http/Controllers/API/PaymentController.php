@@ -255,25 +255,7 @@ class PaymentController extends Controller
                 return $this->errorResponse();
             }
             
-            try{
-                error_log($sale);
-                $charge = Stripe::charges()->create([
-                    'amount' => $sale->grandtotal,
-                    'currency' => 'MYR',
-                    'source' => $request->token,
-                    'description' => 'Sale '. $sale->uid. ' Payment',
-                    'receipt_email' => $request->email,
-                    'metadata' => [
-                        // 'contents' => $contents,
-                        // 'quantity' => 1,
-                        // 'discount' => collect(session()->get('coupon'))->toJson(),
-                    ],
-                ]);
-            }catch(Exception $e){
-                
-                DB::rollBack();
-                return $this->errorResponse();
-            }
+           
 
         }
 
@@ -661,47 +643,94 @@ class PaymentController extends Controller
     }
 
 
+   
     /**
-     * @OA\Get(
+     * @OA\Post(
      *   tags={"PaymentControllerService"},
-     *   path="/api/payment/{uid}/onsale",
-     *   summary="Retrieves onsale payment by Uid.",
-     *     operationId="getOnSalePaymentByUid",
-     *   @OA\Parameter(
-     *     name="uid",
-     *     in="path",
-     *     description="Payment_ID, NOT 'ID'.",
-     *     required=true,
-     *     @OA\Schema(type="string")
-     *   ),
+     *   path="/api/inventorypayment",
+     *   summary="Creates a payment.",
+     *   operationId="createPayment",
+     * @OA\Parameter(
+     * name="token",
+     * in="query",
+     * description="Stripe token",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="email",
+     * in="query",
+     * description="Email",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="contact",
+     * in="query",
+     * description="Contact Person",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="selectedstores",
+     * in="query",
+     * description="Involved Store",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
-     *     description="Payment has been retrieved successfully."
+     *     description="Payment has been created successfully."
      *   ),
      *   @OA\Response(
      *     response="default",
-     *     description="Unable to retrieve the payment."
+     *     description="Unable to create the payment."
      *   )
      * )
      */
-    public function getOnSalePayment(Request $request, $uid)
+    public function inventoryPayment(Request $request)
     {
-        // api/payment/{paymentid} (GET)
-        error_log($this->controllerName.'Retrieving onsale payment of uid:' . $uid);
-        $cols = $this->paymentDefaultCols();
-        $payment = $this->getPayment($uid);
-        if($payment->onsale){
-            $payment = $this->itemPluckCols($payment , $cols);
-            $payment = json_decode(json_encode($payment));
-            $payment = $this->calculatePromotionPrice($payment);
-            $payment = $this->countProductReviews($payment);
-        }else{
-            $payment = null;
+        DB::beginTransaction();
+        $this->validate($request, [
+            'token' => 'required|string|max:500',
+            'email' => 'required|email|max:255',
+            'contact' => 'required|string|max:20',
+            'selectedstores' =>'required|string',
+        ]);
+
+        
+        $selectedstores = collect(json_decode($request->selectedstores));
+        $totalpayment = 0;
+        foreach($selectedstores as $selectedstore){
+            
+            $params = collect([
+                'store_id' => $selectedstore->store_id,
+                'saleitems' => $selectedstore->saleitems,
+            ]);
+            $params = json_decode(json_encode($params));
+            //Creating Sale
+            $sale = $this->createSale($params);
+            if($this->isEmpty($sale)){
+                DB::rollBack();
+                return $this->errorResponse();
+            }
+            
+           
+
         }
-        if ($this->isEmpty($payment)) {
-            return $this->notFoundResponse('Payment');
-        } else {
-            return $this->successResponse('Payment', $payment, 'retrieve');
-        }
+
+        
+        
+       
+        DB::commit();
+        return $this->successResponse('Payment', $request, 'create');
     }
 }

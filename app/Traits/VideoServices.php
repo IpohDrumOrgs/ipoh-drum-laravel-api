@@ -238,7 +238,10 @@ trait VideoServices {
             }else{
                 $data->promopctg = 0;
             }
-    }
+        }else{
+            $data->promoprice = 0;
+            $data->promopctg = 0;
+        }
 
         return $data;
     }

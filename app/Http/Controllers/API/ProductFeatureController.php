@@ -443,7 +443,7 @@ class ProductFeatureController extends Controller
         $inventories = json_decode(json_encode($inventories));
         $inventories = collect($inventories)->map(function ($item, $key) {
 
-            return $this->calculatePromotionPrice($item);
+            return $this->calculateInventoryPromotionPrice($item);
         });
         $tickets = $this->itemsPluckCols($tickets , $this->ticketDefaultCols());
         $tickets = json_decode(json_encode($tickets));

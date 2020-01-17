@@ -411,7 +411,7 @@ trait InventoryServices {
                         $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promotion->discpctg / 100)));
                     }
                     
-                    if($data->price != 0){
+                    if($data->price != 0 && $data->price >= $data->promoprice){
                         $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
                     }else{
                         $data->promopctg = 0;

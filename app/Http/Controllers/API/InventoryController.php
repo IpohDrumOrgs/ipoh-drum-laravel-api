@@ -887,7 +887,7 @@ class InventoryController extends Controller
         if($inventory->onsale){
             $inventory = $this->itemPluckCols($inventory , $cols);
             $inventory = json_decode(json_encode($inventory));
-            $inventory = $this->calculatePromotionPrice($inventory);
+            $inventory = $this->calculateInventoryPromotionPrice($inventory);
             $inventory = $this->countProductReviews($inventory);
         }else{
             $inventory = null;

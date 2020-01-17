@@ -401,7 +401,7 @@ trait InventoryServices {
 
     }
     
-    public function calculatePromotionPrice($data) {
+    public function calculateInventoryPromotionPrice($data) {
         if(isset($data->promotion)){
             if(!$this->isEmpty($data->promotion)){
                 if($this->withinTimeRange($data->promotion->promostartdate , $data->promotion->promoenddate)){

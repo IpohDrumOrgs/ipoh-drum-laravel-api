@@ -6,6 +6,7 @@ use App\Company;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Stripe;
 use App\Traits\AllServices;
 
 trait PaymentServices {
@@ -251,7 +252,7 @@ trait PaymentServices {
 
     }
 
-    // Data
+    // Charge Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
 
     
@@ -278,6 +279,25 @@ trait PaymentServices {
     public function getChargedPrice($price) {
 
         return $this->toDouble(($price * $this->getStripeChargePercentage()) + ($price * $this->getAppChargePercentage()) + $this->getAppChargePrice() + $this->getStripeChargePrice());
+    }
+
+    // Stripe Services
+    // -----------------------------------------------------------------------------------------------------------------------------------------
+
+    public function createStripeCustomer($params) {
+
+        try{
+            $customer = Stripe::customers()->create([
+                'email' => $params->email,
+                'name' => $params->name,
+                'phone' => $params->phone,
+                'address' => $params->address,
+                'description' => $params->description,
+            ]);
+            return $customer->id;
+        }catch(Exception $e){
+            return null;
+        }
     }
 
 }

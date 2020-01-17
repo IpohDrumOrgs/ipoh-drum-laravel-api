@@ -665,6 +665,7 @@ class VideoController extends Controller
         error_log($this->controllerName.'Retrieving public videos listing');
         $video = $this->getVideo($uid);
         $video = $this->setCommentCount($video);
+        $video = $this->calculateVideoPromotionPrice($video);
 
         if ($this->isEmpty($video) && $video->scope != "public") {
             $data['data'] = null;

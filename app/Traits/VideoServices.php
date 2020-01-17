@@ -225,6 +225,23 @@ trait VideoServices {
         return $data->refresh();
     }
 
+    public function calculateVideoPromotionPrice($data) {
+        if(!$data->free){
+            if($data->discbyprice){
+                $data->promoprice =  $this->toDouble($data->price - $data->disc);
+            }else{
+                $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->discpctg / 100)));
+            }
+            
+            if($data->price != 0){
+                $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
+            }else{
+                $data->promopctg = 0;
+            }
+    }
+
+        return $data;
+    }
     private function getAllVideos() {
         
         $data = Video::where('status', true)->get();

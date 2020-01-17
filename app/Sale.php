@@ -58,7 +58,7 @@ class Sale extends Model
      */
     public function payments()
     {
-        return $this->belongsToMany('App\Payment','payment_sale')->withPivot( 'amt','discount','type','status','created_at','updated_at');
+        return $this->hasMany('App\Payment');
     }
 
     /**

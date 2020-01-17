@@ -183,33 +183,6 @@ class PaymentController extends Controller
      *   summary="Creates a payment.",
      *   operationId="createPayment",
      * @OA\Parameter(
-     * name="token",
-     * in="query",
-     * description="Stripe token",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="email",
-     * in="query",
-     * description="Email",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
-     * name="contact",
-     * in="query",
-     * description="Contact Person",
-     * required=true,
-     * @OA\Schema(
-     *              type="string"
-     *          )
-     * ),
-     * @OA\Parameter(
      * name="selectedstores",
      * in="query",
      * description="Involved Store",
@@ -231,37 +204,7 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-        $this->validate($request, [
-            'token' => 'required|string|max:500',
-            'email' => 'required|email|max:255',
-            'contact' => 'required|string|max:20',
-            'selectedstores' =>'required|string',
-        ]);
 
-        
-        $selectedstores = collect(json_decode($request->selectedstores));
-        $totalpayment = 0;
-        foreach($selectedstores as $selectedstore){
-            
-            $params = collect([
-                'store_id' => $selectedstore->store_id,
-                'saleitems' => $selectedstore->saleitems,
-            ]);
-            $params = json_decode(json_encode($params));
-            //Creating Sale
-            $sale = $this->createSale($params);
-            if($this->isEmpty($sale)){
-                DB::rollBack();
-                return $this->errorResponse();
-            }
-            
-           
-
-        }
-
-        
-        
-       
         DB::commit();
         return $this->successResponse('Payment', $request, 'create');
     }
@@ -648,12 +591,12 @@ class PaymentController extends Controller
      * @OA\Post(
      *   tags={"PaymentControllerService"},
      *   path="/api/inventorypayment",
-     *   summary="Creates a payment.",
-     *   operationId="createPayment",
+     *   summary="Creates an inventory payment.",
+     *   operationId="createInventoryPayment",
      * @OA\Parameter(
-     * name="token",
+     * name="card",
      * in="query",
-     * description="Stripe token",
+     * description="Stripe card id",
      * required=true,
      * @OA\Schema(
      *              type="string"
@@ -700,13 +643,30 @@ class PaymentController extends Controller
     {
         DB::beginTransaction();
         $this->validate($request, [
-            'token' => 'required|string|max:500',
+            'card' => 'required|string|max:500',
             'email' => 'required|email|max:255',
             'contact' => 'required|string|max:20',
             'selectedstores' =>'required|string',
         ]);
 
-        
+        $token = $this->createStripeToken($request->card);
+        if($this->isEmpty($token)){
+            return $this->errorResponse();
+        }
+
+        $params = collect([
+            'amount' => 1,
+            'currency' => 'MYR',
+            'source' => $token->id,
+            'receipt_email' =>  $request->email,
+        ]);
+        $params = json_decode(json_encode($params));
+        $charge = $this->createStripeCharge($token);
+        if($this->isEmpty($charge)){
+            error_log('here');
+            return $this->errorResponse();
+        }
+
         $selectedstores = collect(json_decode($request->selectedstores));
         $totalpayment = 0;
         foreach($selectedstores as $selectedstore){
@@ -722,9 +682,23 @@ class PaymentController extends Controller
                 DB::rollBack();
                 return $this->errorResponse();
             }
-            
-           
 
+            $params = collect([
+                'email' => $request->email,
+                'contact' => $request->contact,
+                'sale_id' => $sale->id,
+                'user_id' => $request->user()->id,
+                'type' => 'credit',
+                'method' => 'creditcard',
+                'amt' => $sale->grandtotal,
+            ]);
+
+            $params = json_decode(json_encode($params));
+            $payment = $this->createPayment($params);
+            if($this->isEmpty($payment)){
+                DB::rollBack();
+                return $this->errorResponse();
+            }
         }
 
         

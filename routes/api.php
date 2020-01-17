@@ -141,7 +141,8 @@ Route::post('/register', 'API\UserController@register');
 
 Route::get('/productfeature/{uid}/products', 'API\ProductFeatureController@getFeaturedProducts');
 
-Route::resource('payment', 'API\PaymentController');
+Route::post('/inventorypayment', 'API\PaymentController@inventoryPayment');
+Route::post('/videopayment', 'API\PaymentController@videoPayment');
 Route::get('/filter/payment', 'API\PaymentController@filter');
 
 Route::get('/inventory/{uid}/onsale', 'API\InventoryController@getOnSaleInventory');

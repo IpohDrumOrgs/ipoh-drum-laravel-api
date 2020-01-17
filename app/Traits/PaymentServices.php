@@ -97,7 +97,61 @@ trait PaymentServices {
     private function createPayment($params) {
 
         $params = $this->checkUndefinedProperty($params , $this->paymentAllCols());
+        
+        $data = new Payment();
 
+        $data->uid = Carbon::now()->timestamp . Payment::count();
+        $data->desc = $params->desc;
+        $data->type = $params->type;
+        $data->method = $params->method;
+        $data->reference = $params->reference;
+        $data->email = $params->email;
+        $data->contact = $params->contact;
+        $data->remark = $params->remark;
+
+        $sale = $this->getSaleById($params->sale_id);
+        if($this->isEmpty($sale)){
+            return null;
+        }
+        $data->sale()->associate($sale);
+
+        $user = $this->getUserById($params->user_id);
+        if($this->isEmpty($user)){
+            return null;
+        }
+        $data->user()->associate($user);
+
+        $token = $this->createStripeToken($params->card_id);
+        if($this->isEmpty($token)){
+            return null;
+        }
+
+        //Make Payment
+        $params = collect([
+            'amount' => $params->amount,
+            'currency' => 'MYR',
+            'source' => $token->id,
+            'description' => $user->name. ' Check Out For Sale '. $sale->uid,
+            'receipt_email' =>  $params->email,
+        ]);
+        $params = json_decode(json_encode($params));
+        $charge = $this->createStripeCharge($token);
+        if($this->isEmpty($charge)){
+            return null;
+        }
+
+        error_log(collect($charge));
+        $data->reference = $charge->reference;
+        $data->amount = $this->toDouble($charge->amount);
+        $data->charge = $this->toDouble($this->getChargedPrice($data->amount));
+        $data->net = $this->toDouble($data->amount - $data->charge);
+
+        
+        if($this->saveModel($data)){
+            return $data->refresh();
+        }else{
+            return null;
+        }
    
     }
 
@@ -206,9 +260,9 @@ trait PaymentServices {
 
     public function paymentAllCols() {
 
-        return ['id','company_id', 'user_id', 'uid' ,'name', 'contact', 'desc' , 
-        'imgpath' , 'imgpublicid'  , 'email', 'rating' , 'freeshippingminpurchase' , 
-        'address' , 'state' , 'postcode' , 'city','country','status','companyBelongings'];
+        return ['id','sale_id', 'user_id', 'uid' ,'desc', 'type', 'method' , 
+        'reference' , 'email'  , 'contact', 'amount' , 'charge' , 'net',
+        'remark' , 'status' , 'card_id' ];
 
     }
 
@@ -246,31 +300,59 @@ trait PaymentServices {
 
     public function createStripeCustomer($params) {
 
-        try{
-            $customer = Stripe::customers()->create([
-                'email' => $params->email,
-                'name' => $params->name,
-                'phone' => $params->phone,
-                'address' => $params->address,
-                'description' => $params->description,
-            ]);
-            return $customer->id;
-        }catch(Exception $e){
-            return null;
-        }
+        // try{
+        //     $customer = Stripe::customers()->create([
+        //         'email' => $params->email,
+        //         'name' => $params->name,
+        //         'phone' => $params->phone,
+        //         'address' => $params->address,
+        //         'description' => $params->description,
+        //     ]);
+        //     return $customer->id;
+        // }catch(Exception $e){
+        //     return null;
+        // }
     }
 
     public function createStripeCard($params) {
 
+        // try{
+        //     $card = Stripe::cards()->create([
+        //         'email' => $params->email,
+        //         'name' => $params->name,
+        //         'phone' => $params->phone,
+        //         'address' => $params->address,
+        //         'description' => $params->description,
+        //     ]);
+        //     return $card->id;
+        // }catch(Exception $e){
+        //     return null;
+        // }
+    }
+    
+    public function createStripeToken($card) {
+
         try{
-            $card = Stripe::cards()->create([
-                'email' => $params->email,
-                'name' => $params->name,
-                'phone' => $params->phone,
-                'address' => $params->address,
-                'description' => $params->description,
+            $token = Stripe::token()->create([
+                'card' =>$card,
             ]);
-            return $card->id;
+            return $token;
+        }catch(Exception $e){
+            return null;
+        }
+    }
+    
+    public function createStripeCharge($params) {
+
+        try{
+            $charge = Stripe::charges()->create([
+                'amount' => $params->amount,
+                'currency' => $params->currency,
+                'source' => $params->source,
+                'description' => $params->description,
+                'receipt_email' => $params->receipt_email,
+            ]);
+            return $charge;
         }catch(Exception $e){
             return null;
         }

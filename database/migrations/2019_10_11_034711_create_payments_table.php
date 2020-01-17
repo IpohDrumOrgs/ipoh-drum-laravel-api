@@ -24,9 +24,9 @@ class CreatePaymentsTable extends Migration
             $table->string('reference')->nullable();
             $table->string('email');
             $table->string('contact');
-            $table->decimal('amt', 8, 2)->default(0.00);
-            $table->decimal('discount', 8, 2)->default(0.00);
+            $table->decimal('amount', 8, 2)->default(0.00);
             $table->decimal('charge', 8, 2)->default(0.00);
+            $table->decimal('net', 8, 2)->default(0.00);
             $table->text('remark')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();

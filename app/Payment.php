@@ -22,7 +22,7 @@ class Payment extends Model
     /**
      * Get the creator of the payment.
      */
-    public function creator()
+    public function user()
     {
         return $this->belongsTo('App\User');
     }
@@ -30,9 +30,9 @@ class Payment extends Model
     /**
      * Get the sales of the payment.
      */
-    public function sales()
+    public function sale()
     {
-        return $this->belongsToMany('App\Sale','payment_sale')->withPivot( 'amt','discount','type','status','created_at','updated_at');
+        return $this->belongsTo('App\Sale');
     }
 
    

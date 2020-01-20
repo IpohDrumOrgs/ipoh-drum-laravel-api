@@ -27,6 +27,7 @@ class CreateSalesTable extends Migration
             $table->decimal('charge',8,2)->default(0.00);
             $table->decimal('net',8,2)->default(0.00);
             $table->decimal('grandtotal',8,2)->default(0.00);
+            $table->string('salestatus')->default('received');
             $table->boolean('status')->default(true);
             $table->text('remark')->nullable();
             $table->boolean('pos')->default(true);

@@ -22,6 +22,7 @@ class CreateSaleItemsTable extends Migration
             $table->unsignedInteger('ticket_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('name');
+            $table->string('trackingcode')->nullable();
             $table->integer('qty')->default(0);
             $table->text('desc')->nullable();
             $table->decimal('cost',8,2)->default(0.00);

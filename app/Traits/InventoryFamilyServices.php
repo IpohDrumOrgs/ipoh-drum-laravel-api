@@ -176,7 +176,7 @@ trait InventoryFamilyServices {
     }
     
     //Inventory Family Item Have been sold
-    private function soldInventoryFamily($inventoryfamily) {
+    private function soldInventoryFamily($inventoryfamily, $soldqty) {
 
         $inventory = $inventoryfamily->inventory;
         
@@ -184,17 +184,17 @@ trait InventoryFamilyServices {
             return null;
         }
         
-        $inventory = $this->soldInventory($inventory);
+        $inventory = $this->soldInventory($inventory, $soldqty);
         if($this->isEmpty($inventory)){
             return null;
         }
 
-        if($inventoryfamily->qty <=0 || !$inventoryfamily->onsale){
+        if($inventoryfamily->qty - $soldqty <=0 || !$inventoryfamily->onsale || $soldqty <= 0 ){
             return null;
         }else{
             
-            $inventoryfamily->qty -= 1;
-            $inventoryfamily->salesqty += 1;
+            $inventoryfamily->qty -= $soldqty;
+            $inventoryfamily->salesqty += $soldqty;
             
             if(!$this->saveModel($inventoryfamily)){
                 return null;

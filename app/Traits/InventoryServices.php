@@ -327,25 +327,26 @@ trait InventoryServices {
 
      
     //Inventory Item Have been sold
-    private function soldInventory($inventory) {
+    private function soldInventory($inventory , $soldqty) {
 
-        if($inventory->qty <=0 || !$inventory->onsale){
+        if($inventory->qty - $soldqty <=0 || !$inventory->onsale || $soldqty <= 0){
             return null;
         }else{
 
-            //Check Limited Promotion Qty
-            if($inventory->promotion){
-                if($inventory->promotion->qty > 0 && $inventory->promoendqty >= $inventory->salesqty){
-                    $inventory->promotion()->dissociate();
-                }
-            }
-            
-            $inventory->qty -= 1;
-            $inventory->salesqty += 1;
+            $inventory->qty -= $soldqty;
+            $inventory->salesqty += $soldqty;
             
             if(!$this->saveModel($inventory)){
                 return null;
             }
+
+            //Check Limited Promotion Qty
+            if($inventory->promotion){
+                if($inventory->promotion->qty > 0 && $inventory->salesqty >= $inventory->promoendqty){
+                    $inventory->promotion()->dissociate();
+                }
+            }
+            
 
         }
 
@@ -402,23 +403,18 @@ trait InventoryServices {
     }
     
     public function calculateInventoryPromotionPrice($data) {
-        if(isset($data->promotion)){
-            if(!$this->isEmpty($data->promotion)){
-                if($this->withinTimeRange($data->promotion->promostartdate , $data->promotion->promoenddate)){
-                    if($data->promotion->discbyprice  &&  $data->promotion->disc > 0){
-                        $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
-                        $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
-                    }else if( $data->promotion->discpctg > 0){
-                        $data->promopctg =  $this->toInt($data->promotion->discpctg);
-                        $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
-                    }else{
-                        $data->promoprice = 0;
-                        $data->promopctg = 0;
 
-                    }
-                }
+        if($this->validateInventoryPromotion($data)){
+            if($data->promotion->discbyprice  &&  $data->promotion->disc > 0){
+                $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
+                $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
+            }else if( $data->promotion->discpctg > 0){
+                $data->promopctg =  $this->toInt($data->promotion->discpctg);
+                $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
+            }else{
+                $data->promoprice = 0;
+                $data->promopctg = 0;
             }
-    
         }
 
         return $data;
@@ -438,6 +434,38 @@ trait InventoryServices {
     }
 
     
+    public function validateInventoryPromotion($data) {
+        if(isset($data->promotion)){
+            if(!$this->isEmpty($data->promotion)){
+                if($this->withinTimeRange($data->promotion->promostartdate , $data->promotion->promoenddate)){
+                    return true;
+                }
+            }else{
+                return false;
+            }
+    
+        }else{
+            return false;
+        }
+
+    }
+
+    
+    //Check if the promotion is valid onlimited qty
+    public function validateInventoryPromotionQty($data, $soldqty) {
+        
+        if($this->validateInventoryPromotion($data)){
+            if($data->promotion->qty > 0 && $data->salesqty + $soldqty >= $data->promoendqty){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            //Didn't have promotion
+            return null;
+        }
+
+    }
 
 
 }

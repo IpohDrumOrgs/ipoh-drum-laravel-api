@@ -594,9 +594,9 @@ class PaymentController extends Controller
      *   summary="Creates an inventory payment.",
      *   operationId="createInventoryPayment",
      * @OA\Parameter(
-     * name="card",
+     * name="token",
      * in="query",
-     * description="Stripe card id",
+     * description="Stripe token id",
      * required=true,
      * @OA\Schema(
      *              type="string"
@@ -629,6 +629,15 @@ class PaymentController extends Controller
      *              type="string"
      *          )
      * ),
+     * @OA\Parameter(
+     * name="user_id",
+     * in="query",
+     * description="User Id",
+     * required=true,
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Payment has been created successfully."
@@ -643,36 +652,43 @@ class PaymentController extends Controller
     {
         DB::beginTransaction();
         $this->validate($request, [
-            'card' => 'required|string|max:500',
+            'token' => 'required|string|max:500',
             'email' => 'required|email|max:255',
             'contact' => 'required|string|max:20',
             'selectedstores' =>'required|string',
+            'user_id' =>'required|string',
         ]);
 
-        $token = $this->createStripeToken($request->card);
-        if($this->isEmpty($token)){
-            return $this->errorResponse();
-        }
-
+        //Create Stripe Customer
         $params = collect([
-            'amount' => 1,
-            'currency' => 'MYR',
-            'source' => $token->id,
-            'receipt_email' =>  $request->email,
+            'email' =>  $request->email,
         ]);
         $params = json_decode(json_encode($params));
-        $charge = $this->createStripeCharge($token);
-        if($this->isEmpty($charge)){
-            error_log('here');
+        $customer = $this->createStripeCustomer($params);
+        if($this->isEmpty($customer)){
+            DB::rollBack();
             return $this->errorResponse();
         }
 
+        //Create Stripe Card
+        $params = collect([
+            'customer_id' =>  $customer->id,
+            'token' =>  $request->token,
+        ]);
+        $params = json_decode(json_encode($params));
+        $card = $this->createStripeCard($params);
+        if($this->isEmpty($card)){
+            DB::rollBack();
+            return $this->errorResponse();
+        }
+
+        
         $selectedstores = collect(json_decode($request->selectedstores));
         $totalpayment = 0;
         foreach($selectedstores as $selectedstore){
-            
             $params = collect([
                 'store_id' => $selectedstore->store_id,
+                'user_id' => $request->user_id,
                 'saleitems' => $selectedstore->saleitems,
             ]);
             $params = json_decode(json_encode($params));
@@ -683,11 +699,42 @@ class PaymentController extends Controller
                 return $this->errorResponse();
             }
 
+            error_log($sale->uid);
+            error_log($sale->user->uid);
+            //Make Payment
+            if($sale->user){
+                $params = collect([
+                    'amount' => $sale->grandtotal,
+                    'currency' => 'MYR',
+                    'customer' => $customer->id,
+                    'source' => $card->id,
+                    'description' => "Payment for ". $sale->uid .' by '. $sale->user->uid,
+                    'receipt_email' =>  $request->email,
+                ]);
+            }else{
+                $params = collect([
+                    'amount' => $sale->grandtotal,
+                    'currency' => 'MYR',
+                    'customer' => $customer->id,
+                    'source' => $card->id,
+                    'description' => "Payment for ". $sale->uid .' by customer',
+                    'receipt_email' =>  $request->email,
+                ]);
+
+            }
+            $params = json_decode(json_encode($params));
+            $charge = $this->createStripeCharge($params);
+            if($this->isEmpty($charge)){
+                return $this->errorResponse();
+            }
+            
+            //Record Payment
             $params = collect([
                 'email' => $request->email,
                 'contact' => $request->contact,
                 'sale_id' => $sale->id,
-                'user_id' => $request->user()->id,
+                'user_id' => $request->user_id,
+                'reference' => $charge->id,
                 'type' => 'credit',
                 'method' => 'creditcard',
                 'amt' => $sale->grandtotal,
@@ -705,6 +752,6 @@ class PaymentController extends Controller
         
        
         DB::commit();
-        return $this->successResponse('Payment', $request, 'create');
+        return $this->successResponse('Payment', null, 'create');
     }
 }

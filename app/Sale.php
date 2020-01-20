@@ -72,9 +72,9 @@ class Sale extends Model
     /**
      * Get the creator of the purchase.
      */
-    public function creator()
+    public function user()
     {
-        return $this->belongsTo('App\User','user_id');
+        return $this->belongsTo('App\User');
     }
 
 

@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://172.104.45.205/",
+            "url": "http://localhost:8000/",
             "description": "The URL that IpohDrum Laravel API is running on."
         }
     ],
@@ -4044,9 +4044,9 @@
                 "operationId": "createInventoryPayment",
                 "parameters": [
                     {
-                        "name": "card",
+                        "name": "token",
                         "in": "query",
-                        "description": "Stripe card id",
+                        "description": "Stripe token id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4074,6 +4074,15 @@
                         "name": "selectedstores",
                         "in": "query",
                         "description": "Involved Store",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "User Id",
                         "required": true,
                         "schema": {
                             "type": "string"

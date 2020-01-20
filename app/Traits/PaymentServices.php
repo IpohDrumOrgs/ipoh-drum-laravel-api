@@ -108,6 +108,9 @@ trait PaymentServices {
         $data->email = $params->email;
         $data->contact = $params->contact;
         $data->remark = $params->remark;
+        $data->amount = $this->toDouble($params->amount);
+        $data->charge = $this->toDouble($this->getChargedPrice($data->amount));
+        $data->net = $this->toDouble($data->amount - $data->charge);
 
         $sale = $this->getSaleById($params->sale_id);
         if($this->isEmpty($sale)){
@@ -120,32 +123,6 @@ trait PaymentServices {
             return null;
         }
         $data->user()->associate($user);
-
-        $token = $this->createStripeToken($params->card_id);
-        if($this->isEmpty($token)){
-            return null;
-        }
-
-        //Make Payment
-        $params = collect([
-            'amount' => $params->amount,
-            'currency' => 'MYR',
-            'source' => $token->id,
-            'description' => $user->name. ' Check Out For Sale '. $sale->uid,
-            'receipt_email' =>  $params->email,
-        ]);
-        $params = json_decode(json_encode($params));
-        $charge = $this->createStripeCharge($token);
-        if($this->isEmpty($charge)){
-            return null;
-        }
-
-        error_log(collect($charge));
-        $data->reference = $charge->reference;
-        $data->amount = $this->toDouble($charge->amount);
-        $data->charge = $this->toDouble($this->getChargedPrice($data->amount));
-        $data->net = $this->toDouble($data->amount - $data->charge);
-
         
         if($this->saveModel($data)){
             return $data->refresh();
@@ -270,6 +247,11 @@ trait PaymentServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
 
     
+    public function getStripeServiceTax() {
+
+        return 0.06;
+    }
+
     public function getStripeChargePercentage() {
 
         return 0.034;
@@ -292,7 +274,10 @@ trait PaymentServices {
 
     public function getChargedPrice($price) {
 
-        return $this->toDouble(($price * $this->getStripeChargePercentage()) + ($price * $this->getAppChargePercentage()) + $this->getAppChargePrice() + $this->getStripeChargePrice());
+        $charge = $this->toDouble(($price * $this->getStripeChargePercentage()) + ($price * $this->getAppChargePercentage()) + $this->getAppChargePrice() + $this->getStripeChargePrice());
+        $servicetax = $this->toDouble($charge * $this->getStripeServiceTax());
+
+        return $charge + $servicetax;
     }
 
     // Stripe Services
@@ -300,43 +285,33 @@ trait PaymentServices {
 
     public function createStripeCustomer($params) {
 
-        // try{
-        //     $customer = Stripe::customers()->create([
-        //         'email' => $params->email,
-        //         'name' => $params->name,
-        //         'phone' => $params->phone,
-        //         'address' => $params->address,
-        //         'description' => $params->description,
-        //     ]);
-        //     return $customer->id;
-        // }catch(Exception $e){
-        //     return null;
-        // }
+        try{
+            $customer = Stripe::customers()->create([
+                'email' => $params->email,
+            ]);
+            return (object) $customer;
+        }catch(Exception $e){
+            return null;
+        }
     }
 
     public function createStripeCard($params) {
 
-        // try{
-        //     $card = Stripe::cards()->create([
-        //         'email' => $params->email,
-        //         'name' => $params->name,
-        //         'phone' => $params->phone,
-        //         'address' => $params->address,
-        //         'description' => $params->description,
-        //     ]);
-        //     return $card->id;
-        // }catch(Exception $e){
-        //     return null;
-        // }
+        try{
+            $card = Stripe::cards()->create($params->customer_id, $params->token);
+            return (object) $card;
+        }catch(Exception $e){
+            return null;
+        }
     }
     
-    public function createStripeToken($card) {
-
+    public function createStripeToken($params) {
         try{
-            $token = Stripe::token()->create([
-                'card' =>$card,
+            $token = Stripe::tokens()->create([
+                'customer' =>$params->customer_id,
+                'source' =>$params->card_id,
             ]);
-            return $token;
+            return (object) $token;
         }catch(Exception $e){
             return null;
         }
@@ -348,11 +323,12 @@ trait PaymentServices {
             $charge = Stripe::charges()->create([
                 'amount' => $params->amount,
                 'currency' => $params->currency,
+                'customer' => $params->customer,
                 'source' => $params->source,
                 'description' => $params->description,
                 'receipt_email' => $params->receipt_email,
             ]);
-            return $charge;
+            return  (object) $charge;
         }catch(Exception $e){
             return null;
         }

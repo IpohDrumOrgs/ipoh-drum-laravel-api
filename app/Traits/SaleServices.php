@@ -19,7 +19,7 @@ trait SaleServices {
         //Role Based Retrieve Done in Store Services
         $stores = $this->getStores($requester);
         foreach($stores as $store){
-            $data = $data->merge($store->sales()->where('status',true)->get());
+            $data = $data->merge($store->sales()->with('user','saleitems','store')->where('status',true)->get());
         }
 
 
@@ -83,12 +83,12 @@ trait SaleServices {
     }
 
     private function getSale($uid) {
-        $data = Sale::where('uid', $uid)->where('status', 1)->first();
+        $data = Sale::where('uid', $uid)->with('user','saleitems','store')->where('status', 1)->first();
         return $data;
     }
 
     private function getSaleById($id) {
-        $data = Sale::where('id', $id)->where('status', 1)->first();
+        $data = Sale::where('id', $id)->with('user','saleitems','store')->where('status', 1)->first();
         return $data;
     }
 
@@ -98,6 +98,8 @@ trait SaleServices {
 
         $data = new Sale();
         $data->uid = Carbon::now()->timestamp . Sale::count();
+        $data->email = $params->email;
+        $data->contact = $params->contact;
         $params = $this->checkUndefinedProperty($params , $this->saleAllCols());
         if(!$this->saveModel($data)){
             return null;
@@ -226,7 +228,7 @@ trait SaleServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function saleAllCols() {
 
-        return ['id','uid', 'user_id' ,'store_id','voucher_id', 'sono' , 'qty' , 
+        return ['id','uid', 'user_id' ,'store_id','voucher_id', 'sono', 'email', 'contact' , 'qty' , 
         'totalcost' , 'totalprice' , 'charge' , 'disc' , 'net' , 'grandtotal' , 
         'remark', 'pos', 'status' ];
 

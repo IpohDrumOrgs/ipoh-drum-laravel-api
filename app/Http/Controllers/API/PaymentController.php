@@ -689,6 +689,8 @@ class PaymentController extends Controller
             $params = collect([
                 'store_id' => $selectedstore->store_id,
                 'user_id' => $request->user_id,
+                'email' => $request->email,
+                'contact' => $request->contact,
                 'saleitems' => $selectedstore->saleitems,
             ]);
             $params = json_decode(json_encode($params));

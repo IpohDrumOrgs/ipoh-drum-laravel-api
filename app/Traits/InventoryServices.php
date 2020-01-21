@@ -295,9 +295,6 @@ trait InventoryServices {
             $inventory->qty -= $soldqty;
             $inventory->salesqty += $soldqty;
             
-            if(!$this->saveModel($inventory)){
-                return null;
-            }
 
             //Check Limited Promotion Qty
             if($inventory->promotion){
@@ -306,6 +303,9 @@ trait InventoryServices {
                 }
             }
             
+            if(!$this->saveModel($inventory)){
+                return null;
+            }
 
         }
 

@@ -133,7 +133,7 @@ trait SaleItemServices {
                 $data->grandtotal =  $this->toDouble($data->price - $data->disc);
                 $data->inventory()->associate($inventory);
                 
-                $inventory = $this->soldInventory($inventory, $this->toInt($params->qty));
+                $inventory = $this->soldInventory($inventory->refresh(), $this->toInt($params->qty));
                 if($this->isEmpty($inventory)){
                     return null;
                 }

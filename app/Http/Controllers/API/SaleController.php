@@ -19,23 +19,23 @@ class SaleController extends Controller
 
     private $controllerName = '[SaleController]';
 
-    /**
+     /**
      * @OA\Get(
      *      path="/api/sale",
-     *      operationId="getSaleList",
+     *      operationId="getSales",
      *      tags={"SaleControllerService"},
      *      summary="Get list of sales",
      *      description="Returns list of sales",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",
-     *     description="Page number.",
+     *     description="Page number",
      *     @OA\Schema(type="integer")
      *   ),
      *   @OA\Parameter(
      *     name="pageSize",
      *     in="query",
-     *     description="Page size.",
+     *     description="number of pageSize",
      *     @OA\Schema(type="integer")
      *   ),
      *      @OA\Response(
@@ -49,15 +49,16 @@ class SaleController extends Controller
      */
     public function index(Request $request)
     {
-        error_log($this->controllerName. 'Retrieving list of sales.');
-        // api/sale (GET)
-        $sales = $this->getSaleListing($request->user());
+        error_log('Retrieving list of sales.');
+        // api/inventory (GET)
+        $sales = $this->getSales($request->user());
         if ($this->isEmpty($sales)) {
             return $this->errorPaginateResponse('Sales');
         } else {
             return $this->successPaginateResponse('Sales', $sales, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
+
     
     /**
      * @OA\Get(
@@ -167,7 +168,7 @@ class SaleController extends Controller
     {
         // api/sale/{saleid} (GET)
         error_log('Retrieving sale of uid:' . $uid);
-        $sale = $this->getSale($request->user(), $uid);
+        $sale = $this->getSale($uid);
         if ($this->isEmpty($sale)) {
             return $this->notFoundResponse('Sale');
         } else {

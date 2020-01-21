@@ -5575,12 +5575,12 @@
                 ],
                 "summary": "Get list of sales",
                 "description": "Returns list of sales",
-                "operationId": "getSaleList",
+                "operationId": "getSales",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -5588,7 +5588,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }

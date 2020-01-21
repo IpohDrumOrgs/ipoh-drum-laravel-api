@@ -20,6 +20,8 @@ class CreateSalesTable extends Migration
             $table->unsignedInteger('voucher_id')->unsigned()->nullable();
             $table->string('uid')->unique();
             $table->string('sono')->nullable();
+            $table->string('email')->nullable();
+            $table->string('contact')->nullable();
             $table->integer('qty')->default(0);
             $table->decimal('disc',8,2)->default(0.00);
             $table->decimal('totalcost',8,2)->default(0.00);
@@ -30,7 +32,7 @@ class CreateSalesTable extends Migration
             $table->string('salestatus')->default('received');
             $table->boolean('status')->default(true);
             $table->text('remark')->nullable();
-            $table->boolean('pos')->default(true);
+            $table->boolean('pos')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')

@@ -175,7 +175,7 @@ trait SaleItemServices {
                 $data->inventoryfamily()->associate($inventoryfamily);
 
                 
-                $inventoryfamily = $this->soldInventoryFamily($inventoryfamily , $this->toInt($params->qty));
+                $inventoryfamily = $this->soldInventoryFamily($inventoryfamily->refresh() , $this->toInt($params->qty));
                 if($this->isEmpty($inventoryfamily)){
                     return null;
                 }
@@ -221,7 +221,7 @@ trait SaleItemServices {
                 $data->grandtotal =  $this->toDouble($data->price - $data->disc);
                 $data->pattern()->associate($pattern->refresh());
                 
-                $pattern = $this->soldPattern($pattern, $this->toInt($params->qty));
+                $pattern = $this->soldPattern($pattern->refresh(), $this->toInt($params->qty));
                 if($this->isEmpty($pattern)){
                     return null;
                 }

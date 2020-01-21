@@ -900,6 +900,84 @@ class InventoryController extends Controller
     }
 
     
+    /**
+     * @OA\Get(
+     *   tags={"InventoryControllerService"},
+     *   path="/api/inventories/onsale/filter",
+     *   summary="Filter onsale inventories.",
+     *     operationId="filterOnSaleInventories",
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="keyword",
+     *     in="query",
+     *     description="Keyword for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="fromdate",
+     *     in="query",
+     *     description="From Date for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="todate",
+     *     in="query",
+     *     description="To string for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="status",
+     *     in="query",
+     *     description="status for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Inventory has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieve the inventory."
+     *   )
+     * )
+     */
+    public function filterOnSaleInventories(Request $request)
+    {
+        // api/inventory/{inventoryid} (GET)
+        error_log($this->controllerName.'Filtering Onsale Inventories');
+        $inventories = $this->getAllOnSaleInventories();
+        $params = collect([
+            'keyword' => $request->keyword,
+            'fromdate' => $request->fromdate,
+            'todate' => $request->todate,
+            'status' => $request->status,
+            'onsale' => true,
+        ]);
+        $params = json_decode(json_encode($params));
+        $inventories = $this->filterInventories($inventories, $params);
+        $inventories = collect($inventories)->map(function ($item, $key) {
+            return $this->calculateInventoryPromotionPrice($item);
+        });
+
+        if ($this->isEmpty($inventories)) {
+            return $this->errorPaginateResponse('Inventories');
+        } else {
+            return $this->successPaginateResponse('Inventories', $inventories, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+
+    
 
     /**
      * @OA\Post(

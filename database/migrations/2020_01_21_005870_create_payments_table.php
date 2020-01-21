@@ -16,6 +16,7 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('uid')->unique();
+            $table->unsignedInteger('channel_sale_id')->nullable();
             $table->unsignedInteger('sale_id')->nullable();
             $table->unsignedInteger('user_id')->nullable();
             $table->text('desc')->nullable();
@@ -23,11 +24,12 @@ class CreatePaymentsTable extends Migration
             $table->string('method')->nullable();
             $table->string('reference')->nullable();
             $table->string('email');
-            $table->string('contact');
+            $table->string('contact')->nullable();
             $table->decimal('amount', 8, 2)->default(0.00);
             $table->decimal('charge', 8, 2)->default(0.00);
             $table->decimal('net', 8, 2)->default(0.00);
             $table->text('remark')->nullable();
+            $table->string('saletype')->default("sale");
             $table->boolean('status')->default(true);
             $table->timestamps();
             
@@ -40,6 +42,12 @@ class CreatePaymentsTable extends Migration
             $table->foreign('sale_id')
             ->references('id')
             ->on('sales')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
+            
+            $table->foreign('channel_sale_id')
+            ->references('id')
+            ->on('channel_sales')
             ->onUpdate('cascade')
             ->onDelete('restrict');
             

@@ -143,17 +143,21 @@ Route::get('/productfeature/{uid}/products', 'API\ProductFeatureController@getFe
 
 Route::post('/inventorypayment', 'API\PaymentController@inventoryPayment');
 Route::post('/videopayment', 'API\PaymentController@videoPayment');
+Route::post('/testpayment', 'API\PaymentController@testPayment');
 Route::get('/filter/payment', 'API\PaymentController@filter');
 
 Route::get('/inventory/{uid}/onsale', 'API\InventoryController@getOnSaleInventory');
+Route::get('/inventories/onsale/filter', 'API\InventoryController@filterOnSaleInventories');
 
 
 Route::get('/public/videos', 'API\VideoController@getPublicVideos');
+Route::get('/public/videos/filter', 'API\VideoController@filterPublicVideos');
 Route::get('/public/video/{uid}', 'API\VideoController@getPublicVideo');
 Route::get('/public/video/{uid}/comments', 'API\VideoController@getVideoComments');
 
 
 Route::get('/public/articles', 'API\ArticleController@getPublicArticles');
+Route::get('/public/articles/filter', 'API\ArticleController@filterPublicArticles');
 Route::get('/public/article/{uid}', 'API\ArticleController@getPublicArticle');
 Route::get('/public/article/{uid}/comments', 'API\ArticleController@getArticleComments');
 

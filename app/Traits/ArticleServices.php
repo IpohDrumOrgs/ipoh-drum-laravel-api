@@ -31,57 +31,22 @@ trait ArticleServices {
 
     private function filterArticles($data , $params) {
 
+        $data = $this->globalFilter($data, $params);
         $params = $this->checkUndefinedProperty($params , $this->articleFilterCols());
-        error_log('Filtering articles....');
-
-        if($params->keyword){
-            error_log('Filtering articles with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
-                    return true;
-                }else{
-                    return false;
-                }
-
-            });
-        }
-
-
-        if($params->fromdate){
-            error_log('Filtering articles with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering articles with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-
-        }
-
-        if($params->status){
-            error_log('Filtering articles with status....');
-            if($params->status == 'true'){
-                $data = $data->where('status', true);
-            }else if($params->status == 'false'){
-                $data = $data->where('status', false);
-            }else{
-                $data = $data->where('status', '!=', null);
-            }
-        }
 
         if($params->scope){
             error_log('Filtering articles with scope....');
-            $data = $data->where('scope', $params->scope);
+            $scope = $params->scope;
+            if($scope == 'private'){
+                $data = $data->filter(function ($item){
+                    return $item->scope == 'private';
+                });
+            }else{
+                $data = $data->filter(function ($item){
+                    return $item->scope == 'public';
+                });
+            }
         }
-
 
         $data = $data->unique('id');
 
@@ -185,9 +150,9 @@ trait ArticleServices {
         return $data->refresh();
     }
 
-    private function getAllArticles() {
+    private function getAllPublicArticles() {
         
-        $data = Article::where('status', true)->with('articleimages','blogger')->get();
+        $data = Article::where('status', true)->where('scope', 'public')->with('articleimages','blogger')->get();
 
         return $data;
     }
@@ -218,7 +183,7 @@ trait ArticleServices {
     }
     public function articleFilterCols() {
 
-        return ['keyword','fromdate' ,'todate', 'status', 'scope'];
+        return ['scope'];
 
     }
 

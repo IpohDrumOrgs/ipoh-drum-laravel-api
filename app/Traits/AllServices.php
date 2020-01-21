@@ -17,6 +17,7 @@ use App\Traits\CategoryServices;
 use App\Traits\CommentServices;
 use App\Traits\CompanyServices;
 use App\Traits\CompanyTypeServices;
+use App\Traits\ChannelSaleServices;
 use App\Traits\ChannelServices;
 use App\Traits\GroupServices;
 use App\Traits\InventoryFamilyServices;
@@ -59,6 +60,7 @@ trait AllServices {
     CommentServices,
     CompanyServices, 
     CompanyTypeServices, 
+    ChannelSaleServices,
     ChannelServices,
     GroupServices, 
     InventoryFamilyServices, 

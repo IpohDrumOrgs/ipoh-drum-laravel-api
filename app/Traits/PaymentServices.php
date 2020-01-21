@@ -108,15 +108,28 @@ trait PaymentServices {
         $data->email = $params->email;
         $data->contact = $params->contact;
         $data->remark = $params->remark;
+        $data->saletype = $params->saletype;
         $data->amount = $this->toDouble($params->amount);
         $data->charge = $this->toDouble($this->getChargedPrice($data->amount));
         $data->net = $this->toDouble($data->amount - $data->charge);
 
-        $sale = $this->getSaleById($params->sale_id);
-        if($this->isEmpty($sale)){
-            return null;
+        if($data->saletype == 'sale'){
+            
+            $sale = $this->getSaleById($params->sale_id);
+            if($this->isEmpty($sale)){
+                return null;
+            }
+            $data->sale()->associate($sale);
         }
-        $data->sale()->associate($sale);
+
+        if($data->saletype == 'channelsale'){
+            
+            $sale = $this->getChannelSaleById($params->channel_sale_id);
+            if($this->isEmpty($sale)){
+                return null;
+            }
+            $data->channelsale()->associate($sale);
+        }
 
         $user = $this->getUserById($params->user_id);
         if($this->isEmpty($user)){
@@ -238,7 +251,7 @@ trait PaymentServices {
     public function paymentAllCols() {
 
         return ['id','sale_id', 'user_id', 'uid' ,'desc', 'type', 'method' , 
-        'reference' , 'email'  , 'contact', 'amount' , 'charge' , 'net',
+        'reference' , 'email', 'saletype'  , 'contact', 'amount' , 'charge' , 'net',
         'remark' , 'status' , 'card_id' ];
 
     }

@@ -707,14 +707,7 @@ class VideoController extends Controller
     public function getPublicVideos(Request $request)
     {
         error_log($this->controllerName.'Retrieving public videos listing');
-        $videos = $this->getAllVideos();
-        $params = collect([
-            'scope' => 'public',
-            'status' => true,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $videos = $this->filterVideos($videos , $params);
+        $videos = $this->getAllPublicVideos();
         $videos->map(function($item){
             $item = $this->calculateVideoPromotionPrice($item);
             return $this->setCommentCount($item);
@@ -726,6 +719,87 @@ class VideoController extends Controller
             return $this->successPaginateResponse('Videos', $videos, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
+
+    
+    /**
+     * @OA\Get(
+     *   tags={"VideoControllerService"},
+     *   path="/api/public/videos/filter",
+     *   summary="Filter all public videos.",
+     *     operationId="filterPublicVideos",
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="keyword",
+     *     in="query",
+     *     description="Keyword for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="fromdate",
+     *     in="query",
+     *     description="From Date for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="todate",
+     *     in="query",
+     *     description="To string for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="status",
+     *     in="query",
+     *     description="status for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Videos has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the videos."
+     *   )
+     * )
+     */
+    public function filterPublicVideos(Request $request)
+    {
+        error_log('Retrieving list of filtered videos.');
+        // api/store/filter (GET)
+        $params = collect([
+            'keyword' => $request->keyword,
+            'fromdate' => $request->fromdate,
+            'todate' => $request->todate,
+            'status' => $request->status,
+            'scope' => "public",
+        ]);
+        //Convert To Json Object
+        $params = json_decode(json_encode($params));
+        $videos = $this->getAllPublicVideos();
+        $videos = $this->filterVideos($videos, $params);
+        $videos->map(function($item){
+            $item = $this->calculateVideoPromotionPrice($item);
+            return $this->setCommentCount($item);
+        });
+
+        if ($this->isEmpty($videos)) {
+            return $this->errorPaginateResponse('Videos');
+        } else {
+            return $this->successPaginateResponse('Videos', $videos, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+
 
     /**
      * @OA\Get(

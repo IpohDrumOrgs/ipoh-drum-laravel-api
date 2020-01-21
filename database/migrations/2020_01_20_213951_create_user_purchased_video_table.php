@@ -17,11 +17,7 @@ class CreateUserPurchasedVideoTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('video_id')->unsigned();
             $table->unsignedInteger('user_id')->unsigned();
-            $table->boolean('saved')->default(false);
-            $table->boolean('purchased')->default(false);
-            $table->string('watchedlength')->default('0:00');
-            $table->string('likestatus')->nullable();
-            $table->string('status')->default('clicked');
+            $table->boolean('status')->default(true);
             $table->timestamps();
 
             $table->foreign('video_id')

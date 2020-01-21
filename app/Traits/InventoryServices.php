@@ -36,49 +36,8 @@ trait InventoryServices {
 
     private function filterInventories($data , $params) {
 
-
-        if($params->keyword){
-            error_log('Filtering inventories with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
-                    return true;
-                }else{
-                    return false;
-                }
-
-            });
-        }
-
-
-        if($params->fromdate){
-            error_log('Filtering inventories with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering inventories with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-
-        }
-
-        if($params->status){
-            error_log('Filtering inventories with status....');
-            if($params->status == 'true'){
-                $data = $data->where('status', true);
-            }else if($params->status == 'false'){
-                $data = $data->where('status', false);
-            }else{
-                $data = $data->where('status', '!=', null);
-            }
-        }
+        $data = $this->globalFilter($data, $params);
+        $params = $this->checkUndefinedProperty($params , $this->inventoryFilterCols());
 
         if($params->onsale){
             error_log('Filtering inventories with on sale status....');
@@ -401,7 +360,21 @@ trait InventoryServices {
         return ['id','store_id', 'product_promotion_id', 'shipping_id' ,'warranty_id', 'uid', 'code' , 'sku' , 'name'  , 'imgpublicid', 'imgpath' , 'desc' , 'rating' , 'cost' , 'price' , 'qty','promoendqty','salesqty','stockthreshold','status','onsale'];
 
     }
+
+    public function inventoryFilterCols() {
+
+        return ['onsale'];
+
+    }
     
+    
+    public function getAllOnSaleInventories() {
+
+        $data = Inventory::where('status', true)->where('onsale', true)->get();
+
+        return $data;
+    }
+
     public function calculateInventoryPromotionPrice($data) {
 
         if($this->validateInventoryPromotion($data)){
@@ -412,7 +385,7 @@ trait InventoryServices {
                 $data->promopctg =  $this->toInt($data->promotion->discpctg);
                 $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
             }else{
-                $data->promoprice = 0;
+                $data->promoprice = $data->price;
                 $data->promopctg = 0;
             }
         }

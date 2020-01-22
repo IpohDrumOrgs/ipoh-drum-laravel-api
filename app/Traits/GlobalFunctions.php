@@ -293,7 +293,7 @@ trait GlobalFunctions {
             $keyword = $params->keyword;
             $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
+                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE || stristr($item->title, $keyword) == TRUE ) {
                     return true;
                 }else{
                     return false;

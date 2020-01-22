@@ -42,4 +42,9 @@ class Channel extends Model
         return $this->hasMany('App\Video');
     }
     
+    public function channelsales()
+    {
+        return $this->hasMany('App\ChannelSale');
+    }
+    
 }

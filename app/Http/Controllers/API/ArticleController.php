@@ -511,14 +511,7 @@ class ArticleController extends Controller
     public function getPublicArticles(Request $request)
     {
         error_log($this->controllerName.'Retrieving public articles listing');
-        $articles = $this->getAllArticles();
-        $params = collect([
-            'scope' => 'public',
-            'status' => true,
-        ]);
-        //Convert To Json Object
-        $params = json_decode(json_encode($params));
-        $articles = $this->filterArticles($articles , $params);
+        $articles = $this->getAllPublicArticles();
         $articles->map(function($item){
             return $this->setCommentCount($item);
         });
@@ -529,6 +522,85 @@ class ArticleController extends Controller
             return $this->successPaginateResponse('Articles', $articles, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
+    
+    /**
+     * @OA\Get(
+     *   tags={"ArticleControllerService"},
+     *   path="/api/public/articles/filter",
+     *   summary="Filter all public articles.",
+     *     operationId="filterPublicArticles",
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="keyword",
+     *     in="query",
+     *     description="Keyword for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="fromdate",
+     *     in="query",
+     *     description="From Date for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="todate",
+     *     in="query",
+     *     description="To string for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="status",
+     *     in="query",
+     *     description="status for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Articles has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the articles."
+     *   )
+     * )
+     */
+    public function filterPublicArticles(Request $request)
+    {
+        error_log('Retrieving list of filtered articles.');
+        // api/store/filter (GET)
+        $params = collect([
+            'keyword' => $request->keyword,
+            'fromdate' => $request->fromdate,
+            'todate' => $request->todate,
+            'status' => $request->status,
+            'scope' => "public",
+        ]);
+        //Convert To Json Object
+        $params = json_decode(json_encode($params));
+        $articles = $this->getAllPublicArticles();
+        $articles = $this->filterArticles($articles, $params);
+        $articles->map(function($item){
+            return $this->setCommentCount($item);
+        });
+
+        if ($this->isEmpty($articles)) {
+            return $this->errorPaginateResponse('Articles');
+        } else {
+            return $this->successPaginateResponse('Articles', $articles, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+
 
     /**
      * @OA\Get(

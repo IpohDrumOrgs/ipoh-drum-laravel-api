@@ -374,6 +374,73 @@
                 }
             }
         },
+        "/api/public/articles/filter": {
+            "get": {
+                "tags": [
+                    "ArticleControllerService"
+                ],
+                "summary": "Filter all public articles.",
+                "operationId": "filterPublicArticles",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Articles has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the articles."
+                    }
+                }
+            }
+        },
         "/api/public/article/{uid}/comments": {
             "get": {
                 "tags": [
@@ -3288,6 +3355,73 @@
                 }
             }
         },
+        "/api/inventories/onsale/filter": {
+            "get": {
+                "tags": [
+                    "InventoryControllerService"
+                ],
+                "summary": "Filter onsale inventories.",
+                "operationId": "filterOnSaleInventories",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the inventory."
+                    }
+                }
+            }
+        },
         "/api/thumbnailupload/inventory": {
             "post": {
                 "tags": [
@@ -4083,6 +4217,98 @@
                         "name": "user_id",
                         "in": "query",
                         "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the payment."
+                    }
+                }
+            }
+        },
+        "/api/videopayment": {
+            "post": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Creates a video payment.",
+                "operationId": "createVideoPayment",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Stripe token id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "video_id",
+                        "in": "query",
+                        "description": "Involved video",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the payment."
+                    }
+                }
+            }
+        },
+        "/api/testpayment": {
+            "post": {
+                "tags": [
+                    "PaymentControllerService"
+                ],
+                "summary": "Creates a test payment.",
+                "operationId": "createTestPayment",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Stripe token id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -5349,12 +5575,12 @@
                 ],
                 "summary": "Get list of sales",
                 "description": "Returns list of sales",
-                "operationId": "getSaleList",
+                "operationId": "getSales",
                 "parameters": [
                     {
                         "name": "pageNumber",
                         "in": "query",
-                        "description": "Page number.",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer"
                         }
@@ -5362,7 +5588,7 @@
                     {
                         "name": "pageSize",
                         "in": "query",
-                        "description": "Page size.",
+                        "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
                         }
@@ -8938,6 +9164,73 @@
                         "description": "number of pageSize",
                         "schema": {
                             "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Videos has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the videos."
+                    }
+                }
+            }
+        },
+        "/api/public/videos/filter": {
+            "get": {
+                "tags": [
+                    "VideoControllerService"
+                ],
+                "summary": "Filter all public videos.",
+                "operationId": "filterPublicVideos",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],

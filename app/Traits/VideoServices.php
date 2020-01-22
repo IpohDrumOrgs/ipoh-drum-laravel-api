@@ -30,58 +30,22 @@ trait VideoServices {
 
 
     private function filterVideos($data , $params) {
-
+        $data = $this->globalFilter($data, $params);
         $params = $this->checkUndefinedProperty($params , $this->videoFilterCols());
-        error_log('Filtering videos....');
-
-        if($params->keyword){
-            error_log('Filtering videos with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
-                    return true;
-                }else{
-                    return false;
-                }
-
-            });
-        }
-
-
-        if($params->fromdate){
-            error_log('Filtering videos with fromdate....');
-            $date = Carbon::parse($params->fromdate)->startOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) >= $date);
-            });
-        }
-
-        if($params->todate){
-            error_log('Filtering videos with todate....');
-            $date = Carbon::parse($request->todate)->endOfDay();
-            $data = $data->filter(function ($item) use ($date) {
-                return (Carbon::parse(data_get($item, 'created_at')) <= $date);
-            });
-
-        }
-
-        if($params->status){
-            error_log('Filtering videos with status....');
-            if($params->status == 'true'){
-                $data = $data->where('status', true);
-            }else if($params->status == 'false'){
-                $data = $data->where('status', false);
-            }else{
-                $data = $data->where('status', '!=', null);
-            }
-        }
 
         if($params->scope){
             error_log('Filtering videos with scope....');
-            $data = $data->where('scope', $params->scope);
+            $scope = $params->scope;
+            if($scope == 'private'){
+                $data = $data->filter(function ($item){
+                    return $item->scope == 'private';
+                });
+            }else{
+                $data = $data->filter(function ($item){
+                    return $item->scope == 'public';
+                });
+            }
         }
-
 
         $data = $data->unique('id');
 
@@ -234,16 +198,16 @@ trait VideoServices {
                 $data->promopctg =  $this->toInt($data->discpctg);
                 $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
             }else{
-                $data->promoprice = 0;
+                $data->promoprice = $data->price;
                 $data->promopctg = 0;
             }
         }
 
         return $data;
     }
-    private function getAllVideos() {
+    private function getAllPublicVideos() {
         
-        $data = Video::where('status', true)->get();
+        $data = Video::where('status', true)->where('scope','public')->get();
 
         return $data;
     }
@@ -282,7 +246,7 @@ trait VideoServices {
     }
     public function videoFilterCols() {
 
-        return ['keyword','fromdate' ,'todate', 'status', 'scope'];
+        return ['scope'];
 
     }
 

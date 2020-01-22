@@ -3,23 +3,23 @@
 namespace App\Traits;
 use App\User;
 use App\Store;
-use App\Sale;
+use App\ChannelSale;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\AllServices;
 
-trait SaleServices {
+trait ChannelSaleServices {
 
     use AllServices;
 
-    private function getSales($requester) {
+    private function getChannelSales($requester) {
 
         $data = collect();
 
         //Role Based Retrieve Done in Store Services
         $stores = $this->getStores($requester);
         foreach($stores as $store){
-            $data = $data->merge($store->sales()->with('user','saleitems','store')->where('status',true)->get());
+            $data = $data->merge($store->channelsales()->where('status',true)->get());
         }
 
 
@@ -29,12 +29,12 @@ trait SaleServices {
 
     }
 
-    private function filterSales($data , $params) {
+    private function filterChannelSales($data , $params) {
 
-        error_log('Filtering sales....');
+        error_log('Filtering channelsales....');
 
         if($params->keyword){
-            error_log('Filtering sales with keyword....');
+            error_log('Filtering channelsales with keyword....');
             $keyword = $params->keyword;
             $data = $data->filter(function($item)use($keyword){
                 //check string exist inside or not
@@ -49,7 +49,7 @@ trait SaleServices {
 
 
         if($params->fromdate){
-            error_log('Filtering sales with fromdate....');
+            error_log('Filtering channelsales with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
@@ -57,7 +57,7 @@ trait SaleServices {
         }
 
         if($params->todate){
-            error_log('Filtering sales with todate....');
+            error_log('Filtering channelsales with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
@@ -66,7 +66,7 @@ trait SaleServices {
         }
 
         if($params->status){
-            error_log('Filtering sales with status....');
+            error_log('Filtering channelsales with status....');
             if($params->status == 'true'){
                 $data = $data->where('status', true);
             }else if($params->status == 'false'){
@@ -82,86 +82,56 @@ trait SaleServices {
         return $data;
     }
 
-    private function getSale($uid) {
-        $data = Sale::where('uid', $uid)->with('user','saleitems','store')->where('status', 1)->first();
+    private function getChannelSale($uid) {
+        $data = ChannelSale::where('uid', $uid)->where('status', 1)->first();
         return $data;
     }
 
-    private function getSaleById($id) {
-        $data = Sale::where('id', $id)->with('user','saleitems','store')->where('status', 1)->first();
+    private function getChannelSaleById($id) {
+        $data = ChannelSale::where('id', $id)->where('status', 1)->first();
         return $data;
     }
 
-    private function createSale($params) {
+    private function createChannelSale($params) {
 
-        $params = $this->checkUndefinedProperty($params , $this->saleAllCols());
+        $params = $this->checkUndefinedProperty($params , $this->channelsaleAllCols());
 
-        $data = new Sale();
-        $data->uid = Carbon::now()->timestamp . Sale::count();
-        $data->email = $params->email;
-        $data->contact = $params->contact;
-        $params = $this->checkUndefinedProperty($params , $this->saleAllCols());
-        if(!$this->saveModel($data)){
+        $data = new ChannelSale();
+        $data->uid = Carbon::now()->timestamp . ChannelSale::count();
+        
+        $video = $this->getVideoById($params->video_id);
+        if($this->isEmpty($video)){
             return null;
         }
-
-        $totalqty = 0;
-        $totalprice = 0;
-        $totaldisc = 0;
-        $totalcost = 0;
-        foreach($params->saleitems as $saleitem){
-            $saleitem->sale_id = $data->refresh()->id;
-            $saleitem = $this->createSaleItem($saleitem);
-            if($this->isEmpty($saleitem)){
-                return null;
-            }
-            $totalqty += $this->toInt($saleitem->qty);
-            $totalprice += $this->toDouble($saleitem->totalprice);
-            $totaldisc += $this->toDouble($saleitem->disc);
-            $totalcost += $this->toDouble($saleitem->totalcost);
-        }
-
-        // $data->sono = $params->sono;
-        $data->qty = $this->toInt($totalqty);
-        $data->totalcost = $this->toDouble($totalcost);
-        $data->totalprice = $this->toDouble($totalprice);
+        $data->video()->associate($video);
         
-        $voucher = $this->getVoucherById($params->voucher_id);
-        if($this->isEmpty($voucher)){
-            $data->disc = $this->toDouble($totaldisc);
-        }else{
-            
-            if($voucher->discbyprice){
-                $data->disc = $this->toDouble($totaldisc + $voucher->disc);
-            }else{
-                $data->disc = $this->toDouble($totaldisc + (($voucher->discpctg /100) *  $data->totalprice));
-            }
+        $channel = $video->channel;
+        if($this->isEmpty($channel)){
+            return null;
         }
+        $data->channel()->associate($channel);
+        
+        $user = $this->getUserById($params->user_id);
+        if($this->isEmpty($user)){
+            return null;
+        }
+        $data->user()->associate($user);
 
-        $data->charge =  $this->getChargedPrice(($totalprice - $data->disc));
-        $data->net = $this->toDouble($data->totalprice - $data->disc - $data->charge - $data->totalcost);
-        $data->grandtotal = $this->toDouble($data->totalprice - $data->totaldisc);
+        if($video->free){
+            return null;
+        }
+        
+        $video = $this->calculateVideoPromotionPrice($video);
+        error_log($video->promoprice);
+        $data->disc = $this->toDouble($video->price - $video->promoprice);
+        $data->totalprice = $this->toDouble($video->price);
+        $data->charge =  $this->getChargedPrice(($data->totalprice - $data->disc));
+        $data->net = $this->toDouble($data->totalprice - $data->disc - $data->charge);
+        $data->grandtotal = $this->toDouble($data->totalprice - $data->disc);
         $data->remark = $params->remark;
 
-        if(!$this->isEmpty($params->user_id)){
-            $data->pos = false;
-            $user = $this->getUserById($params->user_id);
-            if($this->isEmpty($user)){
-                return null;
-            }
-            $data->user()->associate($user);
-        }else{
-            $data->pos = true;
-        }
-
-        $store = $this->getStoreById($params->store_id);
-        if($this->isEmpty($store)){
-            return null;
-        }
-        $data->store()->associate($store);
-
-
         $data->status = true;
+        $video->purchaseusers()->syncWithoutDetaching([$user->id]);
         if($this->saveModel($data)){
             return $data->refresh();
         }else{
@@ -171,8 +141,8 @@ trait SaleServices {
         return $data->refresh();
     }
 
-    //Make Sure Sale is not empty when calling this function
-    private function updateSale($data,  $params) {
+    //Make Sure ChannelSale is not empty when calling this function
+    private function updateChannelSale($data,  $params) {
 
         
         // $data->sono = $params->sono;
@@ -214,7 +184,7 @@ trait SaleServices {
         return $data->refresh();
     }
 
-    private function deleteSale($data) {
+    private function deleteChannelSale($data) {
         $data->status = false;
         if($this->saveModel($data)){
             return $data->refresh();
@@ -226,11 +196,11 @@ trait SaleServices {
 
     //Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
-    public function saleAllCols() {
+    public function channelsaleAllCols() {
 
-        return ['id','uid', 'user_id' ,'store_id','voucher_id', 'sono', 'email', 'contact' , 'qty' , 
-        'totalcost' , 'totalprice' , 'charge' , 'disc' , 'net' , 'grandtotal' , 
-        'remark', 'pos', 'status' ];
+        return ['id','uid', 'user_id' ,'channel_id','video_id'  ,
+         'totalprice' , 'charge' , 'disc' , 'net' , 'grandtotal' , 
+        'remark', 'status' ];
 
     }
 

@@ -35,5 +35,12 @@ class Payment extends Model
         return $this->belongsTo('App\Sale');
     }
 
+    /**
+     * Get the sales of the payment.
+     */
+    public function channelsale()
+    {
+        return $this->belongsTo('App\ChannelSale', 'channel_sale_id');
+    }
    
 }

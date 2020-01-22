@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSalesTable extends Migration
+class CreateChannelSalesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,26 +13,19 @@ class CreateSalesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sales', function (Blueprint $table) {
+        Schema::create('channel_sales', function (Blueprint $table) {
             $table->increments('id')->unique();
-            $table->unsignedInteger('user_id')->unsigned()->nullable();
-            $table->unsignedInteger('store_id')->unsigned()->nullable();
-            $table->unsignedInteger('voucher_id')->unsigned()->nullable();
+            $table->unsignedInteger('user_id')->unsigned();
+            $table->unsignedInteger('channel_id')->unsigned();
+            $table->unsignedInteger('video_id')->unsigned();
             $table->string('uid')->unique();
-            $table->string('sono')->nullable();
-            $table->string('email')->nullable();
-            $table->string('contact')->nullable();
-            $table->integer('qty')->default(0);
             $table->decimal('disc',8,2)->default(0.00);
-            $table->decimal('totalcost',8,2)->default(0.00);
             $table->decimal('totalprice',8,2)->default(0.00);
             $table->decimal('charge',8,2)->default(0.00);
             $table->decimal('net',8,2)->default(0.00);
             $table->decimal('grandtotal',8,2)->default(0.00);
-            $table->string('salestatus')->default('received');
             $table->boolean('status')->default(true);
             $table->text('remark')->nullable();
-            $table->boolean('pos')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')
@@ -41,15 +34,15 @@ class CreateSalesTable extends Migration
             ->onUpdate('cascade')
             ->onDelete('restrict');
 
-            $table->foreign('store_id')
+            $table->foreign('channel_id')
             ->references('id')
-            ->on('stores')
+            ->on('channels')
             ->onUpdate('cascade')
             ->onDelete('restrict');
 
-            $table->foreign('voucher_id')
+            $table->foreign('video_id')
             ->references('id')
-            ->on('vouchers')
+            ->on('videos')
             ->onUpdate('cascade')
             ->onDelete('restrict');
         });
@@ -62,6 +55,6 @@ class CreateSalesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sales');
+        Schema::dropIfExists('channel_sales');
     }
 }

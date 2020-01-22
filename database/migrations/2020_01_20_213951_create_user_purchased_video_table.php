@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserVideoTable extends Migration
+class CreateUserPurchasedVideoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateUserVideoTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_video', function (Blueprint $table) {
+        Schema::create('user_purchased_video', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('video_id')->unsigned();
             $table->unsignedInteger('user_id')->unsigned();
@@ -41,6 +41,6 @@ class CreateUserVideoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_video');
+        Schema::dropIfExists('user_purchased_video');
     }
 }

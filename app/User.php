@@ -189,4 +189,16 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\SecondComment');
     }
+
+    
+    public function purchasevideos()
+    {
+         return $this->belongsToMany('App\Video','user_purchased_video', 'user_id' , 'video_id' )->withPivot('status');
+
+    }
+    
+    public function channelsales()
+    {
+        return $this->hasMany('App\ChannelSale');
+    }
 }

@@ -122,7 +122,7 @@ trait SaleItemServices {
                     if(!$this->validateInventoryPromotionQty($inventory, $data->qty)){
                         return null;
                     }else{
-                        $inventory = $this->calculatePromotionPrice($inventory);
+                        $inventory = $this->calculateInventoryPromotionPrice($inventory);
                         $disc = $this->toDouble($inventory->price - $inventory->promoprice);
                     }
                 }
@@ -133,7 +133,7 @@ trait SaleItemServices {
                 $data->grandtotal =  $this->toDouble($data->price - $data->disc);
                 $data->inventory()->associate($inventory);
                 
-                $inventory = $this->soldInventory($inventory, $this->toInt($params->qty));
+                $inventory = $this->soldInventory($inventory->refresh(), $this->toInt($params->qty));
                 if($this->isEmpty($inventory)){
                     return null;
                 }
@@ -163,7 +163,7 @@ trait SaleItemServices {
                     if(!$this->validateInventoryPromotionQty($inventory, $data->qty)){
                         return null;
                     }else{
-                        $inventory = $this->calculatePromotionPrice($inventory);
+                        $inventory = $this->calculateInventoryPromotionPrice($inventory);
                         $disc = $this->toDouble($inventory->price - $inventory->promoprice);
                     }
                 }
@@ -175,7 +175,7 @@ trait SaleItemServices {
                 $data->inventoryfamily()->associate($inventoryfamily);
 
                 
-                $inventoryfamily = $this->soldInventoryFamily($inventoryfamily , $this->toInt($params->qty));
+                $inventoryfamily = $this->soldInventoryFamily($inventoryfamily->refresh() , $this->toInt($params->qty));
                 if($this->isEmpty($inventoryfamily)){
                     return null;
                 }
@@ -210,7 +210,7 @@ trait SaleItemServices {
                     if(!$this->validateInventoryPromotionQty($inventory, $data->qty)){
                         return null;
                     }else{
-                        $inventory = $this->calculatePromotionPrice($inventory);
+                        $inventory = $this->calculateInventoryPromotionPrice($inventory);
                         $disc = $this->toDouble($inventory->price - $inventory->promoprice);
                     }
                 }
@@ -221,12 +221,10 @@ trait SaleItemServices {
                 $data->grandtotal =  $this->toDouble($data->price - $data->disc);
                 $data->pattern()->associate($pattern->refresh());
                 
-                $pattern = $this->soldPattern($pattern, $this->toInt($params->qty));
+                $pattern = $this->soldPattern($pattern->refresh(), $this->toInt($params->qty));
                 if($this->isEmpty($pattern)){
                     return null;
                 }
-            break;
-            case 'video':
             break;
             default:
             return null;

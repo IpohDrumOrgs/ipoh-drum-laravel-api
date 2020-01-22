@@ -59,4 +59,15 @@ class Video extends Model
     {
         return $this->hasMany('App\VideoImage');
     }
+
+    public function channelsales()
+    {
+        return $this->hasMany('App\ChannelSale');
+    }
+    
+    public function purchaseusers()
+    {
+         return $this->belongsToMany('App\User','user_purchased_video', 'video_id' , 'user_id' )->withPivot('status');
+
+    }
 }

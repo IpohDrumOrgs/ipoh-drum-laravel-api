@@ -19,7 +19,7 @@ use Illuminate\Routing\Controller as BaseController;
  */
 /**
  *  @OA\Server(
- *      url="http://localhost:8000/",
+ *      url="http://172.104.45.205/",
  *      description="The URL that IpohDrum Laravel API is running on."
  *  )
  */

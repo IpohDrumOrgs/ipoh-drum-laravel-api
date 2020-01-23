@@ -135,6 +135,39 @@ trait ProductFeatureServices {
         return $data->refresh();
     }
 
+    
+    private function addInventoryToProductFeature($inventory) {
+
+      
+        //Promotion
+        if($inventory->promotion){
+            $productfeature = $this->getProductFeatureById(2);
+            if($this->isEmpty($productfeature)){
+                return null;
+            }
+            $productfeature->inventories()->syncWithoutDetaching([$inventory->id]);
+        }
+
+        //Special Deal
+        $productfeature = $this->getProductFeatureById(1);
+        if($this->isEmpty($productfeature)){
+            return null;
+        }
+        $productfeature->inventories()->syncWithoutDetaching([$inventory->id]);
+
+        //Recommendation
+        $productfeature = $this->getProductFeatureById(4);
+        if($this->isEmpty($productfeature)){
+            return null;
+        }
+        $productfeature->inventories()->syncWithoutDetaching([$inventory->id]);
+
+
+        
+
+        return $productfeature->refresh();
+    }
+
 
     //Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------

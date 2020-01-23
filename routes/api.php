@@ -97,7 +97,7 @@ Route::group(['middleware' => ['auth:api']], function (){
 
     Route::resource('sale', 'API\SaleController');
     Route::get('/filter/sale', 'API\SaleController@filter');
-    Route::get('/usersales', 'API\SaleController@userSale');
+    Route::get('/usersales', 'API\SaleController@userSales');
 
     Route::resource('voucher', 'API\VoucherController');
     Route::get('/filter/voucher', 'API\VoucherController@filter');

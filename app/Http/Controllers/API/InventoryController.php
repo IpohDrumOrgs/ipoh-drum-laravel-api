@@ -411,35 +411,43 @@ class InventoryController extends Controller
 
         //Associating Inventory Family Relationship
         $inventoryfamilies = json_decode($request->inventoryfamilies);
-        $inventorytotalqty = 0;
-        $inventoryfamilytotalqty = 0;
-        $onsale = false;
         if(!$this->isEmpty($inventoryfamilies)){
            foreach($inventoryfamilies as $inventoryfamily){
-                $inventoryfamilyqty = $inventoryfamily->qty;
-                $inventoryfamilytotalqty += $inventoryfamily->qty;
                 $patterns = $inventoryfamily->patterns;
 
-                if($inventoryfamily->onsale && !$onsale){
-                    $onsale = true;
-                }
-
                 $inventoryfamily->inventory_id = $inventory->refresh()->id;
-                $inventoryfamily = $this->associateInventoryFamilyWithInventory($inventory, $inventoryfamily);
-                $this->createLog($request->user()->id , [$inventoryfamily->id], 'create', 'inventoryfamily');
-
+                $inventoryfamily = $this->createInventoryFamily($inventoryfamily);
                 if($this->isEmpty($inventoryfamily)){
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
                 }
 
+                $inventoryfamily->inventory()->associate($inventory);
+                if(!$this->saveModel($inventoryfamily)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+                $this->createLog($request->user()->id , [$inventoryfamily->id], 'create', 'inventoryfamily');
+
                 //Patterns
-                $patterntotalqty = 0;
                 foreach($patterns as $pattern){
-                    $patterntotalqty += $pattern->qty;
+
                     $pattern->inventory_family_id = $inventoryfamily->refresh()->id;
-                    $pattern = $this->associatePatternWithInventoryFamily($inventoryfamily, $pattern);
+                    $pattern = $this->createPattern($pattern);
+                    if($this->isEmpty($pattern)){
+                        error_log("here");
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                    $pattern->inventoryfamily()->associate($inventoryfamily);
+                    if(!$this->saveModel($pattern)){
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
                     $this->createLog($request->user()->id , [$pattern->id], 'create', 'pattern');
                     if($this->isEmpty($pattern)){
                         DB::rollBack();
@@ -447,25 +455,7 @@ class InventoryController extends Controller
                         return $this->errorResponse();
                     }
 
-                    if($pattern->onsale && !$onsale){
-                        $onsale = true;
-                    }
                 }
-
-                //Detect use what total qty
-                if($patterntotalqty > 0){
-                    $inventoryfamily->qty = $this->toInt($patterntotalqty);
-                }else{
-                    $inventoryfamily->qty = $this->toInt($inventoryfamilyqty);
-                }
-
-                if(!$this->saveModel($inventoryfamily)){
-                    DB::rollBack();
-                    $this->deleteImages($proccessingimgids);
-                    return $this->errorResponse();
-                }
-
-                $inventorytotalqty += $this->toInt($inventoryfamily->qty);
            }
         }else{
             error_log('error here4');
@@ -474,20 +464,17 @@ class InventoryController extends Controller
             return $this->errorResponse();
         }
 
-        $inventory->qty = $this->toInt($inventorytotalqty);
-        $inventory->onsale = $onsale;
-
-        if(!$this->saveModel($inventory)){
+        if(!$this->syncInventoryById($inventory->id)){
             DB::rollBack();
             $this->deleteImages($proccessingimgids);
             return $this->errorResponse();
         }
 
-        // if(!$this->addInventoryToProductFeature($inventory)){
-        //     DB::rollBack();
-        //     $this->deleteImages($proccessingimgids);
-        //     return $this->errorResponse();
-        // }
+        if(!$this->addInventoryToProductFeature($inventory)){
+            DB::rollBack();
+            $this->deleteImages($proccessingimgids);
+            return $this->errorResponse();
+        }
         
 
         $this->createLog($request->user()->id , [$inventory->id], 'create', 'inventory');
@@ -710,7 +697,7 @@ class InventoryController extends Controller
                 }
 
                 $inventoryfamily->inventory()->associate($inventory);
-                if(!$this->saveModel($inventory)){
+                if(!$this->saveModel($inventoryfamily)){
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
@@ -729,7 +716,7 @@ class InventoryController extends Controller
                         return $this->errorResponse();
                     }
                     $pattern->inventoryfamily()->associate($inventoryfamily);
-                    if(!$this->saveModel($inventoryfamily)){
+                    if(!$this->saveModel($pattern)){
                         DB::rollBack();
                         $this->deleteImages($proccessingimgids);
                         return $this->errorResponse();
@@ -782,6 +769,12 @@ class InventoryController extends Controller
                             return $this->notFoundResponse('Pattern');
                         }
                         $oripattern = $this->updatePattern($oripattern , $pattern);
+                        if($this->isEmpty($pattern)){
+                            error_log("here");
+                            DB::rollBack();
+                            $this->deleteImages($proccessingimgids);
+                            return $this->errorResponse();
+                        }
                     }
                 }
 

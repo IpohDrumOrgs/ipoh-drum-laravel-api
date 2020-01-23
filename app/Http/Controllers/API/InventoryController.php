@@ -483,11 +483,11 @@ class InventoryController extends Controller
             return $this->errorResponse();
         }
 
-        if(!$this->addInventoryToProductFeature($inventory)){
-            DB::rollBack();
-            $this->deleteImages($proccessingimgids);
-            return $this->errorResponse();
-        }
+        // if(!$this->addInventoryToProductFeature($inventory)){
+        //     DB::rollBack();
+        //     $this->deleteImages($proccessingimgids);
+        //     return $this->errorResponse();
+        // }
         
 
         $this->createLog($request->user()->id , [$inventory->id], 'create', 'inventory');

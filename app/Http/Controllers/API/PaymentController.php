@@ -844,6 +844,25 @@ class PaymentController extends Controller
             return $this->errorResponse();
         }
 
+        $user = $this->getUserById($request->user_id);
+        
+        if($this->isEmpty($user)){
+            DB::rollBack();
+            return $this->errorResponse();
+        }
+
+        
+        $video = $this->getVideoById($request->video_id);
+        
+        if($this->isEmpty($video)){
+            DB::rollBack();
+            return $this->errorResponse();
+        }
+
+        if(!$this->validateUserPurchasedVideo($user, $video)){
+            DB::rollBack();
+            return $this->errorResponse();
+        }
         //Create Channel Sale
         $params = collect([
             'video_id' => $request->video_id,

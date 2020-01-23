@@ -6041,6 +6041,41 @@
                 }
             }
         },
+        "/api/usersales": {
+            "get": {
+                "tags": [
+                    "SaleControllerService"
+                ],
+                "summary": "User Ordered Sale",
+                "operationId": "userSales",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sale has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the sale."
+                    }
+                }
+            }
+        },
         "/api/shipping": {
             "get": {
                 "tags": [
@@ -9321,6 +9356,41 @@
                     },
                     "default": {
                         "description": "Unable to set like"
+                    }
+                }
+            }
+        },
+        "/api/uservideos": {
+            "get": {
+                "tags": [
+                    "VideoControllerService"
+                ],
+                "summary": "User Ordered Video",
+                "operationId": "userVideos",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the video."
                     }
                 }
             }

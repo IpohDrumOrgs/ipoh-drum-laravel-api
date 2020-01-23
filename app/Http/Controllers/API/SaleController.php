@@ -633,4 +633,50 @@ class SaleController extends Controller
         }
     }
 
+       /**
+     * @OA\Get(
+     *   tags={"SaleControllerService"},
+     *   path="/api/usersales",
+     *   summary="User Ordered Sale",
+     *     operationId="userSales",
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Sale has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieve the sale."
+     *   )
+     * )
+     */
+    public function userSales(Request $request)
+    {
+        error_log('Retrieving user sale');
+        $user = $this->getUser($request->user()->uid);
+        if ($this->isEmpty($user)) {
+            return $this->errorResponse();
+        }
+
+        $sales = $user->sales()->with('saleitems')->where('status',true)->get();
+        
+        if ($this->isEmpty($sales)) {
+            return $this->errorPaginateResponse('Sales');
+        } else {
+            return $this->successPaginateResponse('Sales', $sales, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+
+
 }

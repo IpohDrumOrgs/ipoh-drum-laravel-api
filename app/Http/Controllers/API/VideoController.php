@@ -921,4 +921,50 @@ class VideoController extends Controller
             return $this->successPaginateResponse('Comments', $comments, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
+
+    
+       /**
+     * @OA\Get(
+     *   tags={"VideoControllerService"},
+     *   path="/api/uservideos",
+     *   summary="User Ordered Video",
+     *     operationId="userVideos",
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Video has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieve the video."
+     *   )
+     * )
+     */
+    public function userVideos(Request $request)
+    {
+        error_log('Retrieving user video');
+        $user = $this->getUser($request->user()->uid);
+        if ($this->isEmpty($user)) {
+            return $this->errorResponse();
+        }
+
+        $videos = $user->purchasevideos()->wherePivot('status',true)->get();
+        
+        if ($this->isEmpty($videos)) {
+            return $this->errorPaginateResponse('Videos');
+        } else {
+            return $this->successPaginateResponse('Videos', $videos, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
 }

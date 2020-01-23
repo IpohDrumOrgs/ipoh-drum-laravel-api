@@ -250,4 +250,23 @@ trait VideoServices {
 
     }
 
+    
+    private function validateUserPurchasedVideo($user , $video) {
+        
+        if($video->free){
+            return false;
+        }
+        
+        $purchasedvideos = $user->purchasevideos()->wherePivot('status' , true)->get();
+
+        $ids = $purchasedvideos->pluck('id');
+
+        if($ids->search($video->id)){
+            return false;
+        }
+        
+        return true;
+        
+    }
+
 }

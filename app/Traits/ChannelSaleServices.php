@@ -117,10 +117,6 @@ trait ChannelSaleServices {
         }
         $data->user()->associate($user);
 
-        if($video->free){
-            return null;
-        }
-        
         $video = $this->calculateVideoPromotionPrice($video);
         error_log($video->promoprice);
         $data->disc = $this->toDouble($video->price - $video->promoprice);

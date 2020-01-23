@@ -11196,10 +11196,13 @@
                     "id": {
                         "type": "integer"
                     },
-                    "account_id": {
+                    "user_id": {
                         "type": "integer"
                     },
-                    "user_id": {
+                    "store_id": {
+                        "type": "integer"
+                    },
+                    "voucher_id": {
                         "type": "integer"
                     },
                     "uid": {
@@ -11208,49 +11211,124 @@
                     "sono": {
                         "type": "string"
                     },
-                    "totalqty": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "contact": {
+                        "type": "string"
+                    },
+                    "qty": {
                         "type": "integer"
                     },
-                    "discpctg": {
+                    "disc": {
                         "type": "number"
                     },
                     "totalcost": {
                         "type": "number"
                     },
-                    "totalbfdisc": {
+                    "totalprice": {
                         "type": "number"
                     },
-                    "totalbftax": {
+                    "charge": {
                         "type": "number"
                     },
-                    "totaldisc": {
+                    "net": {
                         "type": "number"
                     },
                     "grandtotal": {
                         "type": "number"
                     },
-                    "payment": {
-                        "type": "number"
-                    },
-                    "outstanding": {
-                        "type": "number"
-                    },
-                    "status": {
+                    "salestatus": {
                         "type": "string"
                     },
-                    "lastedit_by": {
+                    "status": {
                         "type": "string"
                     },
                     "remark": {
                         "type": "string"
                     },
-                    "docdate": {
-                        "type": "string"
-                    },
                     "pos": {
                         "type": "integer"
                     },
-                    "remember_token": {
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "saleitems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SaleItem"
+                        }
+                    },
+                    "store": {
+                        "$ref": "#/components/schemas/Store"
+                    }
+                },
+                "type": "object"
+            },
+            "SaleItem": {
+                "title": "SaleItem",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "sale_id": {
+                        "type": "integer"
+                    },
+                    "inventory_id": {
+                        "type": "integer"
+                    },
+                    "inventory_family_id": {
+                        "type": "integer"
+                    },
+                    "pattern_id": {
+                        "type": "integer"
+                    },
+                    "ticket_id": {
+                        "type": "integer"
+                    },
+                    "uid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "trackingcode": {
+                        "type": "string"
+                    },
+                    "qty": {
+                        "type": "integer"
+                    },
+                    "desc": {
+                        "type": "string"
+                    },
+                    "cost": {
+                        "type": "number"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "disc": {
+                        "type": "number"
+                    },
+                    "totalprice": {
+                        "type": "number"
+                    },
+                    "totalcost": {
+                        "type": "number"
+                    },
+                    "grandtotal": {
+                        "type": "number"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "type": {
                         "type": "string"
                     },
                     "created_at": {

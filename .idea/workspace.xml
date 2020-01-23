@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35cfe8ca-25ce-4ad0-bdff-0fc4734b6903" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/ipoh-drum-laravel-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ipoh-drum-laravel-api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Controller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/vendor/telescope/app-dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/vendor/telescope/app-dark.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/vendor/telescope/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/vendor/telescope/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/vendor/telescope/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/vendor/telescope/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/vendor/telescope/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/vendor/telescope/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Sale.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Sale.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/SaleItem.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/SaleItem.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storage/api-docs/api-docs.json" beforeDir="false" afterPath="$PROJECT_DIR$/storage/api-docs/api-docs.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -223,6 +218,8 @@
       <workItem from="1578914819112" duration="4041000" />
       <workItem from="1579306355293" duration="592000" />
       <workItem from="1579527612230" duration="3611000" />
+      <workItem from="1579713941901" duration="704000" />
+      <workItem from="1579766067783" duration="3958000" />
     </task>
     <servers />
   </component>

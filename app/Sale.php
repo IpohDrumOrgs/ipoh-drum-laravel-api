@@ -11,28 +11,36 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     /**
-     * @OA\Property(property="id", type="integer")
-     * @OA\Property(property="account_id", type="integer")
-     * @OA\Property(property="user_id", type="integer")
-     * @OA\Property(property="uid", type="string")
-     * @OA\Property(property="sono", type="string")
-     * @OA\Property(property="totalqty", type="integer")
-     * @OA\Property(property="discpctg", type="number")
-     * @OA\Property(property="totalcost", type="number")
-     * @OA\Property(property="totalbfdisc", type="number")
-     * @OA\Property(property="totalbftax", type="number")
-     * @OA\Property(property="totaldisc", type="number")
-     * @OA\Property(property="grandtotal", type="number")
-     * @OA\Property(property="payment", type="number")
-     * @OA\Property(property="outstanding", type="number")
-     * @OA\Property(property="status", type="string")
-     * @OA\Property(property="lastedit_by", type="string")
-     * @OA\Property(property="remark", type="string")
-     * @OA\Property(property="docdate", type="string")
-     * @OA\Property(property="pos", type="integer")
-     * @OA\Property(property="remember_token", type="string")
-     * @OA\Property(property="created_at", type="string")
-     * @OA\Property(property="updated_at", type="string")
+     * @OA\Property(property="id", type="integer"),
+     * @OA\Property(property="user_id", type="integer"),
+     * @OA\Property(property="store_id", type="integer"),
+     * @OA\Property(property="voucher_id", type="integer"),
+     * @OA\Property(property="uid", type="string"),
+     * @OA\Property(property="sono", type="string"),
+     * @OA\Property(property="email", type="string"),
+     * @OA\Property(property="contact", type="string"),
+     * @OA\Property(property="qty", type="integer"),
+     * @OA\Property(property="disc", type="number"),
+     * @OA\Property(property="totalcost", type="number"),
+     * @OA\Property(property="totalprice", type="number"),
+     * @OA\Property(property="charge", type="number"),
+     * @OA\Property(property="net", type="number"),
+     * @OA\Property(property="grandtotal", type="number"),
+     * @OA\Property(property="salestatus", type="string"),
+     * @OA\Property(property="status", type="string"),
+     * @OA\Property(property="remark", type="string"),
+     * @OA\Property(property="pos", type="integer"),
+     * @OA\Property(property="created_at", type="string"),
+     * @OA\Property(property="updated_at", type="string"),
+     * @OA\Property(property="user", ref="#/components/schemas/User"),
+     *      * @OA\Property(
+     *     property="saleitems",
+     *      type="array",
+     *      @OA\Items(
+     *          ref="#/components/schemas/SaleItem"
+     *      )
+     * ),
+     * @OA\Property(property="store", ref="#/components/schemas/Store"),
      */
 
     /**

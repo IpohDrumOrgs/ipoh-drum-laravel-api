@@ -149,7 +149,7 @@ trait SaleItemServices {
                 if($this->isEmpty($inventory)){
                     return null;
                 }
-                $data->name = $inventory->name. ' '. $inventoryfamily->name;
+                $data->name = $inventory->name. ':'. $inventoryfamily->name;
                 $data->qty = $this->toInt($params->qty);
                 $data->type = 'inventoryfamily';
                 $data->desc = $inventoryfamily->desc;
@@ -196,7 +196,7 @@ trait SaleItemServices {
                     return null;
                 }
 
-                $data->name = $inventory->name. ' & '. $inventoryfamily->name.  ' & '. $pattern->name;
+                $data->name = $inventory->name. ':'. $inventoryfamily->name.  ':'. $pattern->name;
                 $data->qty = $this->toInt($params->qty);
                 $data->type = 'pattern';
                 $data->desc = $pattern->desc;

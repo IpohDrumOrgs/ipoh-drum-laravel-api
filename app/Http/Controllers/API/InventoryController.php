@@ -373,41 +373,42 @@ class InventoryController extends Controller
         }
 
         $count = 0;
-        // if($request->file('sliders') != null){
-        //     error_log('Slider Images Is Detected');
-        //     $sliders = $request->file('sliders');
-        //     foreach($sliders as $slider){
-        //         error_log('Inside slider');
-        //         $count++;
-        //         if($count > 6){
-        //             break;
-        //         }
-        //         $img = $this->uploadImage($slider , "/Inventory/". $inventory->uid . "/sliders");
-        //         error_log(collect($img));
-        //         if(!$this->isEmpty($img)){
-        //             $proccessingimgids->push($img->publicid);
+        if($request->file('sliders') != null){
+            error_log('Slider Images Is Detected');
+            $sliders = $request->file('sliders');
+            foreach($sliders as $slider){
+                error_log('Inside slider');
+                $count++;
+                if($count > 6){
+                    break;
+                }
+                $img = $this->uploadImage($slider , "/Inventory/". $inventory->uid . "/sliders");
+                error_log(collect($img));
+                if(!$this->isEmpty($img)){
+                    $proccessingimgids->push($img->publicid);
 
-        //             $params = collect([
-        //                 'imgpath' => $img->imgurl,
-        //                 'imgpublicid' => $img->publicid,
-        //                 'inventory_id' => $inventory->refresh()->id,
-        //             ]);
-        //             //Attach Image to InventoryImage
-        //             $inventoryimage = $this->createInventoryImage($params);
-        //             if($this->isEmpty($inventoryimage)){
-        //                 error_log('error here1');
-        //                 DB::rollBack();
-        //                 $this->deleteImages($proccessingimgids);
-        //                 return $this->errorResponse();
-        //             }
-        //         }else{
-        //             error_log('error here3');
-        //             DB::rollBack();
-        //             $this->deleteImages($proccessingimgids);
-        //             return $this->errorResponse();
-        //         }
-        //     }
-        // }
+                    $params = collect([
+                        'imgpath' => $img->imgurl,
+                        'imgpublicid' => $img->publicid,
+                        'inventory_id' => $inventory->refresh()->id,
+                    ]);
+                    $params = json_decode(json_encode($params));
+                    //Attach Image to InventoryImage
+                    $inventoryimage = $this->createInventoryImage($params);
+                    if($this->isEmpty($inventoryimage)){
+                        error_log('error here1');
+                        DB::rollBack();
+                        $this->deleteImages($proccessingimgids);
+                        return $this->errorResponse();
+                    }
+                }else{
+                    error_log('error here3');
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
+            }
+        }
 
         //Associating Inventory Family Relationship
         $inventoryfamilies = json_decode($request->inventoryfamilies);

@@ -39,7 +39,7 @@ class SaleTableSeeder extends Seeder
             $saleitem = new SaleItem();
             $saleitem->uid =  Carbon::now()->timestamp . '-' . (SaleItem::count() + 1);
             $inventoryfamily = InventoryFamily::find($faker->numberBetween($min = 1, $max = 20));
-            $saleitem->name =  $inventoryfamily->name;
+            $saleitem->name =  $inventoryfamily->inventory->name.':'.$inventoryfamily->name;
             $saleitem->qty = $faker->numberBetween($min = 1, $max = 10);
             $saleitem->desc =  $inventoryfamily->desc;
             $saleitem->cost =  $faker->numberBetween($min = 1, $max = 100);
@@ -58,7 +58,7 @@ class SaleTableSeeder extends Seeder
             $saleitem = new SaleItem();
             $saleitem->uid =  Carbon::now()->timestamp . '-' . (SaleItem::count() + 1);
             $pattern = Pattern::find($faker->numberBetween($min = 1, $max = 20));
-            $saleitem->name =  $pattern->name;
+            $saleitem->name =  $pattern->inventoryfamily->inventory->name.':'.$pattern->inventoryfamily->name. ':'.$pattern->name;
             $saleitem->qty = $faker->numberBetween($min = 1, $max = 10);
             $saleitem->desc =  $pattern->desc;
             $saleitem->cost =  $faker->numberBetween($min = 1, $max = 100);

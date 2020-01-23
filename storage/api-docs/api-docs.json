@@ -7055,6 +7055,50 @@
                 }
             }
         },
+        "/api/store/{uid}/sales": {
+            "get": {
+                "tags": [
+                    "StoreControllerService"
+                ],
+                "summary": "Retrieves store sales by Uid.",
+                "operationId": "getSalesByStoreUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Store ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sales has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the sales."
+                    }
+                }
+            }
+        },
         "/api/storereview": {
             "get": {
                 "tags": [

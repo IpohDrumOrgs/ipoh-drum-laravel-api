@@ -638,7 +638,7 @@ class SaleController extends Controller
      *   tags={"SaleControllerService"},
      *   path="/api/usersales",
      *   summary="User Ordered Sale",
-     *     operationId="userSales",
+     *     operationId="getUserSales",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",

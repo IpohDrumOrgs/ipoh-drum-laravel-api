@@ -906,4 +906,61 @@ class StoreController extends Controller
         }
     }
 
+    
+    /**
+     * @OA\Get(
+     *   tags={"StoreControllerService"},
+     *   path="/api/store/{uid}/sales",
+     *   summary="Retrieves store sales by Uid.",
+     *     operationId="getSalesByStoreUid",
+     *   @OA\Parameter(
+     *     name="uid",
+     *     in="path",
+     *     description="Store ID, NOT 'ID'.",
+     *     required=true,
+     *     @OA\SChema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Sales has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the sales."
+     *   )
+     * )
+     */
+    public function getSales(Request $request, $uid)
+    {
+        error_log($this->controllerName.'Retrieving store sales by uid:' . $uid);
+        $store = $this->getStore($uid);
+        if ($this->isEmpty($store)) {
+            DB::rollBack();
+            return $this->notFoundResponse('Store');
+        }
+        $sales = collect();
+        $sales = $sales->merge($store->sales()->where('status',true)->get());
+        $sales = $sales->unique('id')->sortBy('id')->flatten(1);
+
+        if ($this->isEmpty($sales)) {
+            return $this->errorPaginateResponse('Sales');
+        } else {
+            return $this->successPaginateResponse('Sales', $sales, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+
+
+
 }

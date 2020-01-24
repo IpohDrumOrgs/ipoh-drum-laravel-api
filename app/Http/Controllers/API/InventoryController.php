@@ -885,6 +885,9 @@ class InventoryController extends Controller
         error_log($this->controllerName.'Retrieving onsale inventory of uid:' . $uid);
         $cols = $this->inventoryDefaultCols();
         $inventory = $this->getInventory($uid);
+        if ($this->isEmpty($inventory)) {
+            return $this->notFoundResponse('Inventory');
+        }
         if($inventory->onsale){
             $inventory = $this->itemPluckCols($inventory , $cols);
             $inventory = json_decode(json_encode($inventory));

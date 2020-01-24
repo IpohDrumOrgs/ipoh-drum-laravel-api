@@ -138,6 +138,10 @@ class ChannelTableSeeder extends Seeder
             $video->channel()->associate(Channel::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10])));
             $video->save();
 
+            if(!$video->free){
+                $video->purchaseusers()->syncWithoutDetaching(1);
+                        }
+
         }
 
         for($z = 0 ; $z < 20 ; $z++){

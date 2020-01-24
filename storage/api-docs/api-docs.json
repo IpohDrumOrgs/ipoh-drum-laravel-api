@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://172.104.45.205/",
+            "url": "https://172.104.45.205/",
             "description": "The URL that IpohDrum Laravel API is running on."
         }
     ],
@@ -6047,7 +6047,7 @@
                     "SaleControllerService"
                 ],
                 "summary": "User Ordered Sale",
-                "operationId": "userSales",
+                "operationId": "getUserSales",
                 "parameters": [
                     {
                         "name": "pageNumber",
@@ -11380,6 +11380,9 @@
                     },
                     "updated_at": {
                         "type": "string"
+                    },
+                    "discountedprice": {
+                        "type": "number"
                     }
                 },
                 "type": "object"

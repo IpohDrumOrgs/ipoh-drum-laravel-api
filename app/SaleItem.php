@@ -30,7 +30,8 @@ class SaleItem extends Model
      * @OA\Property(property="status", type="string"),
      * @OA\Property(property="type", type="string"),
      * @OA\Property(property="created_at", type="string"),
-     * @OA\Property(property="updated_at", type="string")
+     * @OA\Property(property="updated_at", type="string"),
+     * @OA\Property(property="discountedprice", type="number")
      */
      /**
      * The attributes that should be cast to native types.

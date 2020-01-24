@@ -169,6 +169,10 @@ class SaleController extends Controller
         // api/sale/{saleid} (GET)
         error_log('Retrieving sale of uid:' . $uid);
         $sale = $this->getSale($uid);
+        $sale->saleitems->map(function($item){
+            $item->discountedprice = $this->toDouble($item->price - $item->disc);
+            return $item;
+        });
         if ($this->isEmpty($sale)) {
             return $this->notFoundResponse('Sale');
         } else {

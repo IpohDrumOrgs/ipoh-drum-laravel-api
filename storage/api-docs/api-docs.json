@@ -11380,6 +11380,9 @@
                     },
                     "updated_at": {
                         "type": "string"
+                    },
+                    "discountedprice": {
+                        "type": "number"
                     }
                 },
                 "type": "object"

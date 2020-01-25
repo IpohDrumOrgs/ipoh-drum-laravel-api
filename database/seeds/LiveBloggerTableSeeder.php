@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Company;
-use App\Group;
 
-class CompanyTableSeeder extends Seeder
+class LiveBloggerTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +11,6 @@ class CompanyTableSeeder extends Seeder
      */
     public function run()
     {
-        
+        //
     }
 }

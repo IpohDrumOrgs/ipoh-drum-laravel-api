@@ -375,14 +375,14 @@ trait InventoryServices {
         return $data;
     }
 
-    public function calculateInventoryPromotionPrice($data) {
+    public function calculateInventoryPromotionPrice($data , $promotion) {
 
-        if($this->validateInventoryPromotion($data)){
-            if($data->promotion->discbyprice  &&  $data->promotion->disc > 0){
-                $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
-                $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
-            }else if( $data->promotion->discpctg > 0){
-                $data->promopctg =  $this->toInt($data->promotion->discpctg);
+        if($this->validateInventoryPromotion($promotion)){
+            if($promotion->discbyprice  &&  $promotion->disc > 0){
+                $promoprice =  $this->toDouble($price - $promotion->disc);
+                $promopctg =  $this->toInt($this->toDouble($promoprice / $price ) * 100);
+            }else if( !$promotion->discbyprice  && $promotion->discpctg > 0){
+                $data->promopctg =  $this->toInt($promotion->discpctg);
                 $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
             }else{
                 $data->promoprice = $data->price;
@@ -393,24 +393,6 @@ trait InventoryServices {
         return $data;
     }
     
-
-    public function getDiscountedPrice($data , $promotion) {
-
-        if($this->validateInventoryPromotion($data)){
-            if($data->promotion->discbyprice  &&  $data->promotion->disc > 0){
-                $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
-                $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
-            }else if( $data->promotion->discpctg > 0){
-                $data->promopctg =  $this->toInt($data->promotion->discpctg);
-                $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
-            }else{
-                $data->promoprice = $data->price;
-                $data->promopctg = 0;
-            }
-        }
-
-        return $data;
-    }
 
     public function countProductReviews($data) {
         if(isset($data->reviews)){
@@ -443,17 +425,21 @@ trait InventoryServices {
     //Check if the promotion is valid onlimited qty
     public function validateInventoryPromotionQty($data, $soldqty) {
         
-        if($this->validateInventoryPromotion($data)){
-            if($data->promotion->qty > 0 && $data->salesqty + $soldqty >= $data->promoendqty){
-                return false;
+        if(isset($data->promotion)){
+            if($this->validateInventoryPromotion($data->promotion)){
+                if($data->promotion->qty > 0 && $data->salesqty + $soldqty >= $data->promoendqty){
+                    return false;
+                }else{
+                    return true;
+                }
             }else{
-                return true;
+                //Didn't have promotion
+                return false;
             }
-        }else{
-            //Didn't have promotion
-            return null;
-        }
 
+        }else{
+            return false;
+        }
     }
 
 

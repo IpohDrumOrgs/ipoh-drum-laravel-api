@@ -16,9 +16,10 @@ class StoreTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
+
         for($x=0 ; $x<50 ; $x++){
             $store = new Store();
-            $store->uid =  Carbon::now()->timestamp . '-' . (Store::count() + 1);
+            $store->uid =  Carbon::now()->timestamp . (Store::count() + 1);
             $store->name =  $faker->unique()->jobTitle;
             $store->contact =  $faker->unique()->jobTitle;
             $store->email =  $faker->unique()->jobTitle;

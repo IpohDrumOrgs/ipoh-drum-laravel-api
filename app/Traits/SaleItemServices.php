@@ -122,7 +122,7 @@ trait SaleItemServices {
                     if(!$this->validateInventoryPromotionQty($inventory, $data->qty)){
                         return null;
                     }else{
-                        $inventory = $this->calculateInventoryPromotionPrice($inventory);
+                        $inventory = $this->calculateInventoryPromotionPrice($inventory , $inventory->promotion);
                         $disc = $this->toDouble($inventory->price - $inventory->promoprice);
                     }
                 }
@@ -163,7 +163,7 @@ trait SaleItemServices {
                     if(!$this->validateInventoryPromotionQty($inventory, $data->qty)){
                         return null;
                     }else{
-                        $inventory = $this->calculateInventoryPromotionPrice($inventory);
+                        $inventory = $this->calculateInventoryPromotionPrice($inventoryfamily , $inventory->promotion);
                         $disc = $this->toDouble($inventory->price - $inventory->promoprice);
                     }
                 }
@@ -210,7 +210,7 @@ trait SaleItemServices {
                     if(!$this->validateInventoryPromotionQty($inventory, $data->qty)){
                         return null;
                     }else{
-                        $inventory = $this->calculateInventoryPromotionPrice($inventory);
+                        $inventory = $this->calculateInventoryPromotionPrice($pattern , $inventory->promotion);
                         $disc = $this->toDouble($inventory->price - $inventory->promoprice);
                     }
                 }

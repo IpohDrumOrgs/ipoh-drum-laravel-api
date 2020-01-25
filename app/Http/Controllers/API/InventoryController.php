@@ -681,8 +681,10 @@ class InventoryController extends Controller
         $inventoryfamilies = collect(json_decode($request->inventoryfamilies));
         $originvfamiliesids = $inventory->inventoryfamilies()->where('status',true)->pluck('id');
         $inventoryfamiliesids = $inventoryfamilies->pluck('id');
-        $fordeleteids = $originvfamiliesids->diff($inventoryfamiliesids);
+        $forfamilydeleteids = $originvfamiliesids->diff($inventoryfamiliesids);
 
+        //Deleted pattern ids
+        $forpatterndeleteids = collect();
 
         foreach($inventoryfamilies as $inventoryfamily){
             //Insert New Inventory Family
@@ -744,7 +746,13 @@ class InventoryController extends Controller
                 }
                 
                 $patterns = $inventoryfamily->patterns;
+                //Get Pass In Pattern Ids (for checking deleted ids)
+                $patternids =  collect($patterns)->pluck('id');
+                $oripatternids = $oriinventoryfamily->patterns->pluck('id');
+                $forpatterndeleteids = $forpatterndeleteids->merge($oripatternids->diff($patternids));
                 foreach($patterns as $pattern){
+
+                    //Add New Pattern
                     if($pattern->id == null){
                         $pattern->inventory_family_id = $oriinventoryfamily->refresh()->id;
                         $pattern = $this->createPattern($pattern);
@@ -763,6 +771,8 @@ class InventoryController extends Controller
                         
                         $this->createLog($request->user()->id , [$pattern->id], 'create', 'pattern');
                     }else{
+
+                        //Update Existing Pattern
                         $oripattern = $this->getPatternById($pattern->id);
                         if($this->isEmpty($oripattern)){
                             DB::rollBack();
@@ -781,9 +791,27 @@ class InventoryController extends Controller
 
             }
        }
-       error_log($fordeleteids);
+
+       
+       error_log($forpatterndeleteids);
+       //Delete Pattern
+        foreach($forpatterndeleteids as $id){
+            $pattern = $this->getPatternById($id);
+            if($this->isEmpty($pattern)){
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->notFoundResponse('Pattern');
+                }
+            if(!$this->deletePattern($pattern)){
+                DB::rollBack();
+                $this->deleteImages($proccessingimgids);
+                return $this->errorResponse();
+            }
+        }
+
+       error_log($forfamilydeleteids);
        //Delete InventoryFamily
-        foreach($fordeleteids as $id){
+        foreach($forfamilydeleteids as $id){
             $inventoryfamily = $this->getInventoryFamilyById($id);
             if($this->isEmpty($inventoryfamily)){
                  DB::rollBack();
@@ -796,7 +824,6 @@ class InventoryController extends Controller
                 return $this->errorResponse();
             }
         }
-
 
         if(!$this->syncInventoryById($inventory->id)){
             DB::rollBack();
@@ -891,7 +918,7 @@ class InventoryController extends Controller
         if($inventory->onsale){
             $inventory = $this->itemPluckCols($inventory , $cols);
             $inventory = json_decode(json_encode($inventory));
-            $inventory = $this->calculateInventoryPromotionPrice($inventory);
+            $inventory = $this->calculateInventoryPromotionPrice($inventory , $inventory->promotion);
             $inventory = $this->countProductReviews($inventory);
         }else{
             $inventory = null;
@@ -971,7 +998,7 @@ class InventoryController extends Controller
         $params = json_decode(json_encode($params));
         $inventories = $this->filterInventories($inventories, $params);
         $inventories = collect($inventories)->map(function ($item, $key) {
-            return $this->calculateInventoryPromotionPrice($item);
+            return $this->calculateInventoryPromotionPrice($item , $item->promotion);
         });
 
         if ($this->isEmpty($inventories)) {

@@ -379,8 +379,8 @@ trait InventoryServices {
 
         if($this->validateInventoryPromotion($promotion)){
             if($promotion->discbyprice  &&  $promotion->disc > 0){
-                $promoprice =  $this->toDouble($price - $promotion->disc);
-                $promopctg =  $this->toInt($this->toDouble($promoprice / $price ) * 100);
+                $promoprice =  $this->toDouble($data->price - $promotion->disc);
+                $promopctg =  $this->toInt($this->toDouble($promoprice / $data->price ) * 100);
             }else if( !$promotion->discbyprice  && $promotion->discpctg > 0){
                 $data->promopctg =  $this->toInt($promotion->discpctg);
                 $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));

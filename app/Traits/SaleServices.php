@@ -140,7 +140,7 @@ trait SaleServices {
 
         $data->charge =  $this->getChargedPrice(($totalprice - $data->disc));
         $data->net = $this->toDouble($data->totalprice - $data->disc - $data->charge - $data->totalcost);
-        $data->grandtotal = $this->toDouble($data->totalprice - $data->totaldisc);
+        $data->grandtotal = $this->toDouble($data->totalprice - $data->disc);
         $data->remark = $params->remark;
 
         if(!$this->isEmpty($params->user_id)){

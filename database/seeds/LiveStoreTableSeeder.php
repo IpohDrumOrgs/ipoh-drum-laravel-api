@@ -18,7 +18,7 @@ class LiveStoreTableSeeder extends Seeder
 
         $store = new Store();
         $store->uid =  Carbon::now()->timestamp . (Store::count() + 1);
-        $store->name =  "IpohDrumAcademy";
+        $store->name =  "Ipoh Drum";
         $store->contact =  "60167060361";
         $store->email =  "ipohdrum@outlook.com";
         $store->rating =  0;

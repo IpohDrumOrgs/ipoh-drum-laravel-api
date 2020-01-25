@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
+use App\Category;
+use Carbon\Carbon;
 
 class LiveCategoryTableSeeder extends Seeder
 {
@@ -11,6 +14,12 @@ class LiveCategoryTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $category = new Category();
+        $category->uid =  Carbon::now()->timestamp .  (Category::count() + 1);
+        $category->name =  '24 Festive Drums';
+        $category->desc = "24 Festive Drums";
+        $category->status = true;
+        $category->save();
+        
     }
 }

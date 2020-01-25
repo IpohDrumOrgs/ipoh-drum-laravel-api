@@ -18,9 +18,5 @@ class LiveCompanyTypeTableSeeder extends Seeder
         $companytype->name = 'management';
         $companytype->save();
         
-        $companytype = new CompanyType();
-        $companytype->uid = Carbon::now()->timestamp . (CompanyType::count() + 1);;
-        $companytype->name = 'supplier';
-        $companytype->save();
     }
 }

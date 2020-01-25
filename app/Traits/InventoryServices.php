@@ -387,7 +387,7 @@ trait InventoryServices {
                 $q1->where('status', true);
                 $q1->where('qty', '>' , 0);
             }]);
-        }])->get();
+        }])->first();
 
         return $data;
     }

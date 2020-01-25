@@ -58,21 +58,34 @@ trait InventoryServices {
 
     private function getInventory($uid) {
 
-        $data = Inventory::where('uid', $uid)->where('status', true)->with(['inventoryfamilies' => function($q){
-            // Query the name field in status table
-            $q->where('status', true); 
-            $q->with(['patterns' => function($q){
-                // Query the name field in status table
-                $q->where('status', true);
-            }]); 
+        $data = Inventory::where('uid', $uid)->where('status', true)->where('qty', '>' , 0)->with(['inventoryfamilies' => function($q){
+            $q->where('onsale', true);
+            $q->where('status', true);
+            $q->where('qty', '>' , 0);
+            $q->with(['patterns' => function($q1) {
+                $q1->where('onsale', true);
+                $q1->where('status', true);
+                $q1->where('qty', '>' , 0);
+            }]);
         }])->with('store','promotion','warranty','shipping','images','reviews.user','characteristics')->first();
+        
         return $data;
 
     }
     
     private function getInventoryById($id) {
 
-        $data = Inventory::where('id', $id)->where('status', true)->with('store','promotion','warranty','shipping','inventoryfamilies.patterns','images','reviews.user','characteristics')->first();
+        $data = Inventory::where('id', $id)->where('status', true)->where('qty', '>' , 0)->with(['inventoryfamilies' => function($q){
+            $q->where('onsale', true);
+            $q->where('status', true);
+            $q->where('qty', '>' , 0);
+            $q->with(['patterns' => function($q1) {
+                $q1->where('onsale', true);
+                $q1->where('status', true);
+                $q1->where('qty', '>' , 0);
+            }]);
+        }])->with('store','promotion','warranty','shipping','images','reviews.user','characteristics')->first();
+                
         return $data;
 
     }
@@ -387,7 +400,7 @@ trait InventoryServices {
                 $q1->where('status', true);
                 $q1->where('qty', '>' , 0);
             }]);
-        }])->first();
+        }])->with('store','promotion','warranty','shipping','images','reviews.user','characteristics')->first();
 
         return $data;
     }

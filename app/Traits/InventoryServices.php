@@ -393,6 +393,25 @@ trait InventoryServices {
         return $data;
     }
     
+
+    public function getDiscountedPrice($data , $promotion) {
+
+        if($this->validateInventoryPromotion($data)){
+            if($data->promotion->discbyprice  &&  $data->promotion->disc > 0){
+                $data->promoprice =  $this->toDouble($data->price - $data->promotion->disc);
+                $data->promopctg =  $this->toInt($this->toDouble($data->promoprice / $data->price ) * 100);
+            }else if( $data->promotion->discpctg > 0){
+                $data->promopctg =  $this->toInt($data->promotion->discpctg);
+                $data->promoprice =  $this->toDouble($data->price - ($data->price * ($data->promopctg / 100)));
+            }else{
+                $data->promoprice = $data->price;
+                $data->promopctg = 0;
+            }
+        }
+
+        return $data;
+    }
+
     public function countProductReviews($data) {
         if(isset($data->reviews)){
             if(!$this->isEmpty($data->reviews)){
@@ -407,16 +426,13 @@ trait InventoryServices {
     }
 
     
-    public function validateInventoryPromotion($data) {
-        if(isset($data->promotion)){
-            if(!$this->isEmpty($data->promotion)){
-                if($this->withinTimeRange($data->promotion->promostartdate , $data->promotion->promoenddate)){
-                    return true;
-                }
+    public function validateInventoryPromotion($promotion) {
+        if(!$this->isEmpty($promotion)){
+            if($this->withinTimeRange($promotion->promostartdate , $promotion->promoenddate)){
+                return true;
             }else{
                 return false;
             }
-    
         }else{
             return false;
         }

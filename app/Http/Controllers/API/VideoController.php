@@ -928,7 +928,7 @@ class VideoController extends Controller
      *   tags={"VideoControllerService"},
      *   path="/api/uservideos",
      *   summary="User Ordered Video",
-     *     operationId="userVideos",
+     *     operationId="getUserVideos",
      *   @OA\Parameter(
      *     name="pageNumber",
      *     in="query",

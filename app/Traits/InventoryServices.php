@@ -370,10 +370,28 @@ trait InventoryServices {
     
     public function getAllOnSaleInventories() {
 
-        $data = Inventory::where('status', true)->where('onsale', true)->get();
+        $data = Inventory::where('status', true)->where('onsale', true)->where('qty', '>' , 0)->get();
 
         return $data;
     }
+
+    
+    public function getOnSaleInventory($uid) {
+
+        $data = Inventory::where('status', true)->where('onsale', true)->where('uid', $uid)->with(['inventoryfamilies' => function($q){
+            $q->where('onsale', true);
+            $q->where('status', true);
+            $q->where('qty', '>' , 0);
+            $q->with(['patterns' => function($q1) {
+                $q1->where('onsale', true);
+                $q1->where('status', true);
+                $q1->where('qty', '>' , 0);
+            }]);
+        }])->get();
+
+        return $data;
+    }
+
 
     public function calculateInventoryPromotionPrice($data , $promotion) {
 

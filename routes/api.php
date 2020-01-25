@@ -148,7 +148,7 @@ Route::post('/videopayment', 'API\PaymentController@videoPayment');
 Route::post('/testpayment', 'API\PaymentController@testPayment');
 Route::get('/filter/payment', 'API\PaymentController@filter');
 
-Route::get('/inventory/{uid}/onsale', 'API\InventoryController@getOnSaleInventory');
+Route::get('/inventory/{uid}/onsale', 'API\InventoryController@showOnSaleInventory');
 Route::get('/inventories/onsale/filter', 'API\InventoryController@filterOnSaleInventories');
 
 

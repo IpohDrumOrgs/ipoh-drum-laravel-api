@@ -906,12 +906,12 @@ class InventoryController extends Controller
      *   )
      * )
      */
-    public function getOnSaleInventory(Request $request, $uid)
+    public function showOnSaleInventory(Request $request, $uid)
     {
         // api/inventory/{inventoryid} (GET)
         error_log($this->controllerName.'Retrieving onsale inventory of uid:' . $uid);
         $cols = $this->inventoryDefaultCols();
-        $inventory = $this->getInventory($uid);
+        $inventory = $this->getOnSaleInventory($uid);
         if ($this->isEmpty($inventory)) {
             return $this->notFoundResponse('Inventory');
         }

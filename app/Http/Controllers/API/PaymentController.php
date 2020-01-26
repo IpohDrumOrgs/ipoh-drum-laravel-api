@@ -629,15 +629,6 @@ class PaymentController extends Controller
      *              type="string"
      *          )
      * ),
-     * @OA\Parameter(
-     * name="user_id",
-     * in="query",
-     * description="User Id",
-     * required=true,
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Payment has been created successfully."
@@ -656,7 +647,6 @@ class PaymentController extends Controller
             'email' => 'required|email|max:255',
             'contact' => 'required|string|max:20',
             'selectedstores' =>'required|string',
-            'user_id' =>'required|numeric',
         ]);
 
         //Create Stripe Customer
@@ -688,7 +678,7 @@ class PaymentController extends Controller
         foreach($selectedstores as $selectedstore){
             $params = collect([
                 'store_id' => $selectedstore->store_id,
-                'user_id' => $request->user_id,
+                'user_id' => $request->user()->id,
                 'email' => $request->email,
                 'contact' => $request->contact,
                 'saleitems' => $selectedstore->saleitems,
@@ -735,7 +725,7 @@ class PaymentController extends Controller
                 'email' => $request->email,
                 'contact' => $request->contact,
                 'sale_id' => $sale->id,
-                'user_id' => $request->user_id,
+                'user_id' => $request->user()->id,
                 'reference' => $charge->id,
                 'type' => 'credit',
                 'method' => 'creditcard',
@@ -792,15 +782,6 @@ class PaymentController extends Controller
      *              type="integer"
      *          )
      * ),
-     * @OA\Parameter(
-     * name="user_id",
-     * in="query",
-     * description="User Id",
-     * required=true,
-     * @OA\Schema(
-     *              type="integer"
-     *          )
-     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Payment has been created successfully."
@@ -818,7 +799,6 @@ class PaymentController extends Controller
             'token' => 'required|string|max:500',
             'email' =>'required|email',
             'video_id' =>'required|numeric',
-            'user_id' =>'required|numeric',
         ]);
 
         //Create Stripe Customer
@@ -844,7 +824,7 @@ class PaymentController extends Controller
             return $this->errorResponse();
         }
 
-        $user = $this->getUserById($request->user_id);
+        $user = $this->getUserById($request->user()->id);
         
         if($this->isEmpty($user)){
             DB::rollBack();
@@ -866,7 +846,7 @@ class PaymentController extends Controller
         //Create Channel Sale
         $params = collect([
             'video_id' => $request->video_id,
-            'user_id' => $request->user_id,
+            'user_id' => $request->user()->id,
         ]);
         $params = json_decode(json_encode($params));
         //Creating Sale
@@ -897,7 +877,7 @@ class PaymentController extends Controller
             'email' => $request->email,
             'contact' => $request->contact,
             'channel_sale_id' => $sale->id,
-            'user_id' => $request->user_id,
+            'user_id' => $request->user()->id,
             'reference' => $charge->id,
             'type' => 'credit',
             'method' => 'creditcard',

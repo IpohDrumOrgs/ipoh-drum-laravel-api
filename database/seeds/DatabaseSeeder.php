@@ -61,31 +61,31 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleGroupManagerSeeder::class);
 
 
-        //Testing Data
-        // $this->call(CompanyTypeTableSeeder::class);
-        // $this->call(GroupTableSeeder::class);
-        // $this->call(UserTableSeeder::class);
-        // $this->call(CategoryTableSeeder::class);
-        // $this->call(TypeTableSeeder::class);
-        // $this->call(ProductFeatureTableSeeder::class);
-        // $this->call(WarrantySeeder::class);
-        // $this->call(ShippingSeeder::class);
-        // $this->call(ProductPromotionSeeder::class);
-        // $this->call(ProductCharacteristicSeeder::class);
-        // $this->call(StoreTableSeeder::class);
-        // $this->call(TicketTableSeeder::class);
-        // $this->call(InventoryTableSeeder::class);
-        // $this->call(SaleTableSeeder::class);
-        // $this->call(ChannelTableSeeder::class);
-        // $this->call(BloggerTableSeeder::class);
+        // Testing Data
+        $this->call(CompanyTypeTableSeeder::class);
+        $this->call(GroupTableSeeder::class);
+        $this->call(UserTableSeeder::class);
+        $this->call(CategoryTableSeeder::class);
+        $this->call(TypeTableSeeder::class);
+        $this->call(ProductFeatureTableSeeder::class);
+        $this->call(WarrantySeeder::class);
+        $this->call(ShippingSeeder::class);
+        $this->call(ProductPromotionSeeder::class);
+        $this->call(ProductCharacteristicSeeder::class);
+        $this->call(StoreTableSeeder::class);
+        $this->call(TicketTableSeeder::class);
+        $this->call(InventoryTableSeeder::class);
+        $this->call(SaleTableSeeder::class);
+        $this->call(ChannelTableSeeder::class);
+        $this->call(BloggerTableSeeder::class);
 
         //Live Seeding
-        $this->call(LiveCompanyTypeTableSeeder::class);
-        $this->call(LiveCompanyTableSeeder::class);
-        $this->call(LiveCategoryTableSeeder::class);
-        $this->call(LiveProductFeatureTableSeeder::class);
-        $this->call(LiveStoreTableSeeder::class);
-        $this->call(LiveChannelTableSeeder::class);
-        $this->call(LiveBloggerTableSeeder::class);
+        // $this->call(LiveCompanyTypeTableSeeder::class);
+        // $this->call(LiveCompanyTableSeeder::class);
+        // $this->call(LiveCategoryTableSeeder::class);
+        // $this->call(LiveProductFeatureTableSeeder::class);
+        // $this->call(LiveStoreTableSeeder::class);
+        // $this->call(LiveChannelTableSeeder::class);
+        // $this->call(LiveBloggerTableSeeder::class);
     }
 }

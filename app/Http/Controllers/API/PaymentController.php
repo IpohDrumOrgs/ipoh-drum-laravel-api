@@ -730,7 +730,7 @@ class PaymentController extends Controller
                 'type' => 'credit',
                 'method' => 'creditcard',
                 'saletype' => 'sale',
-                'amt' => $sale->grandtotal,
+                'amount' => $sale->grandtotal,
             ]);
 
             $params = json_decode(json_encode($params));
@@ -825,7 +825,8 @@ class PaymentController extends Controller
         }
 
         $user = $this->getUserById($request->user()->id);
-        
+        error_log('user');
+        error_log($user);
         if($this->isEmpty($user)){
             DB::rollBack();
             return $this->errorResponse();
@@ -882,7 +883,7 @@ class PaymentController extends Controller
             'type' => 'credit',
             'method' => 'creditcard',
             'saletype' => 'channelsale',
-            'amt' => $sale->grandtotal,
+            'amount' => $sale->grandtotal,
         ]);
         
         $params = json_decode(json_encode($params));

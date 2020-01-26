@@ -39,6 +39,19 @@ trait InventoryServices {
         $data = $this->globalFilter($data, $params);
         $params = $this->checkUndefinedProperty($params , $this->inventoryFilterCols());
 
+        if($params->keyword){
+            $keyword = $params->keyword;
+            $data = $data->filter(function($item)use($keyword){
+                //check string exist inside or not
+                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
+                    return true;
+                }else{
+                    return false;
+                }
+
+            });
+        }
+        
         if($params->onsale){
             error_log('Filtering inventories with on sale status....');
             if($params->onsale == 'true'){
@@ -368,7 +381,7 @@ trait InventoryServices {
 
     public function inventoryFilterCols() {
 
-        return ['onsale'];
+        return ['keyword', 'onsale'];
 
     }
     

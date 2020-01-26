@@ -34,6 +34,19 @@ trait ArticleServices {
         $data = $this->globalFilter($data, $params);
         $params = $this->checkUndefinedProperty($params , $this->articleFilterCols());
 
+        if($params->keyword){
+            $keyword = $params->keyword;
+            $data = $data->filter(function($item)use($keyword){
+                //check string exist inside or not
+                if(stristr($item->title, $keyword) == TRUE ) {
+                    return true;
+                }else{
+                    return false;
+                }
+
+            });
+        }
+
         if($params->scope){
             error_log('Filtering articles with scope....');
             $scope = $params->scope;
@@ -183,7 +196,7 @@ trait ArticleServices {
     }
     public function articleFilterCols() {
 
-        return ['scope'];
+        return ['keyword' , 'scope'];
 
     }
 

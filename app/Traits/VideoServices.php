@@ -33,6 +33,19 @@ trait VideoServices {
         $data = $this->globalFilter($data, $params);
         $params = $this->checkUndefinedProperty($params , $this->videoFilterCols());
 
+        if($params->keyword){
+            $keyword = $params->keyword;
+            $data = $data->filter(function($item)use($keyword){
+                //check string exist inside or not
+                if(stristr($item->title, $keyword) == TRUE) {
+                    return true;
+                }else{
+                    return false;
+                }
+
+            });
+        }
+        
         if($params->scope){
             error_log('Filtering videos with scope....');
             $scope = $params->scope;
@@ -246,7 +259,7 @@ trait VideoServices {
     }
     public function videoFilterCols() {
 
-        return ['scope'];
+        return ['keyword', 'scope'];
 
     }
 

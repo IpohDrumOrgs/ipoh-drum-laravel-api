@@ -35,6 +35,18 @@ trait SecondCommentServices {
         $data = $this->globalFilter($data, $params);
         $params = $this->checkUndefinedProperty($params , $this->secondcommentFilterCols());
 
+        if($params->keyword){
+            $keyword = $params->keyword;
+            $data = $data->filter(function($item)use($keyword){
+                //check string exist inside or not
+                if(stristr($item->title, $keyword) == TRUE) {
+                    return true;
+                }else{
+                    return false;
+                }
+
+            });
+        }
         $data = $data->unique('id');
 
         return $data;
@@ -136,7 +148,7 @@ trait SecondCommentServices {
     
     public function secondcommentFilterCols() {
 
-        return ['store_id'];
+        return ['keyword', 'store_id'];
 
     }
     

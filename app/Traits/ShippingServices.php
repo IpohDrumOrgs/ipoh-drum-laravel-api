@@ -37,6 +37,18 @@ trait ShippingServices {
         $data = $this->globalFilter($data, $params);
         $params = $this->checkUndefinedProperty($params , $this->shippingFilterCols());
 
+        if($params->keyword){
+            $keyword = $params->keyword;
+            $data = $data->filter(function($item)use($keyword){
+                //check string exist inside or not
+                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
+                    return true;
+                }else{
+                    return false;
+                }
+
+            });
+        }
         if($params->store_id){
             error_log('Filtering shippings with store_id....');
             $store_id = $params->store_id;
@@ -153,7 +165,7 @@ trait ShippingServices {
     
     public function shippingFilterCols() {
 
-        return ['store_id'];
+        return ['keyword', 'store_id'];
 
     }
     

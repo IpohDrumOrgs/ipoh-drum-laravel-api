@@ -288,23 +288,21 @@ trait GlobalFunctions {
         $data = collect($data);
         $params = $this->checkUndefinedProperty($params , $this->globalFilterCols());
 
-        if($params->keyword){
-            error_log('Filtering channels with keyword....');
-            $keyword = $params->keyword;
-            $data = $data->filter(function($item)use($keyword){
-                //check string exist inside or not
-                if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE || stristr($item->title, $keyword) == TRUE ) {
-                    return true;
-                }else{
-                    return false;
-                }
+        // if($params->keyword){
+        //     $keyword = $params->keyword;
+        //     $data = $data->filter(function($item)use($keyword){
+        //         //check string exist inside or not
+        //         if(stristr($item->name, $keyword) == TRUE || stristr($item->uid, $keyword) == TRUE ) {
+        //             return true;
+        //         }else{
+        //             return false;
+        //         }
 
-            });
-        }
+        //     });
+        // }
 
 
         if($params->fromdate){
-            error_log('Filtering channels with fromdate....');
             $date = Carbon::parse($params->fromdate)->startOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) >= $date);
@@ -312,7 +310,6 @@ trait GlobalFunctions {
         }
 
         if($params->todate){
-            error_log('Filtering channels with todate....');
             $date = Carbon::parse($request->todate)->endOfDay();
             $data = $data->filter(function ($item) use ($date) {
                 return (Carbon::parse(data_get($item, 'created_at')) <= $date);
@@ -321,7 +318,6 @@ trait GlobalFunctions {
         }
 
         if($params->status){
-            error_log('Filtering channels with status....');
             if($params->status == 'true'){
                 $data = $data->where('status', true);
             }else if($params->status == 'false'){

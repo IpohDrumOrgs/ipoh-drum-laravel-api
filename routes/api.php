@@ -130,6 +130,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::resource('video', 'API\VideoController');
     Route::get('/filter/video', 'API\VideoController@filter');
     Route::get('/uservideos', 'API\VideoController@userVideos');
+    Route::get('/uservideos/filter', 'API\VideoController@filterUserVideos');
     
 });
 

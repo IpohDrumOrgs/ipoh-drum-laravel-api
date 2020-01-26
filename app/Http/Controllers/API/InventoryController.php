@@ -665,7 +665,6 @@ class InventoryController extends Controller
             'price' => $request->price,
             'qty' => $request->qty,
             'stockthreshold' => $request->stockthreshold,
-            'onsale' => $request->onsale,
         ]);
         $params = json_decode(json_encode($params));
 

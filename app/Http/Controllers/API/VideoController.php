@@ -967,4 +967,87 @@ class VideoController extends Controller
             return $this->successPaginateResponse('Videos', $videos, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
         }
     }
+
+    
+    /**
+     * @OA\Get(
+     *   tags={"VideoControllerService"},
+     *   path="/api/uservideos/filter",
+     *   summary="Filter all public videos.",
+     *     operationId="filterUserVideos",
+     *   @OA\Parameter(
+     *     name="pageNumber",
+     *     in="query",
+     *     description="Page number",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="pageSize",
+     *     in="query",
+     *     description="number of pageSize",
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Parameter(
+     *     name="keyword",
+     *     in="query",
+     *     description="Keyword for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="fromdate",
+     *     in="query",
+     *     description="From Date for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="todate",
+     *     in="query",
+     *     description="To string for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(
+     *     name="status",
+     *     in="query",
+     *     description="status for filter",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Videos has been retrieved successfully."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="Unable to retrieved the videos."
+     *   )
+     * )
+     */
+    public function filterUserVideos(Request $request)
+    {
+        error_log('Retrieving list of filtered videos.');
+        // api/store/filter (GET)
+        $params = collect([
+            'keyword' => $request->keyword,
+            'fromdate' => $request->fromdate,
+            'todate' => $request->todate,
+            'status' => $request->status,
+            'scope' => "public",
+        ]);
+        //Convert To Json Object
+        $params = json_decode(json_encode($params));
+        
+        $user = $this->getUser($request->user()->uid);
+        if ($this->isEmpty($user)) {
+            return $this->errorResponse();
+        }
+
+        $videos = $user->purchasevideos()->wherePivot('status',true)->get();
+        $videos = $this->filterVideos($videos, $params);
+
+        if ($this->isEmpty($videos)) {
+            return $this->errorPaginateResponse('Videos');
+        } else {
+            return $this->successPaginateResponse('Videos', $videos, $this->toInt($request->pageSize), $this->toInt($request->pageNumber));
+        }
+    }
+
 }

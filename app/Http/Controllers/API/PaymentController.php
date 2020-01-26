@@ -840,7 +840,7 @@ class PaymentController extends Controller
             return $this->errorResponse();
         }
 
-        if(!$this->validateUserPurchasedVideo($user, $video)){
+        if($this->validateUserPurchasedVideo($user, $video)){
             DB::rollBack();
             return $this->errorResponse();
         }

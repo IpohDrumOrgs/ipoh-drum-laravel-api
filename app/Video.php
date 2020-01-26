@@ -60,6 +60,12 @@ class Video extends Model
         return $this->hasMany('App\VideoImage');
     }
 
+    
+    public function trailers()
+    {
+        return $this->hasMany('App\Trailer');
+    }
+
     public function channelsales()
     {
         return $this->hasMany('App\ChannelSale');

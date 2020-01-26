@@ -128,6 +128,10 @@ trait VideoServices {
         }
         $data->channel()->associate($channel);
 
+        if(!$this->saveModel($data)){
+            return null;
+        }
+
         return $data->refresh();
     }
 
@@ -179,6 +183,10 @@ trait VideoServices {
             return null;
         }
         $data->channel()->associate($channel);
+
+        if(!$this->saveModel($data)){
+            return null;
+        }
 
         return $data->refresh();
     }
@@ -237,6 +245,33 @@ trait VideoServices {
 
         return true;
     }
+    
+    private function videoChangeToTrailerSources($video) {
+        
+        if($this->isEmpty($video)){
+            return null;
+        }
+
+        if($video->free){
+            return null;
+        }
+        
+        $trailer = $video->trailers()->where('status',true)->where('scope', 'public')->first();
+        if($this->isEmpty($trailer)){
+            return null;
+        }
+
+        $video->videopath = $trailer->videopath;
+        $video->videopublicid = $trailer->videopublicid;
+        $video->imgpath = $trailer->imgpath;
+        $video->imgpublicid = $trailer->imgpublicid;
+        $video->totallength = $trailer->totallength;
+        $video->view = $trailer->view;
+
+        return $video;
+
+        
+    }
 
     // Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -262,23 +297,33 @@ trait VideoServices {
         return ['keyword', 'scope'];
 
     }
-
     
     private function validateUserPurchasedVideo($user , $video) {
         
-        if($video->free){
+        if($this->isEmpty($user)){
             return false;
+        }
+
+        if($this->isEmpty($video)){
+            return false;
+        }
+
+
+        if($video->free){
+            return true;
         }
         
         $purchasedvideos = $user->purchasevideos()->wherePivot('status' , true)->get();
 
         $ids = $purchasedvideos->pluck('id');
-
-        if($ids->search($video->id)){
-            return false;
+        $ids = $ids->filter(function($id)use($video){
+            return $id == $video->id;
+        });
+        if(!$this->isEmpty($ids)){
+            return true;
         }
         
-        return true;
+        return false;
         
     }
 

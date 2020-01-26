@@ -36,6 +36,7 @@ use App\Traits\ShippingServices;
 use App\Traits\StoreReviewServices;
 use App\Traits\StoreServices;
 use App\Traits\TicketServices;
+use App\Traits\TrailerServices;
 use App\Traits\TypeServices;
 use App\Traits\UserServices;
 use App\Traits\VerificationCodeServices;
@@ -80,6 +81,7 @@ trait AllServices {
     StoreReviewServices, 
     StoreServices, 
     TicketServices, 
+    TrailerServices,
     TypeServices, 
     UserServices, 
     VerificationCodeServices, 

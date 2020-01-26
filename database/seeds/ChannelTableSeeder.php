@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Channel;
 use App\Video;
 use App\Comment;
+use App\Trailer;
 use App\SecondComment;
 use Faker\Factory as Faker;
 use App\Company;
@@ -134,13 +135,30 @@ class ChannelTableSeeder extends Seeder
                 $video->price = $faker->numberBetween($min = 1, $max = 1000);
                 $video->disc = $faker->numberBetween($min = 1, $max = 100);
                 $video->discpctg = $faker->boolean($min = 0, $max = 1);
+
             }
             $video->channel()->associate(Channel::find($faker->randomElement([1,2,3,4,5,6,7,8,9,10])));
             $video->save();
 
             if(!$video->free){
                 $video->purchaseusers()->syncWithoutDetaching(1);
-                        }
+                
+                $trailer = new Trailer();
+                $trailer->uid = Carbon::now()->timestamp . Trailer::count();
+                $trailer->title = $faker->jobTitle;
+                $trailer->desc = $faker->sentence;
+                $trailer->videopath = "https://res.cloudinary.com/dmtxkcmay/video/upload/v1574954391/1_Minute_Timer_kzlp4e.mp4";
+                $trailer->videopublicid = Carbon::now()->timestamp;
+                $trailer->imgpath = "https://res.cloudinary.com/dmtxkcmay/image/upload/v1580021471/6_jjs26i.jpg";
+                $trailer->imgpublicid =  Carbon::now()->timestamp;
+                $trailer->totallength = "10:00";
+                $trailer->view = $faker->numberBetween($min = 1000, $max = 100000);
+                $trailer->scope = 'public';
+                $trailer->agerestrict = false;
+
+                $trailer->video()->associate($video);
+                $trailer->save();
+            }
 
         }
 

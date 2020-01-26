@@ -17,12 +17,12 @@ class CreateTrailersTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('video_id')->unsigned();
             $table->string('uid')->unique();
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->string('desc')->nullable();
             $table->string('videopath');
             $table->string('videopublicid');
-            $table->string('thumbnailpath')->nullable();
-            $table->string('thumbnailpublicid')->nullable();
+            $table->string('imgpath')->nullable();
+            $table->string('imgpublicid')->nullable();
             $table->string('totallength');
             $table->integer('view')->default(0);
             $table->boolean('agerestrict')->default(false);

@@ -164,7 +164,6 @@ class VideoController extends Controller
         error_log($this->controllerName.'Retrieving video of uid:' . $uid);
         $video = $this->getVideo($uid);
         if ($this->isEmpty($video)) {
-            $data['data'] = null;
             return $this->notFoundResponse('Video');
         } else {
             return $this->successResponse('Video', $video, 'retrieve');
@@ -281,6 +280,31 @@ class VideoController extends Controller
      *              type="number"
      *          )
      * ),
+     * 
+     * @OA\Parameter(
+     * name="trailervideopath",
+     * in="query",
+     * description="Video Link",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="trailervideopublicid",
+     * in="query",
+     * description="Video Link",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
+     * @OA\Parameter(
+     * name="trailertotallength",
+     * in="query",
+     * description="Length Of Video",
+     * @OA\Schema(
+     *              type="string"
+     *          )
+     * ),
      * 	@OA\RequestBody(
 *          required=true,
 *          @OA\MediaType(
@@ -316,6 +340,8 @@ class VideoController extends Controller
             'channel_id' => 'required|numeric',
             'videopath' => 'required|string',
             'videopublicid' => 'required|string',
+            'trailervideopath' => 'required|string',
+            'trailervideopublicid' => 'required|string',
             'img' => 'required',
             'free' => 'required|boolean',
             'discbyprice' => 'required|boolean',
@@ -343,6 +369,8 @@ class VideoController extends Controller
             DB::rollBack();
             return $this->errorResponse();
         }
+
+
         if($request->file('img') != null){
             error_log('Image Is Detected');
             $img = $this->uploadImage($request->file('img') , "/Video/". $video->uid);
@@ -362,6 +390,33 @@ class VideoController extends Controller
                 return $this->errorResponse();
             }
         }
+
+        if(!$video->free){
+            error_log('inside liao');
+            $this->validate($request, [
+                'trailervideopath' => 'required|string',
+                'trailervideopublicid' => 'required|string',
+            ]);
+            $params = collect([
+                'video_id' => $video->refresh()->id,
+                'title' => $video->title,
+                'desc' => $video->desc,
+                'scope' => $video->scope,
+                'videopath' => $request->trailervideopath,
+                'videopublicid' => $request->trailervideopublicid,
+                'totallength' => $request->trailertotallength,
+                'imgpath' => $video->imgpath,
+                'imgpublicid' => $video->imgpublicid,
+            ]);
+            $params = json_decode(json_encode($params));
+            $trailer = $this->createTrailer($params);
+
+            if ($this->isEmpty($trailer)) {
+                DB::rollBack();
+                return $this->errorResponse();
+            }
+        }
+        
 
         DB::commit();
         return $this->successResponse('Video', $video, 'create');
@@ -650,6 +705,14 @@ class VideoController extends Controller
      *     required=true,
      *     @OA\SChema(type="string")
      *   ),
+     * @OA\Parameter(
+     * name="user_id",
+     * in="query",
+     * description="User ID",
+     * @OA\Schema(
+     *              type="number"
+     *          )
+     * ),
      *   @OA\Response(
      *     response=200,
      *     description="Videos has been retrieved successfully."
@@ -664,15 +727,22 @@ class VideoController extends Controller
     {
         error_log($this->controllerName.'Retrieving public videos listing');
         $video = $this->getVideo($uid);
+        if($this->isEmpty($video) && $video->scope != "public") {
+            return $this->notFoundResponse('Video');
+        }
+        //Check User bought that item or not
+        $user = $this->getUserById($request->user_id);
+        if(!$video->free && !$this->validateUserPurchasedVideo($user , $video)){
+            $video = $this->videoChangeToTrailerSources($video);
+            if($this->isEmpty($video)){
+                return $this->notFoundResponse('Video');
+            }
+        }
         $video = $this->setCommentCount($video);
         $video = $this->calculateVideoPromotionPrice($video);
 
-        if ($this->isEmpty($video) && $video->scope != "public") {
-            $data['data'] = null;
-            return $this->notFoundResponse('Video');
-        } else {
-            return $this->successResponse('Video', $video, 'retrieve');
-        }
+        return $this->successResponse('Video', $video, 'retrieve');
+        
     }
 
 

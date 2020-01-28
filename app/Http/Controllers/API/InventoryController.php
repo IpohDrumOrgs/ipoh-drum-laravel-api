@@ -665,6 +665,7 @@ class InventoryController extends Controller
             'price' => $request->price,
             'qty' => $request->qty,
             'stockthreshold' => $request->stockthreshold,
+            'onsale' => $request->onsale,
         ]);
         $params = json_decode(json_encode($params));
 
@@ -712,6 +713,7 @@ class InventoryController extends Controller
                     $pattern->inventory_family_id = $inventoryfamily->refresh()->id;
                     $pattern = $this->createPattern($pattern);
                     if($this->isEmpty($pattern)){
+                        error_log("here");
                         DB::rollBack();
                         $this->deleteImages($proccessingimgids);
                         return $this->errorResponse();
@@ -755,12 +757,14 @@ class InventoryController extends Controller
                         $pattern->inventory_family_id = $oriinventoryfamily->refresh()->id;
                         $pattern = $this->createPattern($pattern);
                         if($this->isEmpty($pattern)){
+                            error_log("So sad u are here4");
                             DB::rollBack();
                             $this->deleteImages($proccessingimgids);
                             return $this->errorResponse();
                         }
                         $pattern->inventoryfamily()->associate($oriinventoryfamily);
                         if(!$this->saveModel($pattern)){
+                            error_log("So sad u are here3");
                             DB::rollBack();
                             $this->deleteImages($proccessingimgids);
                             return $this->errorResponse();
@@ -772,12 +776,15 @@ class InventoryController extends Controller
                         //Update Existing Pattern
                         $oripattern = $this->getPatternById($pattern->id);
                         if($this->isEmpty($oripattern)){
+                            error_log("So sad u are here1");
                             DB::rollBack();
                             $this->deleteImages($proccessingimgids);
-                            return $this->successResponse('Pattern', null, 'update');
+                            return $this->notFoundResponse('Pattern');
                         }
                         $oripattern = $this->updatePattern($oripattern , $pattern);
                         if($this->isEmpty($pattern)){
+                            error_log("So sad u are here2");
+                            error_log("here");
                             DB::rollBack();
                             $this->deleteImages($proccessingimgids);
                             return $this->errorResponse();
@@ -794,9 +801,10 @@ class InventoryController extends Controller
         foreach($forpatterndeleteids as $id){
             $pattern = $this->getPatternById($id);
             if($this->isEmpty($pattern)){
+                    error_log("So sad u are here");
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
-                    return $this->notFoundResponse('Pattern111');
+                    return $this->notFoundResponse('Pattern');
                 }
             if(!$this->deletePattern($pattern)){
                 DB::rollBack();

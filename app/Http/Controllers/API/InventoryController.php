@@ -712,7 +712,6 @@ class InventoryController extends Controller
                     $pattern->inventory_family_id = $inventoryfamily->refresh()->id;
                     $pattern = $this->createPattern($pattern);
                     if($this->isEmpty($pattern)){
-                        error_log("here");
                         DB::rollBack();
                         $this->deleteImages($proccessingimgids);
                         return $this->errorResponse();
@@ -756,7 +755,6 @@ class InventoryController extends Controller
                         $pattern->inventory_family_id = $oriinventoryfamily->refresh()->id;
                         $pattern = $this->createPattern($pattern);
                         if($this->isEmpty($pattern)){
-                            error_log("here");
                             DB::rollBack();
                             $this->deleteImages($proccessingimgids);
                             return $this->errorResponse();
@@ -776,11 +774,10 @@ class InventoryController extends Controller
                         if($this->isEmpty($oripattern)){
                             DB::rollBack();
                             $this->deleteImages($proccessingimgids);
-                            return $this->notFoundResponse('Pattern');
+                            return $this->successResponse('Pattern', null, 'update');
                         }
                         $oripattern = $this->updatePattern($oripattern , $pattern);
                         if($this->isEmpty($pattern)){
-                            error_log("here");
                             DB::rollBack();
                             $this->deleteImages($proccessingimgids);
                             return $this->errorResponse();
@@ -799,7 +796,7 @@ class InventoryController extends Controller
             if($this->isEmpty($pattern)){
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
-                    return $this->notFoundResponse('Pattern');
+                    return $this->notFoundResponse('Pattern111');
                 }
             if(!$this->deletePattern($pattern)){
                 DB::rollBack();

@@ -748,7 +748,7 @@ class InventoryController extends Controller
                 $patterns = $inventoryfamily->patterns;
                 //Get Pass In Pattern Ids (for checking deleted ids)
                 $patternids =  collect($patterns)->pluck('id');
-                $oripatternids = $oriinventoryfamily->patterns->pluck('id');
+                $oripatternids = $oriinventoryfamily->patterns()->where('status', true)->pluck('id');
                 $forpatterndeleteids = $forpatterndeleteids->merge($oripatternids->diff($patternids));
                 foreach($patterns as $pattern){
 
@@ -779,7 +779,7 @@ class InventoryController extends Controller
                             error_log("So sad u are here1");
                             DB::rollBack();
                             $this->deleteImages($proccessingimgids);
-                            return $this->notFoundResponse('Pattern');
+                            return $this->notFoundResponse('Pattern111');
                         }
                         $oripattern = $this->updatePattern($oripattern , $pattern);
                         if($this->isEmpty($pattern)){
@@ -804,7 +804,7 @@ class InventoryController extends Controller
                     error_log("So sad u are here");
                     DB::rollBack();
                     $this->deleteImages($proccessingimgids);
-                    return $this->notFoundResponse('Pattern');
+                    return $this->notFoundResponse('Pattern222');
                 }
             if(!$this->deletePattern($pattern)){
                 DB::rollBack();

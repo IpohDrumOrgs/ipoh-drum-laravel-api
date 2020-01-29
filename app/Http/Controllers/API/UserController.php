@@ -539,4 +539,36 @@ class UserController extends Controller
             return $this->errorResponse();
         }
     }
+
+    
+    /**
+     * @OA\Get(
+     *   tags={"UserControllerService"},
+     *   summary="get current request's user role.",
+     *     operationId="getCurrentRequestUserRole",
+     * path="/api/userroles",
+     *   @OA\Response(
+     *     response=200,
+     *     description="User role is retrieved."
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="User role is not retrieved."
+     *   )
+     * )
+     */
+    public function userRoles(Request $request)
+    {
+        // TODO Authenticate currently logged in user
+        $user = $this->getUserById($request->user()->id);
+        if ($this->isEmpty($user)) {
+            DB::rollBack();
+            return $this->errorResponse();
+        }
+
+        $roles = $user->roles()->wherePivot('status', true)->get();
+        
+        return $this->successResponse('Role', $roles, 'retrieve');
+
+    }
 }

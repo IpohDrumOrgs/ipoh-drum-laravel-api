@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth:api']], function (){
     Route::get('/user-profile', 'API\UserController@getUser');
     Route::resource('user', 'API\UserController');
     Route::get('/filter/user', 'API\UserController@filter');
+    Route::get('/userroles', 'API\UserController@userRoles');
 
 
     Route::resource('group', 'API\GroupController');

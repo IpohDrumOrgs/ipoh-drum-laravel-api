@@ -8464,6 +8464,23 @@
                 }
             }
         },
+        "/api/userroles": {
+            "get": {
+                "tags": [
+                    "UserControllerService"
+                ],
+                "summary": "get current request's user role.",
+                "operationId": "getCurrentRequestUserRole",
+                "responses": {
+                    "200": {
+                        "description": "User role is retrieved."
+                    },
+                    "default": {
+                        "description": "User role is not retrieved."
+                    }
+                }
+            }
+        },
         "/api/verificationcode": {
             "get": {
                 "tags": [
@@ -8854,6 +8871,30 @@
                         "schema": {
                             "type": "number"
                         }
+                    },
+                    {
+                        "name": "trailervideopath",
+                        "in": "query",
+                        "description": "Video Link",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "trailervideopublicid",
+                        "in": "query",
+                        "description": "Video Link",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "trailertotallength",
+                        "in": "query",
+                        "description": "Length Of Video",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "requestBody": {
@@ -9190,6 +9231,14 @@
                         "required": true,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "User ID",
+                        "schema": {
+                            "type": "number"
                         }
                     }
                 ],

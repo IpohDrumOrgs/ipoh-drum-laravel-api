@@ -436,8 +436,8 @@ class ProductFeatureController extends Controller
         }
 
         //Get Data
-        $inventories = $productfeature->inventories()->where('inventories.onsale' , true)->get();
-        $tickets = $productfeature->tickets()->where('tickets.onsale' , true)->get();
+        $inventories = $productfeature->inventories()->where('inventories.qty', '>',0)->where('inventories.status',true)->where('inventories.onsale' , true)->get();
+        $tickets = $productfeature->tickets()->where('tickets.qty', '>',0)->where('tickets.status',true)->where('tickets.onsale' , true)->get();
 
         $inventories = $this->itemsPluckCols($inventories , $this->inventoryDefaultCols());
         $inventories = json_decode(json_encode($inventories));

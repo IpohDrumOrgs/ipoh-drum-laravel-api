@@ -369,7 +369,7 @@ trait InventoryServices {
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function inventoryDefaultCols() {
 
-        return ['id','uid', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'reviews','inventoryfamilies'];
+        return ['id','uid','images', 'imgpath', 'rating' ,'onsale', 'onpromo', 'name' , 'desc' , 'price'  , 'qty', 'salesqty' , 'promotion' , 'store' , 'warranty' , 'shipping' , 'reviews','inventoryfamilies'];
 
     }
 

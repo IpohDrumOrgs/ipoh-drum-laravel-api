@@ -365,6 +365,22 @@ class InventoryController extends Controller
                     $this->deleteImages($proccessingimgids);
                     return $this->errorResponse();
                 }
+
+                
+                $params = collect([
+                    'imgpath' => $img->imgurl,
+                    'imgpublicid' => $img->publicid,
+                    'inventory_id' => $inventory->refresh()->id,
+                ]);
+                $params = json_decode(json_encode($params));
+                //Attach Image to InventoryImage
+                $inventoryimage = $this->createInventoryImage($params);
+                if($this->isEmpty($inventoryimage)){
+                    error_log('error here1');
+                    DB::rollBack();
+                    $this->deleteImages($proccessingimgids);
+                    return $this->errorResponse();
+                }
             }else{
                 DB::rollBack();
                 $this->deleteImages($proccessingimgids);

@@ -146,6 +146,8 @@ Route::get('/productfeature/{uid}', 'API\ProductFeatureController@show');
 
 Route::post('/register', 'API\UserController@register');
 
+Route::get('/public/siders', 'API\SliderController@getPublicSliders');
+
 Route::get('/productfeature/{uid}/products', 'API\ProductFeatureController@getFeaturedProducts');
 
 Route::post('/testpayment', 'API\PaymentController@testPayment');

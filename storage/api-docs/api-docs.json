@@ -6371,6 +6371,337 @@
                 }
             }
         },
+        "/api/slider": {
+            "get": {
+                "tags": [
+                    "SliderControllerService"
+                ],
+                "summary": "Get list of sliders",
+                "description": "Returns list of sliders",
+                "operationId": "getSliders",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of sliders"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of sliders"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "SliderControllerService"
+                ],
+                "summary": "Creates a slider.",
+                "operationId": "createSlider",
+                "parameters": [
+                    {
+                        "name": "blogger_id",
+                        "in": "query",
+                        "description": "Slider belongs To which Blogger",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Slider title",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Slider description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "query",
+                        "description": "Is this slider public?",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "imgs[]": {
+                                        "description": "Slider Images",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Slider has been created successfully."
+                    },
+                    "default": {
+                        "description": "Unable to create the slider."
+                    }
+                }
+            }
+        },
+        "/api/filter/slider": {
+            "get": {
+                "tags": [
+                    "SliderControllerService"
+                ],
+                "summary": "Filter list of sliders",
+                "description": "Returns list of filtered sliders",
+                "operationId": "filterSliders",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Keyword for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromdate",
+                        "in": "query",
+                        "description": "From Date for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "todate",
+                        "in": "query",
+                        "description": "To string for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "status for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Company id for filter",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of filtered sliders"
+                    },
+                    "default": {
+                        "description": "Unable to retrieve list of sliders"
+                    }
+                }
+            }
+        },
+        "/api/slider/{uid}": {
+            "get": {
+                "tags": [
+                    "SliderControllerService"
+                ],
+                "summary": "Retrieves slider by Uid.",
+                "operationId": "getSliderByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Slider_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Slider has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieve the slider."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "SliderControllerService"
+                ],
+                "summary": "Update slider by Uid.",
+                "operationId": "updateSliderByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Slider_ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "blogger_id",
+                        "in": "query",
+                        "description": "Slider belongs To which Blogger",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Slider title",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Slider description",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "query",
+                        "description": "Is this slider public?",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Slider has been updated successfully."
+                    },
+                    "default": {
+                        "description": "Unable to update the slider."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "SliderControllerService"
+                ],
+                "summary": "Set slider's 'status' to 0.",
+                "operationId": "deleteSliderByUid",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "Slider ID, NOT 'ID'.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Slider has been 'deleted' successfully."
+                    },
+                    "default": {
+                        "description": "Unable to 'delete' the slider."
+                    }
+                }
+            }
+        },
+        "/api/public/sliders": {
+            "get": {
+                "tags": [
+                    "SliderControllerService"
+                ],
+                "summary": "Retrieves all public sliders.",
+                "operationId": "getPublicSliders",
+                "parameters": [
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "number of pageSize",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sliders has been retrieved successfully."
+                    },
+                    "default": {
+                        "description": "Unable to retrieved the sliders."
+                    }
+                }
+            }
+        },
         "/api/store": {
             "get": {
                 "tags": [

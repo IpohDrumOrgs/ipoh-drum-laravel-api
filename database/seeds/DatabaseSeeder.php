@@ -60,6 +60,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSuperAdminSeeder::class);
         $this->call(RoleGroupManagerSeeder::class);
 
+        $this->call(SliderTableSeeder::class);
 
         // Testing Data
         // $this->call(CompanyTypeTableSeeder::class);

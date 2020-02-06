@@ -33,6 +33,7 @@ use App\Traits\SaleItemServices;
 use App\Traits\SaleServices;
 use App\Traits\SecondCommentServices;
 use App\Traits\ShippingServices;
+use App\Traits\SliderServices;
 use App\Traits\StoreReviewServices;
 use App\Traits\StoreServices;
 use App\Traits\TicketServices;
@@ -78,6 +79,7 @@ trait AllServices {
     SaleServices, 
     SecondCommentServices,
     ShippingServices, 
+    SliderServices, 
     StoreReviewServices, 
     StoreServices, 
     TicketServices, 

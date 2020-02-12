@@ -472,7 +472,8 @@ class SliderController extends Controller
         $sliders = $this->getAllPublicSliders();
 
         $sliders->map(function($slider){
-            return $this->parseToReadableSliderStructure($slider);
+            $slider = $this->parseToReadableSliderStructure($slider);
+            return collect($slider)->only(['image', 'thumbImage', 'alt', 'title']);
         });
         $sliders = $sliders->flatten(1);
 

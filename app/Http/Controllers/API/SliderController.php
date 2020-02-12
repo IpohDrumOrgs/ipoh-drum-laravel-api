@@ -474,6 +474,7 @@ class SliderController extends Controller
         $sliders->map(function($slider){
             return $this->parseToReadableSliderStructure($slider);
         });
+        $sliders = $sliders->flatten(1);
 
         if ($this->isEmpty($sliders)) {
             return $this->errorPaginateResponse('Sliders');

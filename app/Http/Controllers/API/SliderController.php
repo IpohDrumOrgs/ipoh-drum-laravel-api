@@ -471,12 +471,10 @@ class SliderController extends Controller
         error_log($this->controllerName.'Retrieving public sliders listing');
         $sliders = $this->getAllPublicSliders();
 
-        $sliders->map(function($slider){
-            $slider = $this->parseToReadableSliderStructure($slider);
-            return collect($slider)->only(['image', 'thumbImage', 'alt', 'title']);
+        $sliders = $sliders->map(function($slider){
+            return $this->parseToReadableSliderStructure($slider);
         });
-        $sliders = $sliders->flatten(1);
-
+        error_log($sliders);
         if ($this->isEmpty($sliders)) {
             return $this->errorPaginateResponse('Sliders');
         } else {

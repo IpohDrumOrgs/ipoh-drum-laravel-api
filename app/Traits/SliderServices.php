@@ -178,7 +178,7 @@ trait SliderServices {
         $slider->alt = $slider->desc;
         $slider->title = $slider->name;
 
-        $slider = $slider->only(['image', 'thumbImage', 'alt', 'title']);
+        $slider = collect($slider)->only(['image', 'thumbImage', 'alt', 'title']);
 
         return $slider;
     }

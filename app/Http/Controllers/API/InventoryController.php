@@ -322,8 +322,8 @@ class InventoryController extends Controller
         $this->validate($request, [
             'store_id' => 'required',
             'name' => 'required|string|max:191',
-            'code' => 'nullable',
-            'sku' => 'required|string|max:191',
+            'code' => 'nullable|string|max:191',
+            'sku' => 'nullable|string|max:191',
             'desc' => 'nullable',
             'cost' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
@@ -653,8 +653,8 @@ class InventoryController extends Controller
         $this->validate($request, [
             'store_id' => 'required',
             'name' => 'required|string|max:191',
-            'code' => 'nullable',
-            'sku' => 'required|string|max:191',
+            'code' => 'nullable|string|max:191',
+            'sku' => 'nullable|string|max:191',
             'desc' => 'nullable',
             'cost' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',

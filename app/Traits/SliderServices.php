@@ -169,8 +169,19 @@ trait SliderServices {
 
         return $data;
     }
+    
 
+    private function parseToReadableSliderStructure($slider) {
+        
+        $slider->image = $slider->imgpath;
+        $slider->thumbImage = $slider->imgpath;
+        $slider->alt = $slider->desc;
+        $slider->title = $slider->name;
 
+        $slider = $slider->only(['image', 'thumbImage', 'alt', 'title']);
+
+        return $slider;
+    }
     // Modifying Display Data
     // -----------------------------------------------------------------------------------------------------------------------------------------
     public function sliderAllCols() {

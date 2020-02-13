@@ -43,7 +43,7 @@ trait CompanyServices {
                 case 3:
                 //Own Wide
                 case 4:
-                    $temp = $requester->companies()->where('status',true)->get();
+                    $temp = $requester->companies()->where('companies.status',true)->get();
                     $data = $data->merge($temp);
                     break;
                 default:

@@ -470,7 +470,7 @@ class SliderController extends Controller
     {
         error_log($this->controllerName.'Retrieving public sliders listing');
         $sliders = $this->getAllPublicSliders();
-
+        //weird
         $sliders->map(function($slider){
             return $this->parseToReadableSliderStructure($slider);
         });
